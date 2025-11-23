@@ -28,12 +28,12 @@ namespace GameEngine {
 	void GridPass::Build(RDGBuilder& builder)
 	{
 		auto [w, h] = APP_WINDOWSIZE;
-		RDGTextureHandle outColor = builder.CreateTexture("RDG_TEXTURE_GRID")
+		RDGTextureHandle viewPort = builder.CreateTexture("ViewPort")
 			.Exetent({ w, h, 1 })
 			.Format(FORMAT_R8G8B8A8_UNORM)
 			.AllowRenderTarget()
 			.Finish();
-		RDGTextureHandle outDepth = builder.CreateTexture("RDG_TEXTURE_GRID_DEPTH")
+		RDGTextureHandle outDepth = builder.CreateTexture("Depth")
 			.Exetent({ w, h, 1 })
 			.Format(FORMAT_D32_SFLOAT)
 			.AllowDepthStencil()
@@ -41,17 +41,16 @@ namespace GameEngine {
 		RDGBufferHandle cameraData = builder.CreateBuffer("CameraData")
 			.Import(RENDER_RENDERRESOURCE->GetCameraDataBuffer().GetRHIBuffer(), RESOURCE_STATE_UNORDERED_ACCESS)
 			.Finish();
-		// 创建Pass结点
+
+
 		RDGRenderPassHandle pass = builder.CreateRenderPass(GetName())
 			.Read(0, 0, 0, cameraData)
 			// .Read(0,1,0,outDepth)  // TODO:现在创建是图片，但是Shader我之前都是绑定联合采样器纹理。。。
 			.RootSignature(m_RootSignature)
-			.Color(0, outColor, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE)
+			.Color(0, viewPort, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE)
 			.Execute([&](RDGPassContext context) {
 				auto [w, h] = APP_WINDOWSIZE;
-
 				RHICommandListRef command = context.command;
-
 				command->SetGraphicsPipeline(m_Pipeline);
 				command->SetViewport({ 0, 0 }, { w, h });
 				command->SetScissor({ 0, 0 }, { w, h });
@@ -61,6 +60,10 @@ namespace GameEngine {
 
 			})
 			.Finish();
+
+
+
+
 	}
 
 }

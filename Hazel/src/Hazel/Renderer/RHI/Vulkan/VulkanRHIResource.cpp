@@ -383,6 +383,15 @@ namespace GameEngine
 
 	VulkanRHITexture::VulkanRHITexture(const RHITextureInfo& info, VkImage image) : RHITexture(info)
 	{
+        /*
+            TextureAspectFlags: 颜色、深度、模板、深度 + 模板
+            VkFormat: SRGBA URGBA....
+            VkImageUsageFlags：默认都加了 SRC、DST ,根据ResourceType添加SAMPLED、STORAGE、（COLOR_ATTACHMENT/DEPTH_STENCIL_ATTACHMENT）
+            VkImageType：1D、2D、3D （creationFlag用来强制）
+            VkImageCreateFlags：Cube的话需要添加（还有很多其他功能）
+
+            创建后布局为 UNDEFINED
+        */ 
         TextureAspectFlags aspects = IsDepthStencilFormat(info.format) ? TEXTURE_ASPECT_DEPTH_STENCIL :IsDepthFormat(info.format) ? TEXTURE_ASPECT_DEPTH :IsStencilFormat(info.format) ? TEXTURE_ASPECT_STENCIL : TEXTURE_ASPECT_COLOR;
         defaultRange = { aspects, 0, info.mipLevels, 0, info.arrayLayers };
         defaultLayers = { aspects, 0, 0, info.arrayLayers };
@@ -408,7 +417,7 @@ namespace GameEngine
 
         VkImageCreateFlags flag = 0;
         if (info.type & RESOURCE_TYPE_TEXTURE_CUBE)      flag |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
-        if (type == VK_IMAGE_TYPE_3D)                    flag |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR;
+        if (type & VK_IMAGE_TYPE_3D)                    flag |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR;   // 运行按照2D数组来处理3D纹理（不然就需要创建3DImageView来使用，其实一直用的都是这种）
 
 
         VkImageCreateInfo imageInfo = {};
@@ -423,8 +432,8 @@ namespace GameEngine
         imageInfo.format = format;
         imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL; // 物理布局方式
         imageInfo.usage = usage;
-        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;   // 逻辑状态 / 访问规则的标记 不影响数据本身，但是会影响Vulkan如何使用它
-        imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;   // 逻辑状态 / 访问规则的标记 不影响数据本身，但是会影响Vulkan如何使用它（只能undefined，直接指定shaderread就报错了）
+        imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE; // 某个队列族独占
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         imageInfo.flags = flag; // Optional
 
@@ -435,18 +444,6 @@ namespace GameEngine
         {
             LOG_ERROR("VMA failed to allocate image!");
         }
-
-#ifdef RHI_DEBUG_LOG
-        // 使用 {} 进行格式化的日志输出
-        LOG_TRACE("成功创建 Vulkan 图像: {}", info.debugName);
-        LOG_TRACE("  - 图像类型: {}", imageInfo.imageType);
-        LOG_TRACE("  - 分辨率: {}x{}x{}",
-            imageInfo.extent.width,
-            imageInfo.extent.height,
-            imageInfo.extent.depth);
-        LOG_TRACE("  - Mipmap 层级: {}", info.mipLevels);
-        LOG_TRACE("  - 数组层数: {}", info.arrayLayers);
-#endif
 	}
 
 	void VulkanRHITexture::Destroy()

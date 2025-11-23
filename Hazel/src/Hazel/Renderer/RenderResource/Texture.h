@@ -10,7 +10,7 @@ namespace GameEngine {
 			TEXTURE_TYPE_3D
 		};
 
-		struct TextureSpce {
+		struct TextureSpec {
 			std::string path;
             TextureType type = TEXTURE_TYPE_2D;
 			Extent3D extent = {1,1,0};
@@ -27,13 +27,16 @@ namespace GameEngine {
 		};
 		class Texture {
 		public:
-			Texture(TextureSpce& spec);
+			Texture(TextureSpec& spec);
 			void LoadFromFile();
 			RHIDescriptorSetRef GetImGuiID();
 			uint32_t GetWidth() { return m_Spec.extent.width; }
             uint32_t GetHeight() { return m_Spec.extent.height; }
+			static RHITextureViewRef CreateView(RHITextureRef texture);
+			static RHIDescriptorSetRef GetImGuiID(RHITextureRef texture);
+			RHITextureRef GetRHITexture() { return m_Spec.texture; }
 		private:
-			TextureSpce m_Spec;
+			TextureSpec m_Spec;
 		};
 		typedef std::shared_ptr<Texture> TextureRef;
 		

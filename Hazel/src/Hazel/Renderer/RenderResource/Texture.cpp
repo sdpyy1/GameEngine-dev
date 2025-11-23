@@ -7,7 +7,7 @@
 
 namespace GameEngine::V2
 {
-	Texture::Texture(TextureSpce& spec) : m_Spec(spec)
+	Texture::Texture(TextureSpec& spec) : m_Spec(spec)
 	{
 		LoadFromFile();
 	}		
@@ -135,6 +135,21 @@ namespace GameEngine::V2
 	RHIDescriptorSetRef Texture::GetImGuiID()
 	{
 		return APP_DYNAMICRHI->GetImGuiTextId(m_Spec.textureView);
+	}
+
+	RHIDescriptorSetRef Texture::GetImGuiID(RHITextureRef texture)
+	{
+		return APP_DYNAMICRHI->GetImGuiTextId(CreateView(texture));
+	}
+
+	RHITextureViewRef Texture::CreateView(RHITextureRef texture)   // TODO:目前只有Viewport使用
+	{
+		RHITextureViewInfo rhiTextureViewInfo;
+		rhiTextureViewInfo.texture = texture;
+		rhiTextureViewInfo.format = FORMAT_R8G8B8A8_UNORM;
+		rhiTextureViewInfo.viewType = VIEW_TYPE_2D;
+		rhiTextureViewInfo.subresource = { TEXTURE_ASPECT_COLOR, 0, 1, 0, 1 };
+		return APP_DYNAMICRHI->CreateTextureView(rhiTextureViewInfo);
 	}
 
 }

@@ -431,7 +431,7 @@ namespace GameEngine {
 	typedef uint32_t ShaderFrequency;
 
 
-	// TODO:???
+	// TODO: 屏障用的
 	enum RHIResourceState : uint32_t	
 	{
 		RESOURCE_STATE_UNDEFINED = 0,
@@ -546,7 +546,7 @@ namespace GameEngine {
 		MemoryUsage memoryUsage = MEMORY_USAGE_GPU_ONLY;
 		ResourceType type = RESOURCE_TYPE_TEXTURE;
 
-		TextureCreationFlags creationFlag = TEXTURE_CREATION_NONE; 
+		TextureCreationFlags creationFlag = TEXTURE_CREATION_NONE;    // 强制创建2D或3D
 		friend bool operator== (const RHITextureInfo& a, const RHITextureInfo& b)
 		{
 			return  a.format == b.format &&

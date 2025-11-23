@@ -83,7 +83,7 @@ namespace GameEngine {
         RDGTextureHandle GetHandle() { return RDGTextureHandle(ID()); }
 
         const RHITextureInfo& GetInfo() { return info; }
-
+        RHITextureRef GetRHITexture() { return texture; }
     private:
         RHITextureInfo info;
         RHIResourceState initState; // 从池中/外部引用时的最初状态

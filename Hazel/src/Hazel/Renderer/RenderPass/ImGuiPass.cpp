@@ -11,39 +11,53 @@ namespace GameEngine
     void ImGuiPass::Init()
     {
         APP_DYNAMICRHI->InitImGui(APP_GLFWWINDOW);
-
         m_ImGuiRendererManager = std::make_shared<ImGuiRendererManager>();
-
     }
     void ImGuiPass::Build(RDGBuilder& builder)
 	{
         if (IsEnabled())
         {
-            RDGTextureHandle outColor = builder.GetTexture("RDG_TEXTURE_GRID");
-            RDGTextureHandle depth = builder.GetTexture("RDG_TEXTURE_GRID_DEPTH");
+            RDGTextureHandle viewport = builder.GetTexture("ViewPort");
+            RDGTextureHandle depth = builder.GetTexture("Depth");
+
+
+            auto [w, h] = APP_WINDOWSIZE;
+
+            RDGTextureHandle UI = builder.CreateTexture("UI")
+                .Exetent({ w, h ,1 })
+                .Format(FORMAT_R8G8B8A8_UNORM)
+                .AllowRenderTarget()
+                .Finish();
+
 
             RDGRenderPassHandle pass = builder.CreateRenderPass(GetName())
-                .Color(0, outColor, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
-                .DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)   // 为什么必须加深度才有效？
+                .Color(0, UI, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
+                .DepthStencil(depth, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
+                .Read(0,0,1, builder.GetTexture("ViewPort"))  // 只是使用也可以这样防止不创建资源
                 .Execute([&](RDGPassContext context) {
                         auto [w, h] = APP_WINDOWSIZE;
-
                         Extent2D windowExtent = { w, h };
 
                         RHICommandListRef command = context.command;
                         command->SetViewport({ 0, 0 }, { windowExtent.width, windowExtent.height });
                         command->SetScissor({ 0, 0 }, { windowExtent.width, windowExtent.height });
-
+                        
                         ImGui_ImplVulkan_NewFrame();
                         ImGui_ImplGlfw_NewFrame();
                         ImGui::NewFrame();
-                        m_ImGuiRendererManager->ImGuiCommand();
+                        static RHIDescriptorSetRef descriptor = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+                     
+                        m_ImGuiRendererManager->ImGuiCommand(descriptor);
                         ImGui::Render();
                         command->ImGuiRenderDrawData();
                     })
-                .OutputReadWrite(outColor)
                 .Finish();
+
+
+
+
         }
+
 	}
 
 }

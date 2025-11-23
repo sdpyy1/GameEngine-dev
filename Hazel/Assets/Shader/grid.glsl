@@ -128,7 +128,8 @@ vec4 getColor(vec3 fragPos3D, float t)
     vec4 result = grid(fragPos3D) * float(t > 0);
     result.a = (deviceZ < sceneZ) ? result.a : 0.0;
     result.a *= fading * 0.75;
-		
+    result.a = 1;  // TODO：目前深度图还没，所以先设置为1
+
     return result;
 }
 

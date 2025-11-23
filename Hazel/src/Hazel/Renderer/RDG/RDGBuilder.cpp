@@ -4,7 +4,6 @@
 #include "RDGPool.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
-
 namespace GameEngine { 
 
     RDGPassNodeRef RDGBlackBoard::Pass(std::string name)
@@ -31,6 +30,7 @@ namespace GameEngine {
         if (found != textures.end()) {
             return found->second;
         }
+        LOG_ERROR("Unable to find RDG resource [{}], please check name!", name.c_str());
         return nullptr;
     }
 
@@ -131,7 +131,9 @@ namespace GameEngine {
         for (auto& pass : passes)
         {
             if (pass->isCulled || !pass) continue;
-
+#ifdef RDG_DEBUG
+            LOG_INFO("RDG: Execute Pass: {0}", pass->Name());
+#endif // RDG_DEBUG
             switch (pass->NodeType()) {
             case RDG_PASS_NODE_TYPE_RENDER:         ExecutePass(dynamic_cast<RDGRenderPassNodeRef>(pass));          break;
             case RDG_PASS_NODE_TYPE_COMPUTE:        ExecutePass(dynamic_cast<RDGComputePassNodeRef>(pass));         break;
@@ -528,7 +530,7 @@ namespace GameEngine {
                 command->TextureBarrier(barrier);
             }
         }
-
+        
         CreateOutputBarriers(pass);
 
         ReleaseResource(pass);

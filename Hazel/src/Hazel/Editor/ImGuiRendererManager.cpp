@@ -61,12 +61,12 @@ namespace GameEngine {
 	void ImGuiRendererManager::Tick(float deltaTime)
 	{
 		Begin();
-		ImGuiCommand();
+		// ImGuiCommand();
 		End();
 	}
 
 
-	void ImGuiRendererManager::ImGuiCommand()
+	void ImGuiRendererManager::ImGuiCommand(RHIDescriptorSetRef viewportTexture)
 	{
 		// ========== Dockspace 主窗口 ==========
 		ImGuiIO& io = ImGui::GetIO();
@@ -149,7 +149,7 @@ namespace GameEngine {
 		ImGui::PopStyleVar(2);
 
 		// ========== 其他面板绘制 ==========
-		ViewportGUI();
+		ViewportGUI(viewportTexture);
 		SettingGUI();
 		DebugTexture();
 		if (m_FolderPreviewPanel.isOpen)
@@ -161,7 +161,7 @@ namespace GameEngine {
 		if (m_LogPanel.isOpen)
 			m_LogPanel.OnImGuiRender();
 	}
-	void ImGuiRendererManager::ViewportGUI()
+	void ImGuiRendererManager::ViewportGUI(RHIDescriptorSetRef viewportTexture)
 	{
 		ImGui::Begin("Viewport");
 
@@ -176,7 +176,11 @@ namespace GameEngine {
 		isMouseInViewport =mousePos.x >= m_ViewportBounds[0].x && mousePos.x <= m_ViewportBounds[1].x && mousePos.y >= m_ViewportBounds[0].y && mousePos.y <= m_ViewportBounds[1].y;
 		// LOG_INFO("{0},{1},{2}", mousePos.x, mousePos.y, isMouseInViewport);
 		Application::GetSceneManager()->GetEditorCamera()->SetIsMouseInViewPort(isMouseInViewport);
-		Application::GetSceneManager()->GetActiveScene()->OutputViewport();
+
+
+		// 设置ViewPort图片
+		ImGui::Image(viewportTexture->RawHandle(), ImGui::GetContentRegionAvail(), {0, 0}, {1, 1});
+		// Application::GetSceneManager()->GetActiveScene()->OutputViewport();
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))

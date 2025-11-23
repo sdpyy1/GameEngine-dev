@@ -4,6 +4,7 @@
 #include "Panels/FolderPreviewPanel.h"
 #include "Panels/LogPanel.h"
 #include <Hazel/Asset/Model/Mesh.h>
+#include <Hazel/Renderer/RDG/RDGHandle.h>
 namespace GameEngine {
 	class SubMesh;
 	class ImGuiRendererManager
@@ -14,10 +15,10 @@ namespace GameEngine {
 		virtual void End() {};
 		void SetDarkThemeV2Colors();
 		void Tick(float deltaTime);
-		void ImGuiCommand();
+		void ImGuiCommand(RHIDescriptorSetRef viewportTexture);
 		bool OnEvent(Event& e);
 		// 各种窗口创建
-		void ViewportGUI();
+		void ViewportGUI(RHIDescriptorSetRef viewportTexture);
 		void DrawGizmo();
 		void SettingGUI();
 		void DebugTexture();

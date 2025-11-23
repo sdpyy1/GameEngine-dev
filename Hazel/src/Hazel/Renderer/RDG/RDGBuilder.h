@@ -8,6 +8,8 @@
 #include <memory>
 #include <string>
 #include <vector>
+// #define RDG_DEBUG
+
 namespace GameEngine {
 
     // name->node
@@ -54,6 +56,7 @@ namespace GameEngine {
         RDGPresentPassHandle GetPresentPass(std::string name) { return GetPass<RDGPresentPassNodeRef, RDGPresentPassHandle>(name); }
         RDGCopyPassHandle GetCopyPass(std::string name) { return GetPass<RDGCopyPassNodeRef, RDGCopyPassHandle>(name); }
 
+        RHITextureRef GetRHITexture(std::string name) { return blackBoard.Texture(name)->GetRHITexture(); }
         DependencyGraphRef GetGraph() { return graph; }
 
         void Execute();

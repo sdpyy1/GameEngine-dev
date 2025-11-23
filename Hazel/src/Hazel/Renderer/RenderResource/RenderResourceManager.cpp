@@ -49,7 +49,6 @@ namespace GameEngine {
 		EditorCamera& camera = m_SceneInfoFromScene.camera;
 		tmpdata.view = camera.GetViewMatrix();
 		tmpdata.proj = camera.GetProjectionMatrix();
-		tmpdata.proj[1][1] *= -1;
 		tmpdata.viewproj = camera.GetViewProjection();
 		tmpdata.Width = camera.GetViewportWidth();
 		tmpdata.Height = camera.GetViewportWidth();

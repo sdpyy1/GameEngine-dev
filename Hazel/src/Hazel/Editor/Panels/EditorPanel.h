@@ -6,9 +6,10 @@ namespace GameEngine {
 		V2::TextureRef icon;
 		RHIDescriptorSetRef textureID;
 		void LoadIconData(const std::string& path,bool isYFlip = true) {
-			V2::TextureSpce spec;
+			V2::TextureSpec spec;
 			spec.path = path;
 			spec.yFlip = isYFlip;
+			spec.format = FORMAT_R8G8B8A8_UNORM;
 			icon = std::make_shared<V2::Texture>(spec);
 			textureID = icon->GetImGuiID();
 		}
