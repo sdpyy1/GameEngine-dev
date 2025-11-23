@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Hazel/Utils/Serializable.h"
 namespace GameEngine {
 	class UUID
 	{
@@ -12,6 +12,9 @@ namespace GameEngine {
 		operator const uint64_t() const { return m_UUID; }
 	private:
 		uint64_t m_UUID;
+		BeginSerailize()
+		SerailizeEntry(m_UUID)
+		EndSerailize
 	};
 
 	class UUID32
@@ -25,6 +28,7 @@ namespace GameEngine {
 		operator const uint32_t() const { return m_UUID; }
 	private:
 		uint32_t m_UUID;
+
 	};
 }
 

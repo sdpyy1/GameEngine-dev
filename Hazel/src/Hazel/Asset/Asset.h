@@ -1,9 +1,9 @@
 #pragma once
 #include <Hazel/Core/UUID.h>
 #include "Hazel/Asset/AssetTypes.h"
-#include "uuids.h"
-namespace GameEngine {
+#include "Hazel/Utils/Serializable.h"
 
+namespace GameEngine {
 
 	namespace V2 {
 		enum AssetType
@@ -25,15 +25,17 @@ namespace GameEngine {
 			virtual ~Asset() = default;
 			virtual std::string GetAssetTypeName() { return "Unknown"; }
 			virtual AssetType GetAssetType() { return ASSET_TYPE_UNKNOWN; }
-			virtual void Serialize() = 0;
-            virtual void Deserialize() = 0;
+			virtual void OnLoadAsset() = 0;
+            virtual void OnSaveAsset() = 0;
 			inline const UUID& GetUID() { return uid; }
 		protected:
 			UUID uid = {};
 
 
-
-
+		private:
+			BeginSerailize()
+			SerailizeEntry(uid)
+			EndSerailize
 		};
 	}
 
