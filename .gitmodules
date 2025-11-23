@@ -29,3 +29,6 @@
 [submodule "Hazel/vendor/shaderc"]
 	path = Hazel/vendor/shaderc
 	url = https://github.com/google/shaderc.git
+[submodule "Hazel/vendor/cereal"]
+	path = Hazel/vendor/cereal
+	url = https://github.com/USCiLab/cereal.git

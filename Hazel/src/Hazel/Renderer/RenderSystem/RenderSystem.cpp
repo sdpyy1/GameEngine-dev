@@ -46,11 +46,15 @@ namespace GameEngine {
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
 
 		passes[GRID_PASS] = std::make_shared<GridPass>();
-		passes[GRID_PASS]->Init();
 		passes[IMGUI_PASS] = std::make_shared<ImGuiPass>();
-        passes[IMGUI_PASS]->Init();
         passes[PRESENT_PASS] = std::make_shared<PresentPass>();
-        passes[PRESENT_PASS]->Init();
+
+
+		for (auto& pass : passes) {
+			if (pass) {
+				pass->Init();
+			}
+		}
 	}
 
 }

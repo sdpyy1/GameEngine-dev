@@ -57,6 +57,7 @@ project "Hazel"
 		"%{IncludeDir.acl}",
 		"%{IncludeDir.rtm}",
 		"%{IncludeDir.spirv_reflect}",
+		"%{IncludeDir.cereal}"
 	}
 
 	libdirs

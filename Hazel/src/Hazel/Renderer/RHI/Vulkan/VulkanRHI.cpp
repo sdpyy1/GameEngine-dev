@@ -1127,37 +1127,6 @@ namespace GameEngine
         commandPool = VULKAN_RHI->CreateCommandPool({ queue });
 	}
 
-    void TextureBarrier1(VkCommandBuffer commandBuffer, const RHITextureBarrier& barrier)
-    {
-        TextureSubresourceRange range = barrier.subresource;
-        if (range.aspect == TEXTURE_ASPECT_NONE) range = barrier.texture->GetDefaultSubresourceRange();
-
-        VkAccessFlags srcAccessMask = VulkanUtil::ResourceStateToAccessFlags(barrier.srcState);
-        VkAccessFlags dstAccessMask = VulkanUtil::ResourceStateToAccessFlags(barrier.dstState);
-        VkPipelineStageFlags srcStage = VulkanUtil::AccessFlagsToPipelineStageFlags(srcAccessMask);
-        VkPipelineStageFlags dstStage = VulkanUtil::AccessFlagsToPipelineStageFlags(dstAccessMask);
-
-        // srcStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;   // 可以保证绝对不会出错
-        // dstStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;   // 目前验证层VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT还是会有一些报错，太难调了
-
-        VkImageMemoryBarrier memoryBarrier = {};
-        memoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        memoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        memoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        memoryBarrier.oldLayout = VulkanUtil::ResourceStateToImageLayout(barrier.srcState);
-        memoryBarrier.newLayout = VulkanUtil::ResourceStateToImageLayout(barrier.dstState);
-        memoryBarrier.image = CAST<VulkanRHITexture>(barrier.texture)->GetHandle();
-        memoryBarrier.subresourceRange = VulkanUtil::SubresourceToVk(range);
-        memoryBarrier.srcAccessMask = srcAccessMask;
-        memoryBarrier.dstAccessMask = dstAccessMask;
-
-        vkCmdPipelineBarrier(
-            commandBuffer,
-            srcStage, dstStage, 0,
-            0, nullptr,
-            0, nullptr,
-            1, &memoryBarrier);
-    }
 	void VulkanRHICommandContextImmediate::TextureBarrier(const RHITextureBarrier& barrier)
 	{
         TextureSubresourceRange range = barrier.subresource;
@@ -1188,6 +1157,10 @@ namespace GameEngine
 	}
     void VulkanRHICommandContext::TextureBarrier(const RHITextureBarrier& barrier)
     {
+        /*
+            srcStageMask/dstStageMask：PipelineStage（表示Pipeline的各个阶段），这两个设置表示src阶段命令完成之前，dst阶段不能开始执行（任务A需要执行完srcStage，任务B才能开始执行dstStage）
+            例如：A->Barrier->B,这样提交命令后，B会停在dstStage，A的srcStage执行完成后，B才能继续
+        */
         TextureSubresourceRange range = barrier.subresource;
         if (range.aspect == TEXTURE_ASPECT_NONE) range = barrier.texture->GetDefaultSubresourceRange();
 
@@ -1206,7 +1179,7 @@ namespace GameEngine
         memoryBarrier.oldLayout = VulkanUtil::ResourceStateToImageLayout(barrier.srcState);
         memoryBarrier.newLayout = VulkanUtil::ResourceStateToImageLayout(barrier.dstState);
         memoryBarrier.image = CAST<VulkanRHITexture>(barrier.texture)->GetHandle();
-        memoryBarrier.subresourceRange = VulkanUtil::SubresourceToVk(range);
+        memoryBarrier.subresourceRange = VulkanUtil::SubresourceToVk(range);   // 可以只转换部分层
         memoryBarrier.srcAccessMask = srcAccessMask;
         memoryBarrier.dstAccessMask = dstAccessMask;
 
