@@ -109,42 +109,24 @@ namespace GameEngine
 		virtual void EndCommand() override final;
 		virtual void Execute(RHIFenceRef fence, RHISemaphoreRef waitSemaphore, RHISemaphoreRef signalSemaphore) override final;
 		virtual void SetViewport(Offset2D min, Offset2D max) override final;
-
 		virtual void SetScissor(Offset2D min, Offset2D max) override final;
-
 		virtual void SetDepthBias(float constantBias, float slopeBias, float clampBias) override final;
-
 		virtual void SetLineWidth(float width) override final;
-
 		virtual void SetGraphicsPipeline(RHIGraphicsPipelineRef graphicsPipeline) override final;
-
 		virtual void SetComputePipeline(RHIComputePipelineRef computePipeline) override final;
-
 		// virtual void SetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline) override final;
-
 		virtual void PushConstants(void* data, uint16_t size, ShaderFrequency frequency) override final;
-
 		virtual void BindDescriptorSet(RHIDescriptorSetRef descriptor, uint32_t set) override final;
-
 		virtual void BindVertexBuffer(RHIBufferRef vertexBuffer, uint32_t streamIndex, uint32_t offset) override final;
-
 		virtual void BindIndexBuffer(RHIBufferRef indexBuffer, uint32_t offset) override final;
-
 		virtual void Dispatch(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) override final;
-
 		virtual void DispatchIndirect(RHIBufferRef argumentBuffer, uint32_t argumentOffset) override final;
-
 		virtual void TraceRays(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) override final;
-
 		virtual void Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance) override final;
-
 		virtual void DrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t vertexOffset, uint32_t firstInstance) override final;
-
 		virtual void DrawIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount) override final;
-
 		virtual void DrawIndexedIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount) override final;
 		virtual void ImGuiRenderDrawData() override final;
-
 		virtual void* RawHandle() override final { return handle; }
 
 	private:
