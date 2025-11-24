@@ -22,11 +22,14 @@ namespace GameEngine {
 		void DrawGizmo();
 		void SettingGUI();
 		void DebugTexture();
+		void GPUTime();
 		static std::shared_ptr<ImGuiRendererManager> Create();
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
 		std::pair<float, float> GetMouseViewportSpace(); // NDC×ø±ê
 		std::pair<glm::vec3, glm::vec3> CastRay(EditorCamera& camera, float mx, float my);
 		void SetScene(std::shared_ptr<Scene> activeScene);
+		void SetGPUTimeInfo(std::vector<RHIGPUTimeInfo>& timeInfo);
+
 	private:
 
 		// Gizmo's
@@ -48,6 +51,9 @@ namespace GameEngine {
 			Ref<MeshSource> meshSource = nullptr;
 			float Distance = 0.0f;
 		};
+
+		// Êý¾Ý
+		std::vector<RHIGPUTimeInfo> m_GPUTimeInfo;
 	};
 
 }

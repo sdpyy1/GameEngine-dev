@@ -33,7 +33,6 @@ namespace GameEngine {
 		virtual RHIGraphicsPipelineRef CreateGraphicsPipeline(const RHIGraphicsPipelineInfo& info) = 0;
 		virtual RHIRenderPassRef CreateRenderPass(const RHIRenderPassInfo& info) = 0;
 		virtual RHIRootSignatureRef CreateRootSignature(const RHIRootSignatureInfo& info) = 0;
-
 		// Í¬²½
 		virtual RHIFenceRef CreateFence(bool signaled) = 0;
 		virtual RHISemaphoreRef CreateSemaphore() = 0;
@@ -67,13 +66,14 @@ namespace GameEngine {
 		virtual void SetScissor(Offset2D min, Offset2D max) = 0;
 
 		virtual void SetDepthBias(float constantBias, float slopeBias, float clampBias) = 0;
-
 		virtual void SetLineWidth(float width) = 0;
 
 		virtual void SetGraphicsPipeline(RHIGraphicsPipelineRef graphicsPipeline) = 0;
 
 		virtual void SetComputePipeline(RHIComputePipelineRef computePipeline) = 0;
+		virtual void PushLabel(const std::string& name, Color3 color = { 1.0f, 1.0f, 1.0f }) = 0;
 
+		virtual void PopLabel() = 0;
 		// virtual void SetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline) = 0;
 
 		virtual void PushConstants(void* data, uint16_t size, ShaderFrequency frequency) = 0;
@@ -98,7 +98,7 @@ namespace GameEngine {
 
 		virtual void DrawIndexedIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount) = 0;
 		virtual void EndRenderPass() = 0;
-
+		virtual std::vector<RHIGPUTimeInfo> GetGPUTime() = 0;
 		virtual void ImGuiRenderDrawData() = 0;
 
 	protected:

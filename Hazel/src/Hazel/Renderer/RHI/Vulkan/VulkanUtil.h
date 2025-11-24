@@ -12,6 +12,7 @@ namespace GameEngine {
 #define VULKAN_PHYSICALDEVICE (std::static_pointer_cast<VulkanDynamicRHI>(DynamicRHI::Get()).get())->GetPhysicalDevice()
 #define VULKAN_DEVICE (std::static_pointer_cast<VulkanDynamicRHI>(DynamicRHI::Get()).get())->GetDevice()
 #define VULKAN_VMA (std::static_pointer_cast<VulkanDynamicRHI>(DynamicRHI::Get()).get())->GetVMA()
+#define VULKAN_QUERYPOOL std::static_pointer_cast<VulkanDynamicRHI>(DynamicRHI::Get()).get()->GetQueryPool()
 #define CAST std::static_pointer_cast
 #define VK_CHECK_RESULT(f)\
 {\

@@ -39,6 +39,7 @@ namespace GameEngine {
 
 		CurCommandList->EndCommand();
 		CurCommandList->Execute(CurResource.fence, CurResource.startSemaphore, CurResource.finishSemaphore);
+		m_GPUTimeInfos = CurCommandList->GetGPUTime();
 		m_SwapChain->Present(CurResource.finishSemaphore);
 	}
 

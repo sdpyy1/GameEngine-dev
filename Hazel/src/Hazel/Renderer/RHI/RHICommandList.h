@@ -413,6 +413,26 @@ namespace GameEngine
 
         virtual void Execute(RHICommandContextRef context) override final;
     };
+    struct RHICommandPushLabel : public RHICommand
+    {
+        std::string name;
+        Color3 color;
+
+        RHICommandPushLabel(const std::string& name, Color3 color)
+            : name(name)
+            , color(color)
+        {
+        }
+
+        virtual void Execute(RHICommandContextRef context) override final;
+    };
+    struct RHICommandPopLabel : public RHICommand
+    {
+        RHICommandPopLabel() {}
+
+        virtual void Execute(RHICommandContextRef context) override final;
+    };
+
     /*RHICommandList是RHICommand的载体，方法通过RHICommandList调用后会根据配置选择是直接执行命令还是缓存命令*/
     class RHICommandList {
     public:
@@ -432,7 +452,8 @@ namespace GameEngine
         void SetScissor(Offset2D min, Offset2D max);
 
         void SetDepthBias(float constantBias, float slopeBias, float clampBias);
-
+        void PushLabel(const std::string& name, Color3 color = { 1.0f, 1.0f, 1.0f });
+        void PopLabel();
         void SetLineWidth(float width);
 
         void SetGraphicsPipeline(RHIGraphicsPipelineRef graphicsPipeline);
@@ -463,7 +484,7 @@ namespace GameEngine
 
         void DrawIndexedIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount);
         void ImGuiRenderDrawData();
-
+        std::vector<RHIGPUTimeInfo> GetGPUTime();
     protected:
         inline void AddCommand(RHICommand* command) { commands.push_back(command); }
 

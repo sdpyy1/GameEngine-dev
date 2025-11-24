@@ -46,7 +46,7 @@ namespace GameEngine
                         ImGui_ImplGlfw_NewFrame();
                         ImGui::NewFrame();
                         static RHIDescriptorSetRef descriptor = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
-                     
+                        m_ImGuiRendererManager->SetGPUTimeInfo(RENDER_GPU_TIME_INFO);
                         m_ImGuiRendererManager->ImGuiCommand(descriptor);
                         ImGui::Render();
                         command->ImGuiRenderDrawData();

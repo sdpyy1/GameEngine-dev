@@ -368,6 +368,26 @@ namespace GameEngine {
 		if (info.byPass) info.context->ImGuiRenderDrawData();
 		else ADD_COMMAND(ImGuiRenderDrawData);
 	}
+
+	void RHICommandList::PushLabel(const std::string& name, Color3 color)
+	{
+		COMMANDLIST_DEBUG_OUTPUT();
+		if (info.byPass) info.context->PushLabel(name, color);
+		else ADD_COMMAND(PushLabel, name, color);
+	}
+
+	void RHICommandList::PopLabel()
+	{
+		COMMANDLIST_DEBUG_OUTPUT();
+		if (info.byPass) info.context->PopLabel();
+		else ADD_COMMAND(PopLabel);
+	}
+
+	std::vector<GameEngine::RHIGPUTimeInfo> RHICommandList::GetGPUTime()
+	{
+		return info.context->GetGPUTime();
+	}
+
 	void RHICommandImGuiRenderDrawData::Execute(RHICommandContextRef context)
 	{
 		context->ImGuiRenderDrawData();
@@ -386,6 +406,16 @@ namespace GameEngine {
 	void RHICommandImmediateCopyBufferToTexture::Execute(RHICommandContextImmediateRef context)
 	{
 		context->CopyBufferToTexture(src, srcOffset, dst, dstSubresource);
+	}
+
+	void RHICommandPushLabel::Execute(RHICommandContextRef context)
+	{
+		context->PushLabel(name, color);
+	}
+
+	void RHICommandPopLabel::Execute(RHICommandContextRef context)
+	{
+		context->PopLabel();
 	}
 
 }

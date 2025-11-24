@@ -5,6 +5,7 @@
 #include "Hazel/Core/Definations.h"
 #include <Hazel/Renderer/RenderResource/RenderResourceManager.h>
 #define RENDER_RESOURCEMANAGER APP_RENDERSYSTEM->GetRenderResourceManager()
+#define RENDER_GPU_TIME_INFO APP_RENDERSYSTEM->GetGPUTimeInfos()
 namespace GameEngine
 {
 	class RenderSystem
@@ -15,6 +16,7 @@ namespace GameEngine
 		void Tick(float timestep);
 		RHISwapchainRef GetSwapChain() { return m_SwapChain; }
 		DynamicRHIRef GetRHI() { return m_DynamicRHI; }
+		std::vector<RHIGPUTimeInfo>& GetGPUTimeInfos() { return m_GPUTimeInfos; }
 		std::shared_ptr<RenderResourceManager> GetRenderResourceManager() { return m_RenderResourceManager; }
 	private:
 		std::shared_ptr<RenderResourceManager> m_RenderResourceManager;
@@ -23,7 +25,7 @@ namespace GameEngine
 		RHIQueueRef m_GraphicsQueue;
 		RHISwapchainRef m_SwapChain;
 		RHICommandPoolRef m_CommandPool;
-
+		std::vector<RHIGPUTimeInfo> m_GPUTimeInfos;
 		struct PerFrameBaseResource
 		{
 			RHICommandListRef commandList;

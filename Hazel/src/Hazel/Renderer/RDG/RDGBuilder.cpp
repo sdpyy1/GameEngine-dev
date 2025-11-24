@@ -131,6 +131,7 @@ namespace GameEngine {
         for (auto& pass : passes)
         {
             if (pass->isCulled || !pass) continue;
+            command->PushLabel(pass->Name(),pass->GetLabelColor());
 #ifdef RDG_DEBUG
             LOG_INFO("RDG: Execute Pass: {0}", pass->Name());
 #endif // RDG_DEBUG
@@ -142,6 +143,7 @@ namespace GameEngine {
             case RDG_PASS_NODE_TYPE_COPY:           ExecutePass(dynamic_cast<RDGCopyPassNodeRef>(pass));            break;
             default:                                LOG_ERROR("Unsupported RDG pass type!");
             }
+            command->PopLabel();
         }
 
         for (auto& pass : passes)   // 释放池化资源
@@ -989,6 +991,12 @@ namespace GameEngine {
         pass->execute = execute;
         return *this;
     }
+
+	RDGRenderPassBuilder& RDGRenderPassBuilder::LabelColor(Color3 color)
+	{
+        pass->SetLabelColor(color);
+        return *this;
+	}
 
     RDGComputePassBuilder& RDGComputePassBuilder::PassIndex(uint32_t x, uint32_t y, uint32_t z)
     {

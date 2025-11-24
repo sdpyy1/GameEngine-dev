@@ -55,7 +55,6 @@ namespace GameEngine
 		void CreateMemoryAllocator();
 		void CreateDescriptorPool();
 		void CreateImmediateCommand();
-
 	private:
 		// 实例
 		VkInstance m_Instance;
@@ -103,7 +102,9 @@ namespace GameEngine
 		virtual void BufferBarrier(const RHIBufferBarrier& barrier) override final;
 		virtual void BeginRenderPass(RHIRenderPassRef renderPass) override final;
 		virtual void CopyTexture(RHITextureRef src, TextureSubresourceLayers srcSubresource, RHITextureRef dst, TextureSubresourceLayers dstSubresource) override final;
+		virtual void PushLabel(const std::string& name, Color3 color = { 0.0f, 0.0f, 0.0f }) override final;
 
+		virtual void PopLabel() override final;
 		virtual void GenerateMips(RHITextureRef src) override final;
 		virtual void EndRenderPass() override final;
 		virtual void EndCommand() override final;
@@ -127,6 +128,8 @@ namespace GameEngine
 		virtual void DrawIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount) override final;
 		virtual void DrawIndexedIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount) override final;
 		virtual void ImGuiRenderDrawData() override final;
+		virtual std::vector<RHIGPUTimeInfo> GetGPUTime() override final;
+
 		virtual void* RawHandle() override final { return handle; }
 
 	private:
@@ -135,8 +138,15 @@ namespace GameEngine
 		VulkanRHIRenderPass* renderPass;                // 运行时状态，随指令变化
 		VulkanRHIGraphicsPipeline* graphicsPipeline;
 		VulkanRHIComputePipeline* computePipeline;
+		VkQueryPool m_TimestampQueryPool;
+		uint32_t m_TimestampQueryIndex = 0;
+		// 用于在渲染时临时存储标签信息的栈
+		std::vector<RHIGPUTimeInfo> m_ActiveLabels;
+		// 用于存储最终计算好的耗时结果
+		std::vector<RHIGPUTimeInfo> m_FinishedLabels;
 		VkPipelineLayout GetCuttentPipelineLayout();
 		VkPipelineBindPoint GetCuttentBindingPoint();
+		void ResetQueryState();
 	};
 
 

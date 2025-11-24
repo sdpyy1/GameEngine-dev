@@ -152,6 +152,7 @@ namespace GameEngine {
 		ViewportGUI(viewportTexture);
 		SettingGUI();
 		DebugTexture();
+		GPUTime();
 		if (m_FolderPreviewPanel.isOpen)
 			m_FolderPreviewPanel.OnImGuiRender();
 
@@ -500,6 +501,49 @@ namespace GameEngine {
 		m_FolderPreviewPanel.SetContext(Application::GetSceneManager()->GetActiveScene());
 		m_SelectedEntity = {};
 		m_GizmoType = -1;
+	}
+
+	void ImGuiRendererManager::SetGPUTimeInfo(std::vector<RHIGPUTimeInfo>& timeInfo)
+	{
+		m_GPUTimeInfo = timeInfo;
+	}
+
+	void ImGuiRendererManager::GPUTime()
+	{
+		if (ImGui::Begin("GPU Timing"))
+		{
+			ImGui::Text("Per-pass GPU durations (ms)");
+			ImGui::Separator();
+
+			if (m_GPUTimeInfo.empty())
+			{
+				ImGui::Text("No GPU timing data.");
+			}
+			else
+			{
+				// 表格展示（更美观）
+				if (ImGui::BeginTable("GPU Time Table", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+				{
+					ImGui::TableSetupColumn("Pass");
+					ImGui::TableSetupColumn("Time (ms)");
+					ImGui::TableHeadersRow();
+
+					for (const auto& info : m_GPUTimeInfo)
+					{
+						ImGui::TableNextRow();
+						ImGui::TableSetColumnIndex(0);
+						ImGui::TextUnformatted(info.Name.c_str());
+
+						ImGui::TableSetColumnIndex(1);
+						ImGui::Text("%.3f", info.DurationMs);
+					}
+
+					ImGui::EndTable();
+				}
+			}
+		}
+
+		ImGui::End();
 	}
 
 }

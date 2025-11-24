@@ -50,6 +50,11 @@ namespace GameEngine {
 		bool debug = false;
 		bool enableRayTracing = false;
 	};
+	typedef struct Color3 {
+		float r = 0.0f;
+		float g = 0.0f;
+		float b = 0.0f;
+	} Color3;
 	enum RHIResourceType : uint32_t
 	{
 		RHI_BUFFER = 0,
@@ -1038,4 +1043,13 @@ namespace GameEngine {
 		}
 
 	} RHIComputePipelineInfo;
+
+
+	// passÖ´ÐÐºÄÊ±¼ÇÂ¼
+	struct RHIGPUTimeInfo{
+		std::string Name;
+		uint32_t StartQueryIndex;
+		uint32_t EndQueryIndex;
+		float DurationMs;
+	};
 }

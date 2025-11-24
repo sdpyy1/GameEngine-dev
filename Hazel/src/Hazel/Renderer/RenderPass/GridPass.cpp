@@ -44,6 +44,7 @@ namespace GameEngine {
 
 
 		RDGRenderPassHandle pass = builder.CreateRenderPass(GetName())
+			.LabelColor({0.2,0.2,0.6})
 			.Read(0, 0, 0, cameraData)
 			.Read(0,1,0,outDepth)  // TODO:现在创建是图片，但是Shader我之前都是绑定联合采样器纹理。。。
 			.RootSignature(m_RootSignature)

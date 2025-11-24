@@ -862,6 +862,14 @@ namespace GameEngine
         {
             LOG_ERROR("Failed to allocate command buffer!");
         }
+
+        // 耗时查询池
+        VkQueryPoolCreateInfo queryPoolInfo{};
+        queryPoolInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+        queryPoolInfo.queryType = VK_QUERY_TYPE_TIMESTAMP;
+        queryPoolInfo.queryCount = 100; // 每个阶段需要 2 个查询（开始 + 结束）
+
+        vkCreateQueryPool(VULKAN_DEVICE, &queryPoolInfo, nullptr, &m_TimestampQueryPool);
     }
 
 	void VulkanRHICommandContext::BeginCommand()
@@ -873,6 +881,9 @@ namespace GameEngine
         beginInfo.flags = 0;
 
         vkBeginCommandBuffer(handle, &beginInfo);
+
+        ResetQueryState();
+       
 	}
 
 	void VulkanRHICommandContext::EndCommand()
@@ -1347,6 +1358,88 @@ namespace GameEngine
     {
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), handle);
     }
+
+	void VulkanRHICommandContext::PushLabel(const std::string& name, Color3 color)
+	{
+        uint32_t startIndex = m_TimestampQueryIndex;
+        vkCmdWriteTimestamp(handle, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_TimestampQueryPool, startIndex);
+        m_TimestampQueryIndex++;
+
+        VkDebugUtilsLabelEXT label_info;
+
+        label_info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
+        label_info.pNext = nullptr;
+        label_info.pLabelName = name.c_str();
+        label_info.color[0] = color.r;
+        label_info.color[1] = color.g;
+        label_info.color[2] = color.b;
+        label_info.color[3] = 1.0f;
+
+        vkCmdBeginDebugUtilsLabelEXT(handle, &label_info);
+
+        m_ActiveLabels.push_back({ name, startIndex, 0, 0.0f });
+	}
+
+	void VulkanRHICommandContext::PopLabel()
+	{
+        // 记录结束时间戳
+        uint32_t endIndex = m_TimestampQueryIndex;
+        vkCmdWriteTimestamp(handle, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPool, endIndex);
+        m_TimestampQueryIndex++;
+        vkCmdEndDebugUtilsLabelEXT(handle);
+        RHIGPUTimeInfo finishedLabel = m_ActiveLabels.back();
+        m_ActiveLabels.pop_back();
+        finishedLabel.EndQueryIndex = endIndex;
+        m_FinishedLabels.push_back(finishedLabel);
+	}
+    void VulkanRHICommandContext::ResetQueryState()
+    {
+        m_TimestampQueryIndex = 0;
+        m_FinishedLabels.clear();
+        vkCmdResetQueryPool(handle, m_TimestampQueryPool, 0, 100);
+    }
+	std::vector<RHIGPUTimeInfo> VulkanRHICommandContext::GetGPUTime()
+	{
+        std::vector<RHIGPUTimeInfo> result;
+
+        if (m_FinishedLabels.empty() || m_TimestampQueryIndex == 0)
+        {
+            return result;
+        }
+
+        std::vector<uint64_t> timestamps(m_TimestampQueryIndex);
+        VkResult vkResult = vkGetQueryPoolResults(VULKAN_DEVICE,
+            m_TimestampQueryPool,
+            0,
+            m_TimestampQueryIndex,
+            sizeof(uint64_t) * m_TimestampQueryIndex,
+            timestamps.data(),
+            sizeof(uint64_t),
+            VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT
+        );
+
+        if (vkResult != VK_SUCCESS)
+        {
+            LOG_ERROR("Failed to get query pool results! Vulkan Result: {}", vkResult);
+            return result;
+        }
+
+        const double NANOSECONDS_TO_MILLISECONDS = 1'000'000.0;
+        for (auto& labelInfo : m_FinishedLabels)
+        {
+            uint64_t startTimeNs = timestamps[labelInfo.StartQueryIndex];
+            uint64_t endTimeNs = timestamps[labelInfo.EndQueryIndex];
+
+            if (endTimeNs > startTimeNs)
+            {
+                labelInfo.DurationMs = static_cast<float>((endTimeNs - startTimeNs) / NANOSECONDS_TO_MILLISECONDS);
+            }
+
+            result.push_back(labelInfo);
+        }
+
+        return result;
+	}
 
 	void VulkanRHICommandContextImmediate::Flush()
 	{

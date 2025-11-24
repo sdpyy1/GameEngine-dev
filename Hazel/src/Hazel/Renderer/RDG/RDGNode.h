@@ -133,12 +133,14 @@ namespace GameEngine {
 
         void ForEachTexture(const std::function<void(RDGTextureEdgeRef, RDGTextureNodeRef)>& func);
         void ForEachBuffer(const std::function<void(RDGBufferEdgeRef, RDGBufferNodeRef)>& func);
-
+        Color3 GetLabelColor() { return LabelColor; }
+        void SetLabelColor(Color3 color) { LabelColor = color; }
         RDGPassNodeType NodeType() { return nodeType; }
 
     protected:
         RDGPassNodeType nodeType;
         bool isCulled = false;
+        Color3 LabelColor = { 1.0f, 1.0f, 1.0f };
 
         RHIRootSignatureRef rootSignature;
         std::array<RHIDescriptorSetRef, MAX_DESCRIPTOR_SETS> descriptorSets;
@@ -163,7 +165,6 @@ namespace GameEngine {
     private:
         uint32_t passIndex[3] = { 0, 0, 0 };
         RDGPassExecuteFunc execute;
-
         friend class RDGRenderPassBuilder;
         friend class RDGBuilder;
     };
