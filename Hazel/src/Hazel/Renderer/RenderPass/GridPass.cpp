@@ -21,7 +21,7 @@ namespace GameEngine {
         pipelineInfo.rootSignature = m_RootSignature;
         pipelineInfo.vertexShader = m_VertShader;
         pipelineInfo.fragmentShader = m_FragShader;
-		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R8G8B8A8_SRGB;
+		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R8G8B8A8_UNORM;
 		m_Pipeline = RHI->CreateGraphicsPipeline(pipelineInfo);
 	}
 
@@ -30,7 +30,7 @@ namespace GameEngine {
 		auto [w, h] = APP_WINDOWSIZE;
 		RDGTextureHandle viewPort = builder.CreateTexture("ViewPort")
 			.Exetent({ w, h, 1 })
-			.Format(FORMAT_R8G8B8A8_SRGB)
+			.Format(FORMAT_R8G8B8A8_UNORM)
 			.AllowRenderTarget()
 			.Finish();
 		RDGTextureHandle outDepth = builder.CreateTexture("Depth")

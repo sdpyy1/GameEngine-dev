@@ -3,11 +3,7 @@
 
 #include <imgui.h>
 #include <imgui_internal.h>
-#include <glm/gtc/type_ptr.hpp>
-#include "Hazel/Platform/Vulkan/VulkanTexture.h"
-#include "Hazel/Utils/UIUtils.h"
-#include "Hazel/Asset/AssetMetadata.h"
-#include "Hazel/Asset/AssetImporter.h"
+
 #include "Hazel/Renderer/old/Renderer.h"
 #include "Hazel/Scene/Scene.h"
 #include "Hazel/Scene/Entity.h"
