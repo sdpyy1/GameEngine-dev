@@ -36,7 +36,7 @@ namespace GameEngine {
 		for (auto& pass : passes) { if (pass) pass->Build(rdgBuilder); }
 		// Ö´ÐÐRDG
 		rdgBuilder.Execute();
-
+		rdgDependencyGraph = rdgBuilder.GetGraph();
 		CurCommandList->EndCommand();
 		CurCommandList->Execute(CurResource.fence, CurResource.startSemaphore, CurResource.finishSemaphore);
 		m_GPUTimeInfos = CurCommandList->GetGPUTime();

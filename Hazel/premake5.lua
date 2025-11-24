@@ -23,7 +23,8 @@ project "Hazel"
 		"vendor/ImGuizmo/ImGuizmo.h",
 		"vendor/ImGuizmo/ImGuizmo.cpp",
 		"vendor/spirv_reflect/spirv_reflect.c",
-		"%{IncludeDir.VulkanSDK}/Include/Volk/volk.c"  -- 添加编译后会让原来架构找不到Vulkan接口找不到
+		"%{IncludeDir.VulkanSDK}/Include/Volk/volk.c",  -- 添加编译后会让原来架构找不到Vulkan接口找不到
+		-- "%{IncludeDir.imgui_node_editor}/**.cpp"
 	}
 
 	defines
@@ -57,7 +58,8 @@ project "Hazel"
 		"%{IncludeDir.acl}",
 		"%{IncludeDir.rtm}",
 		"%{IncludeDir.spirv_reflect}",
-		"%{IncludeDir.cereal}"
+		"%{IncludeDir.cereal}",
+		"%{IncludeDir.imgui_node_editor}"
 	}
 
 	libdirs

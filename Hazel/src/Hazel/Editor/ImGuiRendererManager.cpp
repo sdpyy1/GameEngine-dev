@@ -12,6 +12,7 @@
 #include "Hazel/Asset/Model/Mesh.h"
 #include <ImGuizmo.h>
 #include "Hazel/Scene/SceneManager.h"
+
 namespace GameEngine {
 	namespace Colors
 	{
@@ -153,6 +154,7 @@ namespace GameEngine {
 		SettingGUI();
 		DebugTexture();
 		GPUTime();
+		DrawGPUProfiler();
 		if (m_FolderPreviewPanel.isOpen)
 			m_FolderPreviewPanel.OnImGuiRender();
 
@@ -161,6 +163,8 @@ namespace GameEngine {
 
 		if (m_LogPanel.isOpen)
 			m_LogPanel.OnImGuiRender();
+		if (m_RDGPanel.isOpen)
+			m_RDGPanel.OnImGuiRender();
 	}
 	void ImGuiRendererManager::ViewportGUI(RHIDescriptorSetRef viewportTexture)
 	{
@@ -521,7 +525,6 @@ namespace GameEngine {
 			}
 			else
 			{
-				// 表格展示（更美观）
 				if (ImGui::BeginTable("GPU Time Table", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
 				{
 					ImGui::TableSetupColumn("Pass");
@@ -541,6 +544,73 @@ namespace GameEngine {
 					ImGui::EndTable();
 				}
 			}
+		}
+
+		ImGui::End();
+	}
+	ImVec4 GetColorForDuration(float ms, float maxMs)
+	{
+		float t = ms / maxMs;
+		// Green → Yellow → Red
+		return ImVec4(
+			t < 0.5f ? 0.0f : (t - 0.5f) * 2.0f,   // Red
+			t < 0.5f ? t * 2.0f : 1.0f,            // Green
+			0.0f,
+			1.0f
+		);
+	}
+	namespace ed = ax::NodeEditor;
+
+	void ImGuiRendererManager::DrawGPUProfiler() {
+		ImGui::Begin("GPU Profiler");
+
+		if (m_GPUTimeInfo.empty())
+		{
+			ImGui::TextDisabled("No GPU timing data captured.");
+			ImGui::End();
+			return;
+		}
+
+		// 计算总帧 GPU 耗时
+		float totalFrameMs = 0.0f;
+		for (auto& info : m_GPUTimeInfo)
+			totalFrameMs += info.DurationMs;
+
+		ImGui::Text("Total GPU Frame Time: %.3f ms", totalFrameMs);
+		ImGui::Separator();
+
+		// 树状结构开始
+		if (ImGui::TreeNode("Passes"))
+		{
+			const float barMaxWidth = 200.0f;
+
+			for (auto& info : m_GPUTimeInfo)
+			{
+				// pass 节点
+				if (ImGui::TreeNode(info.Name.c_str()))
+				{
+					float percent = info.DurationMs / totalFrameMs;
+					ImVec4 color = GetColorForDuration(info.DurationMs, totalFrameMs);
+
+					ImGui::Text("Time: %.3f ms (%.1f%%)", info.DurationMs, percent * 100.0f);
+
+					// 条状图背景色
+					ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
+
+					// 绘制条状图
+					ImGui::ProgressBar(
+						percent,
+						ImVec2(barMaxWidth, 0.0f),
+						""
+					);
+
+					ImGui::PopStyleColor();
+
+					ImGui::TreePop();
+				}
+			}
+
+			ImGui::TreePop();
 		}
 
 		ImGui::End();

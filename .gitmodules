@@ -32,3 +32,6 @@
 [submodule "Hazel/vendor/cereal"]
 	path = Hazel/vendor/cereal
 	url = https://github.com/USCiLab/cereal.git
+[submodule "Hazel/vendor/imgui_node_editor"]
+	path = Hazel/vendor/imgui_node_editor
+	url = https://github.com/thedmd/imgui-node-editor.git

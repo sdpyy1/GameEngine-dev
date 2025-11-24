@@ -18,6 +18,8 @@ namespace GameEngine
 		DynamicRHIRef GetRHI() { return m_DynamicRHI; }
 		std::vector<RHIGPUTimeInfo>& GetGPUTimeInfos() { return m_GPUTimeInfos; }
 		std::shared_ptr<RenderResourceManager> GetRenderResourceManager() { return m_RenderResourceManager; }
+		DependencyGraphRef GetRDGDependenctyGraph() { return rdgDependencyGraph; }
+
 	private:
 		std::shared_ptr<RenderResourceManager> m_RenderResourceManager;
 		DynamicRHIRef m_DynamicRHI;
@@ -35,6 +37,7 @@ namespace GameEngine
 		};
 		std::array<PerFrameBaseResource, FRAMES_IN_FLIGHT> m_PerFrameBaseResources;
 		std::array<std::shared_ptr<RenderPassNew>, PASS_TYPE_MAX_CNT> passes;
+		DependencyGraphRef rdgDependencyGraph;
 
 	};
 

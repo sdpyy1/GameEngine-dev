@@ -5,6 +5,7 @@
 #include "Panels/LogPanel.h"
 #include <Hazel/Asset/Model/Mesh.h>
 #include <Hazel/Renderer/RDG/RDGHandle.h>
+#include "Panels/RDGPanel.h"
 namespace GameEngine {
 	class SubMesh;
 	class ImGuiRendererManager
@@ -23,6 +24,7 @@ namespace GameEngine {
 		void SettingGUI();
 		void DebugTexture();
 		void GPUTime();
+		void DrawGPUProfiler();
 		static std::shared_ptr<ImGuiRendererManager> Create();
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
 		std::pair<float, float> GetMouseViewportSpace(); // NDC×ø±ê
@@ -40,6 +42,7 @@ namespace GameEngine {
 		AssetManagerPanel m_AssetManagerPanel;
 		FolderPreviewPanel m_FolderPreviewPanel{ "assets" };
 		ImGuiLogPanel m_LogPanel;
+        RDGPanel m_RDGPanel;
 		//×´Ì¬
 		ImVec2 m_ViewportBounds[2] = { {0,0},{1216,849} };
 		bool isMouseInViewport = false;

@@ -53,7 +53,7 @@ namespace GameEngine
         static Application& Get() { return *s_Instance; }
         static std::shared_ptr<SceneManager> GetSceneManager() { return Get().m_SceneManager; }
         static std::shared_ptr<RendererManager> GetRendererManager();
-
+        static uint32_t GetTotalTick() { return Get().tick; }
     private:
         bool OnWindowClose(WindowCloseEvent& e);
         bool OnWindowResize(WindowResizeEvent& e);
@@ -74,7 +74,7 @@ namespace GameEngine
         std::shared_ptr<SceneManager> m_SceneManager;
 
         uint32_t m_CurrentFrameIndex = 0;
-
+        uint32_t tick = 0;
 
 
     // New

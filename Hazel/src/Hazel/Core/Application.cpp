@@ -57,7 +57,7 @@ namespace GameEngine {
 			}
 			m_WindowManager->Tick();
 			m_CurrentFrameIndex = (m_CurrentFrameIndex + 1) % FRAMES_IN_FLIGHT;
-
+			tick++;
 		}
 	}
 	float Application::GetTimePreFrame()
