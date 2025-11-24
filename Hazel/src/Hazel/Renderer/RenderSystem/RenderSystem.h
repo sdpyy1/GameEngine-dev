@@ -4,7 +4,7 @@
 #include "Hazel/Renderer/RenderPass/RenderPass.h"
 #include "Hazel/Core/Definations.h"
 #include <Hazel/Renderer/RenderResource/RenderResourceManager.h>
-#define RENDER_RENDERRESOURCE APP_RENDERSYSTEM->GetRenderResourceManager()
+#define RENDER_RESOURCEMANAGER APP_RENDERSYSTEM->GetRenderResourceManager()
 namespace GameEngine
 {
 	class RenderSystem

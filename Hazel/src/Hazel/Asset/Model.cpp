@@ -1,20 +1,18 @@
 #include "hzpch.h"
 #include "Model.h"
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#include <assimp/Importer.hpp>
+#include "Hazel/Renderer/RenderResource/Material.h"
 
 namespace GameEngine {
 	Model::Model(std::string path, ModelProcessSetting processSetting) : path(path), processSetting(processSetting) {}
 
 	void Model::OnLoadAsset()
 	{
+        LoadFromFile(path);
 
 	}
 
 	void Model::OnSaveAsset()
 	{
-		LoadFromFile(path);
 
 	}
 
@@ -40,7 +38,7 @@ namespace GameEngine {
 		submeshes.resize(processMeshes.size());
 		if (processSetting.loadMaterials) materials.resize(processMeshes.size());
 
-		//并行加载各个子mesh
+        // Submesh
 		for (int i = 0; i < processMeshes.size(); i++)
 		{
 			aiMesh* mesh = processMeshes[i];
@@ -67,21 +65,17 @@ namespace GameEngine {
 		{
 			
 		}
-
-
 	}
 
 
 	void Model::ProcessNode(aiNode* node, const aiScene* scene, std::vector<aiMesh*>& processMeshes)
 	{
-		// 处理节点所有的网格（如果有的话）
 		for (uint32_t i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
 			processMeshes.push_back(mesh);
 		}
-		// 接下来对它的子节点重复这一过程
 		for (uint32_t i = 0; i < node->mNumChildren; i++)
 		{
 			ProcessNode(node->mChildren[i], scene, processMeshes);
@@ -90,62 +84,53 @@ namespace GameEngine {
 
 	void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene, int index)
 	{
-        std::shared_ptr<Mesh> submesh = std::make_shared<Mesh>();
+        std::shared_ptr<V2::Mesh> submesh = std::make_shared<V2::Mesh>();
 
-        // 处理顶点位置
+        // 顶点位置
         submesh->position = std::vector<glm::vec3>(mesh->mNumVertices);
         for (uint32_t i = 0; i < mesh->mNumVertices; i++)
         {
-            submesh->position[i](0) = mesh->mVertices[i].x;
-            submesh->position[i](1) = mesh->mVertices[i].y;
-            submesh->position[i](2) = mesh->mVertices[i].z;
+            submesh->position[i].x = mesh->mVertices[i].x;
+            submesh->position[i].y = mesh->mVertices[i].y;
+            submesh->position[i].z = mesh->mVertices[i].z;
         }
 
-        // 处理顶点法线
+        // 顶点法线
         if (mesh->mNormals)
         {
             submesh->normal = std::vector<glm::vec3>(mesh->mNumVertices);
             for (uint32_t i = 0; i < mesh->mNumVertices; i++)
             {
-                submesh->normal[i](0) = mesh->mNormals[i].x;
-                submesh->normal[i](1) = mesh->mNormals[i].y;
-                submesh->normal[i](2) = mesh->mNormals[i].z;
+                submesh->normal[i].x = mesh->mNormals[i].x;
+                submesh->normal[i].y = mesh->mNormals[i].y;
+                submesh->normal[i].z = mesh->mNormals[i].z;
             }
         }
 
-        // 处理顶点颜色
+        // 顶点颜色
         if (mesh->mColors[0])
         {
             submesh->color = std::vector<glm::vec3>(mesh->mNumVertices);
             for (uint32_t i = 0; i < mesh->mNumVertices; i++)
             {
-                submesh->color[i](0) = mesh->mColors[0][i].r;
-                submesh->color[i](1) = mesh->mColors[0][i].g;
-                submesh->color[i](2) = mesh->mColors[0][i].b;
+                submesh->color[i].x = mesh->mColors[0][i].r;
+                submesh->color[i].y = mesh->mColors[0][i].g;
+                submesh->color[i].z = mesh->mColors[0][i].b;
             }
         }
 
-        // 处理顶点纹理坐标
+        // 顶点纹理坐标
         if (mesh->mTextureCoords[0])
         {
             submesh->texCoord = std::vector<glm::vec2>(mesh->mNumVertices);
             for (uint32_t i = 0; i < mesh->mNumVertices; i++)
             {
-                submesh->texCoord[i](0) = mesh->mTextureCoords[0][i].x;
-                submesh->texCoord[i](1) = mesh->mTextureCoords[0][i].y;
+                submesh->texCoord[i].x = mesh->mTextureCoords[0][i].x;
+                submesh->texCoord[i].y = mesh->mTextureCoords[0][i].y;
             }
         }
-        // if (mesh->mTextureCoords[1])
-        // {
-        //     submesh->texCoord = std::vector<Vec2>(mesh->mNumVertices);
-        //     for (uint32_t i = 0; i < mesh->mNumVertices; i++)
-        //     {  
-        //         submesh->texCoord[i](0) = mesh->mTextureCoords[1][i].x;
-        //         submesh->texCoord[i](1) = mesh->mTextureCoords[1][i].y;    
-        //     }
-        // }
+        
 
-        // 处理索引,已经三角面化了就全当3处理了
         submesh->index = std::vector<uint32_t>(mesh->mNumFaces * 3);
 
         int tempCnt = 0;
@@ -159,16 +144,15 @@ namespace GameEngine {
             tempCnt += face.mNumIndices;
         }
 
-        // 处理顶点切线
         if (mesh->mTangents)
         {
             submesh->tangent = std::vector<glm::vec4>(mesh->mNumVertices);
             for (uint32_t i = 0; i < mesh->mNumVertices; i++)
             {
-                submesh->tangent[i](0) = mesh->mTangents[i].x;
-                submesh->tangent[i](1) = mesh->mTangents[i].y;
-                submesh->tangent[i](2) = mesh->mTangents[i].z;
-                submesh->tangent[i](3) = 1.0f;  //最后一位为符号(手性)
+                submesh->tangent[i].x = mesh->mTangents[i].x;
+                submesh->tangent[i].y = mesh->mTangents[i].y;
+                submesh->tangent[i].z = mesh->mTangents[i].z;
+                submesh->tangent[i].w = 1.0f;  //最后一位为符号(手性)
             }
         }
         else if (processSetting.tangentSpace)
@@ -181,10 +165,10 @@ namespace GameEngine {
             }
             else
             {
-                submesh->tangent = std::vector<Vec4>(mesh->mNumVertices);
+                //submesh->tangent = std::vector<glm::vec4>(mesh->mNumVertices);
 
-                TangentSpace tangentCalculator = TangentSpace();
-                tangentCalculator.Generate(submesh.get());  // 需要先把上面的信息准备完成
+                //TangentSpace tangentCalculator = TangentSpace();
+                //tangentCalculator.Generate(submesh.get());  // 需要先把上面的信息准备完成    TODO: 切线空间！！！！
             }
         }
 
@@ -195,7 +179,7 @@ namespace GameEngine {
 
             if (materials[index] == nullptr) // 首次创建；后续通过序列化创建时会绑定第一次创建的材质
             {
-                materials[index] = std::make_shared<Material>();
+                materials[index] = std::make_shared<V2::Material>();
                 std::shared_ptr<V2::Texture> diffuse = LoadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
                 std::shared_ptr<V2::Texture> normal = LoadMaterialTexture(aiMaterial, aiTextureType_NORMALS);
                 std::shared_ptr<V2::Texture> specular = LoadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
@@ -211,7 +195,7 @@ namespace GameEngine {
         if (mesh->HasBones())   ExtractBoneWeights(submesh.get(), mesh, scene);
 
         // 处理包围盒
-        submesh->aabb = AxisAlignedBox(submesh->position[0], Vec3::Zero());
+        submesh->aabb = AxisAlignedBox(submesh->position[0], glm::zero<glm::vec3>());
         for (uint32_t i = 0; i < mesh->mNumVertices; i++)   submesh->aabb.Merge(submesh->position[i]);
         submesh->sphere = BoundingSphere(submesh->aabb);
         submesh->box = BoundingBox(submesh->aabb);
@@ -237,73 +221,96 @@ namespace GameEngine {
            
         }
 	}
-    void Model::ExtractBoneWeights(Mesh* submesh, aiMesh* mesh, const aiScene* scene)
+    void Model::ExtractBoneWeights(V2::Mesh* submesh, aiMesh* mesh, const aiScene* scene)
     {
-        submesh->boneIndex = std::vector<IVec4>(mesh->mNumVertices);
-        submesh->boneWeight = std::vector<Vec4>(mesh->mNumVertices);
+        LOG_TRACE("Find Bone Info. Extracting bone weights...");
+        submesh->boneIndex = std::vector<glm::ivec4>(mesh->mNumVertices);
+        submesh->boneWeight = std::vector<glm::vec4>(mesh->mNumVertices);
 
         // 将骨骼相关信息初始化
         for (int i = 0; i < mesh->mNumVertices; i++)
         {
-            for (int j = 0; j < 4; j++)
-            {
-                submesh->boneIndex[i](j) = -1;
-                submesh->boneWeight[i](j) = 0.0f;
-            }
+            submesh->boneIndex[i] = glm::ivec4(-1);
+            submesh->boneWeight[i] = glm::vec4(.0f);
         }
 
-        // 遍历骨骼
+        // 遍历mesh的骨骼
         for (uint32_t index = 0; index < mesh->mNumBones; ++index)
         {
             int boneIndex = -1;
             std::string boneName = mesh->mBones[index]->mName.C_Str();
 
+            // 判断当前骨骼是不是在当前submesh上
             bool find = false;
             for (int i = 0; i < submesh->bone.size(); i++)
             {
-                if (submesh->bone[i].name.compare(boneName) == 0)
+                if (submesh->bone[i].name.compare(boneName) == 0)  // 当前骨骼是在当前submesh上
                 {
                     boneIndex = submesh->bone[i].index;
                     find = true;
                     break;
                 }
             }
+
+            // 不是在当前Submesh上
             if (!find)
             {
-                BoneInfo newBoneInfo;
+                V2::BoneInfo newBoneInfo;
                 newBoneInfo.index = (int)submesh->bone.size();
                 newBoneInfo.name = boneName;
                 for (int i = 0; i < 4; i++)
                 {
                     for (int j = 0; j < 4; j++)
                     {
-                        newBoneInfo.offset(i, j) = mesh->mBones[index]->mOffsetMatrix[i][j];
+                        newBoneInfo.offset[i][j] = mesh->mBones[index]->mOffsetMatrix[i][j];
                     }
                 }
-                newBoneInfo.offset.transposeInPlace();  // 要做一个转置？
+                // newBoneInfo.offset.transposeInPlace();  // 要做一个转置？
                 newBoneInfo.name = std::string(boneName);
                 submesh->bone.push_back(newBoneInfo);
 
                 boneIndex = newBoneInfo.index;
             }
 
-            auto weights = mesh->mBones[index]->mWeights;
-            int numWeights = mesh->mBones[index]->mNumWeights;
+            auto weights = mesh->mBones[index]->mWeights;  // 当前骨骼对所有顶点的权重
+            int numWeights = mesh->mBones[index]->mNumWeights;  // 当前骨骼影响了多少顶点
 
             // 处理和该骨骼相关的顶点
             for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
             {
+                // 骨骼index对顶点vertexId的权重是weight
                 int vertexId = weights[weightIndex].mVertexId;
                 float weight = weights[weightIndex].mWeight;
 
+
+                // 看vertexId对应顶点绑定的骨骼是否已满，选一个没用的位置设置骨骼和骨骼权重
                 for (int i = 0; i < 4; ++i)
                 {
-                    if (submesh->boneIndex[vertexId](i) < 0)
-                    {
-                        submesh->boneIndex[vertexId](i) = boneIndex;
-                        submesh->boneWeight[vertexId](i) = weight;
-                        break;
+                   if (submesh->boneIndex[vertexId].x < 0)
+                   {
+                       submesh->boneIndex[vertexId].x = boneIndex;
+                       submesh->boneWeight[vertexId].x = weight;
+                       break;
                     }
+                   if (submesh->boneIndex[vertexId].y < 0)
+                   {
+                       submesh->boneIndex[vertexId].y = boneIndex;
+                       submesh->boneWeight[vertexId].y = weight;
+                       break;
+                   }
+                   if (submesh->boneIndex[vertexId].z < 0)
+                   {
+                       submesh->boneIndex[vertexId].z = boneIndex;
+                       submesh->boneWeight[vertexId].z = weight;
+                       break;
+                   }
+                   if (submesh->boneIndex[vertexId].w < 0)
+                   {
+                       submesh->boneIndex[vertexId].w = boneIndex;
+                       submesh->boneWeight[vertexId].w = weight;
+                       break;
+                   }
+
                 }
             }
         }
@@ -317,14 +324,19 @@ namespace GameEngine {
             aiString str;
             mat->GetTexture(type, i, &str);
 
-            std::string texturePath = EngineContext::File()->RemoveFilename(path).append("/").append(str.C_Str());
+            std::string texturePath = str.C_Str();
 
             auto iter = textureMap.find(texturePath);   // 先从缓存中找
             if (iter != textureMap.end())    return iter->second;
             else
             {
-                std::shared_ptr<V2::Texture> texture = std::make_shared<V2::Texture>(texturePath);
-                // EngineContext::Asset()->SaveAsset(texture);
+                V2::TextureSpec textureSpec;
+                std::filesystem::path fs_path(path);
+                fs_path = fs_path.parent_path();
+                std::filesystem::path new_texture_path = fs_path / texturePath;
+                textureSpec.path = new_texture_path.string();
+                std::shared_ptr<V2::Texture> texture = std::make_shared<V2::Texture>(textureSpec);
+                LOG_TRACE("Load Texture: {0}", textureSpec.path);
                 textureMap[texturePath] = texture;
                 return texture;
             }

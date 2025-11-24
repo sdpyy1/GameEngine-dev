@@ -18,7 +18,7 @@ namespace GameEngine {
 		Mesh,
 		StaticMesh,
 		MeshSource,
-		Material,
+		MaterialOld,
 		Texture,
 		EnvMap,
 		Audio,
@@ -45,7 +45,7 @@ namespace GameEngine {
 			if (assetType == "StaticMesh")          return AssetType::StaticMesh;
 			if (assetType == "MeshAsset")           return AssetType::MeshSource; // DEPRECATED
 			if (assetType == "MeshSource")          return AssetType::MeshSource;
-			if (assetType == "Material")            return AssetType::Material;
+			if (assetType == "Material")            return AssetType::MaterialOld;
 			if (assetType == "Texture")             return AssetType::Texture;
 			if (assetType == "EnvMap")              return AssetType::EnvMap;
 			if (assetType == "Audio")               return AssetType::Audio;
@@ -73,7 +73,7 @@ namespace GameEngine {
 			case AssetType::Mesh:                return "Mesh";
 			case AssetType::StaticMesh:          return "StaticMesh";
 			case AssetType::MeshSource:          return "MeshSource";
-			case AssetType::Material:            return "Material";
+			case AssetType::MaterialOld:            return "Material";
 			case AssetType::Texture:             return "Texture";
 			case AssetType::EnvMap:              return "EnvMap";
 			case AssetType::Audio:               return "Audio";

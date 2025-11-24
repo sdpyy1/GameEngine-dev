@@ -5,7 +5,7 @@
 #include "Hazel/Renderer/old/RendererAPI.h"
 
 namespace GameEngine {
-	Ref<Material> Material::Create(const Ref<Shader>& shader, const std::string& name)
+	Ref<MaterialOld> MaterialOld::Create(const Ref<Shader>& shader, const std::string& name)
 	{
 		switch (RendererAPI::Current())
 		{
@@ -16,7 +16,7 @@ namespace GameEngine {
 		return nullptr;
 	}
 
-	MaterialPush Material::BuildPush()
+	MaterialPush MaterialOld::BuildPush()
 	{
 		MaterialPush push;
 		push.AlbedoColor = m_AlbedoColor;

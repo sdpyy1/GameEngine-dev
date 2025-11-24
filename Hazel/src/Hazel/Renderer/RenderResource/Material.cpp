@@ -1,0 +1,60 @@
+#include "hzpch.h"
+#include "Material.h"
+#include "Hazel/Core/Application.h"
+#include <Hazel/Renderer/RenderSystem/RenderSystem.h>
+namespace GameEngine::V2
+{ 
+	Material::Material()
+	{
+		materialID = RENDER_RESOURCEMANAGER->AllocateMaterialID();   // 在MaterialInfoBuffer中分配一个ID
+		Update();
+	}
+
+	Material::~Material()
+	{
+		if ( materialID != 0) RENDER_RESOURCEMANAGER->ReleaseMaterialID(materialID);
+	}
+
+	void Material::Update()
+	{
+        materialInfo = {};
+        materialInfo.roughness = roughness;
+        materialInfo.metallic = metallic;
+        materialInfo.alphaClip = alphaClip;
+        materialInfo.useNormaltexture = useNormalTexture;
+        materialInfo.diffuse = diffuse;
+        materialInfo.emission = emission;
+
+        if (textureDiffuse)  materialInfo.textureDiffuse = textureDiffuse->GetbindlessID();
+        if (textureNormal)   materialInfo.textureNormal = textureNormal->GetbindlessID();
+        if (textureArm)      materialInfo.textureArm = textureArm->GetbindlessID();
+        if (textureSpecular) materialInfo.textureSpecular = textureSpecular->GetbindlessID();
+
+        materialInfo.ints = ints;
+        materialInfo.floats = floats;
+        materialInfo.colors = colors;
+        for (uint32_t i = 0; i < 8; i++)
+        {
+            if (texture2D[i]) materialInfo.texture2D[i] = texture2D[i]->GetbindlessID();
+        }
+        for (uint32_t i = 0; i < 4; i++)
+        {
+            if (textureCube[i]) materialInfo.textureCube[i] = textureCube[i]->GetbindlessID();
+            if (texture3D[i]) materialInfo.texture3D[i] = texture3D[i]->GetbindlessID();
+        }
+
+        RENDER_RESOURCEMANAGER->SetMaterialInfo(materialInfo, materialID);
+	}
+
+	void Material::OnLoadAsset()
+	{
+
+	}
+
+	void Material::OnSaveAsset()
+	{
+
+	}
+
+
+}

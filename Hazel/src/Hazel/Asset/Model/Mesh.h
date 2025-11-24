@@ -119,7 +119,7 @@ namespace GameEngine {
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
 		std::vector<Submesh>& GetSubmeshes() { return m_Submeshes; }
 		AssetHandle GetMaterialHandle(uint32_t index) { return m_Materials[index]; } // ·µ»ØµÄÊÇMaterialAsset
-		Ref<Material> GetMaterial(uint32_t index){ return AssetManager::GetAsset<MaterialAsset>(GetMaterialHandle(index))->GetMaterial();} // Material
+		Ref<MaterialOld> GetMaterial(uint32_t index){ return AssetManager::GetAsset<MaterialAsset>(GetMaterialHandle(index))->GetMaterial();} // Material
 		bool HasSkeleton() const { return (bool)m_Skeleton; }
 		const Skeleton* GetSkeleton() const { return m_Skeleton.get(); }
 		const Animation* GetAnimation(const std::string& animationName, const Skeleton& skeleton, const bool isMaskedRootMotion, const glm::vec3& rootTranslationMask, float rootRotationMask) const;

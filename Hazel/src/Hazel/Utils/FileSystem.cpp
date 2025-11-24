@@ -264,7 +264,7 @@ namespace GameEngine {
 		std::ifstream file(name, std::ios::ate | std::ios::binary);
 		if (!file.is_open())
 		{
-			LOG_WARN("Failed to load binary file {}!", filename.c_str());
+			LOG_ERROR("Failed to load binary file {}!", filename.c_str());
 			return false;
 		}
 

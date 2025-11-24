@@ -4,7 +4,7 @@
 #include "DescriptorManager.h"
 namespace GameEngine {
 	// 关于材质的资源描述符全部放在Set=1
-	class VulkanMaterial : public Material
+	class VulkanMaterial : public MaterialOld
 	{
 	public:
 		VulkanMaterial(const Ref<Shader>& shader, const std::string& name = "");

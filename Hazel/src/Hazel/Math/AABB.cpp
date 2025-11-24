@@ -1,5 +1,6 @@
 #include "hzpch.h"
 #include "AABB.h"
+#include <glm/gtx/norm.hpp>
 namespace GameEngine {
     AxisAlignedBox::AxisAlignedBox(const glm::vec3& center, const glm::vec3& halfExtent) { Update(center, halfExtent); }
 
@@ -28,129 +29,168 @@ namespace GameEngine {
         this->maxCorner = center + halfExtent;
     }
 
-    BoundingSphere::BoundingSphere(const std::vector<glm::vec3>& points)
+    glm::vec4 computeBoundingSphere(const std::vector<glm::vec3>& points)
     {
+        if (points.empty()) {
+            return glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+        }
         if (points.size() == 1)
         {
-            center = points[0];
-            radius = 0;
+            return glm::vec4(points[0], 0.0f);
         }
         else if (points.size() == 2)
         {
-            center = (points[0] + points[1]).array() / glm::vec3::Constant(2.0f).array();
-            radius = (points[1] - center).norm();
+            glm::vec3 center = (points[0] + points[1]) * 0.5f;
+            float radius = glm::distance(points[0], points[1]) * 0.5f;
+            return glm::vec4(center, radius);
         }
-        else
+
+        auto min_x_it = std::min_element(points.begin(), points.end(), [](const glm::vec3& a, const glm::vec3& b) { return a.x < b.x; });
+        auto max_x_it = std::max_element(points.begin(), points.end(), [](const glm::vec3& a, const glm::vec3& b) { return a.x < b.x; });
+        auto min_y_it = std::min_element(points.begin(), points.end(), [](const glm::vec3& a, const glm::vec3& b) { return a.y < b.y; });
+        auto max_y_it = std::max_element(points.begin(), points.end(), [](const glm::vec3& a, const glm::vec3& b) { return a.y < b.y; });
+        auto min_z_it = std::min_element(points.begin(), points.end(), [](const glm::vec3& a, const glm::vec3& b) { return a.z < b.z; });
+        auto max_z_it = std::max_element(points.begin(), points.end(), [](const glm::vec3& a, const glm::vec3& b) { return a.z < b.z; });
+
+        float dist_sq_x = glm::length2(*max_x_it - *min_x_it);
+        float dist_sq_y = glm::length2(*max_y_it - *min_y_it);
+        float dist_sq_z = glm::length2(*max_z_it - *min_z_it);
+
+        float max_dist_sq = std::max({ dist_sq_x, dist_sq_y, dist_sq_z });
+
+        glm::vec3 p1, p2;
+        if (max_dist_sq == dist_sq_x) {
+            p1 = *min_x_it;
+            p2 = *max_x_it;
+        }
+        else if (max_dist_sq == dist_sq_y) {
+            p1 = *min_y_it;
+            p2 = *max_y_it;
+        }
+        else {
+            p1 = *min_z_it;
+            p2 = *max_z_it;
+        }
+
+        glm::vec3 center = (p1 + p2) * 0.5f;
+        float radius = glm::sqrt(max_dist_sq) * 0.5f;
+        float radius_sq = radius * radius;
+
+        for (const auto& p : points)
         {
-            uint32_t minIndex[3] = {};
-            uint32_t maxIndex[3] = {};
-            for (uint32_t i = 0; i < points.size(); i++)
+            float dist_sq_to_center = glm::length2(p - center);
+
+            if (dist_sq_to_center > radius_sq)
             {
-                for (int k = 0; k < 3; k++)
-                {
-                    if (points[i](k) < points[minIndex[k]](k)) minIndex[k] = i;
-                    if (points[i](k) > points[maxIndex[k]](k)) maxIndex[k] = i;
-                }
-            }
+                float dist_to_center = glm::sqrt(dist_sq_to_center);
 
-            float maxLength = 0;
-            uint32_t max_axis = 0;
-            for (uint32_t k = 0; k < 3; k++)
-            {
-                glm::vec3 pmin = points[minIndex[k]];
-                glm::vec3 pmax = points[maxIndex[k]];
-                float tlen = pow((pmax - pmin).norm(), 2);
-                if (tlen > maxLength) maxLength = tlen, max_axis = k;
-            }
-            glm::vec3 pmin = points[minIndex[max_axis]];
-            glm::vec3 pmax = points[maxIndex[max_axis]];
+                radius = (radius + dist_to_center) * 0.5f;
+                radius_sq = radius * radius;
 
-
-            center = (pmin + pmax) * 0.5f;
-            radius = float(0.5 * sqrt(maxLength));
-            maxLength = radius * radius;
-
-            for (uint32_t i = 0; i < points.size(); i++)
-            {
-                float len = pow((points[i] - center).norm(), 2);
-                if (len > maxLength)
-                {
-                    len = sqrt(len);
-                    float t = 0.5 - 0.5 * (radius / len);
-                    center = center + (points[i] - center) * t;
-                    radius = (radius + len) * 0.5;
-                    maxLength = radius * radius;
-                }
-            }
-
-            for (uint32_t i = 0; i < points.size(); i++)
-            {
-                float len = (points[i] - center).norm();
-                assert(len - 1e-1 <= radius);   //?
+                center += (p - center) * ((dist_to_center - radius) / dist_to_center);
             }
         }
+        return glm::vec4(center, radius);
     }
+    static BoundingSphere mergeSpheres(const BoundingSphere& a, const BoundingSphere& b)
+    {
+        BoundingSphere result;
+        glm::vec3 dir = b.center - a.center;
+        float distance_sq = glm::dot(dir, dir);
+        float distance = glm::sqrt(distance_sq);
 
+        // 情况1：如果一个球完全包含另一个球
+        if (distance + a.radius <= b.radius + 1e-5f) {
+            return b;
+        }
+        if (distance + b.radius <= a.radius + 1e-5f) {
+            return a;
+        }
+
+        // 情况2：两个球部分重叠或完全分离
+        result.radius = (distance + a.radius + b.radius) * 0.5f;
+
+        // 避免除以零（当两球心完全重合时）
+        if (distance > 1e-6f) {
+            result.center = a.center + dir * ((result.radius - a.radius) / distance);
+        }
+        else {
+            result.center = a.center; 
+        }
+
+        return result;
+    }
     BoundingSphere::BoundingSphere(const std::vector<BoundingSphere>& spheres)
     {
-        uint32_t minIndex[3] = {};
-        uint32_t maxIndex[3] = {};
-        for (uint32_t i = 0; i < spheres.size(); i++)
-        {
-            for (uint32_t k = 0; k < 3; k++)
-            {
-                if (spheres[i].center(k) - spheres[i].radius < spheres[minIndex[k]].center(k) - spheres[minIndex[k]].radius)
-                    minIndex[k] = i;
-                if (spheres[i].center(k) + spheres[i].radius < spheres[maxIndex[k]].center(k) + spheres[maxIndex[k]].radius)
-                    maxIndex[k] = i;
-            }
+        if (spheres.empty()) {
+            *this = BoundingSphere(); 
+            return;
         }
+        auto min_x_it = std::min_element(spheres.begin(), spheres.end(),
+            [](const BoundingSphere& s1, const BoundingSphere& s2) {
+                return (s1.center.x - s1.radius) < (s2.center.x - s2.radius);
+            });
+        auto max_x_it = std::max_element(spheres.begin(), spheres.end(),
+            [](const BoundingSphere& s1, const BoundingSphere& s2) {
+                return (s1.center.x + s1.radius) < (s2.center.x + s2.radius);
+            });
 
-        float maxLength = 0;
-        uint32_t max_axis = 0;
-        for (uint32_t k = 0; k < 3; k++)
-        {
-            BoundingSphere spmin = spheres[minIndex[k]];
-            BoundingSphere spmax = spheres[maxIndex[k]];
-            float tlen = (spmax.center - spmin.center).norm() + spmax.radius + spmin.radius;
-            if (tlen > maxLength) maxLength = tlen, max_axis = k;
+        auto min_y_it = std::min_element(spheres.begin(), spheres.end(),
+            [](const BoundingSphere& s1, const BoundingSphere& s2) {
+                return (s1.center.y - s1.radius) < (s2.center.y - s2.radius);
+            });
+        auto max_y_it = std::max_element(spheres.begin(), spheres.end(),
+            [](const BoundingSphere& s1, const BoundingSphere& s2) {
+                return (s1.center.y + s1.radius) < (s2.center.y + s2.radius);
+            });
+
+        auto min_z_it = std::min_element(spheres.begin(), spheres.end(),
+            [](const BoundingSphere& s1, const BoundingSphere& s2) {
+                return (s1.center.z - s1.radius) < (s2.center.z - s2.radius);
+            });
+        auto max_z_it = std::max_element(spheres.begin(), spheres.end(),
+            [](const BoundingSphere& s1, const BoundingSphere& s2) {
+                return (s1.center.z + s1.radius) < (s2.center.z + s2.radius);
+            });
+        float dist_x = glm::distance(min_x_it->center, max_x_it->center);
+        float dist_y = glm::distance(min_y_it->center, max_y_it->center);
+        float dist_z = glm::distance(min_z_it->center, max_z_it->center);
+
+        float max_dist = std::max({ dist_x, dist_y, dist_z });
+
+        BoundingSphere current_sphere;
+        if (max_dist == dist_x) {
+            current_sphere = mergeSpheres(*min_x_it, *max_x_it);
         }
-
-        BoundingSphere sphere = spheres[minIndex[max_axis]];
-        sphere = sphere + spheres[maxIndex[max_axis]];
-        for (uint32_t i = 0; i < spheres.size(); i++)
-        {
-            sphere = sphere + spheres[i];
+        else if (max_dist == dist_y) {
+            current_sphere = mergeSpheres(*min_y_it, *max_y_it);
         }
-
-        for (uint32_t i = 0; i < spheres.size(); i++)
-        {
-            float t1 = pow(sphere.radius - spheres[i].radius, 2);
-            float t2 = pow((sphere.center - spheres[i].center).norm(), 2);
-            assert(t1 + 1e-1 >= t2);
+        else {
+            current_sphere = mergeSpheres(*min_z_it, *max_z_it);
         }
-
-        this->center = sphere.center;
-        this->radius = sphere.radius;
+        for (const auto& s : spheres) {
+            current_sphere = mergeSpheres(current_sphere, s);
+        }
+        this->center = current_sphere.center;
+        this->radius = current_sphere.radius;
     }
-
     BoundingSphere::BoundingSphere(const BoundingBox& box)
     {
-        center = (box.maxBound + box.minBound).array() / glm::vec3::Constant(2.0f).array(); //简单的外接球
-        radius = (box.maxBound - center).norm();
+        center = (box.maxBound + box.minBound)/ glm::vec3(2.0f);
+        radius = glm::length(box.maxBound - center);
     }
 
     BoundingSphere::BoundingSphere(const AxisAlignedBox& box)
     {
-        center = box.GetCenter();                   //简单的外接球
-        radius = box.GetHalfExtent().norm();
+        center = box.GetCenter();
+        radius = glm::length(box.GetHalfExtent());
     }
 
     BoundingSphere BoundingSphere::operator+(const BoundingSphere& other)
     {
         glm::vec3 t = other.center - center;
 
-        float tlen2 = pow(t.norm(), 2);
+        float tlen2 = pow(glm::length(t), 2);
         if (pow(radius - other.radius, 2) >= tlen2)
         {
             return radius < other.radius ? other : *this;
@@ -164,7 +204,7 @@ namespace GameEngine {
         return sphere;
     }
 
-    Frustum CreateFrustumFromMatrix(Mat4 mat,
+    Frustum CreateFrustumFromMatrix(glm::mat4 mat,
         float     x_left,
         float     x_right,
         float     y_top,
@@ -173,178 +213,112 @@ namespace GameEngine {
         float     z_far)
     {
         Frustum frustum;
+        glm::mat4 matColumn = glm::transpose(mat);
+        frustum.planeRight = matColumn[0] - matColumn[3] * x_right;
+        frustum.planeLeft = matColumn[3] * x_left - matColumn[0];
+        frustum.planeTop = matColumn[3] * y_top - matColumn[1];
+        frustum.planeBottom = matColumn[1] - matColumn[3] * y_bottom;
+        frustum.planeNear = matColumn[3] * z_near - matColumn[2];
+        frustum.planeFar = matColumn[2] - matColumn[3] * z_far;
 
-        // the following is in the vulkan space
-        // note that the Y axis is flipped in Vulkan
+        auto normalizePlane = [](glm::vec4& plane) {
+            glm::vec3 normal(plane.x, plane.y, plane.z);
+            float length = glm::length(normal);
+            if (length > 1e-6f) {
+                plane /= length;
+            }
+            };
 
-        // calculate the tiled frustum
-        // [Fast Extraction of Viewing Frustum Planes from the WorldView - Projection
-        // Matrix](http://gamedevsphere.org/uploads/fast-extraction-viewing-frustum-planes-from-world-view-projection-matrix.pdf)
-
-        // picolo 这里有bug，glm::vector.length() 返回的是向量的维数，glm::length(glm::vector)才是向量长度
-
-        Mat4 matColumn = mat.transpose();
-
-        frustum.planeRight = matColumn.col(0) - (matColumn.col(3) * x_right);
-        frustum.planeRight *= (1.0f / glm::vec3(frustum.planeRight.x(), frustum.planeRight.y(), frustum.planeRight.z()).norm());
-
-        frustum.planeLeft = (matColumn.col(3) * x_left) - matColumn.col(0);
-        frustum.planeLeft *= (1.0f / glm::vec3(frustum.planeLeft.x(), frustum.planeLeft.y(), frustum.planeLeft.z()).norm());
-
-        frustum.planeTop = (matColumn.col(3) * y_top) - matColumn.col(1);
-        frustum.planeTop *= (1.0f / glm::vec3(frustum.planeTop.x(), frustum.planeTop.y(), frustum.planeTop.z()).norm());
-
-        frustum.planeBottom = matColumn.col(1) - (matColumn.col(3) * y_bottom);
-        frustum.planeBottom *= (1.0f / glm::vec3(frustum.planeBottom.x(), frustum.planeBottom.y(), frustum.planeBottom.z()).norm());
-
-        frustum.planeNear = (matColumn.col(3) * z_near) - matColumn.col(2);
-        frustum.planeNear *= (1.0f / glm::vec3(frustum.planeNear.x(), frustum.planeNear.y(), frustum.planeNear.z()).norm());
-
-        frustum.planeFar = matColumn.col(2) - (matColumn.col(3) * z_far);
-        frustum.planeFar *= (1.0f / glm::vec3(frustum.planeFar.x(), frustum.planeFar.y(), frustum.planeFar.z()).norm());
+        normalizePlane(frustum.planeRight);
+        normalizePlane(frustum.planeLeft);
+        normalizePlane(frustum.planeTop);
+        normalizePlane(frustum.planeBottom);
+        normalizePlane(frustum.planeNear);
+        normalizePlane(frustum.planeFar);
 
         return frustum;
     }
 
     bool FrustumIntersectBox(const Frustum& frustum, const BoundingBox& box)
     {
-        // Center of the box.
-        Vec4 boxCenter((box.maxBound.x() + box.minBound.x()) * 0.5f,
-            (box.maxBound.y() + box.minBound.y()) * 0.5f,
-            (box.maxBound.z() + box.minBound.z()) * 0.5f,
-            1.0f);
+        glm::vec3 boxCenter = (box.maxBound + box.minBound) * 0.5f;
+        glm::vec3 boxExtents = (box.maxBound - box.minBound) * 0.5f;
 
-        // Distance from the center to each side.
-        // half extent //more exactly
-        glm::vec3 boxExtents((box.maxBound.x() - box.minBound.x()) * 0.5f,
-            (box.maxBound.y() - box.minBound.y()) * 0.5f,
-            (box.maxBound.z() - box.minBound.z()) * 0.5f);
+        const glm::vec4* planes[] = {
+            &frustum.planeRight,
+            &frustum.planeLeft,
+            &frustum.planeTop,
+            &frustum.planeBottom,
+            &frustum.planeNear,
+            &frustum.planeFar
+        };
 
-        // planeRight
+        for (const auto* plane : planes)
         {
-            float signedDistance = frustum.planeRight.dot(boxCenter);
-            float radiusProject = glm::vec3(fabs(frustum.planeRight.x()), fabs(frustum.planeRight.y()), fabs(frustum.planeRight.z())).dot(boxExtents);
-
-            bool intersectingOrInside = signedDistance < radiusProject;
-            if (!intersectingOrInside)
+            float signedDistance = glm::dot(*plane, glm::vec4(boxCenter, 1.0f));
+            glm::vec3 planeNormal(plane->x, plane->y, plane->z);
+            float radiusProject = glm::dot(glm::abs(planeNormal), boxExtents);
+            if (signedDistance > radiusProject)
             {
                 return false;
             }
         }
-
-        // planeLeft
-        {
-            float signedDistance = frustum.planeLeft.dot(boxCenter);
-            float radiusProject = glm::vec3(fabs(frustum.planeLeft.x()), fabs(frustum.planeLeft.y()), fabs(frustum.planeLeft.z())).dot(boxExtents);
-
-            bool intersectingOrInside = signedDistance < radiusProject;
-            if (!intersectingOrInside)
-            {
-                return false;
-            }
-        }
-
-        // planeTop
-        {
-            float signedDistance = frustum.planeTop.dot(boxCenter);
-            float radiusProject = glm::vec3(fabs(frustum.planeTop.x()), fabs(frustum.planeTop.y()), fabs(frustum.planeTop.z())).dot(boxExtents);
-
-            bool intersectingOrInside = signedDistance < radiusProject;
-            if (!intersectingOrInside)
-            {
-                return false;
-            }
-        }
-
-        // planeBottom
-        {
-            float signedDistance = frustum.planeBottom.dot(boxCenter);
-            float radiusProject = glm::vec3(fabs(frustum.planeBottom.x()), fabs(frustum.planeBottom.y()), fabs(frustum.planeBottom.z())).dot(boxExtents);
-
-            bool intersectingOrInside = signedDistance < radiusProject;
-            if (!intersectingOrInside)
-            {
-                return false;
-            }
-        }
-
-        // planeNear
-        {
-            float signedDistance = frustum.planeNear.dot(boxCenter);
-            float radiusProject = glm::vec3(fabs(frustum.planeNear.x()), fabs(frustum.planeNear.y()), fabs(frustum.planeNear.z())).dot(boxExtents);
-
-            bool intersectingOrInside = signedDistance < radiusProject;
-            if (!intersectingOrInside)
-            {
-                return false;
-            }
-        }
-
-        // planeFar
-        {
-            float signedDistance = frustum.planeFar.dot(boxCenter);
-            float radiusProject = glm::vec3(fabs(frustum.planeFar.x()), fabs(frustum.planeFar.y()), fabs(frustum.planeFar.z())).dot(boxExtents);
-
-            bool intersectingOrInside = signedDistance < radiusProject;
-            if (!intersectingOrInside)
-            {
-                return false;
-            }
-        }
-
         return true;
     }
 
-    BoundingBox BoundingBoxTransform(const BoundingBox& box, const Mat4& mat)
+    BoundingBox BoundingBoxTransform(const BoundingBox& box, const glm::mat4& mat)
     {
-        glm::vec3 boxOffset[8] = { glm::vec3(-1.0f, -1.0f, 1.0f),
-                                          glm::vec3(1.0f, -1.0f, 1.0f),
-                                          glm::vec3(1.0f, 1.0f, 1.0f),
-                                          glm::vec3(-1.0f, 1.0f, 1.0f),
-                                          glm::vec3(-1.0f, -1.0f, -1.0f),
-                                          glm::vec3(1.0f, -1.0f, -1.0f),
-                                          glm::vec3(1.0f, 1.0f, -1.0f),
-                                          glm::vec3(-1.0f, 1.0f, -1.0f) };
+        glm::vec3 boxOffset[8] = {
+            glm::vec3(-1.0f, -1.0f, 1.0f),  // 后下左
+            glm::vec3(1.0f, -1.0f, 1.0f),   // 后下右
+            glm::vec3(1.0f, 1.0f, 1.0f),    // 后上右
+            glm::vec3(-1.0f, 1.0f, 1.0f),   // 后上左
+            glm::vec3(-1.0f, -1.0f, -1.0f), // 前下左
+            glm::vec3(1.0f, -1.0f, -1.0f),  // 前下右
+            glm::vec3(1.0f, 1.0f, -1.0f),   // 前上右
+            glm::vec3(-1.0f, 1.0f, -1.0f)   // 前上左
+        };
 
-        // Load center and extentsphere.
-        // Center of the box.
-        glm::vec3 center((box.maxBound.x() + box.minBound.x()) * 0.5f,
-            (box.maxBound.y() + box.minBound.y()) * 0.5f,
-            (box.maxBound.z() + box.minBound.z()) * 0.5f);
+        glm::vec3 center = (box.maxBound + box.minBound) * 0.5f;
+        glm::vec3 extents = (box.maxBound - box.minBound) * 0.5f;
 
-        // Distance from the center to each side.
-        // half extent //more exactly
-        glm::vec3 extents((box.maxBound.x() - box.minBound.x()) * 0.5f,
-            (box.maxBound.y() - box.minBound.y()) * 0.5f,
-            (box.maxBound.z() - box.minBound.z()) * 0.5f);
+        glm::vec3 minTransformed;
+        glm::vec3 maxTransformed;
 
-        glm::vec3 min;
-        glm::vec3 max;
-
-        // Compute and transform the corners and find new min/max boundsphere.
         for (size_t i = 0; i < 8; ++i)
         {
-            glm::vec3 cornerBefore = extents.array() * boxOffset[i].array() + center.array();
-            Vec4 cornerWithW = mat * Vec4(cornerBefore.x(), cornerBefore.y(), cornerBefore.z(), 1.0);
-            glm::vec3 corner = glm::vec3(cornerWithW.x() / cornerWithW.w(),
-                cornerWithW.y() / cornerWithW.w(),
-                cornerWithW.z() / cornerWithW.w());
+            glm::vec3 cornerWorld = center + extents * boxOffset[i];
 
-            if (0 == i)
+            glm::vec4 cornerHomogeneous = mat * glm::vec4(cornerWorld, 1.0f);
+
+            glm::vec3 cornerNDC;
+            if (cornerHomogeneous.w != 0.0f)
             {
-                min = corner;
-                max = corner;
+                cornerNDC = glm::vec3(
+                    cornerHomogeneous.x / cornerHomogeneous.w,
+                    cornerHomogeneous.y / cornerHomogeneous.w,
+                    cornerHomogeneous.z / cornerHomogeneous.w
+                );
             }
             else
             {
-                min = min.cwiseMin(corner);
-                max = max.cwiseMax(corner);
+                cornerNDC = glm::vec3(0.0f);
+            }
+
+            if (i == 0)
+            {
+                minTransformed = cornerNDC;
+                maxTransformed = cornerNDC;
+            }
+            else
+            {
+                minTransformed = glm::min(minTransformed, cornerNDC);
+                maxTransformed = glm::max(maxTransformed, cornerNDC);
             }
         }
-
         BoundingBox out;
-        out.maxBound = max;
-        out.minBound = min;
+        out.minBound = minTransformed;
+        out.maxBound = maxTransformed;
 
         return out;
     }
@@ -371,14 +345,13 @@ namespace GameEngine {
 
         return true;
     }
-
     bool BoxIntersectBox(const BoundingBox& box1, const BoundingBox& box2)
     {
-        if (box1.maxBound(0) < box2.minBound(0) || box1.maxBound(1) < box2.minBound(1) || box1.maxBound(2) < box2.minBound(2) ||
-            box2.maxBound(0) < box1.minBound(0) || box2.maxBound(1) < box1.minBound(1) || box2.maxBound(2) < box1.minBound(2))
-            return false;
-
-        return true;
+        // TODO: 分离轴定理（SAT）：检查三个坐标轴上的投影是否都有重叠
+        bool noOverlapInX = box1.maxBound.x < box2.minBound.x || box2.maxBound.x < box1.minBound.x;
+        bool noOverlapInY = box1.maxBound.y < box2.minBound.y || box2.maxBound.y < box1.minBound.y;
+        bool noOverlapInZ = box1.maxBound.z < box2.minBound.z || box2.maxBound.z < box1.minBound.z;
+        return !(noOverlapInX || noOverlapInY || noOverlapInZ);
     }
 
 

@@ -32,6 +32,7 @@ namespace GameEngine {
 			RHIDescriptorSetRef GetImGuiID();
 			uint32_t GetWidth() { return m_Spec.extent.width; }
             uint32_t GetHeight() { return m_Spec.extent.height; }
+			uint32_t GetbindlessID() { return m_Spec.bindlessId; }
 			static RHITextureViewRef CreateView(RHITextureRef texture);
 			static RHIDescriptorSetRef GetImGuiID(RHITextureRef texture);
 			RHITextureRef GetRHITexture() { return m_Spec.texture; }

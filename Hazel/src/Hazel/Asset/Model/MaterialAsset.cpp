@@ -10,14 +10,14 @@ namespace GameEngine{
 		Handle = {};
 
 		if (transparent)
-			m_Material = Material::Create(Renderer::GetShaderLibrary()->Get("HazelPBR_Transparent"));
+			m_Material = MaterialOld::Create(Renderer::GetShaderLibrary()->Get("HazelPBR_Transparent"));
 		else
-			m_Material = Material::Create(Renderer::GetShaderLibrary()->Get("HazelPBR_Static"));
+			m_Material = MaterialOld::Create(Renderer::GetShaderLibrary()->Get("HazelPBR_Static"));
 
 		SetDefaults();
 	}
 
-	MaterialAsset::MaterialAsset(Ref<Material> material)
+	MaterialAsset::MaterialAsset(Ref<MaterialOld> material)
 	{
 		Handle = {};
 		m_Material = material;

@@ -17,6 +17,6 @@ namespace GameEngine
 			ShaderFrequency m_Frequency;
 			std::string m_Entry;
 		};
-
 	}
+	using ShaderRef = std::shared_ptr<V2::Shader>;
 }

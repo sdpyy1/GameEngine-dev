@@ -4,6 +4,7 @@
 #include "Hazel/Renderer/RenderPass/GridPass.h"
 #include <Hazel/Renderer/RenderPass/ImGuiPass.h>
 #include <Hazel/Renderer/RenderPass/PresentPass.h>
+#include "Hazel/Asset/Model.h"
 namespace GameEngine {
 	RenderSystem::RenderSystem()
 	{
@@ -43,7 +44,27 @@ namespace GameEngine {
 
 	void RenderSystem::InitPasses()
 	{
+
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
+
+
+
+
+		// ≤‚ ‘«¯”Ú
+		ModelProcessSetting assetsSetting;
+		// Model model = Model("Assets/Model/helmet/DamagedHelmet.gltf", assetsSetting);
+		Model model = Model("Assets/Model/m1911/M1911.gltf", assetsSetting);
+
+		model.OnLoadAsset();
+
+
+
+
+
+
+
+
+
 
 		passes[GRID_PASS] = std::make_shared<GridPass>();
 		passes[IMGUI_PASS] = std::make_shared<ImGuiPass>();

@@ -8,7 +8,7 @@ namespace GameEngine {
 	{
 	public:
 		explicit MaterialAsset(bool transparent = false);
-		explicit MaterialAsset(Ref<Material> material);
+		explicit MaterialAsset(Ref<MaterialOld> material);
 		void SetDefaults();
 		void SetNormalMap(AssetHandle handle);
 		void SetEmissiveMap(AssetHandle handle);
@@ -25,9 +25,9 @@ namespace GameEngine {
 		void ClearEmssiveMap();
 		void ClearMetalnessMap();
 		void ClearRoughnessMap();
-		Ref<Material> GetMaterial() { return m_Material; }
+		Ref<MaterialOld> GetMaterial() { return m_Material; }
 	private:
-		Ref<Material> m_Material;
+		Ref<MaterialOld> m_Material;
 
 		struct MapAssets
 		{

@@ -1,7 +1,7 @@
 #include "hzpch.h"
 #include "Mesh.h"
 
-namespace GameEngine {
+namespace GameEngine::V2 {
     Mesh::Mesh(const Mesh& mesh, const std::vector<uint32_t>& subMeshIndex)
     {
         Merge(mesh, subMeshIndex);

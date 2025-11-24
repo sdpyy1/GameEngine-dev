@@ -753,8 +753,8 @@ namespace GameEngine {
 				imageViewSpec.Image = m_BloomImage->GetImage();
 				imageViewSpec.Mip = i;
 				m_BloomImageViews[i] = ImageView::Create(imageViewSpec);
-				m_BloomPreDownSamplerMaterials[i] = Material::Create(m_BloomShader);
-				m_BloomPreUpSamplerMaterials[i] = Material::Create(m_BloomShader);
+				m_BloomPreDownSamplerMaterials[i] = MaterialOld::Create(m_BloomShader);
+				m_BloomPreUpSamplerMaterials[i] = MaterialOld::Create(m_BloomShader);
 			}
 
 
@@ -1049,7 +1049,7 @@ namespace GameEngine {
 		bloomPassSpecification.DebugName = "BloomPass";
 		bloomPassSpecification.Pipeline = PipelineCompute::Create(m_BloomShader);
 		m_BloomPass = ComputePass::Create(bloomPassSpecification);
-		m_BloomPreFilterMaterial = Material::Create(m_BloomShader);
+		m_BloomPreFilterMaterial = MaterialOld::Create(m_BloomShader);
 		TextureSpecification spec;
 		spec.Format = ImageFormat::RGBA32F;
 		spec.DebugName = "BloomImage";
@@ -1069,8 +1069,8 @@ namespace GameEngine {
 			imageViewSpec.Image = m_BloomImage->GetImage();
 			imageViewSpec.Mip = i;
 			m_BloomImageViews[i] = ImageView::Create(imageViewSpec);
-			m_BloomPreDownSamplerMaterials[i] = Material::Create(m_BloomShader);
-			m_BloomPreUpSamplerMaterials[i] = Material::Create(m_BloomShader);
+			m_BloomPreDownSamplerMaterials[i] = MaterialOld::Create(m_BloomShader);
+			m_BloomPreUpSamplerMaterials[i] = MaterialOld::Create(m_BloomShader);
 		}
 		m_BloomPass->SetInput("u_CameraData", m_UBSCameraData);
 

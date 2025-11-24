@@ -39,7 +39,7 @@ namespace GameEngine {
 			.AllowDepthStencil()
 			.Finish();
 		RDGBufferHandle cameraData = builder.CreateBuffer("CameraData")
-			.Import(RENDER_RENDERRESOURCE->GetCameraDataBuffer().GetRHIBuffer(), RESOURCE_STATE_UNORDERED_ACCESS)
+			.Import(RENDER_RESOURCEMANAGER->GetCameraDataBuffer().GetRHIBuffer(), RESOURCE_STATE_UNORDERED_ACCESS)
 			.Finish();
 
 

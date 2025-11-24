@@ -300,7 +300,7 @@ namespace GameEngine {
 				LOG_TRACE("��ʼ��������[{}]", aiMaterialName.data);
 
 				// �������ʶ�����Ҫһ��Shader������
-				Ref<Material> material = Material::Create(Renderer::GetShaderLibrary()->Get("gBuffer"), aiMaterialName.data);
+				Ref<MaterialOld> material = MaterialOld::Create(Renderer::GetShaderLibrary()->Get("gBuffer"), aiMaterialName.data);
 				auto ma = Ref<MaterialAsset>::Create(material);
 
 				aiString aiTexPath;
@@ -559,7 +559,7 @@ namespace GameEngine {
 			// û�в��ʣ�����Ĭ�ϵ�
 			if (scene->HasMeshes())
 			{
-				Ref<Material> material = Material::Create(Renderer::GetShaderLibrary()->Get("gBuffer"), "GameEngine-Default");
+				Ref<MaterialOld> material = MaterialOld::Create(Renderer::GetShaderLibrary()->Get("gBuffer"), "GameEngine-Default");
 				AssetHandle maHandle = AssetManager::AddMemoryOnlyAsset(Ref<MaterialAsset>::Create(material));
 				meshSource->m_Materials.push_back(maHandle);
 			}

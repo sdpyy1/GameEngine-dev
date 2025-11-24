@@ -129,7 +129,7 @@ namespace GameEngine::V2
 		BindlessResourceInfo bindlessResourceInfo;
         bindlessResourceInfo.textureView = m_Spec.textureView;
         bindlessResourceInfo.resourceType = RESOURCE_TYPE_TEXTURE;
-		m_Spec.bindlessId = RENDER_RENDERRESOURCE->AllocateBindlessID(bindlessResourceInfo, TextureTypeToBindlessSlot(m_Spec.type));		
+		m_Spec.bindlessId = RENDER_RESOURCEMANAGER->AllocateBindlessID(bindlessResourceInfo, TextureTypeToBindlessSlot(m_Spec.type));		
 	}
 
 	RHIDescriptorSetRef Texture::GetImGuiID()

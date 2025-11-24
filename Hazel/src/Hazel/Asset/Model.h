@@ -3,13 +3,17 @@
 #include "Hazel/Renderer/RenderResource/Texture.h"
 #include "Mesh.h"
 #include "Hazel/Renderer/RenderResource/RenderBuffer.h"
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp/Importer.hpp>
+#include "Hazel/Renderer/RenderResource/Material.h"
 namespace GameEngine { 
 
     typedef struct ModelProcessSetting
     {
         bool smoothNormal = false;                  // 生成平滑法线
         bool flipUV = false;                        // 翻转UV
-        bool loadMaterials = false;                 // 读取文件中的材质并生成材质资源
+        bool loadMaterials = true;                 // 读取文件中的材质并生成材质资源
         bool tangentSpace = false;                  // 生成切线
         bool generateBVH = false;                   // 生成BVH
         bool generateCluster = false;               // 生成Cluster
@@ -32,12 +36,12 @@ namespace GameEngine {
 
     struct SubmeshData
     {
-        std::shared_ptr<Mesh> mesh;                                 // CPU端的mesh和cluster信息
+        std::shared_ptr<V2::Mesh> mesh;                                 // CPU端的mesh和cluster信息
         //std::vector<MeshClusterRef> clusters;                       // 仅生成cluster时的信息
         //std::shared_ptr<VirtualMesh> virtualMesh;                   // 生成cluster + cluster group时的信息
 
-        VertexBufferRef vertexBuffer;                               // GPU端的顶点和索引缓冲，既可能存储单个submesh的全部顶点和索引，也可能存储其全部cluster合并后的数据
-        IndexBufferRef indexBuffer;
+       // VertexBufferRef vertexBuffer;                               // GPU端的顶点和索引缓冲，既可能存储单个submesh的全部顶点和索引，也可能存储其全部cluster合并后的数据
+        //IndexBufferRef indexBuffer;
 
         //IndexRange meshClusterID = { 0, 0 };            // 提交的一组cluster的ID范围
         //IndexRange meshClusterGroupID = { 0, 0 };       // 提交的一组cluster group的ID范围
@@ -46,24 +50,14 @@ namespace GameEngine {
     };
 
 
-
-
-
-
 	class Model : public V2::Asset {
     public:
 		Model(std::string path, ModelProcessSetting processSetting);
         void LoadFromFile(std::string path);
-
-
         virtual std::string GetAssetTypeName() override { return "Model Asset"; }
         virtual V2::AssetType GetAssetType() override { return V2::ASSET_TYPE_MODEL; }
-
         virtual void OnLoadAsset() override;
         virtual void OnSaveAsset() override;
-
-
-
 
     private:
         std::string path;
@@ -74,10 +68,10 @@ namespace GameEngine {
         uint32_t totalClusterMaxMip = 0;
         std::vector<SubmeshData> submeshes;
         std::vector<MaterialRef> materials;
-        std::unordered_map<std::string, V2::TextureRef> textureMap; // 加载材质时，单物体可能有多个重复的纹理引用，做个cache避免重复加载
+        std::unordered_map<std::string, V2::TextureRef> textureMap; // Cache
         void ProcessNode(aiNode* node, const aiScene* scene, std::vector<aiMesh*>& processMeshes);
         void ProcessMesh(aiMesh* mesh, const aiScene* scene, int index);
-        void ExtractBoneWeights(Mesh* submesh, aiMesh* mesh, const aiScene* scene);
+        void ExtractBoneWeights(V2::Mesh* submesh, aiMesh* mesh, const aiScene* scene);
         std::shared_ptr<V2::Texture> LoadMaterialTexture(aiMaterial* mat, aiTextureType type);
     };
 }

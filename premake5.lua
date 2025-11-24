@@ -57,6 +57,8 @@ workspace "AAA_GameEngine"
 	architecture "x86_64"
 	startproject "Hazel"
 	disablewarnings { "4828" }
+	linkoptions { "/IGNORE:4099" }
+
 	configurations
 	{
 		"Debug",

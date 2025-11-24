@@ -321,9 +321,9 @@ namespace GameEngine {
 		// Bloom
 		Ref<ComputePass> m_BloomPass;
 		Ref<Shader> m_BloomShader;
-		Ref<Material> m_BloomPreFilterMaterial;
-		std::vector<Ref<Material>> m_BloomPreDownSamplerMaterials;
-		std::vector<Ref<Material>> m_BloomPreUpSamplerMaterials;
+		Ref<MaterialOld> m_BloomPreFilterMaterial;
+		std::vector<Ref<MaterialOld>> m_BloomPreDownSamplerMaterials;
+		std::vector<Ref<MaterialOld>> m_BloomPreUpSamplerMaterials;
 		Ref<Texture2D> m_BloomImage;
 		std::vector<Ref<ImageView>> m_BloomImageViews;
 	};

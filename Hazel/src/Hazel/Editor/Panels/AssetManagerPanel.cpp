@@ -457,7 +457,7 @@ namespace GameEngine {
 		for (uint32_t i = 0; i < submeshes.size(); i++)
 		{
 			Submesh& submesh = submeshes[i];
-			Ref<Material> material = meshSource->GetMaterial(submesh.MaterialIndex);
+			Ref<MaterialOld> material = meshSource->GetMaterial(submesh.MaterialIndex);
 			if (!material)
 				continue;
 

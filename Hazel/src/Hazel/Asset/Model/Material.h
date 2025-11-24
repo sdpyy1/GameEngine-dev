@@ -11,10 +11,10 @@ namespace GameEngine {
 		uint32_t UseNormalMap;
 		uint32_t padding[3];
 	};
-	class Material : public Asset
+	class MaterialOld : public Asset
 	{
 	public:
-		static Ref<Material> Create(const Ref<Shader>& shader, const std::string& name = "");
+		static Ref<MaterialOld> Create(const Ref<Shader>& shader, const std::string& name = "");
 
 		virtual void SetAlbedoTexture(Ref<Texture2D> texture) = 0;
 		virtual void SetNormalTexture(Ref<Texture2D> texture) = 0;
