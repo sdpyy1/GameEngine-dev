@@ -39,9 +39,9 @@ namespace GameEngine {
 		private:
 			TextureSpec m_Spec;
 		};
-		typedef std::shared_ptr<Texture> TextureRef;
 		
 	}
+	typedef std::shared_ptr<V2::Texture> TextureRef;
 
 }
 

@@ -68,7 +68,7 @@ namespace GameEngine {
         uint32_t totalClusterMaxMip = 0;
         std::vector<SubmeshData> submeshes;
         std::vector<MaterialRef> materials;
-        std::unordered_map<std::string, V2::TextureRef> textureMap; // Cache
+        std::unordered_map<std::string, TextureRef> textureMap; // Cache
         void ProcessNode(aiNode* node, const aiScene* scene, std::vector<aiMesh*>& processMeshes);
         void ProcessMesh(aiMesh* mesh, const aiScene* scene, int index);
         void ExtractBoneWeights(V2::Mesh* submesh, aiMesh* mesh, const aiScene* scene);

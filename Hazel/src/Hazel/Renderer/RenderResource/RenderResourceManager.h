@@ -6,6 +6,7 @@
 #include "Hazel/Core/Definations.h"
 #include "RenderStruct.h"
 #include "Hazel/Scene/Scene.h"
+#include "Sampler.h"
 #define MAX_PER_FRAME_RESOURCE_SIZE 10240
 namespace GameEngine {
     // 使用Bindless的资源
@@ -62,9 +63,15 @@ namespace GameEngine {
         RHIDescriptorSetRef descriptorSet;
         RenderBuffer<V2::CameraData> cameraDataBuffer;
     };
+    
 
+    // 对于更新频率不高的资源，存一份即可,需要时直接Get拿
     struct MultiFrameGlobalResources
     {
+        RHIRootSignatureRef samplerRootSignature;
+        RHIDescriptorSetRef samplerDescriptorSet;   // Set=1, Binding=0 存储缓存的采样器数组
+        std::vector<SamplerRef> samplers;
+
         ArrayBuffer<V2::MaterialInfo, MAX_PER_FRAME_RESOURCE_SIZE> materialBuffer;
     };
 
@@ -88,8 +95,11 @@ namespace GameEngine {
             RenderResourceManager();
             ~RenderResourceManager() {};
             void InitPerFrameGlobalResources();
-            void Tick();
+            void InitMultiFrameGlobalResources();
 
+            void Tick();
+            RHIRootSignatureRef GetSamplerRootSignature() { return m_MultiFrameGlobalResources.samplerRootSignature; }
+            RHIDescriptorSetRef GetSamplerDescriptorSet() { return m_MultiFrameGlobalResources.samplerDescriptorSet; }
             // ID
             uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot);
             void ReleaseBindlessID(uint32_t id, BindlessSlot slot);
@@ -98,9 +108,6 @@ namespace GameEngine {
             uint32_t AllocateMaterialID() { return m_MultiFrameGlobalResources.materialBuffer.Allocate(); }
             void ReleaseMaterialID(uint32_t id) { m_MultiFrameGlobalResources.materialBuffer.Release(id); }
             void SetMaterialInfo(const V2::MaterialInfo& materialInfo, uint32_t materialID);
-
-
-
 
             // 各种Buffer数据
             void RenderResourceManager::SetCameraInfo();
@@ -120,12 +127,12 @@ namespace GameEngine {
 
 
         // 每种资源一个ID分配器
-		std::array<IndexAllocator, BINDLESS_SLOT_MAX_ENUM> bindlessIDAlloctor;
+		std::array<IndexAllocator, BINDLESS_SLOT_MAX_ENUM> m_BindlessIDAlloctor;
         RHIRootSignatureRef m_GlobalResourceRootSignature; 
 
 
 
         SceneInfo m_SceneInfoFromScene;
-	};
+    };
 }
 

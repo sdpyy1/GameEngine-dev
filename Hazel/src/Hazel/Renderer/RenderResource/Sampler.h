@@ -14,5 +14,6 @@ namespace GameEngine {
 
         RHISamplerRef sampler;
     };
+    using SamplerRef = std::shared_ptr<Sampler>;
 }
 

@@ -42,10 +42,12 @@ namespace GameEngine {
 		for (int i = 0; i < processMeshes.size(); i++)
 		{
 			aiMesh* mesh = processMeshes[i];
-			LOG_INFO("[{}/{}] Start processing mesh [{}].", i, scene->mNumMeshes, mesh->mName.C_Str());
+            LOG_INFO_TAG("Model",LOG_LINE);
+			LOG_TRACE("[{}/{}] Start processing mesh [{}].", i, scene->mNumMeshes, mesh->mName.C_Str());
 
 			ProcessMesh(mesh, scene, i);
-		}
+            LOG_INFO_TAG("Model", LOG_LINE);
+        }
 		textureMap.clear();
 
 

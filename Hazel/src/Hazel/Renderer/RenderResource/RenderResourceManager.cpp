@@ -10,8 +10,9 @@ namespace GameEngine {
 
 	RenderResourceManager::RenderResourceManager()
 	{
-		for (auto& alloctor : bindlessIDAlloctor) alloctor = IndexAllocator(MAX_BINDLESS_RESOURCE_SIZE);
+		for (auto& alloctor : m_BindlessIDAlloctor) alloctor = IndexAllocator(MAX_BINDLESS_RESOURCE_SIZE);
 		InitPerFrameGlobalResources();
+		InitMultiFrameGlobalResources();
 	}
 
 	void RenderResourceManager::InitPerFrameGlobalResources()
@@ -35,7 +36,7 @@ namespace GameEngine {
 	}
 	void RenderResourceManager::ReleaseBindlessID(uint32_t id, BindlessSlot slot)
 	{
-		bindlessIDAlloctor[slot].Release(id);
+		m_BindlessIDAlloctor[slot].Release(id);
 	}
 	void RenderResourceManager::Tick() // 从场景中解析数据，存入对应Buffer
 	{
@@ -62,7 +63,7 @@ namespace GameEngine {
 
 	uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot)
 	{
-		uint32_t index = bindlessIDAlloctor[slot].Allocate();
+		uint32_t index = m_BindlessIDAlloctor[slot].Allocate();
 		for (auto& resource : m_PerFrameGlobalResources)
 		{
 			RHIDescriptorUpdateInfo updateInfo = {};
@@ -83,4 +84,51 @@ namespace GameEngine {
 	{
 		m_MultiFrameGlobalResources.materialBuffer.SetData(materialInfo, materialID);
 	}
+
+	void RenderResourceManager::InitMultiFrameGlobalResources()
+	{
+		m_MultiFrameGlobalResources.samplers.push_back(std::make_shared<Sampler>(
+			ADDRESS_MODE_CLAMP_TO_EDGE,
+			FILTER_TYPE_LINEAR,
+			MIPMAP_MODE_LINEAR,
+			0.0f));
+
+		m_MultiFrameGlobalResources.samplers.push_back(std::make_shared<Sampler>(
+			ADDRESS_MODE_REPEAT,
+			FILTER_TYPE_LINEAR,
+			MIPMAP_MODE_LINEAR,
+			0.0f));
+
+		m_MultiFrameGlobalResources.samplers.push_back(std::make_shared<Sampler>(
+			ADDRESS_MODE_CLAMP_TO_EDGE,
+			FILTER_TYPE_LINEAR,
+			MIPMAP_MODE_NEAREST,
+			0.0f,
+			SAMPLER_REDUCTION_MODE_MIN));
+
+		m_MultiFrameGlobalResources.samplers.push_back(std::make_shared<Sampler>(
+			ADDRESS_MODE_CLAMP_TO_EDGE,
+			FILTER_TYPE_LINEAR,
+			MIPMAP_MODE_NEAREST,
+			0.0f,
+			SAMPLER_REDUCTION_MODE_MAX));
+		// 为sampler单独创建一个描述符，方便pass使用
+		{
+			RHIRootSignatureInfo info = {};
+			info.AddEntry({ 1, 0, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_SAMPLER });
+			m_MultiFrameGlobalResources.samplerRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
+
+			m_MultiFrameGlobalResources.samplerDescriptorSet = m_MultiFrameGlobalResources.samplerRootSignature->CreateDescriptorSet(1);
+			for (uint32_t i = 0; i < m_MultiFrameGlobalResources.samplers.size(); i++)
+			{
+				RHIDescriptorUpdateInfo updateInfo = {};
+				updateInfo.binding = 0;
+                updateInfo.index = i;   // 同一个binding的数组
+                updateInfo.resourceType = RESOURCE_TYPE_SAMPLER;
+                updateInfo.sampler = m_MultiFrameGlobalResources.samplers[i]->sampler;
+				m_MultiFrameGlobalResources.samplerDescriptorSet->UpdateDescriptor(updateInfo);
+			}
+		}
+	}
+
 }

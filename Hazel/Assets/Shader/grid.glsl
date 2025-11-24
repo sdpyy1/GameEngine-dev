@@ -1,4 +1,7 @@
 #version 460 core
+#extension GL_GOOGLE_include_directive : enable
+#extension GL_EXT_samplerless_texture_functions : enable
+
 // 两个三角形覆盖全屏
 vec3 kNdcPoints[6] = vec3[](
     vec3( 1,  1, 0), 
@@ -19,7 +22,9 @@ layout(set = 0,binding = 0) uniform CameraDataUniform {
 	vec3 CameraPosition;
 } u_CameraData;
 // 描述符集
-layout (set = 0, binding = 1) uniform sampler2D inDepth;
+layout (set = 0, binding = 1) uniform texture2D depthTexture;
+layout (set = 1, binding = 0) uniform sampler depthSampler[];
+
 #ifdef VERTEX_SHADER
 layout(location = 0) out vec3 nearPoint; 
 layout(location = 1) out vec3 farPoint; 
@@ -119,7 +124,7 @@ vec4 getColor(vec3 fragPos3D, float t)
 
 	// 获取场景深度，做深度测试
     vec2 uv = gl_FragCoord.xy / vec2(u_CameraData.width, u_CameraData.height);
-    float sceneZ = texture(inDepth,uv).r;
+    float sceneZ = texture(sampler2D(depthTexture, depthSampler[0]),uv).r;
 
     float linearDepth = linearizeDepth(deviceZ,u_CameraData.Near,u_CameraData.Far);
 
@@ -128,7 +133,6 @@ vec4 getColor(vec3 fragPos3D, float t)
     vec4 result = grid(fragPos3D) * float(t > 0);
     result.a = (deviceZ < sceneZ) ? result.a : 0.0;
     result.a *= fading * 0.75;
-    result.a = 1;  // TODO：目前深度图还没，所以先设置为1
 
     return result;
 }

@@ -550,13 +550,28 @@ namespace GameEngine
 
 	VulkanRHISampler::VulkanRHISampler(const RHISamplerInfo& info) : RHISampler(info)
 	{
+        /*
+            magFilter：放大滤波，当纹理分辨率小，放大观看 较近时使用
+            minFilter：缩小滤波，当纹理分辨率大，缩小观看 较远时使用
+            mipmapMode：mipmap模式，可以选择线性插值还是最近邻插值
+            anisotropyEnable：各向异性过滤启用，用于改善纹理在倾斜视角下的拉伸和模糊问题
+            maxAnisotropy：设置各向异性过滤的强度，值越高，质量越好，但性能开销越大
+            minLod：mipmap 最小层级
+            maxLod：mipmap 最大层级
+            mipLodBias：调整 mipmap 层级的选择，让采样器偏向使用更高或更低分辨率的 mipmap
+            addressModeU / addressModeV / addressModeW： 定义当纹理坐标（UVW）超出 [0.0, 1.0] 范围时，如何处理采样
+            borderColor：当上边超出UVW设置为clamp_to_edge时，这就是边界颜色
+            compareEnable/compareOp：启用比较模式后，采样器会将采样得到的纹理值与一个参考值进行比较，在Shader中采样时使用，但是能力有限，只能判断比较结果
+            Reduction：本来采样是插值，这个拓展可以改成返回最大值或最小值
+        */
         VkSamplerCreateInfo samplerInfo = {};
         samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        samplerInfo.magFilter = VulkanUtil::FilterTypeToVk(info.magFilter);   //放大滤波  //LOD较小（较近）时使用？？
-        samplerInfo.minFilter = VulkanUtil::FilterTypeToVk(info.minFilter);   //缩小滤波
+
+        samplerInfo.magFilter = VulkanUtil::FilterTypeToVk(info.magFilter);
+        samplerInfo.minFilter = VulkanUtil::FilterTypeToVk(info.minFilter);
         samplerInfo.mipmapMode = VulkanUtil::MipMapModeToVk(info.mipmapMode);
-        samplerInfo.anisotropyEnable = info.maxAnisotropy > 0.0f ? VK_TRUE : VK_FALSE;
-        samplerInfo.maxAnisotropy = info.maxAnisotropy;
+        samplerInfo.anisotropyEnable = VK_FALSE;
+        samplerInfo.maxAnisotropy = 1.0f;
         samplerInfo.minLod = 0.0f;
         samplerInfo.maxLod = 100.0f;
         samplerInfo.mipLodBias = info.mipLodBias;
@@ -564,21 +579,24 @@ namespace GameEngine
         samplerInfo.addressModeV = VulkanUtil::AddressModeToVk(info.addressModeV);
         samplerInfo.addressModeW = VulkanUtil::AddressModeToVk(info.addressModeW);
         samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
-        samplerInfo.compareEnable = info.compareFunction == COMPARE_FUNCTION_NEVER ? VK_FALSE : VK_TRUE;
+        samplerInfo.compareEnable = (info.compareFunction != CompareFunction::COMPARE_FUNCTION_NEVER);
         samplerInfo.compareOp = VulkanUtil::CompareFunctionToVk(info.compareFunction);
 
-        // VkPhysicalDeviceProperties properties{};
-        // vkGetPhysicalDeviceProperties(Backend::Get()->physicalDevice, &properties);
-        // samplerInfo.maxAnisotropy = properties.limits.maxSamplerAnisotropy; //设备支持的最大各向异性滤波采样数目
-        // if (maxAnisotropy > 0)
-        // {
-        //     samplerInfo.anisotropyEnable = VK_TRUE;             //各向异性滤波
-        //     samplerInfo.maxAnisotropy = (float)maxAnisotropy;   //设备支持的最大各向异性滤波采样数目
-        // }
-        // else
-        // {
-        //     samplerInfo.anisotropyEnable = VK_FALSE;
-        // }
+        // 各向异性需要设备支持
+        if (info.maxAnisotropy > 0.0f) {
+            VkPhysicalDeviceProperties properties{};
+            vkGetPhysicalDeviceProperties(VULKAN_PHYSICALDEVICE, &properties);
+
+            float deviceMaxAnisotropy = properties.limits.maxSamplerAnisotropy;
+
+            if (deviceMaxAnisotropy > 1.0f) {
+                samplerInfo.maxAnisotropy = std::min(info.maxAnisotropy, deviceMaxAnisotropy);
+                samplerInfo.anisotropyEnable = VK_TRUE;
+            }
+            else {
+                LOG_WARN("Requested maxAnisotropy {}, but device does not support anisotropic filtering. Disabling it.", info.maxAnisotropy);
+            }
+        }
 
         //add a extension struct to enable Min mode
         VkSamplerReductionModeCreateInfoEXT createInfoReduction = {};

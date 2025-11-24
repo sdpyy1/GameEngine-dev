@@ -3,7 +3,7 @@
 #include "Hazel/Renderer/RenderResource/Texture.h"
 namespace GameEngine {
 	struct IconData {
-		V2::TextureRef icon;
+		TextureRef icon;
 		RHIDescriptorSetRef textureID;
 		void LoadIconData(const std::string& path,bool isYFlip = true) {
 			V2::TextureSpec spec;
