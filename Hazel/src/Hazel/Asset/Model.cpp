@@ -43,13 +43,11 @@ namespace GameEngine {
 		{
 			aiMesh* mesh = processMeshes[i];
             LOG_INFO_TAG("Model",LOG_LINE);
-			LOG_TRACE("[{}/{}] Start processing mesh [{}].", i, scene->mNumMeshes, mesh->mName.C_Str());
-
-			ProcessMesh(mesh, scene, i);
+			LOG_TRACE("[{}/{}] Start processing mesh [{}].", i+1, scene->mNumMeshes, mesh->mName.C_Str());
+			ProcessMesh(mesh, scene, i);     
             LOG_INFO_TAG("Model", LOG_LINE);
         }
 		textureMap.clear();
-
 
 		// 统计信息
 		totalIndex = 0;
@@ -96,7 +94,6 @@ namespace GameEngine {
             submesh->position[i].y = mesh->mVertices[i].y;
             submesh->position[i].z = mesh->mVertices[i].z;
         }
-
         // 顶点法线
         if (mesh->mNormals)
         {
@@ -107,8 +104,8 @@ namespace GameEngine {
                 submesh->normal[i].y = mesh->mNormals[i].y;
                 submesh->normal[i].z = mesh->mNormals[i].z;
             }
-        }
 
+        }
         // 顶点颜色
         if (mesh->mColors[0])
         {
@@ -167,7 +164,7 @@ namespace GameEngine {
             }
             else
             {
-                //submesh->tangent = std::vector<glm::vec4>(mesh->mNumVertices);
+                submesh->tangent = std::vector<glm::vec4>(mesh->mNumVertices);
 
                 //TangentSpace tangentCalculator = TangentSpace();
                 //tangentCalculator.Generate(submesh.get());  // 需要先把上面的信息准备完成    TODO: 切线空间！！！！
@@ -202,7 +199,6 @@ namespace GameEngine {
         submesh->sphere = BoundingSphere(submesh->aabb);
         submesh->box = BoundingBox(submesh->aabb);
 
-        // 处理mesh名称
         submesh->name = std::string(mesh->mName.C_Str());
 
         // 优化缓存
@@ -222,10 +218,38 @@ namespace GameEngine {
         {
            
         }
+
+        LOG_TRACE("  - Vertex Count: {}", submeshes[index].mesh->position.size());
+        LOG_TRACE("  - Index Count: {}", submeshes[index].mesh->index.size());
+
+        // 上传到GPU
+        VertexBufferRef vertexBuffer = std::make_shared<V2::VertexBuffer>();
+        vertexBuffer->SetPosition(submesh->position);
+        vertexBuffer->SetNormal(submesh->normal);
+        vertexBuffer->SetTangent(submesh->tangent);
+        vertexBuffer->SetTexCoord(submesh->texCoord);
+        vertexBuffer->SetColor(submesh->color);
+        vertexBuffer->SetBoneIndex(submesh->boneIndex);
+        vertexBuffer->SetBoneWeight(submesh->boneWeight);
+        submeshes[index].vertexBuffer = vertexBuffer;
+        const V2::VertexInfo& vi = vertexBuffer->vertexInfo;
+        LOG_TRACE("  - Vertex Buffer Info:");
+        LOG_TRACE("    positionID:    {}", vi.positionID);
+        LOG_TRACE("    normalID:      {}", vi.normalID);
+        LOG_TRACE("    tangentID:     {}", vi.tangentID);
+        LOG_TRACE("    texCoordID:    {}", vi.texCoordID);
+        LOG_TRACE("    colorID:       {}", vi.colorID);
+        LOG_TRACE("    boneIndexID:   {}", vi.boneIndexID);
+        LOG_TRACE("    boneWeightID:  {}", vi.boneWeightID);
+        IndexBufferRef indexBuffer = std::make_shared<V2::IndexBuffer>();
+        indexBuffer->SetIndex(submeshes[index].mesh->index);
+        submeshes[index].indexBuffer = indexBuffer;
+        LOG_TRACE("    IndexBufferID: {}", indexBuffer->indexID);
 	}
     void Model::ExtractBoneWeights(V2::Mesh* submesh, aiMesh* mesh, const aiScene* scene)
     {
         LOG_TRACE("Find Bone Info. Extracting bone weights...");
+        findBone = true;
         submesh->boneIndex = std::vector<glm::ivec4>(mesh->mNumVertices);
         submesh->boneWeight = std::vector<glm::vec4>(mesh->mNumVertices);
 
@@ -338,7 +362,7 @@ namespace GameEngine {
                 std::filesystem::path new_texture_path = fs_path / texturePath;
                 textureSpec.path = new_texture_path.string();
                 std::shared_ptr<V2::Texture> texture = std::make_shared<V2::Texture>(textureSpec);
-                LOG_TRACE("Load Texture: {0}", textureSpec.path);
+                LOG_TRACE("Load Texture: {0}  Bindless ID:{1}", textureSpec.path, texture->GetbindlessID());
                 textureMap[texturePath] = texture;
                 return texture;
             }

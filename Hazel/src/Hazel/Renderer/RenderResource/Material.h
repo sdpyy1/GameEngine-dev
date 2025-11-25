@@ -85,12 +85,12 @@ namespace GameEngine {
 			float roughness = 0.5f;
 			float metallic = 0.0f;
 			float alphaClip = 0.0f;
-			uint32_t useNormalTexture = 0;
-			TextureRef textureDiffuse;
-			TextureRef textureNormal;
-			TextureRef textureArm;
-			TextureRef textureSpecular;
-			TextureRef textureEmission;
+			uint32_t useNormalTexture = 1;
+			TextureRef textureDiffuse = nullptr;
+			TextureRef textureNormal = nullptr;
+			TextureRef textureArm = nullptr;
+			TextureRef textureSpecular = nullptr;
+			TextureRef textureEmission = nullptr;
 
 
 			std::array<int32_t, 8> ints = { 0 };

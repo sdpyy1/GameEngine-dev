@@ -23,7 +23,7 @@ namespace GameEngine {
 	void RendererManager::Tick(float timestep)
 	{
 		// LOG_TRACE("RenderManager::Tick {}",Renderer::GetCurrentFrameIndex());
-		Application::GetSceneManager()->GetActiveScene()->CollectRenderableEntities(m_SceneRender);
+		Application::GetSceneManager()->GetActiveScene()->CollectRenderableEntities();
 
 		Renderer::BeginFrame();
 

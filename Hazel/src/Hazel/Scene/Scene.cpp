@@ -124,34 +124,9 @@ namespace GameEngine {
 		ImGui::Image(iconData.textureID->RawHandle(), ImGui::GetContentRegionAvail(), { 0, 0 }, { 1, 1 });
 	}
 
-	void Scene::CollectRenderableEntities(std::shared_ptr<SceneRender>& SceneRender)
+	void Scene::CollectRenderableEntities()
 	{
-		// 收集StaticMesh
-		auto allEntityOwnMesh = GetAllEntitiesWith<StaticMeshComponent>();
-		for (auto entity : allEntityOwnMesh) {
-			auto& staticMeshComponent = allEntityOwnMesh.get<StaticMeshComponent>(entity);
-			if (!staticMeshComponent.Visible) continue;
-			Ref<MeshSource> mesh = AssetManager::GetAsset<MeshSource>(staticMeshComponent.StaticMesh);
-			if (mesh == nullptr) continue;
-			Entity e = Entity(entity, this);
-			glm::mat4 transform = GetWorldSpaceTransformMatrix(e);
-			SceneRender->SubmitStaticMesh(mesh, transform);
-		}
-		// 收集SkeletalMesh
-		auto allEntityOwnSubmesh = GetAllEntitiesWith<SubmeshComponent>();
-		for (auto entity : allEntityOwnSubmesh)
-		{
-			auto meshComponent = allEntityOwnSubmesh.get<SubmeshComponent>(entity);
-			if (!meshComponent.Visible) continue;
-
-			if (auto meshSource = AssetManager::GetAsset<MeshSource>(meshComponent.Mesh); meshSource)
-			{
-				Entity e = Entity(entity, this);
-				glm::mat4 transform = GetWorldSpaceTransformMatrix(e);
-				// 在这里就把骨骼信息转换为了模型空间的变换
-				SceneRender->SubmitDynamicMesh(meshSource, meshComponent.SubmeshIndex, transform, GetModelSpaceBoneTransforms(meshComponent.BoneEntityIds, meshSource));
-			}
-		}
+		
 	}
 	std::vector<glm::mat4> Scene::GetModelSpaceBoneTransforms(const std::vector<UUID>& boneEntityIds, Ref<MeshSource> meshSource)
 	{
@@ -499,7 +474,7 @@ namespace GameEngine {
 		static_assert(sizeof(T) == 0);
 	}
 	template<>
-	void Scene::OnComponentAdded<StaticMeshComponent>(Entity entity, StaticMeshComponent& component)
+	void Scene::OnComponentAdded<ModelComponent>(Entity entity, ModelComponent& component)
 	{
 	}
 	template<>
@@ -527,7 +502,7 @@ namespace GameEngine {
 	{
 	}
 	template<>
-	void Scene::OnComponentAdded<DynamicMeshComponent>(Entity entity, DynamicMeshComponent& component)
+	void Scene::OnComponentAdded<DynamicModelComponent>(Entity entity, DynamicModelComponent& component)
 	{
 	}
 	template<>

@@ -107,6 +107,7 @@ namespace GameEngine {
 		void Process(const std::vector<DrawBatch>& drawBatches);
 		void Draw(RHICommandListRef command);
 		void AddBatch(const DrawBatch& batch) { m_Batches.push_back(batch); }
+		void AddDrawCommand(const DrawCommand& drawCommand) { drawCommands.push_back(drawCommand); }
 
 
 

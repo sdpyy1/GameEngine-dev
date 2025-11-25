@@ -11,6 +11,12 @@
 #include <glm/gtx/quaternion.hpp>
 #include <Hazel/Renderer/old/EditorCamera.h>
 #include <Hazel/Asset/Model/Animation.h>
+#include "Hazel/Asset/AssetManager.h"
+#include "Hazel/Renderer/RenderResource/RenderStruct.h"
+#include "Hazel/Core/Application.h"
+#include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderResource/RenderBuffer.h"
+#include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 
 namespace GameEngine {
 
@@ -31,47 +37,86 @@ namespace GameEngine {
 		TagComponent(const std::string& tag)
 			: Tag(tag) {}
 	};
-	struct StaticMeshComponent
+
+
+	// TODO:学 CLUSTER 和 VIRTUAL_MESH
+	enum MeshRendererMode
+	{
+		RENDER_MODE_DEFAULT = 0,
+		RENDER_MODE_CLUSTER,
+		RENDER_MODE_VIRTUAL_MESH,
+
+		RENDER_MODE_MAX,//
+	};
+	struct ModelComponent
 	{
 		AssetHandle StaticMesh = 0;
+		ModelRef model;
+		std::filesystem::path path = "";
+
 		bool Visible = true;
-		std::filesystem::path path = "";
-		StaticMeshComponent() = default;
-		StaticMeshComponent(const StaticMeshComponent& other)
-			: StaticMesh(other.StaticMesh), Visible(other.Visible),path(other.path)
-		{
-		}
-		StaticMeshComponent(AssetHandle staticMesh, std::filesystem::path filePath)
+		bool isDynamic = false;
+		MeshRendererMode renderMode = RENDER_MODE_DEFAULT;
+		std::vector<MaterialRef> materials;
+		bool castShadow = true;
+		ModelComponent() = default;
+		ModelComponent(AssetHandle staticMesh, std::filesystem::path filePath)
 			: StaticMesh(staticMesh),path(filePath){
+			model = AssetManager::GetAssetByAssetHandle<Model>(staticMesh);
+			isDynamic = model->hasBone();
+			materials = model->GetMaterials();   // TODO:注意这个可能导致所有实例都引用同一个材质
 		}
 	};
-	struct DynamicMeshComponent
-	{
-		std::filesystem::path path = "";
-		AssetHandle meshSource = 0;
-		DynamicMeshComponent() = default;
-		DynamicMeshComponent(AssetHandle handle, std::filesystem::path filePath) {
-			meshSource = handle;
-			path = filePath;
-		}
-	};
+
 	struct SubmeshComponent
 	{
 		AssetHandle Mesh;
-		std::vector<UUID> BoneEntityIds; 
 		uint32_t SubmeshIndex = 0;
 		bool Visible = true;
+		std::vector<UUID> BoneEntityIds;
+		ModelRef model;
+        MaterialRef material;
+		bool castShadow = true;
+
+		V2::MeshInfo meshInfo;
+		uint32_t meshInfoID = 0;
 
 		SubmeshComponent() = default;
-		SubmeshComponent(const SubmeshComponent& other)
-			: Mesh(other.Mesh), BoneEntityIds(other.BoneEntityIds), SubmeshIndex(other.SubmeshIndex), Visible(other.Visible)
-		{
+		void updateMeshInfo() {
+			RENDER_RESOURCEMANAGER->SetMeshInfo(meshInfo, meshInfoID);
 		}
 		SubmeshComponent(AssetHandle mesh, uint32_t submeshIndex = 0)
 			: Mesh(mesh), SubmeshIndex(submeshIndex)
 		{
+            model = AssetManager::GetAssetByAssetHandle<Model>(mesh);
+            material = model->GetMaterials()[SubmeshIndex];
+			castShadow = material->castShadow;
+			meshInfoID = RENDER_RESOURCEMANAGER->AllocateMeshInfoID();
+			meshInfo.animationID = 0;
+			meshInfo.indexID = model->GetSubmeshes()[SubmeshIndex].indexBuffer->indexID;
+			meshInfo.vertexID = model->GetSubmeshes()[SubmeshIndex].vertexBuffer->vertexID;
+			meshInfo.materialID = model->GetMaterials()[SubmeshIndex] ? model->GetMaterials()[SubmeshIndex]->GetMaterialID() : 0;
+
+			RENDER_RESOURCEMANAGER->SetMeshInfo(meshInfo, meshInfoID);
+
 		}
 	};
+
+
+	struct DynamicModelComponent
+	{
+		AssetHandle meshSource = 0;
+		std::filesystem::path path = "";
+		bool Visible = true;
+
+		DynamicModelComponent() = default;
+		DynamicModelComponent(AssetHandle handle, std::filesystem::path filePath) {
+			path = filePath;
+		}
+	};
+
+
+
 	struct RelationshipComponent
 	{
 		UUID ParentHandle = 0;
@@ -348,9 +393,9 @@ namespace GameEngine {
 	};
 
 	using AllComponents = 
-		ComponentGroup<StaticMeshComponent,TransformComponent, SpriteRendererComponent,
+		ComponentGroup<ModelComponent,TransformComponent, SpriteRendererComponent,
 			CircleRendererComponent, CameraComponent, ScriptComponent, SpotLightComponent,
 			NativeScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent, SkyComponent,
-			CircleCollider2DComponent, TextComponent, RelationshipComponent, DirectionalLightComponent, SubmeshComponent,DynamicMeshComponent, AnimationComponent>;
+			CircleCollider2DComponent, TextComponent, RelationshipComponent, DirectionalLightComponent, SubmeshComponent,DynamicModelComponent, AnimationComponent>;
 
 }

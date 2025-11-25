@@ -7,7 +7,11 @@ namespace GameEngine
 {
 	void MeshPassProcessor::Init()
 	{
-
+		for (auto& indirectBuffer : indirectBuffers)
+		{
+			if (indirectBuffer == nullptr)
+				indirectBuffer = std::make_shared<MeshPassIndirectBuffers>();
+		}
 	}
 
 	// drawBatches从场景中收集
@@ -15,6 +19,10 @@ namespace GameEngine
 	{
 		// 1.处理场景的drawBatch数据，收集到m_Batches中
 		m_Batches.clear();
+		m_DrawGeometries.clear();
+		drawCommands.clear();
+		meshDrawCommands.clear();
+		meshDrawInfos.clear();
 		for (auto& batch : drawBatches)
 		{
 			OnCollectBatch(batch);  // 具体的Pass重载逻辑
@@ -151,6 +159,9 @@ namespace GameEngine
 			meshDrawCommands.push_back(meshDrawCommand);
 			meshCount++;
 		}
+		drawCommand.meshCommandRange.size = meshCount;
+		AddDrawCommand(drawCommand);
+
 	}
 
 	std::shared_ptr<MeshPassIndirectBuffers> MeshPassProcessor::GetIndirectBuffers()

@@ -17,7 +17,7 @@ namespace GameEngine {
 	enum MeshPassType
 	{
 		
-
+		MESH_PASS_GBUFFER_PASS,
 		MESH_PASS_TYPE_MAX_CNT,	//
 	};
 	class RenderPassNew {

@@ -209,24 +209,24 @@ namespace GameEngine {
 			out << YAML::Key << "Scale" << YAML::Value << transform.Scale;
 			out << YAML::EndMap; // TransformComponent
 		}
-		if (entity.HasComponent<StaticMeshComponent>())
+		if (entity.HasComponent<ModelComponent>())
 		{
-			out << YAML::Key << "StaticMeshComponent";
-			out << YAML::BeginMap; // StaticMeshComponent
+			out << YAML::Key << "ModelComponent";
+			out << YAML::BeginMap; // ModelComponent
 
-			auto& smc = entity.GetComponent<StaticMeshComponent>();
+			auto& smc = entity.GetComponent<ModelComponent>();
 			out << YAML::Key << "MeshSourcePath" << YAML::Value << smc.path.string();
 			out << YAML::Key << "Visible" << YAML::Value << smc.Visible;
-			out << YAML::EndMap; // StaticMeshComponent
+			out << YAML::EndMap; // ModelComponent
 		}
-		if (entity.HasComponent<DynamicMeshComponent>())
+		if (entity.HasComponent<DynamicModelComponent>())
 		{
-			out << YAML::Key << "DynamicMeshComponent";
-			out << YAML::BeginMap; // StaticMeshComponent
+			out << YAML::Key << "DynamicModelComponent";
+			out << YAML::BeginMap; // ModelComponent
 
-			auto& smc = entity.GetComponent<DynamicMeshComponent>();
+			auto& smc = entity.GetComponent<DynamicModelComponent>();
 			out << YAML::Key << "MeshSourcePath" << YAML::Value << smc.path.string();
-			out << YAML::EndMap; // StaticMeshComponent
+			out << YAML::EndMap; // ModelComponent
 		}
 		if (entity.HasComponent<DirectionalLightComponent>())
 		{
@@ -349,19 +349,19 @@ namespace GameEngine {
 					tc.Scale = transformComponent["Scale"].as<glm::vec3>();
 				}
 
-				auto staticMeshComponent = entity["StaticMeshComponent"];
+				auto staticMeshComponent = entity["ModelComponent"];
 				if (staticMeshComponent) {
-					deserializedEntity.AddComponent<StaticMeshComponent>();
+					deserializedEntity.AddComponent<ModelComponent>();
 					Ref<Asset> meshSource = AssetManager::GetMesh(staticMeshComponent["MeshSourcePath"].as<std::string>());
-					auto& com = deserializedEntity.GetComponent<StaticMeshComponent>();
+					auto& com = deserializedEntity.GetComponent<ModelComponent>();
 					com.path = staticMeshComponent["MeshSourcePath"].as<std::string>();
 					com.StaticMesh = meshSource->Handle;
 					com.Visible = staticMeshComponent["Visible"].as<bool>();
 				}
-				auto dynamicMeshComponent = entity["DynamicMeshComponent"];
+				auto dynamicMeshComponent = entity["DynamicModelComponent"];
 				if (dynamicMeshComponent) {
 					Ref<Asset> meshSource = AssetManager::GetMesh(dynamicMeshComponent["MeshSourcePath"].as<std::string>());
-					deserializedEntity.AddComponent<DynamicMeshComponent>(meshSource->Handle, dynamicMeshComponent["MeshSourcePath"].as<std::string>());
+					deserializedEntity.AddComponent<DynamicModelComponent>(meshSource->Handle, dynamicMeshComponent["MeshSourcePath"].as<std::string>());
 					m_Scene->BuildDynamicMeshEntity(meshSource, deserializedEntity, dynamicMeshComponent["MeshSourcePath"].as<std::string>());
 				}
 				if (auto directionalLightComponent = entity["DirectionalLightComponent"]; directionalLightComponent)

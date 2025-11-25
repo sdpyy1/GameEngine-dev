@@ -18,6 +18,14 @@ namespace GameEngine {
 
         } VertexInfo;
 
+        typedef struct MeshInfo {
+            glm::mat4 modelMatrix;
+            uint32_t animationID;           //TODO:动画索引
+            uint32_t materialID;
+            uint32_t vertexID;
+            uint32_t indexID;
+        }MeshInfo;
+
         typedef struct IndirectSetting
         {
             uint32_t processSize = 0;               // 本轮需要处理的全部batch/cluster/cluster group数目

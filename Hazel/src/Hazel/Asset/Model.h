@@ -37,11 +37,15 @@ namespace GameEngine {
     struct SubmeshData
     {
         std::shared_ptr<V2::Mesh> mesh;                                 // CPU端的mesh和cluster信息
+        VertexBufferRef vertexBuffer;                               // GPU端的顶点和索引缓冲，既可能存储单个submesh的全部顶点和索引，也可能存储其全部cluster合并后的数据
+        IndexBufferRef indexBuffer;
+
+
+
         //std::vector<MeshClusterRef> clusters;                       // 仅生成cluster时的信息
         //std::shared_ptr<VirtualMesh> virtualMesh;                   // 生成cluster + cluster group时的信息
 
-        VertexBufferRef vertexBuffer;                               // GPU端的顶点和索引缓冲，既可能存储单个submesh的全部顶点和索引，也可能存储其全部cluster合并后的数据
-        IndexBufferRef indexBuffer;
+
 
         //IndexRange meshClusterID = { 0, 0 };            // 提交的一组cluster的ID范围
         //IndexRange meshClusterGroupID = { 0, 0 };       // 提交的一组cluster group的ID范围
@@ -58,7 +62,10 @@ namespace GameEngine {
         virtual V2::AssetType GetAssetType() override { return V2::ASSET_TYPE_MODEL; }
         virtual void OnLoadAsset() override;
         virtual void OnSaveAsset() override;
-
+        bool hasBone() {return findBone;}
+        std::vector<SubmeshData>& GetSubmeshes() { return submeshes; }
+        SubmeshData& GetSubmesh(uint32_t index) { return submeshes[index]; }
+        std::vector<MaterialRef>& GetMaterials() { return materials; }
     private:
         std::string path;
         ModelProcessSetting processSetting;
@@ -73,6 +80,9 @@ namespace GameEngine {
         void ProcessMesh(aiMesh* mesh, const aiScene* scene, int index);
         void ExtractBoneWeights(V2::Mesh* submesh, aiMesh* mesh, const aiScene* scene);
         std::shared_ptr<V2::Texture> LoadMaterialTexture(aiMaterial* mat, aiTextureType type);
+        bool findBone = false;
     };
+
+    using ModelRef = std::shared_ptr<Model>;
 }
 

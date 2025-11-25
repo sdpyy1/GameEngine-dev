@@ -3,6 +3,7 @@
 #include "Hazel/Asset/Model/MaterialAsset.h"
 #include "AssetMetadata.h"
 #include "AssetImporter.h"
+#include "Model.h"
 namespace GameEngine {
 	class AssetManager {
 	public:
@@ -38,9 +39,40 @@ namespace GameEngine {
 			m_AssetDependencies[handle].insert(dependency);
 		}
 
+
+
+
+
+		// ÐÂ°æ
+		static ModelRef LoadModel(std::string path) {
+			ModelProcessSetting processSetting;
+			auto& model = std::make_shared<Model>(path, processSetting);
+			AssetsMap[model->GetUID()] = model;
+            return model;
+		}
+
+
+		template<typename T>
+		static std::shared_ptr<T> GetAssetByAssetHandle(AssetHandle assetHandle) {
+			auto asset = AssetsMap[assetHandle];
+			if (!asset) return nullptr;
+			return std::dynamic_pointer_cast<T>(asset);
+		}
+
+
+
+
+
+
+
+
 	private:
 		static std::unordered_map<AssetHandle, Ref<Asset>> m_MemoryAssets;
 		static std::unordered_map<AssetHandle, std::unordered_set<AssetHandle>> m_AssetDependencies;
 		static std::map<std::filesystem::path, Ref<Asset>> MesheSourceCacheMap;
+
+
+
+		static std::unordered_map<AssetHandle, std::shared_ptr<V2::Asset>> AssetsMap;
 	};
 }

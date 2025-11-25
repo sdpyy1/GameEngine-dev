@@ -1,6 +1,8 @@
 #include "hzpch.h"
 #include "RenderBuffer.h"
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
+
 namespace GameEngine {
 
 	namespace V2 { 
@@ -107,6 +109,19 @@ namespace GameEngine {
             RENDER_RESOURCEMANAGER->SetVertexInfo(vertexInfo, vertexID);
         }
 
+		VertexBuffer::~VertexBuffer()
+		{
+            /*if (vertexInfo.positionID != 0)     RENDER_RESOURCEMANAGER->ReleaseBindlessID(vertexInfo.positionID, BINDLESS_SLOT_POSITION);
+            if (vertexInfo.normalID != 0)       RENDER_RESOURCEMANAGER->ReleaseBindlessID(vertexInfo.normalID, BINDLESS_SLOT_NORMAL);
+            if (vertexInfo.tangentID != 0)      RENDER_RESOURCEMANAGER->ReleaseBindlessID(vertexInfo.tangentID, BINDLESS_SLOT_TANGENT);
+            if (vertexInfo.texCoordID != 0)     RENDER_RESOURCEMANAGER->ReleaseBindlessID(vertexInfo.texCoordID, BINDLESS_SLOT_TEXCOORD);
+            if (vertexInfo.colorID != 0)        RENDER_RESOURCEMANAGER->ReleaseBindlessID(vertexInfo.colorID, BINDLESS_SLOT_COLOR);
+            if (vertexInfo.boneIndexID != 0)    RENDER_RESOURCEMANAGER->ReleaseBindlessID(vertexInfo.boneIndexID, BINDLESS_SLOT_BONE_INDEX);
+            if (vertexInfo.boneWeightID != 0)   RENDER_RESOURCEMANAGER->ReleaseBindlessID(vertexInfo.boneWeightID, BINDLESS_SLOT_BONE_WEIGHT);
+
+            if (vertexID != 0)       RENDER_RESOURCEMANAGER->ReleaseVertexID(vertexID);*/
+		}
+
 		void IndexBuffer::SetIndex(const std::vector<uint32_t>& index)
 		{
             indexNum = index.size();
@@ -134,6 +149,12 @@ namespace GameEngine {
             }
 
             memcpy(buffer->Map(), index.data(), size);
+		}
+
+		IndexBuffer::~IndexBuffer()
+		{
+            // if (indexID != 0) RENDER_RESOURCEMANAGER->ReleaseBindlessID(indexID, BINDLESS_SLOT_INDEX);
+
 		}
 
 	}

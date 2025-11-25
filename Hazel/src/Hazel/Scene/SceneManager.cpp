@@ -16,7 +16,6 @@ namespace GameEngine
 		m_EditorCamera->OnUpdate(ts);
 		m_CurrentScene->PackupSceneInfo(*m_EditorCamera); // 打包场景数据
 		m_CurrentScene->UpdateAnimation(ts); // 更新动画
-		// LOG_TRACE("SceneManager::Tick Done!");
 	}
 
 	bool SceneManager::OpenScene()

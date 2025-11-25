@@ -14,10 +14,9 @@ namespace GameEngine
 
         if (!IsValid(info))
         {
-            LOG_ERROR("RHIGraphicsPipelineInfo is not valid!");
+            // LOG_TRACE("RHIGraphicsPipelineInfo is not valid!");
             return { nullptr };
         }
-
         LOG_WARN("RHIGraphicsPipeline not found in cache, creating new.");
         ret = { APP_DYNAMICRHI->CreateGraphicsPipeline(info)};
         cachedPipelines[info] = ret;

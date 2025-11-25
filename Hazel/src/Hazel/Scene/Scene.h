@@ -95,7 +95,7 @@ namespace GameEngine {
 		void ShowDebugTexture();
 		void SetViewprotSize(float width, float height) { m_ViewportWidth = width; m_ViewportHeight = height; }
 	public:
-		void CollectRenderableEntities(std::shared_ptr<SceneRender>& sceneRender);
+		void CollectRenderableEntities();
 		Entity CreateEntity(const std::string& name = std::string());
 		Entity CreateChildEntity(Entity parent, const std::string& name);
 		void SortEntities();

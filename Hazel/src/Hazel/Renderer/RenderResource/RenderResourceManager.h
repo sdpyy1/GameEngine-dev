@@ -7,6 +7,7 @@
 #include "RenderStruct.h"
 #include "Hazel/Scene/Scene.h"
 #include "Sampler.h"
+#include "Hazel/Renderer/RenderPass/Meshpass.h"
 #define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
 namespace GameEngine {
     // 使用Bindless的资源
@@ -34,7 +35,7 @@ namespace GameEngine {
     };
     enum GlobalResourceBindingID {
         // 顶点资源
-        GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION = 0,
         GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL,
         GLORBAL_RESOURCE_BINDING_BINDLESS_TANGENT,
         GLORBAL_RESOURCE_BINDING_BINDLESS_TEXCOORD,
@@ -43,7 +44,7 @@ namespace GameEngine {
         GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_WEIGHT,
         GLORBAL_RESOURCE_BINDING_BINDLESS_ANIMATION,
         GLORBAL_RESOURCE_BINDING_BINDLESS_INDEX,
-        
+
         // 采样资源
         GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER,
         GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D,
@@ -53,16 +54,12 @@ namespace GameEngine {
         GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE,
         GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_3D,
 
-        // 渲染资源
-        GLORBAL_RESOURCE_BINDING_BINDLESS_MODEL_TRANSFORM,
-
-
-
-
         // 常规资源
         GLORBAL_RESOURCE_BINDING_SETTING,
         GLORBAL_RESOURCE_BINDING_CAMERA,
-
+        GLORBAL_RESOURCE_BINDING_MESHINFO,
+        GLORBAL_RESOURCE_BINDING_MATERIALINFO,
+        GLORBAL_RESOURCE_BINDING_VERTEXINFO,
         GLORBAL_RESOURCE_BINDING_MAX_ENUM,//
     };
 
@@ -71,6 +68,7 @@ namespace GameEngine {
     {
         RHIDescriptorSetRef descriptorSet;
         RenderBuffer<V2::CameraData> cameraDataBuffer;
+
     };
     
 
@@ -88,6 +86,8 @@ namespace GameEngine {
         // 各种InfoBuffer，存储每个资源在Bindless 中的索引
         ArrayBuffer<V2::VertexInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> vertexBuffer;
         ArrayBuffer<V2::MaterialInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> materialBuffer;
+        ArrayBuffer<V2::MeshInfo, MAX_PER_FRAME_OBJECT_SIZE> meshInfoBuffer;
+
     };
 
 
@@ -132,7 +132,10 @@ namespace GameEngine {
             void ReleaseVertexID(uint32_t id) { m_MultiFrameGlobalResources.vertexBuffer.Release(id); }
             void SetVertexInfo(const V2::VertexInfo& vertexInfo, uint32_t vertexID) {m_MultiFrameGlobalResources.vertexBuffer.SetData(vertexInfo, vertexID);};
 
-
+            // MeshInfo
+            uint32_t AllocateMeshInfoID() { return m_MultiFrameGlobalResources.meshInfoBuffer.Allocate(); }
+            void ReleaseMeshInfoID(uint32_t id) { m_MultiFrameGlobalResources.meshInfoBuffer.Release(id); }
+            void SetMeshInfo(const V2::MeshInfo& meshInfo, uint32_t meshID) {m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfo, meshID);};
 
 
             

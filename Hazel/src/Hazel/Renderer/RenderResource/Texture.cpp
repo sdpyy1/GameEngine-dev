@@ -4,6 +4,7 @@
 #include "Hazel/Core/Application.h"
 #include <stb_image.h>
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 
 namespace GameEngine::V2
 {

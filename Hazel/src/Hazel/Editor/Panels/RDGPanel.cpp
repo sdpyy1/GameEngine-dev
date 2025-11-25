@@ -545,6 +545,7 @@ namespace GameEngine {
         ImVec2 nodePosition = ImVec2(0, 0);
         float nodePositionY = 0;
 
+        ImGui::Begin("RDG");
 
         {
             if (autoUpdate) autoUpdateCount++;
@@ -556,7 +557,10 @@ namespace GameEngine {
                 autoUpdateCount = 0;
             }
             else init = false;
-            if (rdgDependencyGraph == nullptr) return;
+            if (rdgDependencyGraph == nullptr) {
+                ImGui::End();
+                return;
+            }
 
             ImGui::SameLine();
             ImGui::Checkbox("Auto update every 100 frames", &autoUpdate);
@@ -926,9 +930,10 @@ namespace GameEngine {
 
             ed::End();
             ed::SetCurrentEditor(nullptr);
-        }
 
-        
+        }
+        ImGui::End();
+
     }
 }
 

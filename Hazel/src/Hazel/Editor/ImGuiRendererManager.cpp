@@ -163,6 +163,7 @@ namespace GameEngine {
 
 		if (m_LogPanel.isOpen)
 			m_LogPanel.OnImGuiRender();
+
 		if (m_RDGPanel.isOpen)
 			m_RDGPanel.OnImGuiRender();
 	}
@@ -300,10 +301,10 @@ namespace GameEngine {
 
 			auto [origin, direction] = CastRay(*Application::GetSceneManager()->GetEditorCamera(), mouseX, mouseY);
 			auto meshEntities = Application::GetSceneManager()->GetActiveScene()
-				->GetAllEntitiesWith<StaticMeshComponent>();
+				->GetAllEntitiesWith<ModelComponent>();
 			for (auto e : meshEntities) {
 				Entity entity = { e, Application::GetSceneManager()->GetActiveScene().get()};
-				auto& mc = entity.GetComponent<StaticMeshComponent>();
+				auto& mc = entity.GetComponent<ModelComponent>();
 				Ref<MeshSource> meshSource = AssetManager::GetAsset<MeshSource>(mc.StaticMesh);
 				auto& submeshes = meshSource->GetSubmeshes();
 				for (uint32_t i = 0; i < submeshes.size(); i++)
@@ -333,11 +334,11 @@ namespace GameEngine {
 				}
 			}
 			auto dynamicMeshEntities = Application::GetSceneManager()->GetActiveScene()
-				->GetAllEntitiesWith<DynamicMeshComponent>();
+				->GetAllEntitiesWith<DynamicModelComponent>();
 
 			for (auto e : dynamicMeshEntities) {
 				Entity entity = { e, 	Application::GetSceneManager()->GetActiveScene().get() };
-				auto& mc = entity.GetComponent<DynamicMeshComponent>();
+				auto& mc = entity.GetComponent<DynamicModelComponent>();
 				Ref<MeshSource> meshSource = AssetManager::GetAsset<MeshSource>(mc.meshSource);
 				auto& submeshes = meshSource->GetSubmeshes();
 				for (uint32_t i = 0; i < submeshes.size(); i++)

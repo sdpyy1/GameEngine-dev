@@ -2,6 +2,8 @@
 #include "GbufferPass.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
 #include <Hazel/Renderer/RenderSystem/RenderSystem.h>
+#include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
+
 namespace GameEngine
 {
 	void GBufferPassProcessor::OnCollectBatch(const DrawBatch& batch)
@@ -27,7 +29,7 @@ namespace GameEngine
 		pipelineInfo.colorAttachmentFormats[1] = FORMAT_R8G8B8A8_SNORM;
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
 		pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
-		if (pipeline) return pipeline;
+		if (pipeline) return pipeline;   // 材质自带Shader
 
 		pipelineInfo.vertexShader = pipelineState.clusterRender ?
 			pass->clusterVertexShader->GetRHIShader() :
@@ -48,8 +50,6 @@ namespace GameEngine
 
 		vertexShader = std::make_shared<V2::Shader>("Assets/Shader/spv/newGbufferVert.spv", SHADER_FREQUENCY_VERTEX);
 		fragmentShader = std::make_shared<V2::Shader>("Assets/Shader/spv/newGbufferFrag.spv", SHADER_FREQUENCY_FRAGMENT);
-
-
 
 		RHIRootSignatureInfo rootSignatureInfo = {};
 		rootSignatureInfo.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());  // Set=0 全局资源
@@ -104,27 +104,15 @@ namespace GameEngine
 				.Color(1, normal, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
 				.DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
 				.Execute([&](RDGPassContext context) {
-
-				auto [w, h] = APP_WINDOWSIZE;
-
-
-				RHICommandListRef command = context.command;
-				command->SetGraphicsPipeline(pipeline);
-				command->SetViewport({ 0, 0 }, { w,h });
-				command->SetScissor({ 0, 0 }, { w,h });
-				command->SetDepthBias(0.0f, 0.0f, 0.0f);
-				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
-
-
-
-
-
-
-
-
-
-					}
-				)
+					auto [w, h] = APP_WINDOWSIZE;
+					RHICommandListRef command = context.command;
+					command->SetGraphicsPipeline(pipeline);
+					command->SetViewport({ 0, 0 }, { w,h });
+					command->SetScissor({ 0, 0 }, { w,h });
+					command->SetDepthBias(0.0f, 0.0f, 0.0f);
+					command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
+					meshPassProcessor->Draw(command);
+				})
 				.Finish();
 
 		}

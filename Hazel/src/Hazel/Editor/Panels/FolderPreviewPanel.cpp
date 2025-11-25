@@ -49,20 +49,19 @@ namespace GameEngine {
 		}
 		else if (ext == ".fbx" || ext == ".gltf" || ext == ".obj")
 		{
-			Ref<MeshSource> meshSource = AssetManager::GetMesh(path);
-			Entity meshRoot = m_Context->CreateEntity(path.string());
-			if (!meshSource)
-			{
-				LOG_WARN("Failed to load mesh source for: {}", path.string());
-				return;
-			}
 
-			if (meshSource->GetAnimationNames().empty() || meshSource->GetBoneInfo().size() == 0)
-				meshRoot.AddComponent<StaticMeshComponent>(meshSource->Handle, path);
-			else
-			{
-				meshRoot.AddComponent<DynamicMeshComponent>(meshSource->Handle, path);
-				m_Context->BuildDynamicMeshEntity(meshSource, meshRoot, path);
+			ModelRef model = AssetManager::LoadModel(path.string());
+			model->OnLoadAsset();
+			Entity modelEntity = m_Context->CreateEntity(path.string());
+
+			// StaticModel
+			auto& modelComponent =  modelEntity.AddComponent<ModelComponent>(model->GetUID(), path);
+
+			int submeshIndex = 0;
+			for (auto& mesh : model->GetSubmeshes()) {
+				auto& subMeshEntity = m_Context->CreateEntity(mesh.mesh->name);
+				subMeshEntity.SetParent(modelEntity);
+				subMeshEntity.AddComponent<SubmeshComponent>(model->GetUID(), submeshIndex++);
 			}
 		}
 		else if (ext == ".png" || ext == ".jpg" || ext == ".jpeg")
@@ -406,7 +405,7 @@ namespace GameEngine {
 
 			// 图标 + 分类名
 			ImGui::AlignTextToFramePadding();
-			// ImGui::Image(UI::GetImageId(m_DirectoryIcon->GetImage()), ImVec2(16, 16), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Image(m_DirectoryIcon.textureID->RawHandle(), ImVec2(16, 16), ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::SameLine();
 
 			if (ImGui::Selectable(category.Name.c_str(), isCategorySelected, ImGuiSelectableFlags_SpanAvailWidth))

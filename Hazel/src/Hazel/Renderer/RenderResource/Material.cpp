@@ -2,17 +2,19 @@
 #include "Material.h"
 #include "Hazel/Core/Application.h"
 #include <Hazel/Renderer/RenderSystem/RenderSystem.h>
+#include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
+
 namespace GameEngine::V2
 { 
 	Material::Material()
 	{
-		materialID = RENDER_RESOURCEMANAGER->AllocateMaterialID();   // 在MaterialInfoBuffer中分配一个ID
+		materialID = RENDER_RESOURCEMANAGER->AllocateMaterialID();
 		Update();
 	}
 
 	Material::~Material()
 	{
-		if ( materialID != 0) RENDER_RESOURCEMANAGER->ReleaseMaterialID(materialID);
+		// if (APP_RENDERSYSTEM && materialID != 0) RENDER_RESOURCEMANAGER->ReleaseMaterialID(materialID);
 	}
 
 	void Material::Update()

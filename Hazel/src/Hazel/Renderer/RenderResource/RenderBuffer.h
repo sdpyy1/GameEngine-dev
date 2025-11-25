@@ -3,6 +3,7 @@
 #include "Hazel/Core/Application.h"
 #include "Hazel/Utils/IndexAllocator.h"
 #include "RenderStruct.h"
+#include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 namespace GameEngine
 {
 	template<typename Type>   // 直接指明Buffer要存储的数据类型
@@ -10,14 +11,13 @@ namespace GameEngine
 	{
 
 	public:
-		RenderBuffer(ResourceType type = RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_UNIFORM_BUFFER, MemoryUsage usage = MEMORY_USAGE_CPU_TO_GPU)
-		{
+		RenderBuffer(ResourceType type = RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_UNIFORM_BUFFER, MemoryUsage usage = MEMORY_USAGE_CPU_TO_GPU) {
 			m_Size = sizeof(Type);
 			RHIBufferInfo info;
 			info.size = sizeof(Type);
-            info.memoryUsage = usage;
-            info.type = type;
-            info.creationFlag = BUFFER_CREATION_PERSISTENT_MAP;  // 加速map操作
+			info.memoryUsage = usage;
+			info.type = type;
+			info.creationFlag = BUFFER_CREATION_PERSISTENT_MAP;  // 加速map操作
 			buffer = APP_DYNAMICRHI->CreateBuffer(info);
 		}
 		RHIBufferRef GetRHIBuffer() { return buffer; }
@@ -45,8 +45,6 @@ namespace GameEngine
 		RHIBufferRef buffer;
 		uint32_t m_Size;
 	};
-
-
 
 	// 用一个Buffer来管理数组，通过偏移来访问
 	template<typename Type, size_t arraySize>
@@ -77,7 +75,7 @@ namespace GameEngine
 		IndexRange Allocate(uint32_t size) { return idAlloctor.Allocate(size); }
 		void Release(uint32_t index) { idAlloctor.Release(index); }
 		void Release(IndexRange range) { idAlloctor.Release(range); }
-
+		RHIBufferRef GetRHIBuffer() { return buffer; }
 		RHIBufferRef buffer;
 
 	private:
@@ -118,7 +116,7 @@ namespace GameEngine
 		class IndexBuffer
 		{
 		public:
-			IndexBuffer() = default;
+			IndexBuffer() {};
 			~IndexBuffer();
 
 			void SetIndex(const std::vector<uint32_t>& index);

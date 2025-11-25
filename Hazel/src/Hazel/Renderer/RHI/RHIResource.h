@@ -193,7 +193,6 @@ namespace GameEngine {
 		ShaderFrequency GetFrequency() 				const { return frequency; }
 		const ShaderReflectInfo& GetReflectInfo() 	const { return reflectInfo; }
 		const RHIShaderInfo& GetInfo() 				const { return info; }
-
 	private:
 		ShaderFrequency frequency;
 

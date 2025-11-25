@@ -6,6 +6,9 @@
 #include <Hazel/Renderer/RenderPass/PresentPass.h>
 #include "Hazel/Asset/Model.h"
 #include <Hazel/Renderer/RenderPass/GbufferPass.h>
+#include "MeshCollector.h"
+#include <Hazel/Renderer/RenderResource/RenderResourceManager.h>
+
 namespace GameEngine {
 	RenderSystem::RenderSystem()
 	{
@@ -24,6 +27,7 @@ namespace GameEngine {
 
 	void RenderSystem::Tick(float timestep)
 	{
+		MeshCollector::CollectMesh();
 		m_RenderResourceManager->Tick();
 		auto& CurResource = m_PerFrameBaseResources[APP_FRAMEINDEX];
 		/// LOG_INFO("RenderSystem::Tick");
@@ -49,18 +53,8 @@ namespace GameEngine {
 
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
 
-
-
-
-		// ≤‚ ‘«¯”Ú
-		ModelProcessSetting assetsSetting;
-		// Model model = Model("Assets/Model/helmet/DamagedHelmet.gltf", assetsSetting);
-		Model model = Model("Assets/Model/m1911/M1911.gltf", assetsSetting);
-
-		model.OnLoadAsset();
-
-
-		passes[GBUFFER_PASS] = std::make_shared<GBufferPass>();
+		meshPasses[MESH_PASS_GBUFFER_PASS] = std::make_shared<GBufferPass>();
+		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();
 		passes[IMGUI_PASS] = std::make_shared<ImGuiPass>();
         passes[PRESENT_PASS] = std::make_shared<PresentPass>();

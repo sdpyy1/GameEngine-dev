@@ -3,6 +3,8 @@
 #include <Hazel/Core/Application.h>
 #include "Hazel/Renderer/RenderResource/Shader.h"
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
+#include "Hazel/Renderer/RenderResource/PipelineCache.h"
 
 namespace GameEngine {
 	void GridPass::Init()
@@ -22,7 +24,7 @@ namespace GameEngine {
         pipelineInfo.vertexShader = m_VertShader;
         pipelineInfo.fragmentShader = m_FragShader;
 		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R8G8B8A8_UNORM;
-		m_Pipeline = RHI->CreateGraphicsPipeline(pipelineInfo);
+		m_Pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
 	}
 
 	void GridPass::Build(RDGBuilder& builder)

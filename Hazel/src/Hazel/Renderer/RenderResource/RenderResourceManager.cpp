@@ -38,7 +38,11 @@ namespace GameEngine {
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE_CUBE });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_3D, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
 
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_MODEL_TRANSFORM, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+
+		// 下面这些需要手动去绑定buffer和preFrame资源描述符
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MESHINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MATERIALINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_VERTEXINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_SETTING, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_BUFFER });
@@ -50,20 +54,39 @@ namespace GameEngine {
 		// 挂载默认全局资源
 		for (auto& resource : m_PerFrameGlobalResources) {
 			// camera
-			RHIDescriptorUpdateInfo updateInfo = {};
-			updateInfo.resourceType = RESOURCE_TYPE_BUFFER;
-            updateInfo.buffer = resource.cameraDataBuffer.GetRHIBuffer();
-			updateInfo.index = 0;
-			updateInfo.binding = GLORBAL_RESOURCE_BINDING_CAMERA;
-			resource.descriptorSet->UpdateDescriptor(updateInfo);
+			RHIDescriptorUpdateInfo cameraUpdateInfo = {};
+			cameraUpdateInfo.resourceType = RESOURCE_TYPE_BUFFER;
+			cameraUpdateInfo.buffer = resource.cameraDataBuffer.GetRHIBuffer();
+			cameraUpdateInfo.index = 0;
+			cameraUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_CAMERA;
+			resource.descriptorSet->UpdateDescriptor(cameraUpdateInfo);
 			
 			// Setting
 
 
+			// meshInfo
+			RHIDescriptorUpdateInfo meshInfoUpdateInfo = {};
+            meshInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+            meshInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.meshInfoBuffer.GetRHIBuffer();
+			cameraUpdateInfo.index = 0;
+			cameraUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_MESHINFO;
+			resource.descriptorSet->UpdateDescriptor(meshInfoUpdateInfo);
 
+			// materialInfo
+            RHIDescriptorUpdateInfo materialInfoUpdateInfo = {};
+            materialInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+            materialInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.materialBuffer.GetRHIBuffer();
+            materialInfoUpdateInfo.index = 0;
+            materialInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_MATERIALINFO;
+            resource.descriptorSet->UpdateDescriptor(materialInfoUpdateInfo);
 
-
-
+			// vertexInfo
+            RHIDescriptorUpdateInfo vertexInfoUpdateInfo = {};
+            vertexInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+            vertexInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.vertexBuffer.GetRHIBuffer();
+            vertexInfoUpdateInfo.index = 0;
+            vertexInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_VERTEXINFO;
+            resource.descriptorSet->UpdateDescriptor(vertexInfoUpdateInfo);
 
 		}
 

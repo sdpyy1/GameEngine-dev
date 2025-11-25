@@ -285,8 +285,8 @@ namespace GameEngine {
 		if (ImGui::BeginPopup("AddComponent"))
 		{
 			// TODO:这里添加新组件的添加按钮
-			DisplayAddComponentEntry<StaticMeshComponent>("StaticMesh");
-			DisplayAddComponentEntry<DynamicMeshComponent>("DynamicMesh");
+			DisplayAddComponentEntry<ModelComponent>("StaticModel");
+			DisplayAddComponentEntry<DynamicModelComponent>("DynamicModel");
 			DisplayAddComponentEntry<DirectionalLightComponent>("DirctionalLight");
 			ImGui::EndPopup();
 		}
@@ -305,44 +305,26 @@ namespace GameEngine {
 			});
 		DrawComponent<SubmeshComponent>("SubmeshComponent", entity, [](auto& component)
 			{
-				ImGui::Text("Mesh Source Handle: %llu", (uint64_t)component.Mesh);
 				ImGui::Checkbox("Visible", &component.Visible);
-				// 显示骨骼ID列表
-				if (ImGui::TreeNode("Bone Entity IDs")) // 可折叠节点，方便查看
-				{
-					if (component.BoneEntityIds.empty())
-					{
-						ImGui::Text("No bones"); // 空列表提示
-					}
-					else
-					{
-						// 遍历所有骨骼ID并显示
-						for (size_t i = 0; i < component.BoneEntityIds.size(); ++i)
-						{
-							// 假设UUID可转换为uint64_t，若为128位可分两部分显示
-							ImGui::Text("Bone %zu: %llu", i, (uint64_t)component.BoneEntityIds[i]);
-						}
-					}
-					ImGui::TreePop(); // 闭合节点
-				}
+				
 			});
-		DrawComponent<StaticMeshComponent>("Static Mesh", entity, [](auto& component)
+		DrawComponent<ModelComponent>("StaticModel", entity, [](auto& component)
+			{
+				ImGui::Checkbox("Visible", &component.Visible);
+			});
+		DrawComponent<DynamicModelComponent>("DynamicModel", entity, [](auto& component)
 			{
 				ImGui::Checkbox("Visible", &component.Visible);
 
-				DrawMaterial(component.StaticMesh);
 			});
+
 
 		DrawComponent<DirectionalLightComponent>("DirectionalLight", entity, [](auto& component)
 			{
 				ImGui::Text("DirectionalLight Add!");
 			});
 
-		DrawComponent<DynamicMeshComponent>("Dynamic Mesh", entity, [](auto& component)
-			{
-				DrawMaterial(component.meshSource);
-				return;
-			});
+
 
 		DrawComponent<SpotLightComponent>("Spot Light", entity, [](auto& component)
 			{
@@ -449,117 +431,6 @@ namespace GameEngine {
 	}
 	void AssetManagerPanel::DrawMaterial(AssetHandle meshSourceHandle)
 	{
-		Ref<MeshSource> meshSource = AssetManager::GetAsset<MeshSource>(meshSourceHandle);
-		if (!meshSource)
-			return;
-
-		auto& submeshes = meshSource->GetSubmeshes();
-		for (uint32_t i = 0; i < submeshes.size(); i++)
-		{
-			Submesh& submesh = submeshes[i];
-			Ref<MaterialOld> material = meshSource->GetMaterial(submesh.MaterialIndex);
-			if (!material)
-				continue;
-
-			if (ImGui::CollapsingHeader(submesh.MeshName.c_str()))
-			{
-				// ---------------- 材质基础参数 ----------------
-				glm::vec3 albedo = material->GetAlbedoColor();
-				if (ImGui::ColorEdit3("Albedo", glm::value_ptr(albedo)))
-					material->SetAlbedoColor(albedo);
-
-				float metalness = material->GetMetalnessColor();
-				if (ImGui::SliderFloat("Metalness", &metalness, 0.0f, 1.0f))
-					material->SetMetalnessColor(metalness);
-
-				float roughness = material->GetRoughnessColor();
-				if (ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f))
-					material->SetRoughnessColor(roughness);
-
-				glm::vec3 emission = material->GetEmissionColor();
-				if (ImGui::ColorEdit3("Emission", glm::value_ptr(emission)))
-					material->SetEmissionColor(emission);
-
-				bool useNormal = material->GetUseNormalTexture();
-				if (ImGui::Checkbox("Use Normal Map", &useNormal))
-					material->SetUseNormalTexture(useNormal);
-
-				// ---------------- 纹理缩略图 ----------------
-				struct TextureItem
-				{
-					std::string Name;
-					Ref<Texture2D>* TexturePtr;
-					std::function<void(Ref<Texture2D>)> SetFunc; // 设置纹理的方法
-				};
-
-				std::vector<TextureItem> textures = {
-					{ "Albedo", &material->GetAlbedoTexture(), [&material](Ref<Texture2D> tex) { material->SetAlbedoTexture(tex); } },
-					{ "Normal", &material->GetNormalTexture(), [&material](Ref<Texture2D> tex) { material->SetNormalTexture(tex); } },
-					{ "Metalness", &material->GetMetalnessTexture(), [&material](Ref<Texture2D> tex) { material->SetMetalnessTexture(tex); } },
-					{ "Roughness", &material->GetRoughnessTexture(), [&material](Ref<Texture2D> tex) { material->SetRoughnessTexture(tex); } },
-					{ "Emission", &material->GetEmissionTexture(), [&material](Ref<Texture2D> tex) { material->SetEmissionTexture(tex); } }
-				};
-
-				const float thumbnailSize = 64.0f;
-				const float padding = 8.0f;
-				const float cellSize = thumbnailSize + padding;
-				float panelWidth = ImGui::GetContentRegionAvail().x;
-				int columnCount = (int)(panelWidth / cellSize);
-				if (columnCount < 1) columnCount = 1;
-
-				int currentColumn = 0;
-				for (auto& texItem : textures)
-				{
-					ImGui::BeginGroup();
-					ImGui::TextUnformatted(texItem.Name.c_str());
-
-					if (*(texItem.TexturePtr))
-						ImGui::Image(UI::GetImageId((*(texItem.TexturePtr))->GetImage()), { thumbnailSize, thumbnailSize });
-
-					// ---------------- Drag and Drop Target ----------------
-					if (ImGui::BeginDragDropTarget())
-					{
-						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-						{
-							IM_ASSERT(payload->DataSize > 0);
-							const char* droppedPath = (const char*)payload->Data;
-							LOG_INFO("Dropped File: {0} for texture: {1}", droppedPath, texItem.Name);
-
-							// 判断是否为图片
-							if (IsImageFile(droppedPath))
-							{
-								LOG_INFO("Dropped image: {0}", droppedPath);
-
-								// ---------------- 加载纹理逻辑由你实现 ----------------
-								TextureSpecification spec;
-								spec.Format = ImageFormat::SRGBA;
-								spec.DebugName = "changeTexture";
-								std::filesystem::path dirIcon = droppedPath;
-								Ref<Texture2D> newTex = Texture2D::Create(spec, dirIcon);
-
-								// 设置到对应纹理
-								if (newTex)
-									texItem.SetFunc(newTex);
-							}
-							else
-							{
-								LOG_WARN("Dropped file is not an image: {0}", droppedPath);
-							}
-						}
-						ImGui::EndDragDropTarget();
-					}
-
-					ImGui::EndGroup();
-
-					currentColumn++;
-					if (currentColumn < columnCount)
-						ImGui::SameLine();
-					else
-						currentColumn = 0;
-				}
-
-				ImGui::Separator();
-			}
-		}
+		
 	}
 } // namespace GameEngine
