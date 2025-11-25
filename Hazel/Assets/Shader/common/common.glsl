@@ -1,9 +1,85 @@
 #ifndef COMMON_GLSL
 #define COMMON_GLSL
 
+// 全局资源绑定点
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION 1 
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL 2
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TANGENT 3
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXCOORD 4
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_COLOR 5
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_INDEX 6
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_WEIGHT 7
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_ANIMATION 8
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_INDEX 9
+        
+// 采样资源
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER 10
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D 11
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D_ARRAY 12
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D 13
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D_ARRAY 14
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE 15
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_3D 16
+
+// 常规资源
+#define GLORBAL_RESOURCE_BINDING_SETTING 17
+#define GLORBAL_RESOURCE_BINDING_CAMERA 18
+
+// Set = 0
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION) readonly buffer positions { 
+
+    float position[];
+
+} POSITIONS[];
+
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL) readonly buffer normals { 
+
+    float normal[];
+
+} NORMALS[];
 
 
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_TANGENT) readonly buffer tangents { 
+
+    float tangent[];
+
+} TANGENTS[];
 
 
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_TEXCOORD) readonly buffer texCoords { 
 
+    float texCoord[];
+
+} TEXCOORDS[];
+
+
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_COLOR) readonly buffer colors { 
+
+    float color[];
+
+} COLORS[];
+
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_INDEX) readonly buffer boneIndexs { 
+
+    int boneIndex[];
+
+} BONEINDEXS[];
+
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_WEIGHT) readonly buffer boneWeights { 
+
+    float boneWeight[];
+
+} BONEWEIGHTS[];
+
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_ANIMATION) readonly buffer animations { 
+
+    mat4 matrix[];
+
+} ANIMATIONS[];
+
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_INDEX) readonly buffer indices { 
+
+    uint index[];
+
+} INDICES[];
 #endif

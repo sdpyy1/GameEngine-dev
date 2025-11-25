@@ -33,11 +33,7 @@ namespace GameEngine {
 			.Format(FORMAT_R8G8B8A8_UNORM)
 			.AllowRenderTarget()
 			.Finish();
-		RDGTextureHandle outDepth = builder.CreateTexture("Depth")
-			.Exetent({ w, h, 1 })
-			.Format(FORMAT_D32_SFLOAT)
-			.AllowDepthStencil()
-			.Finish();
+		RDGTextureHandle outDepth = builder.GetTexture("Depth");
 		RDGBufferHandle cameraData = builder.CreateBuffer("CameraData")
 			.Import(RENDER_RESOURCEMANAGER->GetCameraDataBuffer().GetRHIBuffer(), RESOURCE_STATE_UNORDERED_ACCESS)
 			.Finish();

@@ -40,8 +40,8 @@ namespace GameEngine {
         //std::vector<MeshClusterRef> clusters;                       // 仅生成cluster时的信息
         //std::shared_ptr<VirtualMesh> virtualMesh;                   // 生成cluster + cluster group时的信息
 
-       // VertexBufferRef vertexBuffer;                               // GPU端的顶点和索引缓冲，既可能存储单个submesh的全部顶点和索引，也可能存储其全部cluster合并后的数据
-        //IndexBufferRef indexBuffer;
+        VertexBufferRef vertexBuffer;                               // GPU端的顶点和索引缓冲，既可能存储单个submesh的全部顶点和索引，也可能存储其全部cluster合并后的数据
+        IndexBufferRef indexBuffer;
 
         //IndexRange meshClusterID = { 0, 0 };            // 提交的一组cluster的ID范围
         //IndexRange meshClusterGroupID = { 0, 0 };       // 提交的一组cluster group的ID范围

@@ -1,7 +1,56 @@
 #pragma once
 #include <glm/ext/matrix_float4x4.hpp>
+#define MAX_PER_FRAME_OBJECT_SIZE 10240			    //全局最大支持的物体数目
+
 namespace GameEngine {
 	namespace V2 {
+
+        typedef struct VertexInfo
+        {
+            uint32_t positionID = 0;
+            uint32_t normalID = 0;
+            uint32_t tangentID = 0;
+            uint32_t texCoordID = 0;
+            uint32_t colorID = 0;
+            uint32_t boneIndexID = 0;
+            uint32_t boneWeightID = 0;
+            uint32_t _padding = 0;
+
+        } VertexInfo;
+
+        typedef struct IndirectSetting
+        {
+            uint32_t processSize = 0;               // 本轮需要处理的全部batch/cluster/cluster group数目
+            uint32_t pipelineStateSize = 0;         // 本轮处理的不同管线状态的数目
+            uint32_t _padding0[2];
+
+            uint32_t drawSize = 0;                  // 通过culling实际需要绘制的数目，由GPU端计算写入
+            uint32_t frustumCull = 0;               // 视锥剔除数目，由GPU端计算写入
+            uint32_t occlusionCull = 0;             // 遮蔽剔除数目，由GPU端计算写入
+            uint32_t _padding1;
+
+        } IndirectSetting;
+        typedef struct IndirectMeshDrawInfo
+        {
+            uint32_t objectID = 0;			        // 物体的实例索引
+            uint32_t commandID = 0;				    // 使用的间接绘制指令的下标
+
+        } IndirectMeshDrawInfo;
+        typedef struct IndirectMeshDrawDatas        // 提交给GPU的待剔除信息
+        {
+            IndirectSetting setting;
+
+            IndirectMeshDrawInfo draws[MAX_PER_FRAME_OBJECT_SIZE];
+
+        } DrawClusterGroupDatas;
+
+        typedef struct IndirectMeshDrawCommands     // 提交给GPU的间接绘制指令信息，被剔除的资源会置instanceCount为零；
+        {                                           // 整个buffer再给mesh pass调用绘制
+            RHIIndirectCommand commands[MAX_PER_FRAME_OBJECT_SIZE];
+
+        } IndirectMeshDrawCommands;
+
+
 		struct CameraData {
 			glm::mat4 view;
 			glm::mat4 proj;

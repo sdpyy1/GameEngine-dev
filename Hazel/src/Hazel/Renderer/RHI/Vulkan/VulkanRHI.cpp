@@ -1345,7 +1345,7 @@ namespace GameEngine
     void VulkanRHICommandContext::DrawIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount)
     {
         LOG_ERROR("VulkanRHICommandContext::DrawIndirect() is not implemented");
-        // vkCmdDrawIndirect(handle, CAST<>(argumentBuffer)->GetHandle(), offset, drawCount, sizeof(RHIIndirectCommand));
+        //vkCmdDrawIndirect(handle, CAST<>(argumentBuffer)->GetHandle(), offset, drawCount, sizeof(RHIIndirectCommand));
     }
 
     void VulkanRHICommandContext::DrawIndexedIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount)

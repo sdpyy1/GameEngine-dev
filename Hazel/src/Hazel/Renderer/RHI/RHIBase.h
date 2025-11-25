@@ -207,6 +207,33 @@ namespace GameEngine {
 		RESOURCE_TYPE_MAX_ENUM = 0x7FFFFFFF,	//
 	};
 	typedef uint32_t ResourceType;
+
+
+	// 间接绘制用
+	typedef struct RHIIndexedIndirectCommand
+	{
+		uint32_t    indexCount;
+		uint32_t    instanceCount;
+		uint32_t    firstIndex;
+		int32_t     vertexOffset;
+		uint32_t    firstInstance;
+	} RHIIndexedIndirectCommand;
+
+
+	// 间接绘制用
+	typedef struct RHIIndirectCommand
+	{
+		uint32_t    vertexCount;
+		uint32_t    instanceCount;
+		uint32_t    firstVertex;
+		uint32_t    firstInstance;
+	} RHIIndirectCommand;
+
+
+
+
+
+
 	typedef struct RHIBufferInfo
 	{
 		uint64_t size;
@@ -1044,6 +1071,77 @@ namespace GameEngine {
 
 	} RHIComputePipelineInfo;
 
+	static uint32_t FormatChanelCounts(RHIFormat format)
+	{
+		switch (format) {
+		case FORMAT_R8_SRGB:
+		case FORMAT_R16_SFLOAT:
+		case FORMAT_R32_SFLOAT:
+		case FORMAT_R8_UNORM:
+		case FORMAT_R16_UNORM:
+		case FORMAT_R8_SNORM:
+		case FORMAT_R16_SNORM:
+		case FORMAT_R8_UINT:
+		case FORMAT_R16_UINT:
+		case FORMAT_R32_UINT:
+		case FORMAT_R8_SINT:
+		case FORMAT_R16_SINT:
+		case FORMAT_R32_SINT:
+		case FORMAT_D32_SFLOAT:
+			return 1;
+
+		case FORMAT_R8G8_SRGB:
+		case FORMAT_R16G16_SFLOAT:
+		case FORMAT_R32G32_SFLOAT:
+		case FORMAT_R8G8_UNORM:
+		case FORMAT_R16G16_UNORM:
+		case FORMAT_R8G8_SNORM:
+		case FORMAT_R16G16_SNORM:
+		case FORMAT_R8G8_UINT:
+		case FORMAT_R16G16_UINT:
+		case FORMAT_R32G32_UINT:
+		case FORMAT_R8G8_SINT:
+		case FORMAT_R16G16_SINT:
+		case FORMAT_R32G32_SINT:
+		case FORMAT_D32_SFLOAT_S8_UINT:
+		case FORMAT_D24_UNORM_S8_UINT:
+			return 2;
+
+		case FORMAT_R8G8B8_SRGB:
+		case FORMAT_R16G16B16_SFLOAT:
+		case FORMAT_R32G32B32_SFLOAT:
+		case FORMAT_R8G8B8_UNORM:
+		case FORMAT_R16G16B16_UNORM:
+		case FORMAT_R8G8B8_SNORM:
+		case FORMAT_R16G16B16_SNORM:
+		case FORMAT_R8G8B8_UINT:
+		case FORMAT_R16G16B16_UINT:
+		case FORMAT_R32G32B32_UINT:
+		case FORMAT_R8G8B8_SINT:
+		case FORMAT_R16G16B16_SINT:
+		case FORMAT_R32G32B32_SINT:
+			return 3;
+
+		case FORMAT_R8G8B8A8_SRGB:
+		case FORMAT_B8G8R8A8_SRGB:
+		case FORMAT_R16G16B16A16_SFLOAT:
+		case FORMAT_R32G32B32A32_SFLOAT:
+		case FORMAT_R8G8B8A8_UNORM:
+		case FORMAT_R16G16B16A16_UNORM:
+		case FORMAT_R8G8B8A8_SNORM:
+		case FORMAT_R16G16B16A16_SNORM:
+		case FORMAT_R8G8B8A8_UINT:
+		case FORMAT_R16G16B16A16_UINT:
+		case FORMAT_R32G32B32A32_UINT:
+		case FORMAT_R8G8B8A8_SINT:
+		case FORMAT_R16G16B16A16_SINT:
+		case FORMAT_R32G32B32A32_SINT:
+			return 4;
+
+		default:
+			return 0;
+		}
+	}
 
 	// pass执行耗时记录
 	struct RHIGPUTimeInfo{

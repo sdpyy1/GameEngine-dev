@@ -7,7 +7,7 @@
 #include "RenderStruct.h"
 #include "Hazel/Scene/Scene.h"
 #include "Sampler.h"
-#define MAX_PER_FRAME_RESOURCE_SIZE 10240
+#define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
 namespace GameEngine {
     // 使用Bindless的资源
     enum BindlessSlot
@@ -33,28 +33,37 @@ namespace GameEngine {
         BINDLESS_SLOT_MAX_ENUM,     //
     };
     enum GlobalResourceBindingID {
-        GLORBAL_RESOURCE_BINDING_SETTING = 0,
+        // 顶点资源
+        GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_TANGENT,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_TEXCOORD,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_COLOR,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_INDEX,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_WEIGHT,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_ANIMATION,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_INDEX,
+        
+        // 采样资源
+        GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D_ARRAY,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D_ARRAY,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE,
+        GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_3D,
+
+        // 渲染资源
+        GLORBAL_RESOURCE_BINDING_BINDLESS_MODEL_TRANSFORM,
+
+
+
+
+        // 常规资源
+        GLORBAL_RESOURCE_BINDING_SETTING,
         GLORBAL_RESOURCE_BINDING_CAMERA,
 
-
-        PER_FRAME_BINDING_BINDLESS_POSITION,
-        PER_FRAME_BINDING_BINDLESS_NORMAL,
-        PER_FRAME_BINDING_BINDLESS_TANGENT,
-        PER_FRAME_BINDING_BINDLESS_TEXCOORD,
-        PER_FRAME_BINDING_BINDLESS_COLOR,
-        PER_FRAME_BINDING_BINDLESS_BONE_INDEX,
-        PER_FRAME_BINDING_BINDLESS_BONE_WEIGHT,
-        PER_FRAME_BINDING_BINDLESS_ANIMATION,
-        PER_FRAME_BINDING_BINDLESS_INDEX,
-
-        PER_FRAME_BINDING_BINDLESS_SAMPLER,
-        PER_FRAME_BINDING_BINDLESS_TEXTURE_1D,
-        PER_FRAME_BINDING_BINDLESS_TEXTURE_1D_ARRAY,
-        PER_FRAME_BINDING_BINDLESS_TEXTURE_2D,
-        PER_FRAME_BINDING_BINDLESS_TEXTURE_2D_ARRAY,
-        PER_FRAME_BINDING_BINDLESS_TEXTURE_CUBE,
-        PER_FRAME_BINDING_BINDLESS_TEXTURE_3D,
-        PER_FRAME_BINDING_MAX_ENUM,//
+        GLORBAL_RESOURCE_BINDING_MAX_ENUM,//
     };
 
     // 每帧都需要更新的资源，每个飞行帧一份，防止冲突
@@ -72,7 +81,13 @@ namespace GameEngine {
         RHIDescriptorSetRef samplerDescriptorSet;   // Set=1, Binding=0 存储缓存的采样器数组
         std::vector<SamplerRef> samplers;
 
-        ArrayBuffer<V2::MaterialInfo, MAX_PER_FRAME_RESOURCE_SIZE> materialBuffer;
+
+
+
+
+        // 各种InfoBuffer，存储每个资源在Bindless 中的索引
+        ArrayBuffer<V2::VertexInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> vertexBuffer;
+        ArrayBuffer<V2::MaterialInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> materialBuffer;
     };
 
 
@@ -100,19 +115,30 @@ namespace GameEngine {
             void Tick();
             RHIRootSignatureRef GetSamplerRootSignature() { return m_MultiFrameGlobalResources.samplerRootSignature; }
             RHIDescriptorSetRef GetSamplerDescriptorSet() { return m_MultiFrameGlobalResources.samplerDescriptorSet; }
-            // ID
+            RHIRootSignatureRef GetGlobalResourcePreFrameRootSignature() { return m_GlobalResourcePreFrameRootSignature; }
+            RHIDescriptorSetRef GetGlobalResourcePerFrameDescriptorSet();
+
+            // 把资源挂载到Bindless中（就是更新对应的资源描述符对应binding的index）
             uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot);
             void ReleaseBindlessID(uint32_t id, BindlessSlot slot);
 
-            // 材质
+            // 材质Info
             uint32_t AllocateMaterialID() { return m_MultiFrameGlobalResources.materialBuffer.Allocate(); }
             void ReleaseMaterialID(uint32_t id) { m_MultiFrameGlobalResources.materialBuffer.Release(id); }
-            void SetMaterialInfo(const V2::MaterialInfo& materialInfo, uint32_t materialID);
+            void SetMaterialInfo(const V2::MaterialInfo& materialInfo, uint32_t materialID) {m_MultiFrameGlobalResources.materialBuffer.SetData(materialInfo, materialID);};
 
+            // 顶点Info
+            uint32_t AllocateVertexID() { return m_MultiFrameGlobalResources.vertexBuffer.Allocate(); }
+            void ReleaseVertexID(uint32_t id) { m_MultiFrameGlobalResources.vertexBuffer.Release(id); }
+            void SetVertexInfo(const V2::VertexInfo& vertexInfo, uint32_t vertexID) {m_MultiFrameGlobalResources.vertexBuffer.SetData(vertexInfo, vertexID);};
+
+
+
+
+            
             // 各种Buffer数据
-            void RenderResourceManager::SetCameraInfo();
+            void RenderResourceManager::UpdateCameraInfo();
             RenderBuffer<V2::CameraData>& GetCameraDataBuffer() { return m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer; }
-
 
 
 
@@ -126,9 +152,9 @@ namespace GameEngine {
 
 
 
-        // 每种资源一个ID分配器
+        // 每种类型的bindless资源，都有一个ID分配器，处理资源映射到Bindless的ID的获取和释放
 		std::array<IndexAllocator, BINDLESS_SLOT_MAX_ENUM> m_BindlessIDAlloctor;
-        RHIRootSignatureRef m_GlobalResourceRootSignature; 
+        RHIRootSignatureRef m_GlobalResourcePreFrameRootSignature; 
 
 
 

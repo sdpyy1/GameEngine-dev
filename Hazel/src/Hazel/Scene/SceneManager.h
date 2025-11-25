@@ -11,6 +11,7 @@ namespace GameEngine
 		void Tick(Timestep ts);
 
 		std::shared_ptr<EditorCamera> GetEditorCamera() { return m_EditorCamera; };
+		std::pair<unsigned int, unsigned int> GetViewportSize() { return { m_EditorCamera->GetViewportWidth(),m_EditorCamera->GetViewportHeight() };};
 		std::shared_ptr<Scene> GetActiveScene() { return m_CurrentScene; };
 		SceneInfo GetSceneInfo(){return m_CurrentScene->GetSceneInfo();}
 		bool OpenScene();

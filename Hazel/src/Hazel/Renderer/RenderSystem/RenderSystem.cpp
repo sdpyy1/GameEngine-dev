@@ -5,6 +5,7 @@
 #include <Hazel/Renderer/RenderPass/ImGuiPass.h>
 #include <Hazel/Renderer/RenderPass/PresentPass.h>
 #include "Hazel/Asset/Model.h"
+#include <Hazel/Renderer/RenderPass/GbufferPass.h>
 namespace GameEngine {
 	RenderSystem::RenderSystem()
 	{
@@ -59,14 +60,7 @@ namespace GameEngine {
 		model.OnLoadAsset();
 
 
-
-
-
-
-
-
-
-
+		passes[GBUFFER_PASS] = std::make_shared<GBufferPass>();
 		passes[GRID_PASS] = std::make_shared<GridPass>();
 		passes[IMGUI_PASS] = std::make_shared<ImGuiPass>();
         passes[PRESENT_PASS] = std::make_shared<PresentPass>();

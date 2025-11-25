@@ -7,6 +7,7 @@ namespace GameEngine {
 	// °´Ë³Ðò
 	enum PassType
 	{
+		GBUFFER_PASS,
 		GRID_PASS,
 		IMGUI_PASS,
 		PRESENT_PASS,

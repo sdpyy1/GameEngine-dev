@@ -6,7 +6,7 @@
 #define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless 单个binding的最大描述符数目
 
 namespace GameEngine {
-	static uint32_t BindlessSlotToPerFrameBinding(BindlessSlot slot) { return slot + (uint32_t)PER_FRAME_BINDING_BINDLESS_POSITION; }
+	static uint32_t BindlessSlotToPerFrameBinding(BindlessSlot slot) { return slot + (uint32_t)GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION; }
 
 	RenderResourceManager::RenderResourceManager()
 	{
@@ -17,20 +17,54 @@ namespace GameEngine {
 
 	void RenderResourceManager::InitPerFrameGlobalResources()
 	{
-		// 创建一个全局的资源描述符集来存储各种全局资源
+		// 创建一个全局的资源描述符集来挂载各种全局资源
 		RHIRootSignatureInfo info = {};
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_SETTING, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
-		info.AddEntry({ 0, PER_FRAME_BINDING_BINDLESS_TEXTURE_2D, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
-		m_GlobalResourceRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
-		for (auto& resource : m_PerFrameGlobalResources) resource.descriptorSet = m_GlobalResourceRootSignature->CreateDescriptorSet(0);
+		// set binding count frequency type
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TANGENT, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXCOORD, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_COLOR, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_INDEX, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_WEIGHT, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_ANIMATION, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_INDEX, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_SAMPLER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D_ARRAY, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D_ARRAY, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE_CUBE });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_3D, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
+
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_MODEL_TRANSFORM, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_SETTING, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_BUFFER });
+
+
+		m_GlobalResourcePreFrameRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
+		for (auto& resource : m_PerFrameGlobalResources) resource.descriptorSet = m_GlobalResourcePreFrameRootSignature->CreateDescriptorSet(0);
+
+		// 挂载默认全局资源
 		for (auto& resource : m_PerFrameGlobalResources) {
+			// camera
 			RHIDescriptorUpdateInfo updateInfo = {};
-			updateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+			updateInfo.resourceType = RESOURCE_TYPE_BUFFER;
             updateInfo.buffer = resource.cameraDataBuffer.GetRHIBuffer();
 			updateInfo.index = 0;
-			updateInfo.binding = GLORBAL_RESOURCE_BINDING_SETTING;
+			updateInfo.binding = GLORBAL_RESOURCE_BINDING_CAMERA;
 			resource.descriptorSet->UpdateDescriptor(updateInfo);
+			
+			// Setting
+
+
+
+
+
+
+
 		}
 
 	}
@@ -38,13 +72,20 @@ namespace GameEngine {
 	{
 		m_BindlessIDAlloctor[slot].Release(id);
 	}
-	void RenderResourceManager::Tick() // 从场景中解析数据，存入对应Buffer
+
+	RHIDescriptorSetRef RenderResourceManager::GetGlobalResourcePerFrameDescriptorSet()
 	{
-		m_SceneInfoFromScene = APP_SCENEMANAGER->GetSceneInfo();
-		SetCameraInfo();
+		return m_PerFrameGlobalResources[APP_FRAMEINDEX].descriptorSet;
 	}
 
-	void RenderResourceManager::SetCameraInfo()
+	// 更新资源
+	void RenderResourceManager::Tick()
+	{
+		m_SceneInfoFromScene = APP_SCENEMANAGER->GetSceneInfo();
+		UpdateCameraInfo();
+	}
+
+	void RenderResourceManager::UpdateCameraInfo()
 	{
 		V2::CameraData tmpdata;
 		EditorCamera& camera = m_SceneInfoFromScene.camera;
@@ -64,12 +105,14 @@ namespace GameEngine {
 
 	uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot)
 	{
+		// 给这个资源分配一个ID
 		uint32_t index = m_BindlessIDAlloctor[slot].Allocate();
+		// 更新描述符（每个飞行帧）
 		for (auto& resource : m_PerFrameGlobalResources)
 		{
 			RHIDescriptorUpdateInfo updateInfo = {};
 			updateInfo.binding = BindlessSlotToPerFrameBinding(slot),
-			updateInfo.index = index;
+			updateInfo.index = index;  // bindless数组的index
 			updateInfo.resourceType = resoruceInfo.resourceType;
 			updateInfo.buffer = resoruceInfo.buffer;
 			updateInfo.textureView = resoruceInfo.textureView;
@@ -81,10 +124,6 @@ namespace GameEngine {
 		return index;
 	}
 
-	void RenderResourceManager::SetMaterialInfo(const V2::MaterialInfo& materialInfo, uint32_t materialID)
-	{
-		m_MultiFrameGlobalResources.materialBuffer.SetData(materialInfo, materialID);
-	}
 
 	void RenderResourceManager::InitMultiFrameGlobalResources()
 	{
@@ -124,7 +163,7 @@ namespace GameEngine {
 			{
 				RHIDescriptorUpdateInfo updateInfo = {};
 				updateInfo.binding = 0;
-                updateInfo.index = i;   // 同一个binding的数组
+                updateInfo.index = i;
                 updateInfo.resourceType = RESOURCE_TYPE_SAMPLER;
                 updateInfo.sampler = m_MultiFrameGlobalResources.samplers[i]->sampler;
 				m_MultiFrameGlobalResources.samplerDescriptorSet->UpdateDescriptor(updateInfo);
