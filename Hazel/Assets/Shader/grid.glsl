@@ -2,7 +2,6 @@
 #extension GL_GOOGLE_include_directive : enable
 #extension GL_EXT_samplerless_texture_functions : enable
 
-// Á½¸öÈý½ÇÐÎ¸²¸ÇÈ«ÆÁ
 vec3 kNdcPoints[6] = vec3[](
     vec3( 1,  1, 0), 
     vec3(-1, -1, 0), 
@@ -21,7 +20,6 @@ layout(set = 0,binding = 0) uniform CameraDataUniform {
 	float Far;
 	vec3 CameraPosition;
 } u_CameraData;
-// ÃèÊö·û¼¯
 layout (set = 0, binding = 1) uniform texture2D depthTexture;
 layout (set = 1, binding = 0) uniform sampler depthSampler[];
 
@@ -35,7 +33,7 @@ vec3 deprojectNDC2World(vec2 pos, float z)
 }
 void main()
 {
-	// ²åÖµºó»ñµÃÃ¿¸öÏñËØµÄ½üÔ¶Æ½ÃæÉÏµÄÎ»ÖÃ,´Ó½üÆ½ÃæµãÏòÔ¶Æ½Ãæµã·¢ÉäÉäÏß£¬ÒâË¼¾ÍÊÇËµ´ÓÉãÏñ»úÊÓ½ÇÏÂÏòËùÓÐÏñËØ·¢ÉäÒ»¸ùÉäÏß£¬ÅÐ¶ÏÉäÏßÓëy=0Õâ¸öÆ½ÃæµÄ½»µã£¬½»µãÎ»ÓÚÕûÊý×ø±ê¾Í»æÖÆÍø¸ñ
+	// ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ØµÄ½ï¿½Ô¶Æ½ï¿½ï¿½ï¿½Ïµï¿½Î»ï¿½ï¿½,ï¿½Ó½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶Æ½ï¿½ï¿½ã·¢ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½Ë¼ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½y=0ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Ä½ï¿½ï¿½ã£¬ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     nearPoint = deprojectNDC2World(kNdcPoints[gl_VertexIndex].xy, 0.0);
     farPoint  = deprojectNDC2World(kNdcPoints[gl_VertexIndex].xy, 1.0);
 
@@ -49,7 +47,7 @@ layout(location = 1) in vec3 farPoint;
 
 layout(location = 0) out vec4 outColor;
 
-// ÅÐ¶Ï×ø±êÊÇ·ñÔÚÖ¸¶¨·¶Î§
+// ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Î§
 bool onRange(float val, float minVal, float maxVal)
 {
     return val >= minVal && val <= maxVal;
@@ -103,7 +101,7 @@ float computeDepth(vec3 pos)
 {
     vec4 posH = u_CameraData.proj * u_CameraData.view * vec4(pos, 1.0);
     float deviceZ = posH.z / posH.w;
-    // ½«Éè±¸¿Õ¼äÉî¶ÈÖµÇ¯ÖÆÔÚ [0.0, 1.0] ·¶Î§ÄÚ
+    // ï¿½ï¿½ï¿½è±¸ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ÖµÇ¯ï¿½ï¿½ï¿½ï¿½ [0.0, 1.0] ï¿½ï¿½Î§ï¿½ï¿½
     return clamp(deviceZ, 0.0, 1.0);
 }
 // Vulkan linearize z.
@@ -119,12 +117,10 @@ float linearizeDepth(float z, float n, float f)
 
 vec4 getColor(vec3 fragPos3D, float t)
 {
-	// »ñµÃäÖÈ¾µãµÄÉî¶È
     float deviceZ = computeDepth(fragPos3D);
 
-	// »ñÈ¡³¡¾°Éî¶È£¬×öÉî¶È²âÊÔ
     vec2 uv = gl_FragCoord.xy / vec2(u_CameraData.width, u_CameraData.height);
-    float sceneZ = texture(sampler2D(depthTexture, depthSampler[0]),uv).r;
+    float sceneZ = texture(sampler2D(depthTexture, depthSampler[1]),uv).r;
 
     float linearDepth = linearizeDepth(deviceZ,u_CameraData.Near,u_CameraData.Far);
 

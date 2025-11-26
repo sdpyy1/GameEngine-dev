@@ -169,7 +169,7 @@ namespace GameEngine {
 	}
 	void ImGuiRendererManager::ViewportGUI(RHIDescriptorSetRef viewportTexture)
 	{
-		ImGui::Begin("Viewport");
+		ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoBackground);
 
 		m_ViewportBounds[0] = ImGui::GetWindowPos();
 		// 程序中ViewportSize都来自这里
@@ -185,13 +185,15 @@ namespace GameEngine {
 
 
 		// 设置ViewPort图片
-		ImGui::Image(viewportTexture->RawHandle(), ImGui::GetContentRegionAvail(), {0, 0}, {1, 1});
+		ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+		ImVec4 border_col = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+		ImGui::Image(viewportTexture->RawHandle(), ImGui::GetContentRegionAvail(), {0, 1}, {1, 0},tint_col,border_col);
+
 		// Application::GetSceneManager()->GetActiveScene()->OutputViewport();
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
-				// 验证 payload 数据有效性（确保是字符串）
 				IM_ASSERT(payload->DataSize > 0);
 				const char* droppedPath = (const char*)payload->Data;
 				Application::GetSceneManager()->OpenScene(droppedPath);
@@ -474,7 +476,7 @@ namespace GameEngine {
 		colors[ImGuiCol_SeparatorHovered] = ImColor(39, 185, 242, 150);
 
 		// Window Background
-		colors[ImGuiCol_WindowBg] = ImGui::ColorConvertU32ToFloat4(Colors::Theme::titlebar);
+		// colors[ImGuiCol_WindowBg] = ImGui::ColorConvertU32ToFloat4(Colors::Theme::titlebar);
 		colors[ImGuiCol_ChildBg] = ImGui::ColorConvertU32ToFloat4(Colors::Theme::background);
 		colors[ImGuiCol_PopupBg] = ImGui::ColorConvertU32ToFloat4(Colors::Theme::backgroundPopup);
 		colors[ImGuiCol_Border] = ImGui::ColorConvertU32ToFloat4(Colors::Theme::backgroundDark);

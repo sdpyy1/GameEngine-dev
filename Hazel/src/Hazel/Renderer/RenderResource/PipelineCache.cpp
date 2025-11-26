@@ -4,13 +4,29 @@
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 namespace GameEngine
 {
+#include <iomanip>
+
+    void print_memory(const void* ptr, size_t size) {
+        const unsigned char* p = static_cast<const unsigned char*>(ptr);
+        for (size_t i = 0; i < size; ++i) {
+            std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(p[i]);
+            if ((i + 1) % 16 == 0) std::cout << std::endl;
+            else std::cout << " ";
+        }
+        std::cout << std::dec << std::endl;
+    }
+
     GraphicsPipelineCache::CachedPipeline GraphicsPipelineCache::Allocate(const RHIGraphicsPipelineInfo& info)
     {
         GraphicsPipelineCache::CachedPipeline ret;
-
+        Key key(info);
+        //print_memory(&info, sizeof(RHIGraphicsPipelineInfo));
         auto iter = cachedPipelines.find(info);
         if (iter != cachedPipelines.end())
+        {
+            // LOG_TRACE("RHIGraphicsPipelineInfo found in cache.");
             return iter->second;
+        }
 
         if (!IsValid(info))
         {
@@ -18,9 +34,9 @@ namespace GameEngine
             return { nullptr };
         }
         LOG_WARN("RHIGraphicsPipeline not found in cache, creating new.");
+
         ret = { APP_DYNAMICRHI->CreateGraphicsPipeline(info)};
         cachedPipelines[info] = ret;
-
         return ret;
     }
 

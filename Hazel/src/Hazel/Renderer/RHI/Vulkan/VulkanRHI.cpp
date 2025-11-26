@@ -459,14 +459,14 @@ namespace GameEngine
         colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
         attachmentInfo.colorAttachments.push_back(colorAttachment);
-        VkAttachmentDescription depthAttachment = {};
-        depthAttachment.format = VulkanUtil::RHIFormatToVkFormat(RHI_DEPTH_FROMAT);
-        depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-        depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        attachmentInfo.depthStencilAttachment = depthAttachment;
+        //VkAttachmentDescription depthAttachment = {};
+        //depthAttachment.format = VulkanUtil::RHIFormatToVkFormat(RHI_DEPTH_FROMAT);
+        //depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+        //depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        //depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+        //depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        //depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+       //  attachmentInfo.depthStencilAttachment = depthAttachment;
         VkRenderPass tempPass = FindOrCreateVkRenderPass(attachmentInfo);
 
         std::shared_ptr<VulkanRHIQueue> queue = CAST<VulkanRHIQueue>(m_Queues[QUEUE_TYPE_GRAPHICS][0]);
@@ -479,7 +479,7 @@ namespace GameEngine
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows 
         io.ConfigWindowsMoveFromTitleBarOnly = true;
-        //ImGui::StyleColorsDark();
+        ImGui::StyleColorsDark();
         auto& style = ImGui::GetStyle();
         auto& colors = ImGui::GetStyle().Colors;
 
@@ -561,7 +561,6 @@ namespace GameEngine
         style.FrameBorderSize = 1.0f;
         style.IndentSpacing = 11.0f;
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-        //ImGuiStyle& style = ImGui::GetStyle();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
             style.WindowRounding = 0.0f;
@@ -585,7 +584,7 @@ namespace GameEngine
         initInfo.Queue = queue->GetHandle();
         initInfo.DescriptorPool = m_DescriptorPool;
         initInfo.PipelineCache = nullptr;
-        initInfo.MinImageCount = FRAMES_IN_FLIGHT;
+        initInfo.MinImageCount = 2;
         initInfo.ImageCount = FRAMES_IN_FLIGHT;
         initInfo.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
         ImGui_ImplVulkan_Init(&initInfo, tempPass);
@@ -1344,6 +1343,26 @@ namespace GameEngine
 
     void VulkanRHICommandContext::DrawIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount)
     {
+        /*
+           void vkCmdDrawIndirect(
+                VkCommandBuffer                             commandBuffer,
+                VkBuffer                                    buffer, // 绘制数据存储的Buffer
+                VkDeviceSize                                offset, // 绘制数据存储的Buffer的偏移
+                uint32_t                                    drawCount, // 绘制次数
+                uint32_t                                    stride // 每个绘制命令结构体的大小（RHIIndirectCommand）
+            );
+
+
+            每个绘制Buffer结构：
+            typedef struct RHIIndirectCommand
+            {
+                uint32_t    vertexCount;    // 绘制的顶点数量
+                uint32_t    instanceCount;  // 绘制实例数量
+                uint32_t    firstVertex;     // 绘制的起始顶点索引
+                uint32_t    firstInstance;   // 绘制实例的起始索引
+            } RHIIndirectCommand;
+        
+        */
         vkCmdDrawIndirect(handle, CAST<VulkanRHIBuffer> (argumentBuffer)->GetHandle(), offset, drawCount, sizeof(RHIIndirectCommand));
     }
 

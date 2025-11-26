@@ -28,19 +28,18 @@ namespace GameEngine
 		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R8G8B8A8_UNORM;
 		pipelineInfo.colorAttachmentFormats[1] = FORMAT_R8G8B8A8_SNORM;
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
-		pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
-		if (pipeline) return pipeline;   // 材质自带Shader
 
-		pipelineInfo.vertexShader = pipelineState.clusterRender ?
-			pass->clusterVertexShader->GetRHIShader() :
-			pass->vertexShader->GetRHIShader();                          // 用默认着色器
+		// TODO: 如果材质自带了Shader，可以直接在这里就创建管线并返回，否则就是当前Pass自带的Shader信息
+		// pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
+		//if (pipeline) return pipeline;   // 材质自带Shader
+
+		pipelineInfo.vertexShader = pass->vertexShader->GetRHIShader();                          // 用默认着色器
 		pipelineInfo.geometryShader = nullptr;
 		pipelineInfo.fragmentShader = pass->fragmentShader->GetRHIShader();
 		pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
 		if (pipeline) return pipeline;
-
-		if (pipelineState.clusterRender) return pass->clusterPipeline;                       // 用默认管线
-		else                            return pass->pipeline;
+		LOG_ERROR("[GBufferPass] Failed to create pipeline");
+		return nullptr;
 	}
 
 	void GBufferPass::Init()
@@ -60,7 +59,7 @@ namespace GameEngine
 		pipelineInfo.fragmentShader = fragmentShader->GetRHIShader();
 		pipelineInfo.rootSignature = rootSignature;
 		pipelineInfo.primitiveType = PRIMITIVE_TYPE_TRIANGLE_LIST;
-		pipelineInfo.rasterizerState = { FILL_MODE_SOLID, CULL_MODE_BACK, DEPTH_CLIP, 0.0f, 0.0f };
+		pipelineInfo.rasterizerState = { FILL_MODE_SOLID, CULL_MODE_FRONT, DEPTH_CLIP, 0.0f, 0.0f };
 		for (uint32_t i = 0; i < 4; i++) pipelineInfo.blendState.renderTargets[i].enable = false;
 		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R8G8B8A8_UNORM;
 		pipelineInfo.colorAttachmentFormats[1] = FORMAT_R8G8B8A8_SNORM;
@@ -74,7 +73,7 @@ namespace GameEngine
 
 		auto [w, h] = APP_WINDOWSIZE;
 
-		RDGTextureHandle diffuse = builder.CreateTexture("G-Buffer Diffuse/Roughness")
+		RDGTextureHandle diffuse = builder.CreateTexture("ViewPort")
 			.Exetent({ w, h, 1 })
 			.Format(FORMAT_R8G8B8A8_UNORM)
 			.ArrayLayers(1)
@@ -102,7 +101,7 @@ namespace GameEngine
 			builder.CreateRenderPass(GetName())
 				.Color(0, diffuse, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
 				.Color(1, normal, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
-				.DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
+				.DepthStencil(depth, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
 				.Execute([&](RDGPassContext context) {
 					auto [w, h] = APP_WINDOWSIZE;
 					RHICommandListRef command = context.command;
@@ -110,7 +109,7 @@ namespace GameEngine
 					command->SetViewport({ 0, 0 }, { w,h });
 					command->SetScissor({ 0, 0 }, { w,h });
 					command->SetDepthBias(0.0f, 0.0f, 0.0f);
-					command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
+					command->BindDescriptorSet(Application::GetRenderSystem()->GetRenderResourceManager()->GetGlobalResourcePerFrameDescriptorSet(), 0);
 					meshPassProcessor->Draw(command);
 				})
 				.Finish();

@@ -2,12 +2,14 @@
 #include "SceneManager.h"
 #include "Hazel/Utils/FileSystem.h"
 #include "SceneSerializer.h"
+#include "Hazel/Core/Application.h"
 namespace GameEngine
 {
 	SceneManager::SceneManager()
 	{
 		m_CurrentScene = std::make_shared<Scene>();
-		m_EditorCamera = std::make_shared<EditorCamera>(45.0f, 1280.0f, 720.0f, 0.1f, 1000.0f);
+		
+		m_EditorCamera = std::make_shared<EditorCamera>(45.0f, APP_WINDOWSIZE.first, APP_WINDOWSIZE.second, 0.1f, 1000.0f);
 	}
 
 	void SceneManager::Tick(Timestep ts)

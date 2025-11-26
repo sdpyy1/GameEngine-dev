@@ -11,7 +11,7 @@ layout(location = 6) out flat uint OUT_ID;
 
 void main() 
 {
-    uint objectID       = gl_InstanceIndex;
+    uint objectID       = gl_InstanceIndex;   // ����ʱ�����õ�startʵ������ʵ��ID
     uint indexOffset    = gl_VertexIndex;
 
     mat4 model          = FetchModel(objectID);
@@ -48,14 +48,15 @@ layout (location = 0) out vec4 G_BUFFER_DIFFUSE_ROUGHNESS;
 layout (location = 1) out vec4 G_BUFFER_NORMAL_METALLIC;
 void main()
 {
-    // Material material   = FetchMaterial(IN_ID);
+    Material material   = FetchMaterial(IN_ID);
     // vec4 color          = vec4(IN_COLOR, 1.0f);
-    // vec4 diffuse        = FetchDiffuse(material, IN_TEXCOORD);
+    vec4 diffuse        = FetchDiffuse(material, IN_TEXCOORD);
+    diffuse.a           = 1.0f;
     // vec3 emission       = FetchEmission(material);
     // vec3 normal         = FetchNormal(material, IN_TEXCOORD, IN_NORMAL, IN_TANGENT);
     // float roughness     = FetchRoughness(material, IN_TEXCOORD);
     // float metallic      = FetchMetallic(material, IN_TEXCOORD);
-    G_BUFFER_NORMAL_METALLIC    = vec4(1,1,1,1);
-    G_BUFFER_DIFFUSE_ROUGHNESS           = vec4(1,1,1,1);
+    G_BUFFER_DIFFUSE_ROUGHNESS    = vec4(diffuse);
+    G_BUFFER_NORMAL_METALLIC           = vec4(1,1,1,1);
 }
 #endif

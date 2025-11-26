@@ -357,6 +357,7 @@ namespace GameEngine {
             else
             {
                 V2::TextureSpec textureSpec;
+                textureSpec.yFlip = true;
                 std::filesystem::path fs_path(path);
                 fs_path = fs_path.parent_path();
                 std::filesystem::path new_texture_path = fs_path / texturePath;

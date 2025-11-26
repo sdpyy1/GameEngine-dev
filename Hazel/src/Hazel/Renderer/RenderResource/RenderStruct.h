@@ -44,6 +44,7 @@ namespace GameEngine {
             uint32_t commandID = 0;				    // 使用的间接绘制指令的下标
 
         } IndirectMeshDrawInfo;
+        
         typedef struct IndirectMeshDrawDatas        // 提交给GPU的待剔除信息
         {
             IndirectSetting setting;

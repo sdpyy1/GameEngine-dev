@@ -18,8 +18,6 @@ namespace GameEngine
         if (IsEnabled())
         {
             RDGTextureHandle viewport = builder.GetTexture("ViewPort");
-            RDGTextureHandle depth = builder.GetTexture("Depth");
-
 
             auto [w, h] = APP_WINDOWSIZE;
 
@@ -32,7 +30,6 @@ namespace GameEngine
 
             RDGRenderPassHandle pass = builder.CreateRenderPass(GetName())
                 .Color(0, UI, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
-                .DepthStencil(depth, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
                 .Read(0,0,1, builder.GetTexture("ViewPort"))  // 只是使用也可以这样防止不创建资源
                 .Execute([&](RDGPassContext context) {
                         auto [w, h] = APP_WINDOWSIZE;

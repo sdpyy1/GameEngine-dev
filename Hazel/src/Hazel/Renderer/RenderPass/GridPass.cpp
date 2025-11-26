@@ -23,18 +23,17 @@ namespace GameEngine {
         pipelineInfo.rootSignature = m_RootSignature;
         pipelineInfo.vertexShader = m_VertShader;
         pipelineInfo.fragmentShader = m_FragShader;
+		pipelineInfo.blendState.renderTargets[0] = { BLEND_OP_ADD, BLEND_FACTOR_SRC_ALPHA, BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+		                                              BLEND_OP_ADD, BLEND_FACTOR_SRC_ALPHA, BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+		                                              COLOR_MASK_RGBA, true};		
 		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R8G8B8A8_UNORM;
-		m_Pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
+		m_Pipeline = APP_DYNAMICRHI->CreateGraphicsPipeline(pipelineInfo);
 	}
 
 	void GridPass::Build(RDGBuilder& builder)
 	{
 		auto [w, h] = APP_WINDOWSIZE;
-		RDGTextureHandle viewPort = builder.CreateTexture("ViewPort")
-			.Exetent({ w, h, 1 })
-			.Format(FORMAT_R8G8B8A8_UNORM)
-			.AllowRenderTarget()
-			.Finish();
+		RDGTextureHandle viewPort = builder.GetTexture("ViewPort");
 		RDGTextureHandle outDepth = builder.GetTexture("Depth");
 		RDGBufferHandle cameraData = builder.CreateBuffer("CameraData")
 			.Import(RENDER_RESOURCEMANAGER->GetCameraDataBuffer().GetRHIBuffer(), RESOURCE_STATE_UNORDERED_ACCESS)
@@ -44,9 +43,9 @@ namespace GameEngine {
 		RDGRenderPassHandle pass = builder.CreateRenderPass(GetName())
 			.LabelColor({0.2,0.2,0.6})
 			.Read(0, 0, 0, cameraData)
-			.Read(0,1,0,outDepth)  // TODO:现在创建是图片，但是Shader我之前都是绑定联合采样器纹理。。。
+			.Read(0,1,0,outDepth)
 			.RootSignature(m_RootSignature)
-			.Color(0, viewPort, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE)
+			.Color(0, viewPort, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE)
 			.Execute([&](RDGPassContext context) {
 				auto [w, h] = APP_WINDOWSIZE;
 				RHICommandListRef command = context.command;

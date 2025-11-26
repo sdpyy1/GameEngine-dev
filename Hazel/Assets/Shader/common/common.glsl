@@ -114,6 +114,7 @@ struct Camera{
 
 
 layout(set = 0,binding = GLORBAL_RESOURCE_BINDING_CAMERA) readonly buffer CameraDataUniform{
+
     Camera data;
 
 } u_CameraData;
@@ -121,11 +122,11 @@ layout(set = 0,binding = GLORBAL_RESOURCE_BINDING_CAMERA) readonly buffer Camera
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_MATERIALINFO) readonly buffer materials { 
 
-    Material slot[MAX_PER_FRAME_RESOURCE_SIZE];   // TODO： 其实这种用bindless也行，这种属于buffer内部是数组，bindless是外部是buffer数组
+    Material slot[MAX_PER_FRAME_RESOURCE_SIZE];
 
 } u_MaterialInfo;
 
-layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_MATERIALINFO) readonly buffer objects {
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_MESHINFO) readonly buffer objects {
 
     MeshInfo slot[MAX_PER_FRAME_OBJECT_SIZE];
 
@@ -143,58 +144,58 @@ layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION) readonly b
 
     float position[];
 
-} POSITIONS[];
+} POSITIONS[MAX_BINDLESS_RESOURCE_SIZE];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL) readonly buffer normals { 
 
     float normal[];
 
-} NORMALS[];
+} NORMALS[MAX_BINDLESS_RESOURCE_SIZE];
 
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_TANGENT) readonly buffer tangents { 
 
     float tangent[];
 
-} TANGENTS[];
+} TANGENTS[MAX_BINDLESS_RESOURCE_SIZE];
 
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_TEXCOORD) readonly buffer texCoords { 
 
     float texCoord[];
 
-} TEXCOORDS[];
+} TEXCOORDS[MAX_BINDLESS_RESOURCE_SIZE];
 
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_COLOR) readonly buffer colors { 
 
     float color[];
 
-} COLORS[];
+} COLORS[MAX_BINDLESS_RESOURCE_SIZE];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_INDEX) readonly buffer boneIndexs { 
 
     int boneIndex[];
 
-} BONEINDEXS[];
+} BONEINDEXS[MAX_BINDLESS_RESOURCE_SIZE];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_WEIGHT) readonly buffer boneWeights { 
 
     float boneWeight[];
 
-} BONEWEIGHTS[];
+} BONEWEIGHTS[MAX_BINDLESS_RESOURCE_SIZE];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_ANIMATION) readonly buffer animations { 
 
     mat4 matrix[];
 
-} ANIMATIONS[];
+} ANIMATIONS[MAX_BINDLESS_RESOURCE_SIZE];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_INDEX) readonly buffer indices { 
 
     uint index[];
 
-} INDICES[];
+} INDICES[MAX_BINDLESS_RESOURCE_SIZE];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER) uniform sampler SAMPLER[];
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D) uniform texture1D TEXTURES_1D[];
@@ -377,7 +378,9 @@ vec4 FetchTex3D(in uint slot, in vec3 vector) {
 vec4 FetchTex3D(in uint slot, in vec3 vector, in float lod) {
 	return textureLod(sampler3D(TEXTURES_3D[slot], SAMPLER[1]), vector, lod);   
 }
-
+Material FetchMaterial(in uint objectID) {
+	return u_MaterialInfo.slot[u_MeshInfo.slot[objectID].materialID]; 
+}
 vec4 FetchDiffuse(in Material material, in vec2 coord) {
     if(material.textureDiffuse > 0)    
     {

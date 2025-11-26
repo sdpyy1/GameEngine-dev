@@ -77,21 +77,25 @@ namespace GameEngine {
 	};
 	typedef struct DrawGeometryInfo
 	{
-		uint32_t objectID;
-		uint32_t vertexID;
-		uint32_t indexID;
-		uint32_t indexCount;
+		uint32_t objectID; // meshInfo
+		uint32_t vertexID; // vertexInfo
+		uint32_t indexID; // indexID
+		uint32_t indexCount; // 索引数量
 		// IndexRange clusterID = { 0, 0 };
 		// IndexRange clusterGroupID = { 0, 0 };
 
 	} DrawGeometryInfo;
 	typedef struct MeshPassIndirectBuffers
 	{
+		// 存储渲染需要的信息
 		RenderBuffer<V2::IndirectMeshDrawDatas> meshDrawDataBuffer;
-		RenderBuffer<V2::IndirectMeshDrawCommands> meshDrawCommandBuffer= RenderBuffer<V2::IndirectMeshDrawCommands>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
+
+		// 存储间接渲染需要的指令buffer的信息
+		RenderBuffer<V2::IndirectMeshDrawCommands> meshDrawCommandBuffer = RenderBuffer<V2::IndirectMeshDrawCommands>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
 
 	} MeshPassIndirectBuffers;
-	struct DrawCommand
+
+	struct DrawCommand  // 最终定义一次DrawCall的信息
 	{
 		RHIGraphicsPipelineRef pipeline;
 		IndexRange meshCommandRange = { 0, 0 };
@@ -114,7 +118,7 @@ namespace GameEngine {
 
 	protected:
 		virtual void MeshPassProcessor::OnCollectBatch(const DrawBatch& batch) = 0;   // 需要具体的Pass说明这个batch自己需不需要
-		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& first);
+		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& first) = 0;  // 因为创建pipelien需要Shader信息也需要vkRenderPass也就是附件信息，这些需要具体的Pass提供（Shader也可以来自材质）
 
 
 	private:

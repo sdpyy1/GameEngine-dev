@@ -852,16 +852,16 @@ namespace GameEngine {
 		struct RenderTarget
 		{
 			BlendOp colorBlendOp = BLEND_OP_ADD;
-			BlendFactor colorSrcBlend = BLEND_FACTOR_ONE;
-			BlendFactor colorDstBlend = BLEND_FACTOR_ZERO;
+			BlendFactor colorSrcBlend = BLEND_FACTOR_SRC_COLOR;
+			BlendFactor colorDstBlend = BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 
 			BlendOp alphaBlendOp = BLEND_OP_ADD;
-			BlendFactor alphaSrcBlend = BLEND_FACTOR_ONE;
-			BlendFactor alphaDstBlend = BLEND_FACTOR_ZERO;
+			BlendFactor alphaSrcBlend = BLEND_FACTOR_SRC_ALPHA;
+			BlendFactor alphaDstBlend = BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 
 			ColorWriteMasks colorWriteMask = COLOR_MASK_RGBA;
 
-			bool enable = false;
+			bool enable = true;
 
 			bool __padding[3] = { 0 };
 
@@ -937,7 +937,7 @@ namespace GameEngine {
 
 		RHIRootSignatureRef				rootSignature;
 
-		VertexInputStateInfo            vertexInputState = {};
+		// VertexInputStateInfo            vertexInputState = {};   // TODO：因为并没使用这个字段，会自动创建，会导致info的Hash计算错误，缓存错误
 		PrimitiveType					primitiveType = PRIMITIVE_TYPE_TRIANGLE_LIST;
 		RHIRasterizerStateInfo			rasterizerState = {};
 		RHIBlendStateInfo				blendState = {};
@@ -957,7 +957,7 @@ namespace GameEngine {
 				a.geometryShader.get() == b.geometryShader.get() &&
 				a.fragmentShader.get() == b.fragmentShader.get() &&
 				a.rootSignature.get() == b.rootSignature.get() &&
-				a.vertexInputState == b.vertexInputState &&
+				// a.vertexInputState == b.vertexInputState &&
 				a.primitiveType == b.primitiveType &&
 				a.rasterizerState == b.rasterizerState &&
 				a.blendState == b.blendState &&

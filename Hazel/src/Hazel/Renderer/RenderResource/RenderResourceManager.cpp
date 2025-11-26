@@ -11,8 +11,9 @@ namespace GameEngine {
 	RenderResourceManager::RenderResourceManager()
 	{
 		for (auto& alloctor : m_BindlessIDAlloctor) alloctor = IndexAllocator(MAX_BINDLESS_RESOURCE_SIZE);
-		InitPerFrameGlobalResources();
 		InitMultiFrameGlobalResources();
+
+		InitPerFrameGlobalResources();
 	}
 
 	void RenderResourceManager::InitPerFrameGlobalResources()
@@ -53,41 +54,74 @@ namespace GameEngine {
 
 		// 挂载默认全局资源
 		for (auto& resource : m_PerFrameGlobalResources) {
-			// camera
-			RHIDescriptorUpdateInfo cameraUpdateInfo = {};
-			cameraUpdateInfo.resourceType = RESOURCE_TYPE_BUFFER;
-			cameraUpdateInfo.buffer = resource.cameraDataBuffer.GetRHIBuffer();
-			cameraUpdateInfo.index = 0;
-			cameraUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_CAMERA;
-			resource.descriptorSet->UpdateDescriptor(cameraUpdateInfo);
+			{
+				// camera
+				RHIDescriptorUpdateInfo cameraUpdateInfo = {};
+				cameraUpdateInfo.resourceType = RESOURCE_TYPE_BUFFER;
+				cameraUpdateInfo.buffer = resource.cameraDataBuffer.GetRHIBuffer();
+				cameraUpdateInfo.index = 0;
+				cameraUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_CAMERA;
+				resource.descriptorSet->UpdateDescriptor(cameraUpdateInfo);
+			}
 			
 			// Setting
 
 
-			// meshInfo
-			RHIDescriptorUpdateInfo meshInfoUpdateInfo = {};
-            meshInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
-            meshInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.meshInfoBuffer.GetRHIBuffer();
-			cameraUpdateInfo.index = 0;
-			cameraUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_MESHINFO;
-			resource.descriptorSet->UpdateDescriptor(meshInfoUpdateInfo);
+			{
+				// meshInfo
+				RHIDescriptorUpdateInfo meshInfoUpdateInfo = {};
+				meshInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+				meshInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.meshInfoBuffer.GetRHIBuffer();
+				meshInfoUpdateInfo.index = 0;
+				meshInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_MESHINFO;
+				resource.descriptorSet->UpdateDescriptor(meshInfoUpdateInfo);
+			}
 
-			// materialInfo
-            RHIDescriptorUpdateInfo materialInfoUpdateInfo = {};
-            materialInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
-            materialInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.materialBuffer.GetRHIBuffer();
-            materialInfoUpdateInfo.index = 0;
-            materialInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_MATERIALINFO;
-            resource.descriptorSet->UpdateDescriptor(materialInfoUpdateInfo);
+			{
+				// materialInfo
+				RHIDescriptorUpdateInfo materialInfoUpdateInfo = {};
+				materialInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+				materialInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.materialBuffer.GetRHIBuffer();
+				materialInfoUpdateInfo.index = 0;
+				materialInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_MATERIALINFO;
+				resource.descriptorSet->UpdateDescriptor(materialInfoUpdateInfo);
+			}
 
-			// vertexInfo
-            RHIDescriptorUpdateInfo vertexInfoUpdateInfo = {};
-            vertexInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
-            vertexInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.vertexBuffer.GetRHIBuffer();
-            vertexInfoUpdateInfo.index = 0;
-            vertexInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_VERTEXINFO;
-            resource.descriptorSet->UpdateDescriptor(vertexInfoUpdateInfo);
+			{
+				// vertexInfo
+				RHIDescriptorUpdateInfo vertexInfoUpdateInfo = {};
+				vertexInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+				vertexInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.vertexBuffer.GetRHIBuffer();
+				vertexInfoUpdateInfo.index = 0;
+				vertexInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_VERTEXINFO;
+				resource.descriptorSet->UpdateDescriptor(vertexInfoUpdateInfo);
+			}
 
+			{
+				// sampler
+                RHIDescriptorUpdateInfo samplerUpdateInfo = {};
+                samplerUpdateInfo.resourceType = RESOURCE_TYPE_SAMPLER;
+                samplerUpdateInfo.sampler = m_MultiFrameGlobalResources.samplers[0]->sampler;
+                samplerUpdateInfo.index = 0;
+                samplerUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER;
+                resource.descriptorSet->UpdateDescriptor(samplerUpdateInfo);
+				samplerUpdateInfo.sampler = m_MultiFrameGlobalResources.samplers[1]->sampler;
+				samplerUpdateInfo.index = 1;
+				samplerUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER;
+				resource.descriptorSet->UpdateDescriptor(samplerUpdateInfo);
+				samplerUpdateInfo.sampler = m_MultiFrameGlobalResources.samplers[2]->sampler;
+				samplerUpdateInfo.index = 2;
+				samplerUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER;
+				resource.descriptorSet->UpdateDescriptor(samplerUpdateInfo);
+				samplerUpdateInfo.sampler = m_MultiFrameGlobalResources.samplers[3]->sampler;
+				samplerUpdateInfo.index = 3;
+				samplerUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER;
+				resource.descriptorSet->UpdateDescriptor(samplerUpdateInfo);
+
+
+
+
+			}
 		}
 
 	}
@@ -114,10 +148,13 @@ namespace GameEngine {
 		EditorCamera& camera = m_SceneInfoFromScene.camera;
 		tmpdata.view = camera.GetViewMatrix();
 		tmpdata.proj = camera.GetProjectionMatrix();
-		tmpdata.proj[1][1] *= -1;  // TODO：Y轴反转
+		//tmpdata.proj[1][1] *= -1;  // TODO：Y轴反转
 		tmpdata.viewproj = camera.GetViewProjection();
-		tmpdata.Width = camera.GetViewportWidth();
-		tmpdata.Height = camera.GetViewportWidth();
+		//tmpdata.Width = camera.GetViewportWidth();
+		//tmpdata.Height = camera.GetViewportWidth();
+		// 目前统一用窗口的宽高
+		tmpdata.Width = APP_WINDOWSIZE.first;
+		tmpdata.Height = APP_WINDOWSIZE.second;
 		tmpdata.Near = camera.GetNearClip();
 		tmpdata.Far = camera.GetFarClip();
 		tmpdata.Position = camera.GetPosition();

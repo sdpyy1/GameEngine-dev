@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "MeshPass.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
+#include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #define MAX_PER_PASS_PIPELINE_STATE_COUNT 1024      //每个mesh pass支持的最大的不同管线状态数目
 
 namespace GameEngine
@@ -34,7 +35,7 @@ namespace GameEngine
 			OnBuildDrawInfo(batch);
 		}
 
-		// 到这里，这个Pass需要的模型数据已经按照PipelineState分类好了~
+		// 到这里，这个Pass需要的模型数据已经按照PipelineState分类好了~ 每个管线状态对应一组DrawGeometryInfo，每个DrawGeometryInfo（就是记录了绘制一个SubMesh需要的所有信息，因为是Bindless存储，所以都是一些ID）记录一个Mesh的MeshInfo位置（存储材质）顶点信息、索引信息
 
 		// 3. 创建或获取需要的Pipeline
 		uint32_t pipelineIndex = 0;
@@ -68,7 +69,9 @@ namespace GameEngine
 	void MeshPassProcessor::Draw(RHICommandListRef command) {
 		for (auto& drawCommand : drawCommands)
 		{
-			command->SetGraphicsPipeline(drawCommand.pipeline);
+			auto [w, h] = APP_WINDOWSIZE;
+
+			// command->SetGraphicsPipeline(drawCommand.pipeline);
 
 			if (drawCommand.meshCommandRange.size > 0)
 			{
@@ -113,36 +116,17 @@ namespace GameEngine
 		m_DrawGeometries[pipelineState].push_back(info);
 	}
 
-	RHIGraphicsPipelineRef MeshPassProcessor::OnCreatePipeline(const DrawPipelineState& pipelineState)
-	{
-		RHIGraphicsPipelineInfo pipelineInfo = {};
-		pipelineInfo.vertexShader = pipelineState.vertexShader;
-		pipelineInfo.geometryShader = pipelineState.geometryShader;
-		pipelineInfo.fragmentShader = pipelineState.fragmentShader;
-		pipelineInfo.primitiveType = PRIMITIVE_TYPE_TRIANGLE_LIST;
-		pipelineInfo.rasterizerState = { pipelineState.fillMode, pipelineState.cullMode, DEPTH_CLIP, 0.0f, 0.0f };
-		pipelineInfo.depthStencilState = { pipelineState.depthCompare, pipelineState.depthTest, pipelineState.depthWrite };
-
-		// 需要各个mesh pass 重载，提供根签名和帧缓冲信息
-		// pipelineInfo.rootSignature                   = rootSignature;
-		// for(uint32_t i = 0; i < 4; i++) pipelineInfo.blendState.renderTargets[i].enable = false;
-		// pipelineInfo.colorAttachmentFormats[0]      = FORMAT_R8G8B8A8_UNORM;
-		// pipelineInfo.colorAttachmentFormats[1]      = FORMAT_R8G8B8A8_UNORM;
-		// pipelineInfo.colorAttachmentFormats[2]      = FORMAT_R8G8B8A8_UNORM;
-		// pipelineInfo.colorAttachmentFormats[3]      = FORMAT_R16G16B16A16_SFLOAT;                                               
-		// pipelineInfo.depthStencilAttachmentFormat   = EngineContext::Render()->GetDepthFormat();
-
-		return GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;   // 构建可能失败返回空，则后续处理将放弃该pipelineState的绘制
-	}
-
 	void MeshPassProcessor::OnBuildDrawCommands(uint32_t pipelineIndex, RHIGraphicsPipelineRef pipeline, std::vector<DrawGeometryInfo>& geometries)
 	{
 		auto buffers = GetIndirectBuffers();
+
 		DrawCommand drawCommand;
 		drawCommand.pipeline = pipeline;
-		drawCommand.meshCommandRange = { (uint32_t)meshDrawCommands.size(), 0 };
+		drawCommand.meshCommandRange = { (uint32_t)meshDrawCommands.size(), 0 };   
 		drawCommand.indirectMeshCommandBuffer = buffers->meshDrawCommandBuffer.GetRHIBuffer();
 
+
+		// 遍历当前pipeline下所有需要绘制的SubMesh信息（DrawGeometryInfo）
 		uint32_t meshCount = 0;
 		for (auto& geometry : geometries) {
 			V2::IndirectMeshDrawInfo meshDrawInfo;
@@ -155,7 +139,7 @@ namespace GameEngine
 			meshDrawCommand.vertexCount = geometry.indexCount;
 			meshDrawCommand.instanceCount = 1;                     // TODO 使用同一个顶点和索引缓冲的还能进一步合并？
 			meshDrawCommand.firstVertex = 0;                       // 间接绘制里这样的多个indirect command 有多大的开销？
-			meshDrawCommand.firstInstance = geometry.objectID;
+			meshDrawCommand.firstInstance = geometry.objectID;   // 渲染时，通过实例索引来拿到对应的MeshInfo
 			meshDrawCommands.push_back(meshDrawCommand);
 			meshCount++;
 		}

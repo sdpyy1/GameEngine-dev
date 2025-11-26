@@ -28,10 +28,10 @@ namespace GameEngine {
 		// m_RendererManager = std::make_shared<RendererManager>();
 		AssetImporter::Init();
 
-		m_SceneManager = std::make_shared<SceneManager>();
 
 		m_WindowManager = std::make_shared<WindowManager>(WindowSpec(m_Specification.Name, 1950, 1300));
 		m_WindowManager->SetEventCallback(HZ_BIND_EVENT_FN(Application::OnEvent));
+		m_SceneManager = std::make_shared<SceneManager>();
 
 		m_RenderSystem = std::make_shared<RenderSystem>();
 		m_RenderSystem->InitPasses();

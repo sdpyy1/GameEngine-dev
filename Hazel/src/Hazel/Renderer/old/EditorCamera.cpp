@@ -274,7 +274,7 @@ namespace GameEngine {
 
 	glm::vec3 EditorCamera::GetUpDirection() const
 	{
-		return glm::rotate(GetOrientation(), glm::vec3(0.0f, -1.0f, 0.0f));    // TODO:现在图片渲染出来是反的。。等模型渲染后再看怎么调整
+		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 1.0f, 0.0f));    // TODO:现在图片渲染出来是反的。。等模型渲染后再看怎么调整
 	}
 
 	glm::vec3 EditorCamera::GetRightDirection() const

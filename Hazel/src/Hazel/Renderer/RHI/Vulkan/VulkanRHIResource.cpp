@@ -1079,7 +1079,7 @@ namespace GameEngine
 
 
         // 光栅固定管线状态
-        VkPipelineVertexInputStateCreateInfo vertexInputInfo = GetInputStateCreateInfo(info.vertexInputState);
+       // VkPipelineVertexInputStateCreateInfo vertexInputInfo = GetInputStateCreateInfo(info.vertexInputState);
         VkPipelineInputAssemblyStateCreateInfo inputAssembly = GetPipelineInputAssemblyStateCreateInfo(info.primitiveType);
         VkPipelineViewportStateCreateInfo viewportState = GetPipelineViewportStateCreateInfo();
         VkPipelineRasterizationStateCreateInfo rasterizer = GetPipelineRasterizationStateCreateInfo(info.rasterizerState);
@@ -1088,12 +1088,12 @@ namespace GameEngine
         VkPipelineDepthStencilStateCreateInfo depthStencil = GetPipelineDepthStencilStateCreateInfo(info.depthStencilState);
         VkPipelineDynamicStateCreateInfo dynamicState = GetPipelineDynamicStateCreateInfo();
 
-        GetDynamicInputStateCreateInfo(info.vertexInputState);
+        //GetDynamicInputStateCreateInfo(info.vertexInputState);
 
 
         VkGraphicsPipelineCreateInfo pipelineInfo = {};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-        pipelineInfo.pVertexInputState = &vertexInputInfo;
+        //pipelineInfo.pVertexInputState = &vertexInputInfo;
         pipelineInfo.pInputAssemblyState = &inputAssembly;
         pipelineInfo.pViewportState = &viewportState;
         pipelineInfo.pRasterizationState = &rasterizer;
