@@ -99,8 +99,8 @@ namespace GameEngine
 			.Finish();
 		if (IsEnabled()) {
 			builder.CreateRenderPass(GetName())
-				.Color(0, diffuse, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
-				.Color(1, normal, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
+				.Color(0, diffuse, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 1.0f })    // 如果a设置为0，会影响后续网格渲染
+				.Color(1, normal, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 1.0f })
 				.DepthStencil(depth, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
 				.Execute([&](RDGPassContext context) {
 					auto [w, h] = APP_WINDOWSIZE;
