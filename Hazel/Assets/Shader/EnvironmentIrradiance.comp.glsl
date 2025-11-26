@@ -1,8 +1,10 @@
 #version 450 core
 #ifdef COMPUTE_SHADER
 #include"include/Common.glslh"
-layout(binding = 0, rgba32f) restrict writeonly uniform imageCube o_IrradianceMap;
-layout(binding = 1) uniform samplerCube u_RadianceMap;
+layout(set = 0, binding = 0, rgba32f) restrict writeonly uniform imageCube o_IrradianceMap;
+layout(set = 0, binding = 1) uniform textureCube u_RadianceMap;
+layout(set = 1, binding = 0) uniform sampler u_Samplers[];
+
 layout(push_constant) uniform Uniforms
 {
 	uint Samples;
@@ -89,7 +91,7 @@ void main()
 		float cosTheta = max(0.0, dot(Li, N));
 
 		// PIs here cancel out because of division by pdf.
-		vec3 radianceSample = textureLod(u_RadianceMap, Li, 0).rgb;
+		vec3 radianceSample = textureLod(samplerCube(u_RadianceMap, u_Samplers[0]), Li, 0).rgb;
 		irradiance += 2.0 * radianceSample * cosTheta;
 	}
 	irradiance /= vec3(samples);

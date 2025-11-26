@@ -121,6 +121,7 @@ namespace GameEngine {
         RDGTextureBuilder& AllowDepthStencil();
         RDGTextureBuilder& MipLevels(uint32_t mipLevels);
         RDGTextureBuilder& ArrayLayers(uint32_t arrayLayers);
+        RDGTextureBuilder& CubeMap();
 
         RDGTextureHandle Finish() { return texture->GetHandle(); }
 

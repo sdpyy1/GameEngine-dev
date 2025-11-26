@@ -248,6 +248,10 @@ namespace GameEngine {
             info.format = texture->info.format;
             info.viewType = edge->viewType;
             info.subresource = edge->subresource;
+            if(texture->info.type &= RESOURCE_TYPE_TEXTURE_CUBE)
+            {
+                info.viewType = VIEW_TYPE_CUBE;
+            }
             RHITextureViewRef view = RDGTextureViewPool::Get()->Allocate(info).textureView;
             pass->pooledViews.push_back(view);
 
@@ -503,7 +507,7 @@ namespace GameEngine {
             }
             });
 
-        // command->PushEvent(pass->Name(), { 1.0f, 1.0f, 0.0f });
+        //command->PushEvent(pass->Name(), { 1.0f, 1.0f, 0.0f });
 
         CreateInputBarriers(pass);
 
@@ -514,21 +518,18 @@ namespace GameEngine {
 
             if (pass->generateMip)
             {
-                RHITextureBarrier barrier = {
-                    barrier.texture = Resolve(to),
-                    barrier.srcState = RESOURCE_STATE_TRANSFER_DST,
-                    barrier.dstState = RESOURCE_STATE_TRANSFER_SRC,
-                    barrier.subresource = {}
-                };
+                RHITextureBarrier barrier;
+                barrier.texture = Resolve(to);
+                barrier.srcState = RESOURCE_STATE_TRANSFER_DST;
+                barrier.dstState = RESOURCE_STATE_TRANSFER_SRC;
+                barrier.subresource = {};
                 command->TextureBarrier(barrier);
                 command->GenerateMips(Resolve(to)); // 默认纹理处于src状态，需要手动加屏障
 
-                barrier = {
-                    barrier.texture = Resolve(to),
-                    barrier.srcState = RESOURCE_STATE_TRANSFER_SRC,
-                    barrier.dstState = RESOURCE_STATE_TRANSFER_DST,
-                    barrier.subresource = {}
-                };
+                barrier.texture = Resolve(to);
+                barrier.srcState = RESOURCE_STATE_TRANSFER_SRC;
+                barrier.dstState = RESOURCE_STATE_TRANSFER_DST;
+                barrier.subresource = {};
                 command->TextureBarrier(barrier);
             }
         }
@@ -751,6 +752,13 @@ namespace GameEngine {
         texture->info.arrayLayers = arrayLayers;
         return *this;
     }
+
+	GameEngine::RDGTextureBuilder& RDGTextureBuilder::CubeMap()
+	{
+        texture->info.type |= RESOURCE_TYPE_TEXTURE_CUBE;
+        texture->info.arrayLayers = 6;
+        return *this;
+	}
 
     RDGBufferBuilder& RDGBufferBuilder::Import(RHIBufferRef buffer, RHIResourceState initState)
     {

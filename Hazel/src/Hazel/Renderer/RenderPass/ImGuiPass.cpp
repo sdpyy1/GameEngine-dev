@@ -34,15 +34,12 @@ namespace GameEngine
                 .Execute([&](RDGPassContext context) {
                         auto [w, h] = APP_WINDOWSIZE;
                         Extent2D windowExtent = { w, h };
-
                         RHICommandListRef command = context.command;
-                        command->SetViewport({ 0, 0 }, { windowExtent.width, windowExtent.height });
-                        command->SetScissor({ 0, 0 }, { windowExtent.width, windowExtent.height });
-                        
+                        static RHIDescriptorSetRef descriptor = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+
                         ImGui_ImplVulkan_NewFrame();
                         ImGui_ImplGlfw_NewFrame();
                         ImGui::NewFrame();
-                        static RHIDescriptorSetRef descriptor = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
                         m_ImGuiRendererManager->SetGPUTimeInfo(RENDER_GPU_TIME_INFO);
                         m_ImGuiRendererManager->ImGuiCommand(descriptor);
                         ImGui::Render();

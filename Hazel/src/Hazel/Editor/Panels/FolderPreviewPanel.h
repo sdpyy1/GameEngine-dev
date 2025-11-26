@@ -20,6 +20,7 @@ namespace GameEngine {
 
 		void OnImGuiRender() override;
 		void SetContext(std::shared_ptr<Scene>& context);
+		bool createModel = false;
 
 	private:
 		void DrawToolbar();
@@ -29,6 +30,8 @@ namespace GameEngine {
 		void DrawFileGrid();
 		void ScanAssetsForCategories(const std::filesystem::path& directory);
 		void DrawCategoryTree();
+
+
 	private:
 		enum class BrowserMode
 		{

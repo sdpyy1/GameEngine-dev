@@ -20,6 +20,8 @@ namespace GameEngine {
 		virtual void InitImGui(GLFWwindow* window) = 0;
 		virtual RHIDescriptorSetRef GetImGuiTextId(RHITextureViewRef textureView) = 0;
 		virtual void Destroy();
+		virtual RHIComputePipelineRef CreateComputePipeline(const RHIComputePipelineInfo& info) = 0;
+
 		virtual RHIQueueRef GetQueue(const RHIQueueInfo& info) = 0;
 		virtual RHISurfaceRef CreateSurface(GLFWwindow* window) = 0;
 		virtual RHISwapchainRef CreateSwapChain(const RHISwapchainInfo& info) = 0;

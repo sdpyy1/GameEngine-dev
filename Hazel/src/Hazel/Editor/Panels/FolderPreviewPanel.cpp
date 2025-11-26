@@ -63,6 +63,7 @@ namespace GameEngine {
 				subMeshEntity.SetParent(modelEntity);
 				subMeshEntity.AddComponent<SubmeshComponent>(model->GetUID(), submeshIndex++);
 			}
+			createModel = true;
 		}
 		else if (ext == ".png" || ext == ".jpg" || ext == ".jpeg")
 		{
@@ -75,6 +76,7 @@ namespace GameEngine {
 
 	void FolderPreviewPanel::OnImGuiRender()
 	{
+		createModel = false;
 		ImGui::Begin("Content Browser");
 
 		DrawToolbar();

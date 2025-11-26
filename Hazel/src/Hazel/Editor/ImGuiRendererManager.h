@@ -16,7 +16,7 @@ namespace GameEngine {
 		virtual void End() {};
 		void SetDarkThemeV2Colors();
 		void Tick(float deltaTime);
-		void ImGuiCommand(RHIDescriptorSetRef viewportTexture);
+		bool ImGuiCommand(RHIDescriptorSetRef viewportTexture);
 		bool OnEvent(Event& e);
 		// 各种窗口创建
 		void ViewportGUI(RHIDescriptorSetRef viewportTexture);
@@ -31,6 +31,7 @@ namespace GameEngine {
 		std::pair<glm::vec3, glm::vec3> CastRay(EditorCamera& camera, float mx, float my);
 		void SetScene(std::shared_ptr<Scene> activeScene);
 		void SetGPUTimeInfo(std::vector<RHIGPUTimeInfo>& timeInfo);
+		bool createModel = false;
 
 	private:
 
@@ -54,7 +55,6 @@ namespace GameEngine {
 			Ref<MeshSource> meshSource = nullptr;
 			float Distance = 0.0f;
 		};
-
 		// 数据
 		std::vector<RHIGPUTimeInfo> m_GPUTimeInfo;
 	};

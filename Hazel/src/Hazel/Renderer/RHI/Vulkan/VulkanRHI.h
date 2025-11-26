@@ -27,6 +27,8 @@ namespace GameEngine
 		virtual RHIBufferRef CreateBuffer(const RHIBufferInfo& info) override final;
 		virtual RHIRootSignatureRef CreateRootSignature(const RHIRootSignatureInfo& info) override final;
 		virtual RHIGraphicsPipelineRef CreateGraphicsPipeline(const RHIGraphicsPipelineInfo& info) override final;
+		virtual RHIComputePipelineRef CreateComputePipeline(const RHIComputePipelineInfo& info) override final;
+
 		virtual RHIRenderPassRef CreateRenderPass(const RHIRenderPassInfo& info) override final;
 
 		virtual RHISamplerRef CreateSampler(const RHISamplerInfo& info) override final;

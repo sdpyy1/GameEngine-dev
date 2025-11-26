@@ -8,6 +8,7 @@
 #include <Hazel/Renderer/RenderPass/GbufferPass.h>
 #include "MeshCollector.h"
 #include <Hazel/Renderer/RenderResource/RenderResourceManager.h>
+#include <Hazel/Renderer/RenderPass/IBLPass.h>
 
 namespace GameEngine {
 	RenderSystem::RenderSystem()
@@ -52,7 +53,7 @@ namespace GameEngine {
 	{
 
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
-
+		passes[IBL_PASS] = std::make_shared<IBLPass>();
 		meshPasses[MESH_PASS_GBUFFER_PASS] = std::make_shared<GBufferPass>();
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();

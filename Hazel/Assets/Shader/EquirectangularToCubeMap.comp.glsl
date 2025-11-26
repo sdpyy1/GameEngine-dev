@@ -1,8 +1,9 @@
 #version 450 core
 #ifdef COMPUTE_SHADER
 #include "include/Common.glslh"
-layout(binding = 0, rgba32f) restrict writeonly uniform imageCube o_CubeMap;
-layout(binding = 1) uniform sampler2D u_EquirectangularTex;
+layout(set = 0, binding = 0, rgba32f) restrict writeonly uniform imageCube o_CubeMap;
+layout(set = 0, binding = 1) uniform texture2D u_EquirectangularTex;
+layout(set = 1, binding = 0) uniform sampler u_Samplers[];
 
 
 vec3 GetCubeMapTexCoord(vec2 imageSize)
@@ -31,7 +32,7 @@ void main()
 	float theta = acos(cubeTC.y);
     vec2 uv = vec2(phi / (2.0 * PI) + 0.5, theta / PI);
 
-	vec4 color = texture(u_EquirectangularTex, uv);
+	vec4 color = texture(sampler2D(u_EquirectangularTex,u_Samplers[0]), uv);
 	color = min(color, vec4(500.0));
 	imageStore(o_CubeMap, ivec3(gl_GlobalInvocationID), color);
 }

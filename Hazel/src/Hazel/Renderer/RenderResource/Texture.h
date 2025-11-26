@@ -27,7 +27,7 @@ namespace GameEngine {
 		};
 		class Texture {
 		public:
-			Texture(TextureSpec& spec);
+			Texture(TextureSpec& spec);   // 从这里创建的Textue，出去的布局是RESOURCE_STATE_SHADER_RESOURCE
 			void LoadFromFile();
 			RHIDescriptorSetRef GetImGuiID();
 			uint32_t GetWidth() { return m_Spec.extent.width; }

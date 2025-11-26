@@ -67,7 +67,7 @@ namespace GameEngine {
 	}
 
 
-	void ImGuiRendererManager::ImGuiCommand(RHIDescriptorSetRef viewportTexture)
+	bool ImGuiRendererManager::ImGuiCommand(RHIDescriptorSetRef viewportTexture)
 	{
 		// ========== Dockspace 主窗口 ==========
 		ImGuiIO& io = ImGui::GetIO();
@@ -166,10 +166,11 @@ namespace GameEngine {
 
 		if (m_RDGPanel.isOpen)
 			m_RDGPanel.OnImGuiRender();
+		return m_FolderPreviewPanel.createModel;
 	}
 	void ImGuiRendererManager::ViewportGUI(RHIDescriptorSetRef viewportTexture)
 	{
-		ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoBackground);
+		ImGui::Begin("Viewport");
 
 		m_ViewportBounds[0] = ImGui::GetWindowPos();
 		// 程序中ViewportSize都来自这里
@@ -185,9 +186,7 @@ namespace GameEngine {
 
 
 		// 设置ViewPort图片
-		ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-		ImVec4 border_col = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
-		ImGui::Image(viewportTexture->RawHandle(), ImGui::GetContentRegionAvail(), {0, 1}, {1, 0},tint_col,border_col);
+		ImGui::Image(viewportTexture->RawHandle(), ImGui::GetContentRegionAvail(), {0, 1}, {1, 0});
 
 		// Application::GetSceneManager()->GetActiveScene()->OutputViewport();
 		if (ImGui::BeginDragDropTarget())

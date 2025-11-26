@@ -1,6 +1,7 @@
 #version 450 core
 #ifdef COMPUTE_SHADER
 #include "include/Common.glslh"
+#extension GL_EXT_samplerless_texture_functions : require
 // Pre-filters environment cube map using GGX NDF importance sampling.
 // Part of specular IBL split-sum approximation.
 
@@ -101,8 +102,9 @@ float NdfGGX(float cosLh, float roughness)
 	return alphaSq / (PI * denom * denom);
 }
 
-layout(binding = 0, rgba32f) restrict writeonly uniform imageCube outputTexture;
-layout(binding = 1) uniform samplerCube inputTexture;
+layout(set = 0, binding = 0, rgba32f) restrict writeonly uniform imageCube outputTexture;
+layout(set = 0, binding = 1) uniform textureCube inputTexture;
+layout(set = 1, binding = 0) uniform sampler u_Samplers[];
 
 layout (push_constant) uniform Uniforms
 {
@@ -164,7 +166,7 @@ void main(void)
 			// Mip level to sample from.
 			float mipLevel = max(0.5 * log2(ws / wt) + 1.0, 0.0);
 
-			color  += textureLod(inputTexture, Li, mipLevel).rgb * cosLi;
+			color  += textureLod(samplerCube(inputTexture, u_Samplers[0]), Li, mipLevel).rgb * cosLi;
 			weight += cosLi;
 		}
 	}

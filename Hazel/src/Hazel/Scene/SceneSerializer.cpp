@@ -351,11 +351,20 @@ namespace GameEngine {
 
 				auto staticMeshComponent = entity["ModelComponent"];
 				if (staticMeshComponent) {
-					deserializedEntity.AddComponent<ModelComponent>();
-					Ref<Asset> meshSource = AssetManager::GetMesh(staticMeshComponent["MeshSourcePath"].as<std::string>());
+					ModelRef model = AssetManager::LoadModel(staticMeshComponent["MeshSourcePath"].as<std::string>());
+					model->OnLoadAsset();
+					auto& modelComponent = deserializedEntity.AddComponent<ModelComponent>(model->GetUID(), staticMeshComponent["MeshSourcePath"].as<std::string>());
+
+					int submeshIndex = 0;
+					for (auto& mesh : model->GetSubmeshes()) {
+						auto& subMeshEntity = m_Scene->CreateEntity(mesh.mesh->name);
+						subMeshEntity.SetParent(deserializedEntity);
+						subMeshEntity.AddComponent<SubmeshComponent>(model->GetUID(), submeshIndex++);
+					}
+
 					auto& com = deserializedEntity.GetComponent<ModelComponent>();
 					com.path = staticMeshComponent["MeshSourcePath"].as<std::string>();
-					com.StaticMesh = meshSource->Handle;
+					com.StaticMesh = model->GetUID();
 					com.Visible = staticMeshComponent["Visible"].as<bool>();
 				}
 				auto dynamicMeshComponent = entity["DynamicModelComponent"];

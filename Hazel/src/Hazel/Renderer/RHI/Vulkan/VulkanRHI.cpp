@@ -848,6 +848,14 @@ namespace GameEngine
         return std::make_shared<VulkanRHIDescriptorSet>(texId);
 	}
 
+	GameEngine::RHIComputePipelineRef VulkanDynamicRHI::CreateComputePipeline(const RHIComputePipelineInfo& info)
+	{
+        RHIComputePipelineRef computePipeline = std::make_shared<VulkanRHIComputePipeline>(info);
+        RegisterResource(computePipeline);
+
+        return computePipeline;
+	}
+
     VulkanRHICommandContext::VulkanRHICommandContext(RHICommandPoolRef pool): RHICommandContext(pool)
     {
         this->pool = std::static_pointer_cast<VulkanRHICommandPool>(pool);

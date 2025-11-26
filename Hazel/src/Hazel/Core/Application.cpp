@@ -79,8 +79,8 @@ namespace GameEngine {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(HZ_BIND_EVENT_FN(Application::OnWindowClose));
-		/*dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowResize));
-		dispatcher.Dispatch<WindowMinimizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowMinimize));*/
+		dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowResize));
+		dispatcher.Dispatch<WindowMinimizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowMinimize));
 		/*if (m_RendererManager->OnEvent(e)) {
 			return;
 		}*/
@@ -107,11 +107,11 @@ namespace GameEngine {
 		}
 		//m_Minimized = false;
 
-		auto& window = m_GLFWWindow;
-		RENDER_SUBMIT([&window, width, height]() mutable
-			{
-				window->GetSwapChain().OnResize(width, height);
-			});
+		//auto& window = m_GLFWWindow;
+		//RENDER_SUBMIT([&window, width, height]() mutable
+		//	{
+		//		window->GetSwapChain().OnResize(width, height);
+		//	});
 
 		return false;
 	}
