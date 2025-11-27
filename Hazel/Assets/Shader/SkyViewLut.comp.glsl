@@ -2,7 +2,7 @@
 #ifdef COMPUTE_SHADER
 #define LOCAL_SIZE 8
 #include "include/SkyCommon.glslh"
-
+// TODO: 改Set = 1，其他用common
 layout(rgba32f, binding = 0) uniform writeonly image2D SkyViewLut;
 layout(binding = 1) uniform sampler2D u_TransmittanceLut;
 layout(binding = 2) uniform sampler2D u_MultiScatteringLut;
