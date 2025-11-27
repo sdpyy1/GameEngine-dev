@@ -4,7 +4,8 @@
 #include "include/SkyCommon.glslh"
 
 layout(rgba32f, binding = 0) uniform writeonly image2D MultiScatteringLut;
-layout(binding = 1) uniform sampler2D u_TransmittanceLut;
+layout(binding = 1) uniform texture2D u_TransmittanceLut;
+layout(set = 1, binding = 0) uniform sampler u_Sampler[];
 
 
 layout(local_size_x = LOCAL_SIZE, local_size_y = LOCAL_SIZE, local_size_z = 1) in;
@@ -23,7 +24,7 @@ void main()
 	float sin_theta = sqrt(1.0 - cos_theta * cos_theta);
 	vec3 lightDir = vec3(sin_theta, cos_theta, 0);
     vec3 p = vec3(0, r, 0);
-	vec3 color = IntegralMultiScattering(Atmosphere, p, lightDir, u_TransmittanceLut);
+	vec3 color = IntegralMultiScattering(Atmosphere, p, lightDir, u_TransmittanceLut,u_Sampler[0]);
 
 	
     imageStore(MultiScatteringLut, texelCoord, vec4(color, 1.0));

@@ -128,13 +128,13 @@ namespace GameEngine {
 			glm::mat4 view;
 			glm::mat4 proj;
 			glm::mat4 viewproj;
+            glm::mat4 invPV;
 			float Width;
 			float Height;
 			float Near;
 			float Far;
 			glm::vec3 Position;
 			float padding;
-			glm::mat4 InverseViewProj;
 		};
 
 

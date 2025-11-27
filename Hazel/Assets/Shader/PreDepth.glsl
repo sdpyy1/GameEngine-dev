@@ -1,42 +1,18 @@
 #version 450 core
+#include "common/common.glsl"
 #ifdef VERTEX_SHADER
-// Vertex buffer
-layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec3 a_Normal;
-layout(location = 2) in vec3 a_Tangent;
-layout(location = 3) in vec3 a_Binormal;
-layout(location = 4) in vec2 a_TexCoord;
 
-// Transform buffer
-layout(location = 5) in vec4 a_MRow0;
-layout(location = 6) in vec4 a_MRow1;
-layout(location = 7) in vec4 a_MRow2;
-
-// Make sure both shaders compute the exact same answer(PBR shader). 
-// We need to have the same exact calculations to produce the gl_Position value (eg. matrix multiplications).
-// precise invariant gl_Position;
-layout(set = 0,binding = 0) uniform CameraDataUniform {
-    mat4 view;
-    mat4 proj;
-	mat4 viewProj;
-	float width;
-	float height;
-	float Near;
-	float Far;
-	vec3 CameraPosition;
-} u_CameraData;
 void main()
 {
-	mat4 transform = mat4(
-		vec4(a_MRow0.x, a_MRow1.x, a_MRow2.x, 0.0),
-		vec4(a_MRow0.y, a_MRow1.y, a_MRow2.y, 0.0),
-		vec4(a_MRow0.z, a_MRow1.z, a_MRow2.z, 0.0),
-		vec4(a_MRow0.w, a_MRow1.w, a_MRow2.w, 1.0)
-	);
+	
+	uint objectID       = gl_InstanceIndex;
+    uint indexOffset    = gl_VertexIndex;
 
-	vec4 worldPosition = transform * vec4(a_Position, 1.0);
+    mat4 model          = FetchModel(objectID);
+    uint index          = FetchIndex(objectID, indexOffset);
+    vec4 pos            = FetchPos(objectID, index);
+    gl_Position = u_CameraData.data.viewProj * model * pos;
 
-    gl_Position =u_CameraData.viewProj * worldPosition;
 }
 #endif
 

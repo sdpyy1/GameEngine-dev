@@ -36,7 +36,7 @@ namespace GameEngine {
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D_ARRAY, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D_ARRAY, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE_CUBE });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE }); // 就是得设置Texture，设置Cube不对
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_3D, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
 
 
@@ -45,9 +45,9 @@ namespace GameEngine {
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MATERIALINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_VERTEXINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_SETTING, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_BUFFER });
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_BUFFER });
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_LIGHTINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_SETTING, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_LIGHTINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 
 
 		m_GlobalResourcePreFrameRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
@@ -58,7 +58,7 @@ namespace GameEngine {
 			{
 				// camera
 				RHIDescriptorUpdateInfo cameraUpdateInfo = {};
-				cameraUpdateInfo.resourceType = RESOURCE_TYPE_BUFFER;
+				cameraUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				cameraUpdateInfo.buffer = resource.cameraDataBuffer.GetRHIBuffer();
 				cameraUpdateInfo.index = 0;
 				cameraUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_CAMERA;
@@ -122,7 +122,7 @@ namespace GameEngine {
 			{
 				// lightInfo
 				RHIDescriptorUpdateInfo lightUpdateInfo = {};
-				lightUpdateInfo.resourceType = RESOURCE_TYPE_BUFFER;
+				lightUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				lightUpdateInfo.buffer = resource.lightInfoBuffer.GetRHIBuffer();
                 lightUpdateInfo.index = 0;
                 lightUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO;
@@ -157,6 +157,7 @@ namespace GameEngine {
 		tmpdata.proj = camera.GetProjectionMatrix();
 		//tmpdata.proj[1][1] *= -1;  // TODO：Y轴反转
 		tmpdata.viewproj = camera.GetViewProjection();
+        tmpdata.invPV = glm::inverse(tmpdata.viewproj);
 		//tmpdata.Width = camera.GetViewportWidth();
 		//tmpdata.Height = camera.GetViewportWidth();
 		// 目前统一用窗口的宽高
@@ -166,7 +167,6 @@ namespace GameEngine {
 		tmpdata.Far = camera.GetFarClip();
 		tmpdata.Position = camera.GetPosition();
 		tmpdata.padding = 1.f;
-		tmpdata.InverseViewProj = glm::inverse(camera.GetViewProjection());
 		m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer.SetData(tmpdata);
 	}
 

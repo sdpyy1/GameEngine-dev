@@ -25,8 +25,8 @@ namespace GameEngine
 
 		pipelineInfo.rootSignature = pass->rootSignature;
 		for (uint32_t i = 0; i < 4; i++) pipelineInfo.blendState.renderTargets[i].enable = false;
-		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R8G8B8A8_UNORM;
-		pipelineInfo.colorAttachmentFormats[1] = FORMAT_R8G8B8A8_SNORM;
+		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R32G32B32A32_SFLOAT;
+		pipelineInfo.colorAttachmentFormats[1] = FORMAT_R32G32B32A32_SFLOAT;
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
 
 		// TODO: 如果材质自带了Shader，可以直接在这里就创建管线并返回，否则就是当前Pass自带的Shader信息
@@ -61,11 +61,11 @@ namespace GameEngine
 		pipelineInfo.primitiveType = PRIMITIVE_TYPE_TRIANGLE_LIST;
 		pipelineInfo.rasterizerState = { FILL_MODE_SOLID, CULL_MODE_FRONT, DEPTH_CLIP, 0.0f, 0.0f };
 		for (uint32_t i = 0; i < 4; i++) pipelineInfo.blendState.renderTargets[i].enable = false;
-		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R8G8B8A8_UNORM;
-		pipelineInfo.colorAttachmentFormats[1] = FORMAT_R8G8B8A8_SNORM;
-		pipelineInfo.depthStencilState = { COMPARE_FUNCTION_LESS_EQUAL, true, true };
+		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R32G32B32A32_SFLOAT;
+		pipelineInfo.colorAttachmentFormats[1] = FORMAT_R32G32B32A32_SFLOAT;
+		pipelineInfo.depthStencilState = { COMPARE_FUNCTION_LESS_EQUAL, true, false };   // 其实不需要再写深度了，preDepth已经写好了
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
-		pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;    // 普通mesh的默认绘制管线
+		pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
 	}
 
 	void GBufferPass::Build(RDGBuilder& builder)
@@ -73,9 +73,9 @@ namespace GameEngine
 
 		auto [w, h] = APP_WINDOWSIZE;
 
-		RDGTextureHandle diffuse = builder.CreateTexture("ViewPort")
+		RDGTextureHandle ViewPort = builder.CreateTexture("ViewPort")
 			.Exetent({ w, h, 1 })
-			.Format(FORMAT_R8G8B8A8_UNORM)
+			.Format(FORMAT_R32G32B32A32_SFLOAT)
 			.ArrayLayers(1)
 			.MipLevels(1)
 			.MemoryUsage(MEMORY_USAGE_GPU_ONLY)
@@ -84,7 +84,7 @@ namespace GameEngine
 			.Finish();
 		RDGTextureHandle normal = builder.CreateTexture("G-Buffer Normal/Metallic")
 			.Exetent({ w, h, 1 })
-			.Format(FORMAT_R8G8B8A8_SNORM)
+			.Format(FORMAT_R32G32B32A32_SFLOAT)
 			.ArrayLayers(1)
 			.MipLevels(1)
 			.MemoryUsage(MEMORY_USAGE_GPU_ONLY)
@@ -92,16 +92,14 @@ namespace GameEngine
 			.AllowRenderTarget()
 			.Finish();
 
-		RDGTextureHandle depth = builder.CreateTexture("Depth")
-			.Exetent({ w, h, 1 })
-			.Format(FORMAT_D32_SFLOAT)
-			.AllowDepthStencil()
-			.Finish();
+		RDGTextureHandle depth = builder.GetTexture("Depth");
+
+
 		if (IsEnabled()) {
 			builder.CreateRenderPass(GetName())
-				.Color(0, diffuse, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 1.0f })    // 如果a设置为0，会影响后续网格渲染
+				.Color(0, ViewPort, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 1.0f })    // 如果a设置为0，会影响后续网格渲染
 				.Color(1, normal, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 1.0f })
-				.DepthStencil(depth, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
+				.DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
 				.Execute([&](RDGPassContext context) {
 					auto [w, h] = APP_WINDOWSIZE;
 					RHICommandListRef command = context.command;

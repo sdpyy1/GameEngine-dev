@@ -1,7 +1,7 @@
 #version 460 core
 #extension GL_GOOGLE_include_directive : enable
 #extension GL_EXT_samplerless_texture_functions : enable
-
+#include "common/common.glsl"
 vec3 kNdcPoints[6] = vec3[](
     vec3( 1,  1, 0), 
     vec3(-1, -1, 0), 
@@ -10,17 +10,8 @@ vec3 kNdcPoints[6] = vec3[](
     vec3( 1,  1, 0), 
     vec3( 1, -1, 0)
 );
-layout(set = 0,binding = 0) uniform CameraDataUniform {
-    mat4 view;
-    mat4 proj;
-	mat4 viewProj;
-	float width;
-	float height;
-	float Near;
-	float Far;
-	vec3 CameraPosition;
-} u_CameraData;
-layout (set = 0, binding = 1) uniform texture2D depthTexture;
+
+layout (set = 2, binding = 1) uniform texture2D depthTexture;
 layout (set = 1, binding = 0) uniform sampler depthSampler[];
 
 #ifdef VERTEX_SHADER
@@ -28,12 +19,11 @@ layout(location = 0) out vec3 nearPoint;
 layout(location = 1) out vec3 farPoint; 
 vec3 deprojectNDC2World(vec2 pos, float z) 
 {
-    vec4 worldH = inverse(u_CameraData.viewProj) * vec4(pos, z, 1.0);
+    vec4 worldH = inverse(u_CameraData.data.viewProj) * vec4(pos, z, 1.0);
     return worldH.xyz / worldH.w;
 }
 void main()
 {
-	// ��ֵ����ÿ�����صĽ�Զƽ���ϵ�λ��,�ӽ�ƽ�����Զƽ��㷢�����ߣ���˼����˵��������ӽ������������ط���һ�����ߣ��ж�������y=0���ƽ��Ľ��㣬����λ����������ͻ�������
     nearPoint = deprojectNDC2World(kNdcPoints[gl_VertexIndex].xy, 0.0);
     farPoint  = deprojectNDC2World(kNdcPoints[gl_VertexIndex].xy, 1.0);
 
@@ -99,9 +89,8 @@ vec4 grid(vec3 fragPos3D)
 
 float computeDepth(vec3 pos) 
 {
-    vec4 posH = u_CameraData.proj * u_CameraData.view * vec4(pos, 1.0);
+    vec4 posH = u_CameraData.data.proj * u_CameraData.data.view * vec4(pos, 1.0);
     float deviceZ = posH.z / posH.w;
-    // ���豸�ռ����ֵǯ���� [0.0, 1.0] ��Χ��
     return clamp(deviceZ, 0.0, 1.0);
 }
 // Vulkan linearize z.
@@ -119,10 +108,10 @@ vec4 getColor(vec3 fragPos3D, float t)
 {
     float deviceZ = computeDepth(fragPos3D);
 
-    vec2 uv = gl_FragCoord.xy / vec2(u_CameraData.width, u_CameraData.height);
-    float sceneZ = texture(sampler2D(depthTexture, depthSampler[1]),uv).r;
+    vec2 uv = gl_FragCoord.xy / vec2(u_CameraData.data.width, u_CameraData.data.height);
+    float sceneZ = texture(sampler2D(depthTexture, depthSampler[0]),uv).r;
 
-    float linearDepth = linearizeDepth(deviceZ,u_CameraData.Near,u_CameraData.Far);
+    float linearDepth = linearizeDepth(deviceZ,u_CameraData.data.Near,u_CameraData.data.Far);
 
     float fading = exp2(-linearDepth * 0.05);
 

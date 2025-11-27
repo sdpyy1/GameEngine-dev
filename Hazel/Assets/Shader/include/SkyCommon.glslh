@@ -170,7 +170,7 @@ vec2 GetTransmittanceLutUv(float bottomRadius, float topRadius, float mu, float 
     return vec2(x_mu, x_r);
 }
 // 查表计算任意点 p 沿着任意方向 dir 到大气层边缘的 transmittance
-vec3 TransmittanceToAtmosphere(in AtmosphereParameter param, vec3 p, vec3 dir, sampler2D lut)
+vec3 TransmittanceToAtmosphere(in AtmosphereParameter param, vec3 p, vec3 dir, texture2D lut, sampler u_sampler)
 {
     float bottomRadius = param.PlanetRadius;
     float topRadius = param.PlanetRadius + param.AtmosphereHeight;
@@ -180,7 +180,7 @@ vec3 TransmittanceToAtmosphere(in AtmosphereParameter param, vec3 p, vec3 dir, s
     float r = length(p);
 
     vec2 uv = GetTransmittanceLutUv(bottomRadius, topRadius, cos_theta, r);
-    return textureLod(lut, uv, 0.0).rgb; // LOD = 0
+    return textureLod(sampler2D(lut,u_sampler), uv, 0.0).rgb; // LOD = 0
 }
 vec3 Scattering(AtmosphereParameter param, vec3 p, vec3 lightDir, vec3 viewDir)
 {
@@ -195,7 +195,7 @@ vec3 Scattering(AtmosphereParameter param, vec3 p, vec3 lightDir, vec3 viewDir)
 // 积分计算多重散射查找表
 vec3 IntegralMultiScattering(
     in AtmosphereParameter param, vec3 samplePoint, vec3 lightDir,
-    sampler2D _transmittanceLut)
+    texture2D _transmittanceLut, sampler u_sampler)
 {
     const int N_DIRECTION = 64;
     const int N_SAMPLE = 32;
@@ -291,7 +291,7 @@ vec3 IntegralMultiScattering(
             vec3 sigma_t = sigma_s + sigma_a;                                         // extinction
             opticalDepth += sigma_t * ds;
 
-            vec3 t1 = TransmittanceToAtmosphere(param, p, lightDir, _transmittanceLut);
+            vec3 t1 = TransmittanceToAtmosphere(param, p, lightDir, _transmittanceLut,u_sampler);
             vec3 s  = Scattering(param, p, lightDir, viewDir);
             vec3 t2 = exp(-opticalDepth);
             
@@ -310,20 +310,20 @@ vec3 IntegralMultiScattering(
 }
 
 // 读取多重散射查找表
-vec3 GetMultiScattering(in AtmosphereParameter param, vec3 p, vec3 lightDir, sampler2D lut)
+vec3 GetMultiScattering(in AtmosphereParameter param, vec3 p, vec3 lightDir, texture2D lut, sampler u_sampler)
 {
     float h = length(p) - param.PlanetRadius;
     vec3 sigma_s = RayleighCoefficient(param, h) + MieCoefficient(param, h); 
     
     float cosSunZenithAngle = dot(normalize(p), lightDir);
     vec2 uv = vec2(cosSunZenithAngle * 0.5 + 0.5, h / param.AtmosphereHeight);
-    vec3 G_ALL = textureLod(lut, uv, 0).rgb;
+    vec3 G_ALL = textureLod(sampler2D(lut,u_sampler), uv, 0).rgb;
 
     return G_ALL * sigma_s;
 }
 vec3 GetSkyView(
     in AtmosphereParameter param, vec3 eyePos, vec3 viewDir, vec3 lightDir, float maxDis, 
-    sampler2D _transmittanceLut, sampler2D _multiScatteringLut)
+    texture2D _transmittanceLut, texture2D _multiScatteringLut,sampler u_sampler)
 {
     const int N_SAMPLE = 32;
     vec3 color = vec3(0, 0, 0);
@@ -349,7 +349,7 @@ vec3 GetSkyView(
                             OzoneAbsorption(param, h) + MieAbsorption(param, h);        // absorption
         opticalDepth += extinction * ds;
 
-        vec3 t1 = TransmittanceToAtmosphere(param, p, lightDir, _transmittanceLut);
+        vec3 t1 = TransmittanceToAtmosphere(param, p, lightDir, _transmittanceLut,u_sampler);
         vec3 s  = Scattering(param, p, lightDir, viewDir);
         vec3 t2 = exp(-opticalDepth);
         
@@ -358,7 +358,7 @@ vec3 GetSkyView(
         color += inScattering;
 
         // 多重散射
-        vec3 multiScattering = GetMultiScattering(param, p, lightDir, _multiScatteringLut);
+        vec3 multiScattering = GetMultiScattering(param, p, lightDir, _multiScatteringLut,u_sampler);
         color += multiScattering * t2 * ds * sunLuminance;
 
         p += viewDir * ds;

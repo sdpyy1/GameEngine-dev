@@ -1,6 +1,7 @@
 #ifndef COMMON_GLSL
 #define COMMON_GLSL
 #extension GL_EXT_nonuniform_qualifier : require
+#extension GL_EXT_samplerless_texture_functions : require
 
 #define MAX_PER_FRAME_RESOURCE_SIZE 10240			//全局的缓冲大小（个数）,包括动画，材质等
 #define MAX_PER_FRAME_OBJECT_SIZE 10240			    //全局最大支持的物体数目
@@ -8,6 +9,7 @@
 #define MAX_POINT_LIGHT_SIZE 16
 #define MAX_SPOT_LIGHT_SIZE 16
 #define CSM_LEVEL_COUNT 4
+
 
 struct BoundingSphere
 {
@@ -146,11 +148,13 @@ struct Camera{
     mat4 view;
     mat4 proj;
 	mat4 viewProj;
+    mat4 InverseViewProj;
 	float width;
 	float height;
 	float Near;
 	float Far;
 	vec3 CameraPosition;
+    float padding;
 };
 // 全局资源绑定点
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION 0 

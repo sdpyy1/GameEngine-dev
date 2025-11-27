@@ -7,7 +7,7 @@ namespace GameEngine
 {
 	void IBLPass::Init()
 	{
-		SetEnable(false);
+		SetEnable(true);
 		{
 			equirectangularConversionCompShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "EquirectangularToCubeMap.comp.spv", SHADER_FREQUENCY_COMPUTE);
 			RHIRootSignatureInfo rootSignatureInfo = {};
@@ -46,18 +46,18 @@ namespace GameEngine
 		}
 
 		V2::TextureSpec spec;
-		spec.path = APP_HDR_PATH + "1.hdr";
-		spec.format = FORMAT_R8G8B8A8_UNORM;
+		spec.path = APP_HDR_PATH + "6.hdr";
+		spec.format = FORMAT_R32G32B32A32_SFLOAT;
 		HDRTexture = std::make_shared<V2::Texture>(spec);
 
 		spec.path = APP_TEXTURE_PATH + "BRDF_LUT.png";
-		spec.format = FORMAT_R8G8B8A8_UNORM;
+		spec.format = FORMAT_R32G32B32A32_SFLOAT;
 		Lut = std::make_shared<V2::Texture>(spec);
 
 
 		RHITextureInfo rhiTextureInfo;
         rhiTextureInfo.extent = { 1024, 1024, 1 };
-        rhiTextureInfo.format = FORMAT_R8G8B8A8_UNORM;
+        rhiTextureInfo.format = FORMAT_R32G32B32A32_SFLOAT;
         rhiTextureInfo.mipLevels = rhiTextureInfo.extent.MipSize();
 		rhiTextureInfo.arrayLayers = 6;
         rhiTextureInfo.type = RESOURCE_TYPE_RW_TEXTURE | RESOURCE_TYPE_TEXTURE_CUBE;
@@ -85,7 +85,7 @@ namespace GameEngine
 
 			RDGTextureHandle prefilterMap = builder.CreateTexture("PrefilterMap")
 				.Exetent({ 1024, 1024, 1 })
-				.Format(FORMAT_R8G8B8A8_UNORM)
+				.Format(FORMAT_R32G32B32A32_SFLOAT)
 				.ArrayLayers(6)
 				.MipLevels(0)
 				.AllowReadWrite()
@@ -94,7 +94,7 @@ namespace GameEngine
 
 			RDGTextureHandle irradianceMap = builder.CreateTexture("IrradianceMap")
 				.Exetent({ 32, 32, 1 })
-				.Format(FORMAT_R8G8B8A8_UNORM)
+				.Format(FORMAT_R32G32B32A32_SFLOAT)
 				.ArrayLayers(6)
 				.AllowReadWrite()
 				.CubeMap()
@@ -121,6 +121,8 @@ namespace GameEngine
 				.From(prefilterMap)
 				.To(cubeMap)
 				.GenerateMips()
+				.OutputRead(cubeMap)
+				.OutputReadWrite(prefilterMap)
 				.Finish();
 
 

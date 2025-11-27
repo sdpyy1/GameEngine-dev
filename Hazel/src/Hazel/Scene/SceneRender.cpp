@@ -1084,7 +1084,7 @@ namespace GameEngine {
 			float LOD = 0.0f;
 			int Mode = 0; // 0 = prefilter, 1 = downsample, 2 = firstUpsample, 3 = upsample
 		} bloomComputePushConstants;
-		struct BloomSettings
+		struct BloomSettingsold
 		{
 			bool Enabled = true;
 			float Threshold = 1.0f;

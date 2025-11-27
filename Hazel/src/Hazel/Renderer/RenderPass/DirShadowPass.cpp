@@ -53,16 +53,16 @@ namespace GameEngine {
 					.RootSignature(m_RootSignature)
 					.PassIndex(i)
 					.Execute([&](RDGPassContext context) {
-					RHICommandListRef command = context.command;
-					command->SetGraphicsPipeline(m_Pipeline);
-					command->SetViewport({ 0, 0 }, { 4096,4096 });
-					command->SetScissor({ 0, 0 }, { 4096,4096 });
-					command->SetDepthBias(0.0f, 0.0f, 0.0f);
-					command->BindDescriptorSet(Application::GetRenderSystem()->GetRenderResourceManager()->GetGlobalResourcePerFrameDescriptorSet(), 0);
-					uint32_t csmIndex = context.passIndex[0];
-					command->PushConstants(&csmIndex, sizeof(uint32_t), SHADER_FREQUENCY_VERTEX);
-					meshPassProcessor->Draw(command);
-						})
+						RHICommandListRef command = context.command;
+						command->SetGraphicsPipeline(m_Pipeline);
+						command->SetViewport({ 0, 0 }, { 4096,4096 });
+						command->SetScissor({ 0, 0 }, { 4096,4096 });
+						command->SetDepthBias(0.0f, 0.0f, 0.0f);
+						command->BindDescriptorSet(Application::GetRenderSystem()->GetRenderResourceManager()->GetGlobalResourcePerFrameDescriptorSet(), 0);
+						uint32_t csmIndex = context.passIndex[0];
+						command->PushConstants(&csmIndex, sizeof(uint32_t), SHADER_FREQUENCY_VERTEX);
+						meshPassProcessor->Draw(command);
+					})
 					.Finish();
 			}
 		}

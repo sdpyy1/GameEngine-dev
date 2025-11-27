@@ -11,7 +11,7 @@ namespace GameEngine {
 #define MAX_RENDER_TARGETS 8			//允许同时绑定的最大RT数目
 #define MAX_DESCRIPTOR_SETS 8			//允许绑定的最大描述符集数目
 	
-#define RHI_COLOR_FROMAT FORMAT_R8G8B8A8_UNORM
+#define RHI_COLOR_FROMAT FORMAT_R32G32B32A32_SFLOAT
 #define RHI_DEPTH_FROMAT FORMAT_D32_SFLOAT
 
 #define RHI_DYNAMICRHI DynamicRHI::Get()
@@ -423,7 +423,20 @@ namespace GameEngine {
 				a.height == b.height &&
 				a.depth == b.depth;
 		}
+		Extent3D GetMipExtent(uint32_t mip) const
+		{
+			Extent3D mipExtent = *this;
+			while (mip > 0 && (mipExtent.width > 1 || mipExtent.height > 1 || mipExtent.depth > 1))
+			{
+				if (mipExtent.width > 1) mipExtent.width /= 2;
+				if (mipExtent.height > 1) mipExtent.height /= 2;
+				if (mipExtent.depth > 1) mipExtent.depth /= 2;
 
+				mip--;
+			}
+
+			return mipExtent;
+		}
 		const uint32_t MipSize() const
 		{
 			return (uint32_t)(std::floor(std::log2(std::max(width, std::max(height, depth))))) + 1;
@@ -852,7 +865,7 @@ namespace GameEngine {
 		struct RenderTarget
 		{
 			BlendOp colorBlendOp = BLEND_OP_ADD;
-			BlendFactor colorSrcBlend = BLEND_FACTOR_SRC_COLOR;
+			BlendFactor colorSrcBlend = BLEND_FACTOR_SRC_ALPHA;
 			BlendFactor colorDstBlend = BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 
 			BlendOp alphaBlendOp = BLEND_OP_ADD;

@@ -1,17 +1,7 @@
 #version 450 core
 #include "include/SkyCommon.glslh"
-layout(set = 0,binding = 0) uniform CameraDataUniform {
-    mat4 view;
-    mat4 proj;
-	mat4 viewProj;
-	float width;
-	float height;
-	float Near;
-	float Far;
-	vec3 CameraPosition;
-	float padding;
-	mat4 InverseViewProj;
-} u_CameraData;
+#include "common/Common.glsl"
+
 #ifdef VERTEX_SHADER
 vec2 NDC[3] = vec2[](
     vec2(-1.0, -1.0), 
@@ -24,7 +14,7 @@ void main(){
 	vec4 position = vec4(NDC[gl_VertexIndex], 1.0, 1.0);
 	gl_Position = position;
     out_texCoord = (NDC[gl_VertexIndex] + 1.0) * 0.5;
-	worldPosition = (u_CameraData.InverseViewProj * position).xyz;
+	worldPosition = (u_CameraData.data.InverseViewProj * position).xyz;
 }
 #endif
 
@@ -32,16 +22,12 @@ void main(){
 layout(location = 0) in vec2 in_texCoord;
 layout(location = 1) in vec3 worldPosition;
 layout(location = 0) out vec4 out_color;
-layout(set=0,binding = 1) uniform samplerCube SkyTexture;
-layout(binding = 2) uniform sampler2D u_SkyViewLut;
-layout(binding = 3) uniform sampler2D u_TransmittanceLut;
-layout(binding = 4) uniform sampler2D u_MultiScatteringLut;
-layout(std140, set = 0, binding = 5) uniform SceneData
-{
-	DirectionalLight DirectionalLights;
-	float EnvironmentMapIntensity;
-	uint isDynamicSky;
-} u_Scene;
+layout(set = 2,binding = 0) uniform textureCube SkyTexture;
+layout(set = 2,binding = 1) uniform texture2D u_SkyViewLut;
+layout(set = 2,binding = 2) uniform texture2D u_TransmittanceLut;
+layout(set = 2,binding = 3) uniform texture2D u_MultiScatteringLut;
+layout(set = 1, binding = 0) uniform sampler u_Sampler[];
+
 
 vec3 GetSunDisk(in AtmosphereParameter param, vec3 eyePos, vec3 viewDir, vec3 lightDir)
 {
@@ -59,22 +45,23 @@ vec3 GetSunDisk(in AtmosphereParameter param, vec3 eyePos, vec3 viewDir, vec3 li
     if(disToAtmosphere < 0) return vec3(0,0,0);
 
     // ¼ÆËãË¥¼õ
-    sunLuminance *= TransmittanceToAtmosphere(param, eyePos, viewDir, u_TransmittanceLut);
+    sunLuminance *= TransmittanceToAtmosphere(param, eyePos, viewDir, u_TransmittanceLut,u_Sampler[0]);
 
     if(theta < param.SunDiskAngle) return sunLuminance;
     return vec3(0,0,0);
 }
 void main(){
+	uint isDynamicSky = 0;
 	vec4 color = vec4(0,0,0,1);
 	vec3 v_dir = normalize(worldPosition);
-	if(u_Scene.isDynamicSky == 0){
-		out_color = texture(SkyTexture, v_dir);
+	if(isDynamicSky == 0){
+		out_color = texture(samplerCube(SkyTexture,u_Sampler[0]),v_dir);
 	}else{
 		AtmosphereParameter Atmosphere = BuildAtmosphereParameter();
-		vec3 lightDir = normalize(-u_Scene.DirectionalLights.Direction);
-		float h = u_CameraData.CameraPosition.y - Atmosphere.SeaLevel + Atmosphere.PlanetRadius;
+		vec3 lightDir = normalize(-u_LightInfo.data.dirLights.direction);
+		float h = u_CameraData.data.CameraPosition.y - Atmosphere.SeaLevel + Atmosphere.PlanetRadius;
 		vec3 eyePos = vec3(0, h, 0);
-		color.rgb += texture(u_SkyViewLut, ViewDirToUV(v_dir)).rgb;
+		color.rgb += texture(sampler2D(u_SkyViewLut,u_Sampler[0]), ViewDirToUV(v_dir)).rgb;
 		color.rgb += GetSunDisk(Atmosphere, eyePos, v_dir, lightDir);
 		out_color = color;
 

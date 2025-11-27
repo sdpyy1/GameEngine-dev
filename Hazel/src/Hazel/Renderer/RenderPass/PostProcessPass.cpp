@@ -23,7 +23,7 @@ namespace GameEngine {
 			pipelineInfo.primitiveType = PRIMITIVE_TYPE_TRIANGLE_LIST;
 			pipelineInfo.rasterizerState = { FILL_MODE_SOLID, CULL_MODE_NONE, DEPTH_CLIP, 0.0f, 0.0f };
 			pipelineInfo.depthStencilState = { COMPARE_FUNCTION_LESS_EQUAL, true, true };
-			pipelineInfo.colorAttachmentFormats[0] = FORMAT_R8G8B8A8_UNORM;
+			pipelineInfo.colorAttachmentFormats[0] = FORMAT_R32G32B32A32_SFLOAT;
 			pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;  // Depth?
 			m_Pipeline = APP_DYNAMICRHI->CreateGraphicsPipeline(pipelineInfo); 
 		}

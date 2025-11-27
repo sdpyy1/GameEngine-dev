@@ -9,7 +9,7 @@ namespace GameEngine {
 			V2::TextureSpec spec;
 			spec.path = path;
 			spec.yFlip = isYFlip;
-			spec.format = FORMAT_R8G8B8A8_UNORM;
+			spec.format = FORMAT_R32G32B32A32_SFLOAT;
 			icon = std::make_shared<V2::Texture>(spec);
 			textureID = icon->GetImGuiID();
 		}

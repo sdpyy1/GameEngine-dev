@@ -14,6 +14,8 @@
 #include <Hazel/Renderer/RenderPass/SkyPass.h>
 #include <Hazel/Renderer/RenderPass/BloomPass.h>
 #include <Hazel/Renderer/RenderPass/PostProcessPass.h>
+#include <Hazel/Renderer/RenderPass/LightPass.h>
+#include <Hazel/Renderer/RenderPass/PreDepthPass.h>
 
 namespace GameEngine {
 	RenderSystem::RenderSystem()
@@ -63,10 +65,13 @@ namespace GameEngine {
 		passes[IBL_PASS] = std::make_shared<IBLPass>();
 		meshPasses[MESH_PASS_DIRSHADOW_PASS] = std::make_shared<DirShadowPass>();
 		meshPasses[MESH_PASS_GBUFFER_PASS] = std::make_shared<GBufferPass>();
+		meshPasses[MESH_PASS_PREDEPTH_PASS] = std::make_shared<PreDepthPass>();
 		passes[DIR_SHADOW_PASS] = meshPasses[MESH_PASS_DIRSHADOW_PASS];
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
+		passes[PREDEPTH_PASS] = meshPasses[MESH_PASS_PREDEPTH_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();
 		passes[SKY_PASS] = std::make_shared<SkyPass>();
+		passes[LIGHT_PASS] = std::make_shared<LightPass>();
         passes[BLOOM_PASS] = std::make_shared<BloomPass>();
         passes[POST_PROCESS_PASS] = std::make_shared<PostProcessPass>();
 		passes[IMGUI_PASS] = std::make_shared<ImGuiPass>();
