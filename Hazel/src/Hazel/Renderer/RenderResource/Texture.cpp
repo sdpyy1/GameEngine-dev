@@ -38,6 +38,11 @@ namespace GameEngine::V2
 
 		return viewType;
 	}
+	bool isDepthFormalt(RHIFormat format) {
+        return format == RHIFormat::FORMAT_D32_SFLOAT ||
+            format == RHIFormat::FORMAT_D32_SFLOAT_S8_UINT ||
+            format == RHIFormat::FORMAT_D24_UNORM_S8_UINT;
+	}
 	void Texture::LoadFromFile()
 	{
 		if (m_Spec.type == TEXTURE_TYPE_3D) {
@@ -145,11 +150,14 @@ namespace GameEngine::V2
 
 	RHITextureViewRef Texture::CreateView(RHITextureRef texture)   // TODO:目前只有Viewport使用
 	{
+		if (!texture) {
+			LOG_ERROR("Texture is null");
+		}
 		RHITextureViewInfo rhiTextureViewInfo;
 		rhiTextureViewInfo.texture = texture;
-		rhiTextureViewInfo.format = FORMAT_R8G8B8A8_UNORM;
+		rhiTextureViewInfo.format = texture->GetInfo().format;
 		rhiTextureViewInfo.viewType = VIEW_TYPE_2D;
-		rhiTextureViewInfo.subresource = { TEXTURE_ASPECT_COLOR, 0, 1, 0, 1 };
+		rhiTextureViewInfo.subresource = { isDepthFormalt(texture->GetInfo().format)? TEXTURE_ASPECT_DEPTH: TEXTURE_ASPECT_COLOR, 0, 1, 0, 1};
 		return APP_DYNAMICRHI->CreateTextureView(rhiTextureViewInfo);
 	}
 

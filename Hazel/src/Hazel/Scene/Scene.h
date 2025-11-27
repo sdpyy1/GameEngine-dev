@@ -135,5 +135,7 @@ namespace GameEngine {
 		friend class SceneSerializer;
 		friend class SceneRender;
 		SceneInfo m_SceneInfo;
+	public:
+		bool HasDirLight();
 	};
 }

@@ -67,7 +67,7 @@ namespace GameEngine {
 	}
 
 
-	bool ImGuiRendererManager::ImGuiCommand(RHIDescriptorSetRef viewportTexture)
+	bool ImGuiRendererManager::ImGuiCommand(RHIDescriptorSetRef viewportTexture, RHIDescriptorSetRef debugTexture)
 	{
 		// ========== Dockspace 主窗口 ==========
 		ImGuiIO& io = ImGui::GetIO();
@@ -152,7 +152,7 @@ namespace GameEngine {
 		// ========== 其他面板绘制 ==========
 		ViewportGUI(viewportTexture);
 		SettingGUI();
-		DebugTexture();
+		DebugTexture(debugTexture);
 		GPUTime();
 		DrawGPUProfiler();
 		if (m_FolderPreviewPanel.isOpen)
@@ -403,10 +403,10 @@ namespace GameEngine {
 		return { rayPos, rayDir };
 	}
 
-	void ImGuiRendererManager::DebugTexture()
+	void ImGuiRendererManager::DebugTexture(RHIDescriptorSetRef debugTexture)
 	{
 		ImGui::Begin("Debug Texture");
-		Application::GetSceneManager()->GetActiveScene()->ShowDebugTexture();
+		ImGui::Image(debugTexture->RawHandle(), ImGui::GetContentRegionAvail(), { 0, 1 }, { 1, 0 });
 		ImGui::End();
 	}
 

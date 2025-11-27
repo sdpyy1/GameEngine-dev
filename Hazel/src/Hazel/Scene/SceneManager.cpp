@@ -80,4 +80,10 @@ namespace GameEngine
 		m_CurrentSceneFilePath = filepath.string();
 		std::replace(m_CurrentSceneFilePath.begin(), m_CurrentSceneFilePath.end(), '\\', '/');
 	}
+
+	bool SceneManager::HasDirLight()
+	{
+		return m_CurrentScene->HasDirLight();
+	}
+
 }

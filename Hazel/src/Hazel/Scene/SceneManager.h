@@ -18,6 +18,15 @@ namespace GameEngine
 		bool OpenScene(const std::filesystem::path& filepath);
 		void SaveScene();
 		void SaveSceneAs();
+
+	public:
+		bool HasDirLight();
+
+
+
+
+
+
 	private:
 		std::shared_ptr<Scene> m_CurrentScene;
 		std::shared_ptr<EditorCamera> m_EditorCamera;

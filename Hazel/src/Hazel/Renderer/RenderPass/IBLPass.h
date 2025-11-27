@@ -17,12 +17,14 @@ namespace GameEngine {
 		virtual std::string GetName() { return "IBLPass"; }
 		virtual PassType GetType() override final { return GRID_PASS; }
 
-
 	private:
 		TextureRef HDRTexture;
+		TextureRef Lut;
+
+
+
 		RHITextureRef IrradianceMap;
 		RHITextureRef PreFilterMap;
-		RHITextureRef Lut;
 		RHITextureRef CubeMap;
 
 

@@ -8,6 +8,7 @@ namespace GameEngine {
 	enum PassType
 	{
 		IBL_PASS,
+		DIR_SHADOW_PASS,
 		GBUFFER_PASS,
 		GRID_PASS,
 		IMGUI_PASS,
@@ -17,7 +18,7 @@ namespace GameEngine {
 
 	enum MeshPassType
 	{
-		
+		MESH_PASS_DIRSHADOW_PASS,
 		MESH_PASS_GBUFFER_PASS,
 		MESH_PASS_TYPE_MAX_CNT,	//
 	};

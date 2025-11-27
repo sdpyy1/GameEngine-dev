@@ -685,12 +685,12 @@ namespace GameEngine {
             if (frequency & SHADER_FREQUENCY_VERTEX)         stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
             if (frequency & SHADER_FREQUENCY_FRAGMENT)       stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
             if (frequency & SHADER_FREQUENCY_GEOMETRY)       stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
-            if (frequency & SHADER_FREQUENCY_RAY_GEN)        stageFlags |= VK_SHADER_STAGE_RAYGEN_BIT_KHR;
-            if (frequency & SHADER_FREQUENCY_CLOSEST_HIT)    stageFlags |= VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR;
-            if (frequency & SHADER_FREQUENCY_RAY_MISS)       stageFlags |= VK_SHADER_STAGE_MISS_BIT_KHR;
-            if (frequency & SHADER_FREQUENCY_INTERSECTION)   stageFlags |= VK_SHADER_STAGE_INTERSECTION_BIT_KHR;
-            if (frequency & SHADER_FREQUENCY_ANY_HIT)        stageFlags |= VK_SHADER_STAGE_ANY_HIT_BIT_KHR;
-            if (frequency & SHADER_FREQUENCY_MESH)           stageFlags |= VK_SHADER_STAGE_MESH_BIT_EXT;
+            // if (frequency & SHADER_FREQUENCY_RAY_GEN)        stageFlags |= VK_SHADER_STAGE_RAYGEN_BIT_KHR;
+            // if (frequency & SHADER_FREQUENCY_CLOSEST_HIT)    stageFlags |= VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR;
+            //if (frequency & SHADER_FREQUENCY_RAY_MISS)       stageFlags |= VK_SHADER_STAGE_MISS_BIT_KHR;
+            // if (frequency & SHADER_FREQUENCY_INTERSECTION)   stageFlags |= VK_SHADER_STAGE_INTERSECTION_BIT_KHR;
+            // if (frequency & SHADER_FREQUENCY_ANY_HIT)        stageFlags |= VK_SHADER_STAGE_ANY_HIT_BIT_KHR;
+            //if (frequency & SHADER_FREQUENCY_MESH)           stageFlags |= VK_SHADER_STAGE_MESH_BIT_EXT;
             return stageFlags;
         }
         static VkDescriptorType ResourceTypeToVk(ResourceType resourceType)

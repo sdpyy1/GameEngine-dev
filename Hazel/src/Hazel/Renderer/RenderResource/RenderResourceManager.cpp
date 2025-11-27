@@ -47,6 +47,7 @@ namespace GameEngine {
 
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_SETTING, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_LIGHTINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_BUFFER });
 
 
 		m_GlobalResourcePreFrameRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
@@ -117,12 +118,18 @@ namespace GameEngine {
 				samplerUpdateInfo.index = 3;
 				samplerUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER;
 				resource.descriptorSet->UpdateDescriptor(samplerUpdateInfo);
-
-
-
-
+			}
+			{
+				// lightInfo
+				RHIDescriptorUpdateInfo lightUpdateInfo = {};
+				lightUpdateInfo.resourceType = RESOURCE_TYPE_BUFFER;
+				lightUpdateInfo.buffer = resource.lightInfoBuffer.GetRHIBuffer();
+                lightUpdateInfo.index = 0;
+                lightUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO;
+                resource.descriptorSet->UpdateDescriptor(lightUpdateInfo);
 			}
 		}
+		
 
 	}
 	void RenderResourceManager::ReleaseBindlessID(uint32_t id, BindlessSlot slot)

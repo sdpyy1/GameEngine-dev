@@ -257,6 +257,19 @@ namespace GameEngine {
 		float LightSize = 0.5f; // For PCSS
 		float ShadowAmount = 1.0f; // “ı”∞≥Ã∂»
 	};
+
+
+	struct PointLightComponent
+	{
+		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
+		float Intensity = 1.0f;
+		float Radius = 1.0f;
+	};
+
+
+
+
+
 	struct SpotLightComponent
 	{ 
         glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
@@ -393,7 +406,7 @@ namespace GameEngine {
 	};
 
 	using AllComponents = 
-		ComponentGroup<ModelComponent,TransformComponent, SpriteRendererComponent,
+		ComponentGroup<ModelComponent,TransformComponent, SpriteRendererComponent,PointLightComponent,
 			CircleRendererComponent, CameraComponent, ScriptComponent, SpotLightComponent,
 			NativeScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent, SkyComponent,
 			CircleCollider2DComponent, TextComponent, RelationshipComponent, DirectionalLightComponent, SubmeshComponent,DynamicModelComponent, AnimationComponent>;

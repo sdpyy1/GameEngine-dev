@@ -5,6 +5,7 @@
 #include <backends/imgui_impl_glfw.h>
 #include <Hazel/Editor/ImGuiRendererManager.h>
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Scene/SceneManager.h"
 
 namespace GameEngine
 {
@@ -30,18 +31,18 @@ namespace GameEngine
 
             RDGRenderPassHandle pass = builder.CreateRenderPass(GetName())
                 .Color(0, UI, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
-                .Read(0,0,1, builder.GetTexture("ViewPort"))  // 只是使用也可以这样防止不创建资源
+                .Read(0,0,0, builder.GetTexture("ViewPort"))  // 只是使用也可以这样防止不创建资源
                 .Execute([&](RDGPassContext context) {
                         auto [w, h] = APP_WINDOWSIZE;
                         Extent2D windowExtent = { w, h };
                         RHICommandListRef command = context.command;
-                        static RHIDescriptorSetRef descriptor = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
-
+                        static RHIDescriptorSetRef viewportDescriptor = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+                        static RHIDescriptorSetRef debugDescriptor = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
                         ImGui_ImplVulkan_NewFrame();
                         ImGui_ImplGlfw_NewFrame();
                         ImGui::NewFrame();
                         m_ImGuiRendererManager->SetGPUTimeInfo(RENDER_GPU_TIME_INFO);
-                        m_ImGuiRendererManager->ImGuiCommand(descriptor);
+                        m_ImGuiRendererManager->ImGuiCommand(viewportDescriptor,debugDescriptor);
                         ImGui::Render();
                         command->ImGuiRenderDrawData();
                     })

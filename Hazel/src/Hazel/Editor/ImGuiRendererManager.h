@@ -16,13 +16,13 @@ namespace GameEngine {
 		virtual void End() {};
 		void SetDarkThemeV2Colors();
 		void Tick(float deltaTime);
-		bool ImGuiCommand(RHIDescriptorSetRef viewportTexture);
+		bool ImGuiCommand(RHIDescriptorSetRef viewportTexture, RHIDescriptorSetRef debugTexture);
 		bool OnEvent(Event& e);
 		// 各种窗口创建
 		void ViewportGUI(RHIDescriptorSetRef viewportTexture);
 		void DrawGizmo();
 		void SettingGUI();
-		void DebugTexture();
+		void DebugTexture(RHIDescriptorSetRef debugTexture);
 		void GPUTime();
 		void DrawGPUProfiler();
 		static std::shared_ptr<ImGuiRendererManager> Create();

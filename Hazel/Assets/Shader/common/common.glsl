@@ -5,6 +5,73 @@
 #define MAX_PER_FRAME_RESOURCE_SIZE 10240			//全局的缓冲大小（个数）,包括动画，材质等
 #define MAX_PER_FRAME_OBJECT_SIZE 10240			    //全局最大支持的物体数目
 #define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless 单个binding的最大描述符数目
+#define MAX_POINT_LIGHT_SIZE 16
+#define MAX_SPOT_LIGHT_SIZE 16
+#define CSM_LEVEL_COUNT 4
+
+struct BoundingSphere
+{
+    vec3 center;
+    float radius;
+};
+
+struct DirLightInfo
+{
+    vec3 direction;
+    float intensity;
+
+    vec3 radiance;
+    float _padding;
+
+    mat4 view[CSM_LEVEL_COUNT];
+    mat4 projection[CSM_LEVEL_COUNT];
+    mat4 viewProj[CSM_LEVEL_COUNT];
+    float SplitDepth[CSM_LEVEL_COUNT];
+};
+
+struct PointLightInfo
+{
+    vec3 position;
+    float intensity;
+
+    mat4 view[6];
+    mat4 projection;
+    mat4 viewProj[6];
+
+    vec3 radiance;
+    float _padding;
+
+    BoundingSphere sphere; 
+};
+
+struct SpotLightInfo
+{ 
+    vec3 position;
+    float intensity;
+    float range;
+    float falloff;
+
+    mat4 view;
+    mat4 projection;
+    mat4 viewProj;
+
+    vec3 radiance;
+    float _padding;
+
+    BoundingSphere sphere;
+};
+
+struct LightInfo
+{
+    uint dirLightCount;
+    uint pointLightCount;
+    uint spotLightCount;
+    uint _padding0;
+
+    DirLightInfo dirLights;
+    PointLightInfo pointLights[MAX_POINT_LIGHT_SIZE];
+    SpotLightInfo spotLights[MAX_SPOT_LIGHT_SIZE];
+};
 
 struct RHIIndexedIndirectCommand 
 {
@@ -111,7 +178,13 @@ struct Camera{
 #define GLORBAL_RESOURCE_BINDING_MESHINFO 18
 #define GLORBAL_RESOURCE_BINDING_MATERIALINFO 19
 #define GLORBAL_RESOURCE_BINDING_VERTEXINFO 20
+#define GLORBAL_RESOURCE_BINDING_LIGHTINFO 21
 
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO) readonly buffer LightInfoBuffer {
+
+    LightInfo data;
+
+} u_LightInfo;
 
 layout(set = 0,binding = GLORBAL_RESOURCE_BINDING_CAMERA) readonly buffer CameraDataUniform{
 

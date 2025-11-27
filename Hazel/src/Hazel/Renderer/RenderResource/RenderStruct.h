@@ -1,9 +1,73 @@
 #pragma once
 #include <glm/ext/matrix_float4x4.hpp>
+#include <Hazel/Math/AABB.h>
 #define MAX_PER_FRAME_OBJECT_SIZE 10240			    //全局最大支持的物体数目
+#define MAX_POINT_LIGHT_SIZE 16
+#define MAX_SPOT_LIGHT_SIZE 16
+#define CSM_LEVEL_COUNT 4
+
 
 namespace GameEngine {
 	namespace V2 {
+        struct DirLightInfo
+        {
+            glm::vec3 direction;
+            float intensity;
+
+            glm::vec3 radiance;
+            float _padding;
+
+            glm::mat4 view[CSM_LEVEL_COUNT];
+            glm::mat4 projection[CSM_LEVEL_COUNT];
+            glm::mat4 viewProj[CSM_LEVEL_COUNT];
+            float SplitDepth[CSM_LEVEL_COUNT];
+        };
+
+        struct PointLightInfo
+        {
+            glm::vec3 position;
+            float intensity;
+
+            glm::mat4 view[6];
+            glm::mat4 projection;
+            glm::mat4 viewProj[6];
+
+            glm::vec3 radiance;
+            float _padding;
+
+            BoundingSphere sphere; 
+        };
+
+        struct SpotLightInfo
+        { 
+            glm::vec3 position;
+            float intensity;
+            float range;
+            float falloff;
+
+            glm::mat4 view;
+            glm::mat4 projection;
+            glm::mat4 viewProj;
+
+            glm::vec3 radiance;
+            float _padding;
+
+            BoundingSphere sphere;
+        };
+
+        struct LightInfo
+        {
+            uint32_t dirLightCount = 0;
+            uint32_t pointLightCount = 0;
+            uint32_t spotLightCount = 0;
+            uint32_t _padding0;
+
+            DirLightInfo dirLights;
+            PointLightInfo pointLights[MAX_POINT_LIGHT_SIZE];
+            SpotLightInfo spotLights[MAX_SPOT_LIGHT_SIZE];
+        };
+
+
 
         typedef struct VertexInfo
         {

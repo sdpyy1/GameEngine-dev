@@ -124,23 +124,22 @@ namespace GameEngine {
 
     struct BoundingSphere
     {
-        BoundingSphere() {};
 
+        glm::vec3 center = glm::zero<glm::vec3>();
+        float radius = 0.0f;
+
+
+
+        BoundingSphere() {};
         BoundingSphere(const glm::vec3& center, const float& radius)
         {
             this->center = center;
             this->radius = radius;
         };
-
         BoundingSphere(const std::vector<glm::vec3>& points);
-
         BoundingSphere(const std::vector<BoundingSphere>& spheres);
-
         BoundingSphere(const BoundingBox& box);
-
         BoundingSphere(const AxisAlignedBox& box);
-        glm::vec3 center = glm::zero<glm::vec3>();
-        float radius = 0.0f;
         BoundingSphere operator+(const BoundingSphere& other);
 
     private:

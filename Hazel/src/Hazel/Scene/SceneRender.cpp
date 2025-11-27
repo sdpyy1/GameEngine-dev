@@ -97,9 +97,9 @@ namespace GameEngine {
 		Renderer::EndRenderPass(m_CommandBuffer);
 	}
 
-	void SceneRender::CalculateCascades(CascadeData* cascades, const EditorCamera& sceneCamera, const glm::vec3& lightDirection) const
+	void SceneRender::CalculateCascades(CascadeDataold* cascades, const EditorCamera& sceneCamera, const glm::vec3& lightDirection) const
 	{
-		float nearOffset = -250.f; // ��ռ���Ҫ�����ƶ�һЩ����ʵ�����ͨ�����㳡������Զ�����������Ȼ�����Nearƽ�棬��Ȼ�޷����������ڵ��ˣ���������׶�ڵ����壩
+		float nearOffset = -250.f;
 		float farOffset = 0.f;
 		glm::mat4 viewProjection = sceneCamera.GetViewProjection();
 		float CascadeSplitLambda = 0.9f;
@@ -293,7 +293,7 @@ namespace GameEngine {
 	void SceneRender::UploadCSMShadowData() {
         uint32_t frameIndex = Renderer::GetCurrentFrameIndex();
 		if (m_SceneDataFromScene.SceneLightEnvironment.DirectionalLights[0].Intensity == 0) return;
-		CascadeData cascades[4];
+		CascadeDataold cascades[4];
 		CalculateCascades(cascades, m_SceneDataFromScene.camera, m_SceneDataFromScene.SceneLightEnvironment.DirectionalLights[0].Direction);
 		for (int i = 0; i < NumShadowCascades; i++)
 		{

@@ -23,7 +23,11 @@ namespace GameEngine {
 	{
 		// UI::Image(Application::GetRendererManager()->GetTextureWhichNeedDebug(), ImGui::GetContentRegionAvail(), {0, 0}, {1, 1});
 	}
-
+	bool Scene::HasDirLight()
+	{
+		auto& views = GetAllEntitiesWith<DirectionalLightComponent>();
+        return !views.empty();
+	}
 	// 打包一帧的场景数据
 	void Scene::PackupSceneInfo(EditorCamera& editorCamera) {
 		m_SceneInfo.camera = editorCamera;
@@ -561,6 +565,10 @@ namespace GameEngine {
 	{
 	}
 	template<>
+	void Scene::OnComponentAdded<PointLightComponent>(Entity entity, PointLightComponent& component)
+	{
+	}
+	template<>
 	void Scene::OnComponentAdded<SkyComponent>(Entity entity, SkyComponent& component)
 	{
 		component.iblPath.clear(); // 先清空
@@ -584,6 +592,7 @@ namespace GameEngine {
 			}
 		}
 	}
+
 
 
 

@@ -7,8 +7,10 @@
 #include "Hazel/Asset/Model.h"
 #include <Hazel/Renderer/RenderPass/GbufferPass.h>
 #include "MeshCollector.h"
+#include "LightCollector.h"
 #include <Hazel/Renderer/RenderResource/RenderResourceManager.h>
 #include <Hazel/Renderer/RenderPass/IBLPass.h>
+#include <Hazel/Renderer/RenderPass/DirShadowPass.h>
 
 namespace GameEngine {
 	RenderSystem::RenderSystem()
@@ -28,6 +30,7 @@ namespace GameEngine {
 
 	void RenderSystem::Tick(float timestep)
 	{
+		LightCollector::CollectLight();
 		MeshCollector::CollectMesh();
 		m_RenderResourceManager->Tick();
 		auto& CurResource = m_PerFrameBaseResources[APP_FRAMEINDEX];
@@ -53,8 +56,11 @@ namespace GameEngine {
 	{
 
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
+
 		passes[IBL_PASS] = std::make_shared<IBLPass>();
+		meshPasses[MESH_PASS_DIRSHADOW_PASS] = std::make_shared<DirShadowPass>();
 		meshPasses[MESH_PASS_GBUFFER_PASS] = std::make_shared<GBufferPass>();
+		passes[DIR_SHADOW_PASS] = meshPasses[MESH_PASS_DIRSHADOW_PASS];
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();
 		passes[IMGUI_PASS] = std::make_shared<ImGuiPass>();

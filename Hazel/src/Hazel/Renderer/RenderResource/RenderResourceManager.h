@@ -60,12 +60,14 @@ namespace GameEngine {
 #define GLORBAL_RESOURCE_BINDING_MESHINFO 18
 #define GLORBAL_RESOURCE_BINDING_MATERIALINFO 19
 #define GLORBAL_RESOURCE_BINDING_VERTEXINFO 20
+#define GLORBAL_RESOURCE_BINDING_LIGHTINFO 21
+
     // 每帧都需要更新的资源，每个飞行帧一份，防止冲突
     struct PreFrameGlobalResources
     {
         RHIDescriptorSetRef descriptorSet;
         RenderBuffer<V2::CameraData> cameraDataBuffer;
-
+        RenderBuffer<V2::LightInfo> lightInfoBuffer;
     };
     
 
@@ -134,7 +136,8 @@ namespace GameEngine {
             void ReleaseMeshInfoID(uint32_t id) { m_MultiFrameGlobalResources.meshInfoBuffer.Release(id); }
             void SetMeshInfo(const V2::MeshInfo& meshInfo, uint32_t meshID) {m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfo, meshID);};
 
-
+            // LightInfo
+            void SetLightInfo(const V2::LightInfo& lightInfo) {m_PerFrameGlobalResources[APP_FRAMEINDEX].lightInfoBuffer.SetData(lightInfo);};
             
             // 各种Buffer数据
             void RenderResourceManager::UpdateCameraInfo();

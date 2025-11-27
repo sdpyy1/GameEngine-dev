@@ -119,7 +119,7 @@ namespace GameEngine {
 				return IsSelected < other.IsSelected;
 			}
 		};
-		struct CascadeData
+		struct CascadeDataold
 		{
 			glm::mat4 ViewProj;
 			glm::mat4 View;
@@ -200,7 +200,7 @@ namespace GameEngine {
 
 	private: // Utils which need struct
 		void CopyToBoneTransformStorage(const MeshKey& meshKey, const Ref<MeshSource>& meshSource, const std::vector<glm::mat4>& boneTransforms);
-		void CalculateCascades(CascadeData* cascades, const EditorCamera& sceneCamera, const glm::vec3& lightDirection) const;
+		void CalculateCascades(CascadeDataold* cascades, const EditorCamera& sceneCamera, const glm::vec3& lightDirection) const;
 	private: // member
 		// ≈‰÷√–≈œ¢
 		bool NeedResize = false;
