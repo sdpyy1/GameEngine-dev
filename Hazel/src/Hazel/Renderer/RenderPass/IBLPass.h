@@ -21,7 +21,7 @@ namespace GameEngine {
 		TextureRef HDRTexture;
 		TextureRef Lut;
 
-
+		bool hasPreCompute = false;   // 控制只有第一帧计算
 
 		RHITextureRef IrradianceMap;
 		RHITextureRef PreFilterMap;

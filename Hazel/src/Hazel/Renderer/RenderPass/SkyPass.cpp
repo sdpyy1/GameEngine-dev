@@ -96,7 +96,7 @@ namespace GameEngine {
         RDGTextureHandle MultiScatteringLutTexture = builder.CreateTexture("MultiScatteringLutTexture")
             .Exetent({ MultiScatteringLutResolution ,MultiScatteringLutResolution, 1})
             .AllowReadWrite()
-            .Format(FORMAT_R32G32B32A32_SFLOAT)
+            .Format(FORMAT_R8G8B8A8_UNORM)  // 不能用FORMAT_R32G32B32A32_SFLOAT 会报错
             .Finish();
 
 		builder.CreateComputePass("MultiScatteringLutPass")
@@ -147,7 +147,7 @@ namespace GameEngine {
             .Read(2, 2, 0, TransmittanceLutTexture)
             .Read(2, 3, 0, MultiScatteringLutTexture)
 			.Color(0, ViewPort,ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE)
-			.DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
+			.DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE)
 			.Execute([&](RDGPassContext context) {
 				auto [w, h] = APP_WINDOWSIZE;
 				RHICommandListRef command = context.command;

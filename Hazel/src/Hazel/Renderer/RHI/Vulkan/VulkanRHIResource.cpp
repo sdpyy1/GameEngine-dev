@@ -29,14 +29,15 @@ namespace GameEngine
         VkDevice logicalDevice = VULKAN_DEVICE;
         VkSurfaceKHR surface = std::static_pointer_cast<VulkanRHISurface>(info.surface)->GetHandle();
 
-        // 设备支持信息
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &capabilities);
 
+        // 获取设备支持的图片格式，最终呈现的VkImage支持的格式
         uint32_t size;
         vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &size, nullptr);
         availableFormats.resize(size);
         vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &size, availableFormats.data());
 
+        // 支持的呈现模式
         vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &size, nullptr);
         availablePresentModes.resize(size);
         vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &size, availablePresentModes.data());
@@ -50,8 +51,10 @@ namespace GameEngine
             LOG_ERROR("Cant find swapchain image format support!");
         }
 
+        // 呈现模式
         VkPresentModeKHR presentMode = ChooseSwapPresentMode();
 
+        // Extent
         VkExtent2D extent = ChooseSwapExtent();
         if (extent.width != info.extent.width || extent.height != info.extent.height)
         {
@@ -80,11 +83,7 @@ namespace GameEngine
         createInfo.imageColorSpace = surfaceFormat.colorSpace;
         createInfo.imageExtent = extent;
         createInfo.imageArrayLayers = 1;
-        createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
-            VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
-            VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-            VK_IMAGE_USAGE_SAMPLED_BIT |
-            VK_IMAGE_USAGE_STORAGE_BIT;
+        createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |VK_IMAGE_USAGE_TRANSFER_DST_BIT; // 因为要copy到它上边，所以加VK_IMAGE_USAGE_TRANSFER_DST_BIT
 
         // 检测队列族对交换链图像的操作方式
         /*
@@ -157,26 +156,26 @@ namespace GameEngine
         return textures[currentIndex];
 	}
 
+    // SRGB空间：https://stackoverflow.com/questions/12524623/what-are-the-practical-differences-when-working-with-colors-in-a-linear-vs-a-no
+    /*
+        理清楚：伽马矫正和SRGB
+        伽马矫正：pow(1/2.2) 用于抵消显示器的pow(2.2),让显示器最终显示的内容就是我想要输出的内容
+        SRGB空间： 它不仅考虑到了伽马矫正，而且考虑到了人眼对暗部更敏感，所以线性处理完后，转到SRGB空间后不仅会抵消显示器的pow(2.2)并且会把线性颜色转为适合人眼的非线性颜色分布
+    */
     VkSurfaceFormatKHR VulkanRHISwapchain::ChooseSwapSurfaceFormat(VkFormat targetFormat)
     {
-        // 选择通道标准，以及色彩空间
-        //std::cout << "Available swapchain surface formats:" << std::endl;
-        //for (const auto format : availableFormats) {
-        //    std::cout << format.format << " : " << format.colorSpace << std::endl;
-        //}
-        //std::cout << " " << std::endl;
-
-        if (availableFormats.size() == 1 && availableFormats[0].format == VK_FORMAT_UNDEFINED) {    //无偏向性，任选
+        if (availableFormats.size() == 1 && availableFormats[0].format == VK_FORMAT_UNDEFINED) {
             return { VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
         }
 
+        // 交换链的VkImage色彩空间应该选择SRGB的，自己在后处理时把线性转为SRGB再传递给交换链的VkImage  Vulkan官方教程中选择的是VK_FORMAT_B8G8R8A8_SRGB 
         for (const auto& availableFormat : availableFormats) {
             if (availableFormat.format == targetFormat && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
                 return availableFormat;
             }
         }
 
-        return availableFormats[0];
+        return availableFormats[0];  // 默认就是 return { VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
     }
 
     VkPresentModeKHR VulkanRHISwapchain::ChooseSwapPresentMode()

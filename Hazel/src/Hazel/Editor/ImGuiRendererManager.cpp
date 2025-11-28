@@ -187,8 +187,9 @@ namespace GameEngine {
 
 		// ÉèÖÃViewPortÍ¼Æ¬
 		ImGui::Image(viewportTexture->RawHandle(), ImGui::GetContentRegionAvail(), {0, 1}, {1, 0});
-
 		// Application::GetSceneManager()->GetActiveScene()->OutputViewport();
+
+
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))

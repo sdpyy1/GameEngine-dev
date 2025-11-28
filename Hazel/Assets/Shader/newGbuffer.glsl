@@ -11,7 +11,7 @@ layout(location = 6) out flat uint OUT_ID;
 
 void main() 
 {
-    uint objectID       = gl_InstanceIndex;   // ����ʱ�����õ�startʵ������ʵ��ID
+    uint objectID       = gl_InstanceIndex;
     uint indexOffset    = gl_VertexIndex;
 
     mat4 model          = FetchModel(objectID);

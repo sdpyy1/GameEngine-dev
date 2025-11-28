@@ -13,17 +13,19 @@ namespace GameEngine {
 		struct TextureSpec {
 			std::string path;
             TextureType type = TEXTURE_TYPE_2D;
-			Extent3D extent = {1,1,0};
-            RHIFormat format = FORMAT_R8G8B8A8_UNORM;   // 自动伽马
-			bool srgb = true;
+			bool srgb = true;   // 需要手动指定传入的图片是不是SRGB
             uint32_t mipLevels = 1;
             uint32_t arrayLayers = 1;
             bool generateMipmap = false;
+			bool yFlip = false;
+
+			// output
+			Extent3D extent = { 1,1,1 };
+			RHIFormat format = FORMAT_UKNOWN;  // 从文件中解析
 			uint32_t textureID = 0;
 			RHITextureRef texture;
 			RHITextureViewRef textureView;
 			uint32_t bindlessId;
-			bool yFlip = false;
 		};
 		class Texture {
 		public:

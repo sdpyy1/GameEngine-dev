@@ -11,17 +11,7 @@ namespace GameEngine {
 #define APP_WINDOWSIZE Application::Get().GetWindowManager()->GetWindowSize()
 #define APP_SCENEMANAGER Application::GetSceneManager()
 #define APP_TICK Application::GetTotalTick()
-#define SWAPCHAIN_COLOR_FORMAT FORMAT_R8G8B8A8_UNORM
 #define APP_SCENE_CAMERA Application::GetSceneManager()->GetEditorCamera()
-
-
-
-
-
-
-
-
-
 
 #define APP_SHADER_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/Shader/spv/")
 #define APP_HDR_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/HDR/")

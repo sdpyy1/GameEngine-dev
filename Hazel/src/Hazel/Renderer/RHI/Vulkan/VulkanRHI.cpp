@@ -394,7 +394,7 @@ namespace GameEngine
         poolInfo.poolSizeCount = static_cast<uint32_t>(descriptorPoolSizes.size());
         poolInfo.pPoolSizes = descriptorPoolSizes.data();
         poolInfo.maxSets = 8192;
-        poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;   // 使得描述符可以实时更新
+        poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT| VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;   // 使得描述符可以实时更新
 
         VK_CHECK_RESULT(vkCreateDescriptorPool(m_LogicalDevice, &poolInfo, nullptr, &m_DescriptorPool));
 	}
@@ -452,7 +452,7 @@ namespace GameEngine
 
         VulkanUtil::VulkanRenderPassAttachments attachmentInfo = {};
         VkAttachmentDescription colorAttachment = {};
-        colorAttachment.format = VulkanUtil::RHIFormatToVkFormat(RHI_COLOR_FROMAT);
+        colorAttachment.format = VulkanUtil::RHIFormatToVkFormat(FORMAT_R8G8B8A8_UNORM);   // 因为Imgui最终渲染结果直接copy到交换链的Image，所以格式就取和交换链的Image的格式一致
         colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;

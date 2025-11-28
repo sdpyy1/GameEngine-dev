@@ -18,7 +18,7 @@ namespace GameEngine {
 		virtual PassType GetType() override final { return IMGUI_PASS; }
 	private:
 		std::shared_ptr<ImGuiRendererManager> m_ImGuiRendererManager;
-		RHITextureRef viewportTexture;
+		TextureRef viewportTexture;
 		RHIDescriptorSetRef viewportID;
 
 	};

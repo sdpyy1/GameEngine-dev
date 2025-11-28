@@ -27,7 +27,7 @@ void main()
 	float h = u_CameraData.data.CameraPosition.y - Atmosphere.SeaLevel + Atmosphere.PlanetRadius;
 	vec3 eyePos = vec3(0, h, 0);
 
-	vec3 color = GetSkyView(Atmosphere, eyePos, viewDir, lightDir, -1.0f,u_TransmittanceLut, u_MultiScatteringLut,u_Sampler[0] );
+	vec3 color = GetSkyView(Atmosphere, eyePos, viewDir, lightDir, -1.0f, u_TransmittanceLut, u_MultiScatteringLut,u_Sampler[1]);
 
     imageStore(SkyViewLut, texelCoord, vec4(color, 1.0));
 

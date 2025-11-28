@@ -52,15 +52,9 @@ namespace GameEngine {
 				command->BindDescriptorSet(context.descriptors[2], 2);
 				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetSamplerDescriptorSet(), 1);
 				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
-
 				command->Draw(6,1,0,0);
-
 			})
 			.Finish();
-
-
-
-
 	}
 
 }

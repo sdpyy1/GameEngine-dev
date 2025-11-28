@@ -40,16 +40,18 @@ namespace GameEngine {
 
 	void DirShadowPass::Build(RDGBuilder& builder)
 	{ 
+
+		RDGTextureHandle depth = builder.CreateTexture("CSMTextureArray")
+			.ArrayLayers(CSM_LEVEL_COUNT)
+			.AllowDepthStencil()
+			.Exetent({ 4096,4096,1 })
+			.Format(FORMAT_D32_SFLOAT)
+			.Finish();
+
 		if (APP_SCENEMANAGER->HasDirLight()) {
 			for (int i = 0; i < CSM_LEVEL_COUNT; i++) {
-				RDGTextureHandle depth = builder.CreateTexture("CSMTexture" + std::to_string(i))
-					.AllowDepthStencil()
-					.Exetent({ 4096,4096,1 })
-					.Format(FORMAT_D32_SFLOAT)
-					.Finish();
-
 				builder.CreateRenderPass("DirShadowPass" + std::to_string(i))
-					.DepthStencil(depth, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
+					.DepthStencil(depth, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, 1.0f, 0, { TEXTURE_ASPECT_DEPTH,0,1,(uint32_t)i,1})
 					.RootSignature(m_RootSignature)
 					.PassIndex(i)
 					.Execute([&](RDGPassContext context) {

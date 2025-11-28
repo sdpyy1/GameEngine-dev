@@ -4,7 +4,7 @@
 #include "Hazel/Core/Definations.h"
 #include <Hazel/Renderer/RDG/DependencyGraph.h>
 #include <Hazel/Renderer/RenderPass/RenderPass.h>
-
+// #define RDG_DEBUG 
 #define RENDER_RESOURCEMANAGER APP_RENDERSYSTEM->GetRenderResourceManager()
 #define RENDER_GPU_TIME_INFO APP_RENDERSYSTEM->GetGPUTimeInfos()
 namespace GameEngine

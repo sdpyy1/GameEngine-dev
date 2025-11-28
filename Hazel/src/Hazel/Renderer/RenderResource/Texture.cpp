@@ -5,7 +5,7 @@
 #include <stb_image.h>
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
-
+#include "Hazel/Renderer/RDG/RDGPool.h"
 namespace GameEngine::V2
 {
 	Texture::Texture(TextureSpec& spec) : m_Spec(spec)
@@ -53,22 +53,32 @@ namespace GameEngine::V2
 		}
 
 		// 文件读取
-		std::vector<uint8_t> data;
-		FileSystem::LoadBinary(m_Spec.path, data);
+		Buffer imageBuffer;
 		int width, height, channels;
 		if (m_Spec.yFlip) {
 			stbi_set_flip_vertically_on_load(true);
 		}
-		stbi_info_from_memory(data.data(), data.size(), &width, &height, &channels);
-		stbi_uc* pixels = stbi_load_from_memory(data.data(), data.size(), &width, &height, &channels, 4);
+		if (stbi_is_hdr(m_Spec.path.c_str())) {
+			m_Spec.format = RHIFormat::FORMAT_R32G32B32A32_SFLOAT;
+			imageBuffer.Data = (byte*)stbi_loadf(m_Spec.path.c_str(), &width, &height, &channels, 4);
+			imageBuffer.Size = width * height * 4 * sizeof(float);
+		}
+		else {
+			imageBuffer.Data = stbi_load(m_Spec.path.c_str(), &width, &height, &channels, 4);
+			imageBuffer.Size = width * height * 4;
+			if (m_Spec.srgb) {
+                m_Spec.format = RHIFormat::FORMAT_R8G8B8A8_SRGB;
+			}
+			else {
+                m_Spec.format = RHIFormat::FORMAT_R8G8B8A8_UNORM;
+			}
+		}
+
 		stbi_set_flip_vertically_on_load(false);
 
-		// 都按RGBA32F来申请临时Buffer
-		uint32_t bytesPerPixel = 4 * sizeof(float); // 4 * 4 = 16 字节
-		uint32_t bufferSize = width * height * bytesPerPixel;
 		m_Spec.extent = { (uint32_t)width,(uint32_t)height,1 };
 		if (m_Spec.generateMipmap) {
-			m_Spec.mipLevels = (uint32_t)(std::floor(std::log2(std::max(width, height)))) + 1;
+			m_Spec.mipLevels = m_Spec.extent.MipSize();
 		}
 		ResourceType resourceType = (m_Spec.type == TEXTURE_TYPE_CUBE) ? (RESOURCE_TYPE_TEXTURE_CUBE | RESOURCE_TYPE_TEXTURE) : RESOURCE_TYPE_TEXTURE;
 		// RHI
@@ -98,19 +108,19 @@ namespace GameEngine::V2
 
 		// 转移数据
 		RHIBufferInfo bufferInfo = {
-			bufferInfo.size = bufferSize,
+			bufferInfo.size = imageBuffer.Size,
 			bufferInfo.memoryUsage = MEMORY_USAGE_CPU_ONLY,
 			bufferInfo.type = RESOURCE_TYPE_BUFFER,
 			bufferInfo.creationFlag = BUFFER_CREATION_PERSISTENT_MAP
 		};
 		RHIBufferRef stagingBuffer = APP_DYNAMICRHI->CreateBuffer(bufferInfo);
-		memcpy(stagingBuffer->Map(), pixels, bufferSize);
+		memcpy(stagingBuffer->Map(), imageBuffer.Data, imageBuffer.Size);
 		APP_DYNAMICRHI->GetImmediateCommandList(true)->TextureBarrier(
 			{ m_Spec.texture,
 			RESOURCE_STATE_UNDEFINED, RESOURCE_STATE_TRANSFER_DST,
 			{TEXTURE_ASPECT_COLOR, 0, m_Spec.mipLevels, 0, 1} });
 		APP_DYNAMICRHI->GetImmediateCommandList()->CopyBufferToTexture(stagingBuffer, 0, m_Spec.texture, { TEXTURE_ASPECT_COLOR, 0, 0, 1 });
-		stbi_image_free(pixels);
+		// stbi_image_free(pixels);
 
 
 		// mipmap
@@ -147,7 +157,7 @@ namespace GameEngine::V2
 
 	RHIDescriptorSetRef Texture::GetImGuiID(RHITextureRef texture)
 	{
-		return APP_DYNAMICRHI->GetImGuiTextId(CreateView(texture));
+		return APP_DYNAMICRHI->GetImGuiTextId(CreateView(texture));  // 每次都创建一个新的
 	}
 
 	RHITextureViewRef Texture::CreateView(RHITextureRef texture)   // TODO:目前只有Viewport使用
@@ -160,6 +170,7 @@ namespace GameEngine::V2
 		rhiTextureViewInfo.format = texture->GetInfo().format;
 		rhiTextureViewInfo.viewType = VIEW_TYPE_2D;
 		rhiTextureViewInfo.subresource = { isDepthFormalt(texture->GetInfo().format)? TEXTURE_ASPECT_DEPTH: TEXTURE_ASPECT_COLOR, 0, 1, 0, 1};
+		// return RDGTextureViewPool::Get()->Allocate(rhiTextureViewInfo).textureView;   // TODO:这种入池没有释放有没有问题
 		return APP_DYNAMICRHI->CreateTextureView(rhiTextureViewInfo);
 	}
 

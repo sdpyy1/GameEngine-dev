@@ -38,20 +38,17 @@ vec3 GammaCorrect(vec3 color, float gamma)
 }
 layout(location = 0) in vec2 in_texCoord;
 layout(location = 0) out vec4 out_color;
-layout(std140, set = 0, binding = 2) uniform RendererData
-{
-	vec4 CascadeSplits;
-	float LightSize;
-	int ShadowType;
-	uint debugCSM;
-	float BloomScale;
-} u_RendererData;
-layout(set = 0, binding = 0) uniform sampler2D lightRes;
-layout(set = 0, binding = 1) uniform sampler2D BloomRes;
+
+layout(set = 0, binding = 0) uniform texture2D lightRes;
+layout(set = 0, binding = 1) uniform texture2D BloomRes;
+layout(set = 1, binding = 0) uniform sampler SAMPLER[];
 void main(){
 
-	vec3 finalColor = texture(lightRes, in_texCoord).rgb;
-	finalColor += texture(BloomRes, in_texCoord).rgb * u_RendererData.BloomScale;
+	float BloomScale = 1.0;  // TODO: Setting
+
+
+	vec3 finalColor = texture(sampler2D(lightRes,SAMPLER[0]), in_texCoord).rgb;
+	finalColor += texture(sampler2D(BloomRes,SAMPLER[0]), in_texCoord).rgb * BloomScale;
 	finalColor = ACESTonemap(finalColor);
 
 	const float gamma = 2.2;

@@ -9,7 +9,7 @@ namespace GameEngine {
 			V2::TextureSpec spec;
 			spec.path = path;
 			spec.yFlip = isYFlip;
-			spec.format = FORMAT_R32G32B32A32_SFLOAT;
+			spec.srgb = false;  // 目前看图标都不是SRGB空间的
 			icon = std::make_shared<V2::Texture>(spec);
 			textureID = icon->GetImGuiID();
 		}

@@ -2,9 +2,7 @@
 #include "Hazel/Core/Base.h"
 namespace GameEngine {
 
-// #define RHI_DEBUG_LOG 0   // 打印详细日志
-
-
+#define SWAPCHAIN_COLOR_FORMAT FORMAT_R8G8B8A8_UNORM
 
 #define MAX_QUEUE_CNT 2					//每个队列族的最大队列数目
 #define MAX_SHADER_IN_OUT_VARIABLES 8	//允许着色器最大的输入和输出变量数目
@@ -95,6 +93,17 @@ namespace GameEngine {
 	};
 	enum RHIFormat : uint32_t
 	{
+		/*
+		*	归一化：会再GPU读取时自动转到 0-1之间
+			UNORM：无符号归一化，存储的是0-2^x-1的数据，读取时自动转为 0-1
+			SNORM：有符号归一化，存储的是-2^(x-1)到2^(x-1)的数据，读取时自动转为 -1.0~1.0
+
+			UINT：无符号整数，存储的是0-2^x-1的数据
+			SINT: 有符号整数，存储的是-2^(x-1)到2^(x-1)的数据
+			SFLOAT：有符号浮点数，直接作为浮点数
+		
+			SRGB：读取时自动转为线性，输入时自动进行伽马矫正
+		*/
 		FORMAT_UKNOWN = 0,
 		// 	带伽马校正的色彩格式，存储时压缩、采样时解压缩
 		FORMAT_R8_SRGB,
@@ -116,6 +125,7 @@ namespace GameEngine {
 		FORMAT_R8G8_UNORM,
 		FORMAT_R8G8B8_UNORM,
 		FORMAT_R8G8B8A8_UNORM,
+		FORMAT_B8G8R8A8_UNORM,  // SwapChain支持这种格式
 		FORMAT_R16_UNORM,
 		FORMAT_R16G16_UNORM,
 		FORMAT_R16G16B16_UNORM,
