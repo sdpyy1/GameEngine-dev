@@ -111,7 +111,7 @@ namespace GameEngine
         }
 
     private:
-        std::unordered_map<Key, std::list<PooledTexture>, Key::Hash> pooledTextures;
+        std::unordered_map<Key, std::list<PooledTexture>, Key::Hash> pooledTextures;   // 每个Key对应一个List而不是一个Texture
         uint32_t pooledSize = 0;
         uint32_t allocatedSize = 0;
     };
@@ -174,7 +174,7 @@ namespace GameEngine
             RHIDescriptorSetRef descriptor;
         };
 
-        struct Key
+        struct Key  // 根签名和Set一致就可以复用
         {
             Key(const RHIRootSignatureInfo& info, uint32_t set)
                 : entries(info.GetEntries())

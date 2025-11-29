@@ -37,18 +37,59 @@ namespace GameEngine {
     void RDGBlackBoard::AddPass(RDGPassNodeRef pass)
     {
         passes[pass->Name()] = pass;
+#ifdef RDG_DEBUG
+        passeNames[pass] = pass->Name();
+#endif
     }
 
     void RDGBlackBoard::AddBuffer(RDGBufferNodeRef buffer)
     {
         buffers[buffer->Name()] = buffer;
+#ifdef RDG_DEBUG
+        bufferNames[buffer] = buffer->Name();
+#endif
+
     }
 
     void RDGBlackBoard::AddTexture(RDGTextureNodeRef texture)
     {
         textures[texture->Name()] = texture;
-    }
+#ifdef RDG_DEBUG
+        textureNames[texture] = texture->Name();
+#endif
 
+    }
+#ifdef RDG_DEBUG
+	std::string RDGBlackBoard::PassName(RDGPassNodeRef pass)
+	{
+        auto found = passeNames.find(pass);
+        if (found != passeNames.end()) {
+            return found->second;
+        }
+        LOG_ERROR("Unable to find RDG resource");
+        return "";
+	}
+
+	std::string RDGBlackBoard::BufferName(RDGBufferNodeRef buffer)
+	{
+        auto found = bufferNames.find(buffer);
+        if (found != bufferNames.end()) {
+            return found->second;
+        }
+        LOG_ERROR("Unable to find RDG resource");
+        return "";
+	}
+
+	std::string RDGBlackBoard::TextureName(RDGTextureNodeRef texture)
+	{
+        auto found = textureNames.find(texture);
+        if (found != textureNames.end()) {
+            return found->second;
+        }
+        LOG_ERROR("Unable to find RDG resource");
+        return "";
+	}
+#endif
     RDGTextureBuilder RDGBuilder::CreateTexture(std::string name)
     {
         RDGTextureNodeRef textureNode = graph->CreateNode<RDGTextureNode>(name);
@@ -134,14 +175,14 @@ namespace GameEngine {
             command->PushLabel(pass->Name(),pass->GetLabelColor());
 #ifdef RDG_DEBUG
             LOG_INFO("RDG: Execute Pass: {0}", pass->Name());
-#endif // RDG_DEBUG
+#endif
             switch (pass->NodeType()) {
-            case RDG_PASS_NODE_TYPE_RENDER:         ExecutePass(dynamic_cast<RDGRenderPassNodeRef>(pass));          break;
-            case RDG_PASS_NODE_TYPE_COMPUTE:        ExecutePass(dynamic_cast<RDGComputePassNodeRef>(pass));         break;
-            case RDG_PASS_NODE_TYPE_RAY_TRACING:    ExecutePass(dynamic_cast<RDGRayTracingPassNodeRef>(pass));      break;
-            case RDG_PASS_NODE_TYPE_PRESENT:        ExecutePass(dynamic_cast<RDGPresentPassNodeRef>(pass));         break;
-            case RDG_PASS_NODE_TYPE_COPY:           ExecutePass(dynamic_cast<RDGCopyPassNodeRef>(pass));            break;
-            default:                                LOG_ERROR("Unsupported RDG pass type!");
+                case RDG_PASS_NODE_TYPE_RENDER:         ExecutePass(dynamic_cast<RDGRenderPassNodeRef>(pass));          break;
+                case RDG_PASS_NODE_TYPE_COMPUTE:        ExecutePass(dynamic_cast<RDGComputePassNodeRef>(pass));         break;
+                case RDG_PASS_NODE_TYPE_RAY_TRACING:    ExecutePass(dynamic_cast<RDGRayTracingPassNodeRef>(pass));      break;
+                case RDG_PASS_NODE_TYPE_PRESENT:        ExecutePass(dynamic_cast<RDGPresentPassNodeRef>(pass));         break;
+                case RDG_PASS_NODE_TYPE_COPY:           ExecutePass(dynamic_cast<RDGCopyPassNodeRef>(pass));            break;
+                default:                                LOG_ERROR("Unsupported RDG pass type!");
             }
             command->PopLabel();
         }
@@ -163,6 +204,9 @@ namespace GameEngine {
             if (edge->IsOutput()) return;
             RHIResourceState previousState = PreviousState(texture, pass, edge->subresource, false);
             //if(previousState != edge->state)  // 状态一样也加屏障？ 比如连续两个UAV读写的情况？
+#ifdef RDG_DEBUG
+            LOG_TRACE_TAG("RDG","Texture[{2}]: CreateInputBarriers: {0} -> {1}", RHIResourceStateToString(previousState), RHIResourceStateToString(edge->state), blackBoard.TextureName(texture));
+#endif
             {
                 RHITextureBarrier barrier = {
                     Resolve(texture),        // 第一个成员: texture
@@ -171,16 +215,17 @@ namespace GameEngine {
                     edge->subresource        // 第四个成员: subresource
                 };
                 command->TextureBarrier(barrier);
-
-                // printf("rdg resource %lld, raw: %s barrier: %d to %d\n", (int64_t)texture->texture.get(), ToHex((uint64_t)texture->texture->RawHandle(), false).c_str(), (uint32_t)previousState, (uint32_t)edge->state);
             }
-            });
+        });
 
         pass->ForEachBuffer([&](RDGBufferEdgeRef edge, RDGBufferNodeRef buffer) {
 
             if (edge->IsOutput()) return;
             RHIResourceState previousState = PreviousState(buffer, pass, false);
             //if(previousState != edge->state)  // 状态一样也加屏障？ 比如连续两个UAV读写的情况？
+#ifdef RDG_DEBUG
+            LOG_TRACE_TAG("RDG","Buffer[{2}]: CreateInputBarriers: {0} -> {1}", RHIResourceStateToString(previousState), RHIResourceStateToString(edge->state), blackBoard.BufferName(buffer));
+#endif
             {
                 RHIBufferBarrier barrier = {
                     Resolve(buffer),  // 第一个成员: buffer
@@ -203,6 +248,9 @@ namespace GameEngine {
             if (!edge->IsOutput()) return;
             RHIResourceState previousState = PreviousState(texture, pass, edge->subresource, true);
             //if(previousState != edge->state)  // 状态一样也加屏障？ 比如连续两个UAV读写的情况？
+#ifdef RDG_DEBUG
+            LOG_TRACE_TAG("RDG", "Texture[{2}]: CreateOutputBarriers: {0} -> {1}", RHIResourceStateToString(previousState), RHIResourceStateToString(edge->state), blackBoard.TextureName(texture));
+#endif
             {
                 RHITextureBarrier barrier = {
                     Resolve(texture),   // texture
@@ -212,7 +260,6 @@ namespace GameEngine {
                 };
                 command->TextureBarrier(barrier);
 
-                // printf("rdg resource %lld, raw: %s barrier: %d to %d\n", (int64_t)texture->texture.get(), ToHex((uint64_t)texture->texture->RawHandle(), false).c_str(), (uint32_t)previousState, (uint32_t)edge->state);
             }
             });
 
@@ -221,6 +268,9 @@ namespace GameEngine {
             if (!edge->IsOutput()) return;
             RHIResourceState previousState = PreviousState(buffer, pass, true);
             //if(previousState != edge->state)  // 状态一样也加屏障？ 比如连续两个UAV读写的情况？
+#ifdef RDG_DEBUG
+            LOG_TRACE_TAG("RDG", "Buffer[{2}]: CreateOutputBarriers: {0} -> {1}", RHIResourceStateToString(previousState), RHIResourceStateToString(edge->state), blackBoard.BufferName(buffer));
+#endif
             {
                 RHIBufferBarrier barrier = {
                     Resolve(buffer),  // 对应 .buffer
@@ -238,20 +288,15 @@ namespace GameEngine {
 
     void RDGBuilder::PrepareDescriptorSet(RDGPassNodeRef pass)
     {
-        // ForEachTexture会遍历每一个输入的纹理，再遍历每一个输出的纹理
         pass->ForEachTexture([&](RDGTextureEdgeRef edge, RDGTextureNodeRef texture) {
 
             if (edge->IsOutput()) return;    // 作为output声明时不需要view  TODO:???
-            RHITextureViewInfo info;
-            info.texture = Resolve(texture); // 创建资源
 
+            RHITextureViewInfo info;
+            info.texture = Resolve(texture);
             info.format = texture->info.format;
             info.viewType = edge->viewType;
             info.subresource = edge->subresource;
-            if(texture->info.type &= RESOURCE_TYPE_TEXTURE_CUBE)
-            {
-                info.viewType = VIEW_TYPE_CUBE;
-            }
             RHITextureViewRef view = RDGTextureViewPool::Get()->Allocate(info).textureView;
             pass->pooledViews.push_back(view);
 
@@ -274,7 +319,7 @@ namespace GameEngine {
                 updateInfo.textureView = view;
                 pass->descriptorSets[edge->set]->UpdateDescriptor(updateInfo);
             }
-            });
+        });
         // Buffer同Textrue一样
         pass->ForEachBuffer([&](RDGBufferEdgeRef edge, RDGBufferNodeRef buffer) {
 
@@ -298,16 +343,16 @@ namespace GameEngine {
 
                 pass->descriptorSets[edge->set]->UpdateDescriptor(updateInfo);
             }
-            });
+        });
 
     }
 
     void RDGBuilder::PrepareRenderTarget(RDGRenderPassNodeRef pass, RHIRenderPassInfo& renderPassInfo)
     {
-        // 单独处理RT
+        //TODO:其实可以ForEachTexture时直接区分各种asXxxx
         pass->ForEachTexture([&](RDGTextureEdgeRef edge, RDGTextureNodeRef texture) {
 
-            if (edge->IsOutput()) return;                            
+            if (edge->IsOutput()) return;  // ??                            
             if (!(edge->asColor || edge->asDepthStencil)) return;
             RHITextureViewInfo info;
             info.texture = Resolve(texture);
@@ -341,7 +386,7 @@ namespace GameEngine {
                 info.clearStencil = edge->clearStencil;
                 renderPassInfo.depthStencilAttachment = info;
             }
-            });
+        });
     }
 
     void RDGBuilder::ReleaseResource(RDGPassNodeRef pass)
@@ -363,22 +408,14 @@ namespace GameEngine {
 
     void RDGBuilder::ExecutePass(RDGRenderPassNodeRef pass)
     {
-        // 根据各个资源依赖的edge收集描述符更新信息以及framebuffer信息，
-        // 调用Resolve()来分配和获取实际的RHI资源，资源将在最后一个使用的pass之后返回资源池
-        // 处理状态转换的屏障
-
-        PrepareDescriptorSet(pass);   // 根据这个Pass需要的资源进行实际创建 + 更新描述符
-
+        PrepareDescriptorSet(pass);
         RHIRenderPassInfo renderPassInfo = {};
-        PrepareRenderTarget(pass, renderPassInfo);   // 准备RenderPass需要的信息
-
-        RHIRenderPassRef renderPass = APP_DYNAMICRHI->CreateRenderPass(renderPassInfo); // 根据图创建RenderPass和FranmeBuffer
-
-        // command->PushEvent(pass->Name(), { 0.0f, 0.0f, 0.0f });
+        PrepareRenderTarget(pass, renderPassInfo);
+        RHIRenderPassRef renderPass = APP_DYNAMICRHI->CreateRenderPass(renderPassInfo); // 根据图创建RenderPass和FranmeBuffer，因为有pool其实无所谓把RenderPass和FrameBuffer放在一起创建
 
         CreateInputBarriers(pass);
 
-        command->BeginRenderPass(renderPass);
+        command->BeginRenderPass(renderPass); // Begin的是RenderPass，把实际的FrameBuffer当作参数传递进去了
 
         RDGPassContext context;
         context.command = command;
@@ -394,16 +431,12 @@ namespace GameEngine {
         CreateOutputBarriers(pass);
 
         ReleaseResource(pass);
-
-        // command->PopEvent();
     }
 
     void RDGBuilder::ExecutePass(RDGComputePassNodeRef pass)
     {
 
         PrepareDescriptorSet(pass);
-
-        // command->PushEvent(pass->Name(), { 1.0f, 0.0f, 0.0f });
 
         CreateInputBarriers(pass);
 
@@ -419,16 +452,12 @@ namespace GameEngine {
         CreateOutputBarriers(pass);
 
         ReleaseResource(pass);
-
-        // command->PopEvent();
     }
 
     void RDGBuilder::ExecutePass(RDGRayTracingPassNodeRef pass)
     {
 
         PrepareDescriptorSet(pass);
-
-        // command->PushEvent(pass->Name(), { 0.0f, 1.0f, 0.0f });
 
         CreateInputBarriers(pass);
 
@@ -445,8 +474,6 @@ namespace GameEngine {
         CreateOutputBarriers(pass);
 
         ReleaseResource(pass);
-
-        // command->PopEvent();
     }
 
     void RDGBuilder::ExecutePass(RDGPresentPassNodeRef pass)
@@ -471,7 +498,6 @@ namespace GameEngine {
                 Resolve(texture)->GetDefaultSubresourceLayers() : edges[0]->subresourceLayer;
         }
 
-        // command->PushEvent(pass->Name(), { 0.0f, 0.0f, 1.0f });
 
         CreateInputBarriers(pass);
 
@@ -483,8 +509,6 @@ namespace GameEngine {
         CreateOutputBarriers(pass);
 
         ReleaseResource(pass);
-
-        // command->PopEvent();
     }
 
     void RDGBuilder::ExecutePass(RDGCopyPassNodeRef pass)
@@ -507,7 +531,6 @@ namespace GameEngine {
             }
             });
 
-        //command->PushEvent(pass->Name(), { 1.0f, 1.0f, 0.0f });
 
         CreateInputBarriers(pass);
 
@@ -537,8 +560,6 @@ namespace GameEngine {
         CreateOutputBarriers(pass);
 
         ReleaseResource(pass);
-
-        // command->PopEvent();
     }
 
     RHITextureRef RDGBuilder::Resolve(RDGTextureNodeRef textureNode)
@@ -612,7 +633,7 @@ namespace GameEngine {
         textureNode->ForEachPass([&](RDGTextureEdgeRef edge, RDGPassNodeRef pass) {
 
             bool isOutputFirst = output ? !edge->IsOutput() : edge->IsOutput();
-            bool isPrevoiusPass = output ? pass->ID() <= currentID : pass->ID() < currentID;
+            bool isPrevoiusPass = output ? pass->ID() <= currentID : pass->ID() < currentID;   // 遍历的这个pass是不是当前pass的前序pass
             bool isSubresourceCovered = subresource.IsDefault() ||                      // 无状态地追踪整个子资源状态实在有些困难，现在支持的方法是：
                 edge->subresource.IsDefault() ||                // 1. 若目标状态是默认范围，那只追踪前序最近的状态
                 subresource == edge->subresource;               // 2. 若目标状态是子范围，那必须追踪前序最近的完全一致的子范围/默认范围的状态
@@ -629,7 +650,7 @@ namespace GameEngine {
                 previousState = edge->state;
                 previousID = pass->ID();
             }
-            });
+        });
 
         return previousState;
     }

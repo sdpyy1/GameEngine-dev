@@ -142,7 +142,7 @@ namespace GameEngine {
 		RDGTextureHandle depth = builder.GetTexture("Depth");
 		builder.CreateRenderPass("SkyPass")
 			.RootSignature(m_RootSignature)
-			.Read(2, 0, 0, skyBox)
+			.Read(2, 0, 0, skyBox, VIEW_TYPE_CUBE)
             .Read(2, 1, 0, SkyViewLutTexture)
             .Read(2, 2, 0, TransmittanceLutTexture)
             .Read(2, 3, 0, MultiScatteringLutTexture)

@@ -37,10 +37,10 @@ namespace GameEngine {
     {
         RDGTexturePool::PooledTexture ret;
         RHITextureInfo tempInfo = info;
-        if (tempInfo.mipLevels == 0) tempInfo.mipLevels = tempInfo.extent.MipSize();
+        if (tempInfo.mipLevels == 0) tempInfo.mipLevels = tempInfo.extent.MipSize(); // auto mip
 
         auto& textures = pooledTextures[{tempInfo}];
-        for (auto iter = textures.begin(); iter != textures.end(); iter++)
+        for (auto iter = textures.begin(); iter != textures.end(); iter++)   // TODO:这个For总是返回第一项
         {
             ret = *iter;
             textures.erase(iter);
@@ -50,7 +50,7 @@ namespace GameEngine {
 
         LOG_TRACE("RHITexture not found in cache, creating new.");
         ret.texture = APP_DYNAMICRHI->CreateTexture(tempInfo),   // 在释放资源时才会把texture放入池中
-        ret.state = RESOURCE_STATE_UNDEFINED;
+        ret.state = RESOURCE_STATE_UNDEFINED; // RHI接口创建的texture的state是UNDEFINED
         allocatedSize++;
 
         return ret;

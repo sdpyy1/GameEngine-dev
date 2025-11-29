@@ -1,6 +1,7 @@
 #pragma once
 #include "RenderPass.h"
 #include "Hazel/Renderer/RenderResource/Texture.h"
+#include <Hazel/Core/Definations.h>
 
 namespace GameEngine {
 	class ImGuiRendererManager;
@@ -19,7 +20,7 @@ namespace GameEngine {
 	private:
 		std::shared_ptr<ImGuiRendererManager> m_ImGuiRendererManager;
 		TextureRef viewportTexture;
-		RHIDescriptorSetRef viewportID;
+		RHIDescriptorSetRef viewportID[FRAMES_IN_FLIGHT];
 
 	};
 

@@ -32,7 +32,7 @@ namespace GameEngine {
 	{
 		RDGTextureHandle viewport = builder.GetTexture("ViewPort");
 
-		RDGTextureHandle bloomRes = builder.GetTexture("Bloom");
+		RDGTextureHandle bloomRes = builder.GetTexture("UpBloom");
 
 		builder.CreateRenderPass("PostProcess")
 			.RootSignature(m_RootSignature)

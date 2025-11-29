@@ -391,6 +391,10 @@ namespace GameEngine
 
             创建后布局为 UNDEFINED
         */ 
+
+        // 创建默认的View参数
+        ASSERT(info.mipLevels > 0,"RHI层不会自动Mip！！！");
+        ASSERT(info.arrayLayers > 0,"layer没传？");
         TextureAspectFlags aspects = IsDepthStencilFormat(info.format) ? TEXTURE_ASPECT_DEPTH_STENCIL :IsDepthFormat(info.format) ? TEXTURE_ASPECT_DEPTH :IsStencilFormat(info.format) ? TEXTURE_ASPECT_STENCIL : TEXTURE_ASPECT_COLOR;
         defaultRange = { aspects, 0, info.mipLevels, 0, info.arrayLayers };
         defaultLayers = { aspects, 0, 0, info.arrayLayers };
@@ -1362,6 +1366,7 @@ namespace GameEngine
         handle = VULKAN_RHI->FindOrCreateVkRenderPass(renderPassAttachments);
 
         // 创建framebuffer  TODO:把FrameBuffer塞到RenderPass里了
+        // Framebuffer创建时是需要具体资源的，因为这里把imageViews传进去了
         VkFramebufferCreateInfo framebufferInfo = {};
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         framebufferInfo.renderPass = handle;

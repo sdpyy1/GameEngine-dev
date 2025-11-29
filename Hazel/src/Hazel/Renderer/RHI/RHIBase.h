@@ -505,6 +505,9 @@ namespace GameEngine {
 
 		RESOURCE_STATE_MAX_ENUM,	//
 	};
+	std::string RHIResourceStateToString(RHIResourceState state);
+
+
 	enum PrimitiveType : uint32_t
 	{
 		PRIMITIVE_TYPE_TRIANGLE_LIST = 0,

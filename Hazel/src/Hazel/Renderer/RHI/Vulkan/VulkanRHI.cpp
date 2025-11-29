@@ -1009,6 +1009,10 @@ namespace GameEngine
             clearValues.push_back(clearValue);
         }
 
+        /*
+            BeginRenderPass：所以最终渲染流程绑定的是RenderPass对象，不过FrameBuffer当作参数传递进去了
+        */
+
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassInfo.renderPass = CAST<VulkanRHIRenderPass>(renderPass)->GetHandle();

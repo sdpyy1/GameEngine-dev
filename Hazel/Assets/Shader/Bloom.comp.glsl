@@ -4,6 +4,7 @@
 #ifdef COMPUTE_SHADER
 layout(set = 2, rgba32f, binding = 0) uniform writeonly image2D o_Texture;
 layout(set = 2, binding = 1) uniform texture2D u_InputTexture;
+layout(set = 2, binding = 2) uniform texture2D allDonwTexture;
 layout(set = 1, binding = 0) uniform sampler SAMPLER[];
 layout(push_constant) uniform Uniforms
 {
@@ -104,6 +105,7 @@ vec3 UpsampleTent9(texture2D tex, float lod, vec2 uv, vec2 texelSize, float radi
 
 void main()
 {
+// 配合Pass已经调整好不报错，勿动~
     vec2 imgSize = vec2(imageSize(o_Texture));
     ivec2 invocID = ivec2(gl_GlobalInvocationID);
     if (invocID.x >= imgSize.x || invocID.y >= imgSize.y) 
@@ -127,11 +129,13 @@ void main()
     }
     else if (u_Uniforms.Mode == MODE_UPSAMPLE)
     {
-        vec2 bloomTexSize = vec2(textureSize(u_InputTexture, int(u_Uniforms.LOD + 1.0f)));
+        // 把下一层采样传递上来
+        vec2 bloomTexSize = vec2(textureSize(u_InputTexture, 0));
         float sampleScale = 1.0f;
-        vec3 upsampledTexture = UpsampleTent9(u_InputTexture, u_Uniforms.LOD + 1.0f, texCoords, 1.0f / bloomTexSize, sampleScale, SAMPLER[0]);
+        vec3 upsampledTexture = UpsampleTent9(u_InputTexture,0, texCoords, 1.0f / bloomTexSize, sampleScale, SAMPLER[0]);
 
-        vec3 existing = textureLod(sampler2D(u_InputTexture, SAMPLER[0]), texCoords, u_Uniforms.LOD).rgb;
+        // 加上本来这层就有的
+        vec3 existing = textureLod(sampler2D(allDonwTexture, SAMPLER[0]), texCoords,u_Uniforms.LOD).rgb;
         color.rgb = existing + upsampledTexture;
     }
     

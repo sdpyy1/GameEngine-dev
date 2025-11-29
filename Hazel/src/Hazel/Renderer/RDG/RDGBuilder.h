@@ -10,6 +10,10 @@
 #include <vector>
 // #define RDG_DEBUG
 
+/*
+    RDGNode分为PassNode(RenderPass, ComputePass, RayTracingPass, CopyPass, PresentPass)和ResourceNode(TextureNode, BufferNode)
+    RDGEdge用于存储 资源->Pass的View，用于在Pass时创建对应的view
+*/
 namespace GameEngine {
 
     // name->node
@@ -19,7 +23,11 @@ namespace GameEngine {
         RDGPassNodeRef Pass(std::string name);
         RDGBufferNodeRef Buffer(std::string name);
         RDGTextureNodeRef Texture(std::string name);
-
+#ifdef RDG_DEBUG
+        std::string PassName(RDGPassNodeRef pass);
+        std::string BufferName(RDGBufferNodeRef buffer);
+        std::string TextureName(RDGTextureNodeRef texture);
+#endif
         void AddPass(RDGPassNodeRef pass);
         void AddBuffer(RDGBufferNodeRef buffer);
         void AddTexture(RDGTextureNodeRef texture);
@@ -30,6 +38,12 @@ namespace GameEngine {
         std::unordered_map<std::string, RDGPassNodeRef> passes;
         std::unordered_map<std::string, RDGBufferNodeRef> buffers;
         std::unordered_map<std::string, RDGTextureNodeRef> textures;
+#ifdef RDG_DEBUG
+        std::unordered_map<RDGPassNodeRef,std::string> passeNames;
+        std::unordered_map<RDGTextureNodeRef,std::string> textureNames;
+        std::unordered_map<RDGBufferNodeRef,std::string> bufferNames;
+#endif
+
     };
 
     class RDGBuilder
@@ -166,7 +180,7 @@ namespace GameEngine {
         RDGRenderPassBuilder& RootSignature(RHIRootSignatureRef rootSignature);                 // 若提供根签名未提供描述符，使用池化创建
         RDGRenderPassBuilder& DescriptorSet(uint32_t set, RHIDescriptorSetRef descriptorSet);   // 若提供了描述符，直接用相应的描述符
         
-        // 创建边
+        // 创建边  默认View都是2D，如果需要cubeView，需要手动指定
         RDGRenderPassBuilder& Read(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);
         RDGRenderPassBuilder& Read(uint32_t set, uint32_t binding, uint32_t index, RDGTextureHandle texture, TextureViewType viewType = VIEW_TYPE_2D, TextureSubresourceRange subresource = {});
         RDGRenderPassBuilder& ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);   // 好像和read也没什么区别？

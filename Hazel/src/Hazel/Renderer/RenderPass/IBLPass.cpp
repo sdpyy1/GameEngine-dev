@@ -102,7 +102,7 @@ namespace GameEngine
 				builder.CreateComputePass(GetName() + "/HDR->PrefilterMapMip0")
 					.Read(0, 1, 0, hdr)
 					.RootSignature(equirectangularConversionCompRootSignature)
-					.ReadWrite(0, 0, 0, prefilterMap)
+					.ReadWrite(0, 0, 0, prefilterMap, VIEW_TYPE_CUBE)
 					.Execute([&](RDGPassContext context)
 						{
 							RHICommandListRef command = context.command;
@@ -123,8 +123,8 @@ namespace GameEngine
 
 
 				builder.CreateComputePass(GetName() + "/IrradianceMap")
-					.Read(0, 1, 0, cubeMap)
-					.ReadWrite(0, 0, 0, irradianceMap)
+					.Read(0, 1, 0, cubeMap,VIEW_TYPE_CUBE)
+					.ReadWrite(0, 0, 0, irradianceMap, VIEW_TYPE_CUBE)
 					.RootSignature(environmentIrradianceCompRootSignature)
 					.Execute([&](RDGPassContext context)
 						{
@@ -144,7 +144,7 @@ namespace GameEngine
 				for (uint32_t i = 1, size = 1024; i < mipLevels; i++, size /= 2) {
 					// 注意外部定义的变量只能拿进来初始值
 					builder.CreateComputePass(GetName() + "/PrefilterMapMip" + std::to_string(i))
-						.Read(0, 1, 0, cubeMap)
+						.Read(0, 1, 0, cubeMap, VIEW_TYPE_CUBE)
 						.PassIndex(size, i)
 						.ReadWrite(0, 0, 0, prefilterMap, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR, i, 1, 0, 6 })   // TODO: FIX 资源屏障流程
 						.RootSignature(environmentMipFilterCompRootSignature)

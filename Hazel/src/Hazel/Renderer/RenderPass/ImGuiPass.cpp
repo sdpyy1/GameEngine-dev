@@ -19,8 +19,8 @@ namespace GameEngine
 	{
         if (IsEnabled())
         {
-            if (viewportID) {
-                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)viewportID->RawHandle());
+            if (viewportID[APP_FRAMEINDEX]) {
+                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)viewportID[APP_FRAMEINDEX]->RawHandle());
             }
             RDGTextureHandle viewport = builder.GetTexture("ViewPort");
 
@@ -40,12 +40,12 @@ namespace GameEngine
                         Extent2D windowExtent = { w, h };
                         RHICommandListRef command = context.command;
         
-                        viewportID = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+                        viewportID[APP_FRAMEINDEX] = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
                         ImGui_ImplVulkan_NewFrame();
                         ImGui_ImplGlfw_NewFrame();
                         ImGui::NewFrame();
                         m_ImGuiRendererManager->SetGPUTimeInfo(RENDER_GPU_TIME_INFO);
-                        m_ImGuiRendererManager->ImGuiCommand(viewportID, viewportID);
+                        m_ImGuiRendererManager->ImGuiCommand(viewportID[APP_FRAMEINDEX], viewportID[APP_FRAMEINDEX]);
                         ImGui::Render();
                         command->ImGuiRenderDrawData();
                     })
