@@ -958,6 +958,8 @@ namespace GameEngine
         {
             LOG_ERROR("Failed to allocate descriptor set!");
         }
+
+        printRawHandle();
 	}
 
 	VulkanRHIDescriptorSet::VulkanRHIDescriptorSet(VkDescriptorSet aSet)

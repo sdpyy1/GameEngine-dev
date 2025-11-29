@@ -9,7 +9,7 @@ namespace GameEngine
 	void BloomPass::Init()
 	{
 		SetEnable(true);
-		m_Shader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "Bloom.comp.spv", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
+		m_Shader = std::make_shared<Shader>(APP_SHADER_PATH + "Bloom.comp.spv", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
 		RHIRootSignatureInfo info = {};
 		info.AddEntryFromReflect(m_Shader);
 		info.AddPushConstant({ sizeof(bloomComputePushConstants),SHADER_FREQUENCY_COMPUTE })

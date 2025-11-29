@@ -4,7 +4,7 @@
 #include <Hazel/Core/Definations.h>
 
 namespace GameEngine {
-	class ImGuiRendererManager;
+	class PanelManager;
 	class ImGuiPass :public RenderPassNew
 	{
 	public:
@@ -18,7 +18,7 @@ namespace GameEngine {
 		virtual std::string GetName() { return "ImGuiPass"; }
 		virtual PassType GetType() override final { return IMGUI_PASS; }
 	private:
-		std::shared_ptr<ImGuiRendererManager> m_ImGuiRendererManager;
+		std::shared_ptr<PanelManager> m_PanelManager;
 		TextureRef viewportTexture;
 		RHIDescriptorSetRef viewportID[FRAMES_IN_FLIGHT];
 

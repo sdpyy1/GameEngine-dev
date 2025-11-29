@@ -5,15 +5,15 @@
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
-
+#include "Hazel/Scene/SceneManager.h"
 namespace GameEngine {
 	void GridPass::Init()
 	{
 		auto RHI = APP_DYNAMICRHI;
 		std::string vertPath =APP_SHADER_PATH + "gridVert.spv";
 		std::string fragPath = APP_SHADER_PATH + "gridFrag.spv";
-		m_VertShader = V2::Shader(vertPath, SHADER_FREQUENCY_VERTEX).GetRHIShader();
-		m_FragShader = V2::Shader(fragPath, SHADER_FREQUENCY_FRAGMENT).GetRHIShader();
+		m_VertShader = Shader(vertPath, SHADER_FREQUENCY_VERTEX).GetRHIShader();
+		m_FragShader = Shader(fragPath, SHADER_FREQUENCY_FRAGMENT).GetRHIShader();
 
 
 		RHIRootSignatureInfo rootSignatureInfo = {};

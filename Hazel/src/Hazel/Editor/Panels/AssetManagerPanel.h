@@ -20,7 +20,7 @@ namespace GameEngine {
 		void DrawComponents(Entity entity);
 
 	private:
-		static void DrawMaterial(AssetHandle meshSourceHandle);
+		static void DrawMaterial(UUID meshSourceHandle);
 
 	private:
 		std::shared_ptr<Scene> m_Context;

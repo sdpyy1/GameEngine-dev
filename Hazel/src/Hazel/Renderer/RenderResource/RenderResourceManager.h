@@ -66,8 +66,8 @@ namespace GameEngine {
     struct PreFrameGlobalResources
     {
         RHIDescriptorSetRef descriptorSet;
-        RenderBuffer<V2::CameraData> cameraDataBuffer;
-        RenderBuffer<V2::LightInfo> lightInfoBuffer;
+        RenderBuffer<CameraData> cameraDataBuffer;
+        RenderBuffer<LightInfo> lightInfoBuffer;
     };
     
 
@@ -83,9 +83,9 @@ namespace GameEngine {
 
 
         // 各种InfoBuffer，存储每个资源在Bindless 中的索引
-        ArrayBuffer<V2::VertexInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> vertexBuffer;
-        ArrayBuffer<V2::MaterialInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> materialBuffer;
-        ArrayBuffer<V2::MeshInfo, MAX_PER_FRAME_OBJECT_SIZE> meshInfoBuffer;
+        ArrayBuffer<VertexInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> vertexBuffer;
+        ArrayBuffer<MaterialInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> materialBuffer;
+        ArrayBuffer<MeshInfo, MAX_PER_FRAME_OBJECT_SIZE> meshInfoBuffer;
 
     };
 
@@ -124,24 +124,24 @@ namespace GameEngine {
             // 材质Info
             uint32_t AllocateMaterialID() { return m_MultiFrameGlobalResources.materialBuffer.Allocate(); }
             void ReleaseMaterialID(uint32_t id) { m_MultiFrameGlobalResources.materialBuffer.Release(id); }
-            void SetMaterialInfo(const V2::MaterialInfo& materialInfo, uint32_t materialID) {m_MultiFrameGlobalResources.materialBuffer.SetData(materialInfo, materialID);};
+            void SetMaterialInfo(const MaterialInfo& materialInfo, uint32_t materialID) {m_MultiFrameGlobalResources.materialBuffer.SetData(materialInfo, materialID);};
 
             // 顶点Info
             uint32_t AllocateVertexID() { return m_MultiFrameGlobalResources.vertexBuffer.Allocate(); }
             void ReleaseVertexID(uint32_t id) { m_MultiFrameGlobalResources.vertexBuffer.Release(id); }
-            void SetVertexInfo(const V2::VertexInfo& vertexInfo, uint32_t vertexID) {m_MultiFrameGlobalResources.vertexBuffer.SetData(vertexInfo, vertexID);};
+            void SetVertexInfo(const VertexInfo& vertexInfo, uint32_t vertexID) {m_MultiFrameGlobalResources.vertexBuffer.SetData(vertexInfo, vertexID);};
 
             // MeshInfo
             uint32_t AllocateMeshInfoID() { return m_MultiFrameGlobalResources.meshInfoBuffer.Allocate(); }
             void ReleaseMeshInfoID(uint32_t id) { m_MultiFrameGlobalResources.meshInfoBuffer.Release(id); }
-            void SetMeshInfo(const V2::MeshInfo& meshInfo, uint32_t meshID) {m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfo, meshID);};
+            void SetMeshInfo(const MeshInfo& meshInfo, uint32_t meshID) {m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfo, meshID);};
 
             // LightInfo
-            void SetLightInfo(const V2::LightInfo& lightInfo) {m_PerFrameGlobalResources[APP_FRAMEINDEX].lightInfoBuffer.SetData(lightInfo);};
+            void SetLightInfo(const LightInfo& lightInfo) {m_PerFrameGlobalResources[APP_FRAMEINDEX].lightInfoBuffer.SetData(lightInfo);};
             
             // 各种Buffer数据
             void RenderResourceManager::UpdateCameraInfo();
-            RenderBuffer<V2::CameraData>& GetCameraDataBuffer() { return m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer; }
+            RenderBuffer<CameraData>& GetCameraDataBuffer() { return m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer; }
 
 
 

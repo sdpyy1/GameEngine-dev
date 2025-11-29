@@ -4,11 +4,13 @@
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
+#include "Hazel/Scene/SceneManager.h"
+
 namespace GameEngine { 
 
 	void PreDepthPassProcessor::OnCollectBatch(const DrawBatch& batch)
 	{
-		if (batch.material->RenderPassMask() & V2::PASS_MASK_DEFERRED_PASS) AddBatch(batch);
+		if (batch.material->RenderPassMask() & PASS_MASK_DEFERRED_PASS) AddBatch(batch);
 	}
 
 	RHIGraphicsPipelineRef PreDepthPassProcessor::OnCreatePipeline(const DrawPipelineState& pipelineState)
@@ -20,8 +22,8 @@ namespace GameEngine {
 	{
 		meshPassProcessor = std::make_shared<PreDepthPassProcessor>(this);
 		MeshPass::Init();
-		m_VertShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "PreDepthVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-		m_FragShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "PreDepthFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+		m_VertShader = std::make_shared<Shader>(APP_SHADER_PATH + "PreDepthVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+		m_FragShader = std::make_shared<Shader>(APP_SHADER_PATH + "PreDepthFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
 		RHIRootSignatureInfo info = {};
 		info.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());
 		m_RootSignature = APP_DYNAMICRHI->CreateRootSignature(info);

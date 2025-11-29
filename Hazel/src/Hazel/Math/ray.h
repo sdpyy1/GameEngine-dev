@@ -1,8 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
-
-#include "AABB.h"
+#include "Hazel/Scene/EditorCamera.h"
+#include "collision.h"
 
 namespace GameEngine {
 
@@ -21,7 +21,18 @@ namespace GameEngine {
 			return { {0.0f, 0.0f, 0.0f},{0.0f, 0.0f, 0.0f} };
 		}
 
-		bool IntersectsAABB(const AABB& aabb, float& t) const
+		// 屏幕坐标->从摄像机位置处发射射线
+		static Ray CastRay(EditorCamera& camera, float ndcX, float ndcY)
+		{
+			glm::vec4 mouseClipPos = { ndcX, ndcY, 0.0f, 1.0f }; // 近裁剪面
+			glm::vec4 rayCamera = glm::inverse(camera.GetProjectionMatrix()) * mouseClipPos;
+			rayCamera /= rayCamera.w;
+			glm::vec4 rayWorld4 = glm::inverse(camera.GetViewMatrix()) * rayCamera;
+			glm::vec3 rayDir = glm::normalize(glm::vec3(rayWorld4) - camera.GetPosition());
+			glm::vec3 rayPos = camera.GetPosition();
+			return { rayPos, rayDir };
+		}
+		bool IntersectsAABB(const AxisAlignedBox& aabb, float& t) const
 		{
 			glm::vec3 dirfrac;
 			// r.dir is unit direction vector of ray
@@ -30,8 +41,8 @@ namespace GameEngine {
 			dirfrac.z = 1.0f / Direction.z;
 			// lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
 			// r.org is origin of ray
-			const glm::vec3& lb = aabb.Min;
-			const glm::vec3& rt = aabb.Max;
+			const glm::vec3& lb = aabb.GetMinCorner();
+			const glm::vec3& rt = aabb.GetMaxCorner();
 			float t1 = (lb.x - Origin.x) * dirfrac.x;
 			float t2 = (rt.x - Origin.x) * dirfrac.x;
 			float t3 = (lb.y - Origin.y) * dirfrac.y;

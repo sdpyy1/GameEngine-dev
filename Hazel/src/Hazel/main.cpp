@@ -1,7 +1,5 @@
 #include "hzpch.h"
 #include "Hazel/Core/Application.h"
-#include "Hazel/Window/WindowManager.h"
-#include "Hazel/Renderer/RHI/Vulkan/VulkanRHI.h"
 int main(int argc, char** argv)
 {
 	GameEngine::Log::Init();

@@ -8,7 +8,6 @@
 #include <fstream>
 #include "Hazel/Asset/AssetManager.h"
 #include <yaml-cpp/yaml.h>
-#include "Hazel/Asset/Model/Mesh.h"
 namespace YAML {
 	template<>
 	struct convert<glm::vec2>
@@ -353,26 +352,21 @@ namespace GameEngine {
 				if (staticMeshComponent) {
 					ModelRef model = AssetManager::LoadModel(staticMeshComponent["MeshSourcePath"].as<std::string>());
 					model->OnLoadAsset();
-					auto& modelComponent = deserializedEntity.AddComponent<ModelComponent>(model->GetUID(), staticMeshComponent["MeshSourcePath"].as<std::string>());
+					auto& modelComponent = deserializedEntity.AddComponent<ModelComponent>(model->GetUUID(), staticMeshComponent["MeshSourcePath"].as<std::string>());
 
 					int submeshIndex = 0;
 					for (auto& mesh : model->GetSubmeshes()) {
-						auto& subMeshEntity = m_Scene->CreateEntity(mesh.mesh->name);
-						subMeshEntity.SetParent(deserializedEntity);
-						subMeshEntity.AddComponent<SubmeshComponent>(model->GetUID(), submeshIndex++);
+						auto& subMeshEntity = m_Scene->CreateChildEntity(deserializedEntity,mesh.mesh->name);
+						subMeshEntity.AddComponent<SubmeshComponent>(model->GetUUID(), submeshIndex++);
 					}
 
 					auto& com = deserializedEntity.GetComponent<ModelComponent>();
 					com.path = staticMeshComponent["MeshSourcePath"].as<std::string>();
-					com.StaticMesh = model->GetUID();
+					com.ModelID = model->GetUUID();
 					com.Visible = staticMeshComponent["Visible"].as<bool>();
 				}
 				auto dynamicMeshComponent = entity["DynamicModelComponent"];
-				if (dynamicMeshComponent) {
-					Ref<Asset> meshSource = AssetManager::GetMesh(dynamicMeshComponent["MeshSourcePath"].as<std::string>());
-					deserializedEntity.AddComponent<DynamicModelComponent>(meshSource->Handle, dynamicMeshComponent["MeshSourcePath"].as<std::string>());
-					m_Scene->BuildDynamicMeshEntity(meshSource, deserializedEntity, dynamicMeshComponent["MeshSourcePath"].as<std::string>());
-				}
+				
 				if (auto directionalLightComponent = entity["DirectionalLightComponent"]; directionalLightComponent)
 				{
 					auto& component = deserializedEntity.AddComponent<DirectionalLightComponent>();

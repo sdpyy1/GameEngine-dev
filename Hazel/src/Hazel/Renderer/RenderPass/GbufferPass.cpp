@@ -3,12 +3,13 @@
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
 #include <Hazel/Renderer/RenderSystem/RenderSystem.h>
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
+#include "Hazel/Scene/SceneManager.h"
 
 namespace GameEngine
 {
 	void GBufferPassProcessor::OnCollectBatch(const DrawBatch& batch)
 	{
-		if (batch.material->RenderPassMask() & V2::PASS_MASK_DEFERRED_PASS) AddBatch(batch);
+		if (batch.material->RenderPassMask() & PASS_MASK_DEFERRED_PASS) AddBatch(batch);
 	}
 
 	RHIGraphicsPipelineRef GBufferPassProcessor::OnCreatePipeline(const DrawPipelineState& pipelineState)
@@ -47,8 +48,8 @@ namespace GameEngine
 		meshPassProcessor = std::make_shared<GBufferPassProcessor>(this);
 		MeshPass::Init();
 
-		vertexShader = std::make_shared<V2::Shader>("Assets/Shader/spv/newGbufferVert.spv", SHADER_FREQUENCY_VERTEX);
-		fragmentShader = std::make_shared<V2::Shader>("Assets/Shader/spv/newGbufferFrag.spv", SHADER_FREQUENCY_FRAGMENT);
+		vertexShader = std::make_shared<Shader>("Assets/Shader/spv/newGbufferVert.spv", SHADER_FREQUENCY_VERTEX);
+		fragmentShader = std::make_shared<Shader>("Assets/Shader/spv/newGbufferFrag.spv", SHADER_FREQUENCY_FRAGMENT);
 
 		RHIRootSignatureInfo rootSignatureInfo = {};
 		rootSignatureInfo.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());  // Set=0 全局资源

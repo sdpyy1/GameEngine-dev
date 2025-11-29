@@ -1,7 +1,7 @@
 #pragma once
 #include "Hazel/Core/Timestep.h"
 #include "Scene.h"
-#include "Hazel/Renderer/old/EditorCamera.h"
+#include "Hazel/Scene/EditorCamera.h"
 namespace GameEngine
 {
 	class SceneManager
@@ -11,7 +11,7 @@ namespace GameEngine
 		void Tick(Timestep ts);
 
 		std::shared_ptr<EditorCamera> GetEditorCamera() { return m_EditorCamera; };
-		std::pair<unsigned int, unsigned int> GetViewportSize() { return { m_EditorCamera->GetViewportWidth(),m_EditorCamera->GetViewportHeight() };};
+		std::pair<unsigned int, unsigned int> GetViewportSize();;
 		std::shared_ptr<Scene> GetActiveScene() { return m_CurrentScene; };
 		SceneInfo GetSceneInfo(){return m_CurrentScene->GetSceneInfo();}
 		bool OpenScene();
@@ -21,17 +21,9 @@ namespace GameEngine
 
 	public:
 		bool HasDirLight();
-
-
-
-
-
-
 	private:
 		std::shared_ptr<Scene> m_CurrentScene;
 		std::shared_ptr<EditorCamera> m_EditorCamera;
-
-
 		std::string m_CurrentSceneFilePath;
 
 	};

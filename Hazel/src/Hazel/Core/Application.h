@@ -10,9 +10,6 @@ namespace GameEngine
     class WindowMinimizeEvent;
     class WindowCloseEvent;
     class WindowResizeEvent;
-    class Window;
-    class WindowsWindow;
-    class RenderContext;
     class RenderSystem;
     struct ApplicationCommandLineArgs
     {
@@ -45,8 +42,6 @@ namespace GameEngine
         bool isRunning() const { return m_Running; }
         bool isMinimized() const { return m_Minimized; }
 
-        Ref<WindowsWindow>& GetWindow();
-        Ref<RenderContext> GetRenderContext();
         const ApplicationSpecification& GetSpecification() const { return m_Specification; }
         uint32_t GetCurrentFrameIndex() const { return m_CurrentFrameIndex; }
 
@@ -70,7 +65,6 @@ namespace GameEngine
         float m_LastFrameTime = 0.0f;
 
         // Context
-        Ref<Window> m_GLFWWindow;
         std::shared_ptr<RendererManager> m_RendererManager;
         std::shared_ptr<SceneManager> m_SceneManager;
 

@@ -4,7 +4,7 @@
 #include <Hazel/Renderer/RenderSystem/RenderSystem.h>
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 
-namespace GameEngine::V2
+namespace GameEngine
 { 
 	Material::Material()
 	{

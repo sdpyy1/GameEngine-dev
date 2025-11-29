@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "RenderSystem.h"
 #include "Hazel/Core/Application.h"
+#include "Hazel/Editor/PanelManager.h"
 #include "Hazel/Renderer/RenderPass/GridPass.h"
 #include <Hazel/Renderer/RenderPass/ImGuiPass.h>
 #include <Hazel/Renderer/RenderPass/PresentPass.h>
@@ -31,6 +32,7 @@ namespace GameEngine {
 			m_PerFrameBaseResources[i].finishSemaphore = m_DynamicRHI->CreateSemaphore();
 			m_PerFrameBaseResources[i].fence = m_DynamicRHI->CreateFence(true);
 		}
+
 	}
 
 	void RenderSystem::Tick(float timestep)
@@ -59,9 +61,10 @@ namespace GameEngine {
 
 	void RenderSystem::InitPasses()
 	{
-
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
-
+		//ModelProcessSetting setting;
+		//ModelRef model = std::make_shared<Model>("Assets/Model/Klee/klee.obj", setting);
+		//model->OnLoadAsset();
 		passes[IBL_PASS] = std::make_shared<IBLPass>();
 		meshPasses[MESH_PASS_DIRSHADOW_PASS] = std::make_shared<DirShadowPass>();
 		meshPasses[MESH_PASS_GBUFFER_PASS] = std::make_shared<GBufferPass>();
@@ -83,6 +86,19 @@ namespace GameEngine {
 				pass->Init();
 			}
 		}
+	}
+
+	void RenderSystem::SetPanelManager(std::shared_ptr<PanelManager> panelManager)
+	{
+		m_PanelManager = panelManager;
+	}
+
+	bool RenderSystem::OnEvent(Event& e)
+	{
+		if (m_PanelManager) {
+			m_PanelManager->OnEvent(e);
+		}
+		return false;
 	}
 
 }

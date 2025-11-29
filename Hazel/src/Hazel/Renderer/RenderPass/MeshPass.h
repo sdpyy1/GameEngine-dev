@@ -88,10 +88,10 @@ namespace GameEngine {
 	typedef struct MeshPassIndirectBuffers
 	{
 		// 存储渲染需要的信息
-		RenderBuffer<V2::IndirectMeshDrawDatas> meshDrawDataBuffer;
+		RenderBuffer<IndirectMeshDrawDatas> meshDrawDataBuffer;
 
 		// 存储间接渲染需要的指令buffer的信息
-		RenderBuffer<V2::IndirectMeshDrawCommands> meshDrawCommandBuffer = RenderBuffer<V2::IndirectMeshDrawCommands>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
+		RenderBuffer<IndirectMeshDrawCommands> meshDrawCommandBuffer = RenderBuffer<IndirectMeshDrawCommands>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
 
 	} MeshPassIndirectBuffers;
 
@@ -127,7 +127,7 @@ namespace GameEngine {
 		std::map<DrawPipelineState, std::vector<DrawGeometryInfo>> m_DrawGeometries; // 把渲染Batch按照PipelineState进行分类
 		std::array<std::shared_ptr<MeshPassIndirectBuffers>, FRAMES_IN_FLIGHT> indirectBuffers;     // 每帧都完全重构的buffer，因此需要每帧一份   
 		std::vector<RHIIndirectCommand> meshDrawCommands;
-		std::vector<V2::IndirectMeshDrawInfo> meshDrawInfos;
+		std::vector<IndirectMeshDrawInfo> meshDrawInfos;
 
 		void AddDrawInfo(DrawPipelineState& pipelineState, DrawGeometryInfo info);
 		void OnBuildDrawInfo(DrawBatch& batch);

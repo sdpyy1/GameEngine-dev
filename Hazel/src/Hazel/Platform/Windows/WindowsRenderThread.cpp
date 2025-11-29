@@ -1,8 +1,6 @@
 #include "hzpch.h"
 #include "Hazel/Core/RenderThread.h"
 
-#include "Hazel/Renderer/old/Renderer.h"
-
 #include <Windows.h>
 
 namespace GameEngine {
@@ -41,7 +39,7 @@ namespace GameEngine {
 	{
 		m_IsRunning = true;
 		if (m_ThreadingPolicy == ThreadingPolicy::MultiThreaded)
-			m_RenderThread.Dispatch(Renderer::RenderThreadFunc, this);
+			// m_RenderThread.Dispatch(Renderer::RenderThreadFunc, this);
 
 		s_RenderThreadID = m_RenderThread.GetID();
 	}
@@ -100,7 +98,7 @@ namespace GameEngine {
 	void RenderThread::NextFrame()
 	{
 		m_AppThreadFrame++;
-		Renderer::SwapQueues();  // Ωªªª√¸¡Óª∫≥Â≥ÿ
+		// Renderer::SwapQueues();  // Ωªªª√¸¡Óª∫≥Â≥ÿ
 	}
 
 	void RenderThread::BlockUntilRenderComplete()
@@ -118,7 +116,7 @@ namespace GameEngine {
 			Set(State::Kick);
 		}else
 		{
-			Renderer::WaitAndRender(this);
+			// Renderer::WaitAndRender(this);
 		}
 	}
 

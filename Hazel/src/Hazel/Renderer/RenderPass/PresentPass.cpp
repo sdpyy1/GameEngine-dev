@@ -2,6 +2,7 @@
 #include "PresentPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Scene/SceneManager.h"
 
 namespace GameEngine
 { 

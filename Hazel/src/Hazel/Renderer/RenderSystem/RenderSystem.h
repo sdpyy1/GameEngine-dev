@@ -4,6 +4,7 @@
 #include "Hazel/Core/Definations.h"
 #include <Hazel/Renderer/RDG/DependencyGraph.h>
 #include <Hazel/Renderer/RenderPass/RenderPass.h>
+#include "Hazel/Core/Events/Event.h"
 // #define RDG_DEBUG 
 #define RENDER_RESOURCEMANAGER APP_RENDERSYSTEM->GetRenderResourceManager()
 #define RENDER_GPU_TIME_INFO APP_RENDERSYSTEM->GetGPUTimeInfos()
@@ -11,6 +12,7 @@ namespace GameEngine
 {
 	class MeshPass;
 	class RenderResourceManager;
+	class PanelManager;
 	class RenderSystem
 	{
 	public:
@@ -21,12 +23,15 @@ namespace GameEngine
 		DynamicRHIRef GetRHI() { return m_DynamicRHI; }
 		std::vector<RHIGPUTimeInfo>& GetGPUTimeInfos() { return m_GPUTimeInfos; }
 		std::shared_ptr<RenderResourceManager> GetRenderResourceManager() { return m_RenderResourceManager; }
+		void SetPanelManager(std::shared_ptr<PanelManager> panelManager);
 		DependencyGraphRef GetRDGDependenctyGraph() { return rdgDependencyGraph; }
 		const std::array<std::shared_ptr<MeshPass>, MESH_PASS_TYPE_MAX_CNT>& GetMeshPasses() { return meshPasses; }
+		bool OnEvent(Event& e);
 
 	private:
 		// 处理器
 		std::shared_ptr<RenderResourceManager> m_RenderResourceManager;
+		std::shared_ptr<PanelManager> m_PanelManager;
 		// 渲染资源
 		DynamicRHIRef m_DynamicRHI;
 		RHISurfaceRef m_Surface;

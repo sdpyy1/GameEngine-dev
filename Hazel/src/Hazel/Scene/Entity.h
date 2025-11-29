@@ -13,12 +13,15 @@ namespace GameEngine {
 	public:
 		Entity() = default;
 		Entity(entt::entity handle, Scene* scene);
-		Entity(entt::entity handle, Ref<Scene> scene);
 		Entity(entt::entity handle, std::shared_ptr<Scene> scene);
 		Entity(const Entity& other) = default;
 		UUID GetParentUUID() { return GetComponent<RelationshipComponent>().ParentHandle; }
 		void SetParentUUID(UUID parent) { GetComponent<RelationshipComponent>().ParentHandle = parent; }
-		std::vector<UUID>& Children() { return GetComponent<RelationshipComponent>().Children; }
+		std::vector<UUID>& Children() {
+			if (!HasComponent<RelationshipComponent>())
+				return std::vector<UUID>();
+			return GetComponent<RelationshipComponent>().Children; 
+		}
 		TransformComponent& Transform() { return GetComponent<TransformComponent>(); }
 
 		Entity Entity::GetParent()

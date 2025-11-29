@@ -4,21 +4,13 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
-#include "Hazel/Renderer/old/Renderer.h"
 #include "Hazel/Scene/Scene.h"
 #include "Hazel/Scene/Entity.h"
-#include "Hazel/Asset/Model/Mesh.h"
 namespace GameEngine {
 	FolderPreviewPanel::FolderPreviewPanel(const std::filesystem::path& assetsDir)
 		: m_AssetsDir(assetsDir), m_CurrentDir(assetsDir)
 	{
-		// 扫描分类（递归）
 		ScanAssetsForCategories(assetsDir);
-
-		TextureSpecification spec;
-		spec.DebugName = "FolderIcons";
-		spec.GenerateMips = false;
-
 
 		m_DirectoryIcon.LoadIconData("Assets/Icon/DirectoryIcon.png");
         m_FileIcon.LoadIconData("Assets/Icon/FileIcon.png");
@@ -49,21 +41,8 @@ namespace GameEngine {
 		}
 		else if (ext == ".fbx" || ext == ".gltf" || ext == ".obj")
 		{
-
-			ModelRef model = AssetManager::LoadModel(path.string());
-			model->OnLoadAsset();
-			Entity modelEntity = m_Context->CreateEntity(path.string());
-
-			// StaticModel
-			auto& modelComponent =  modelEntity.AddComponent<ModelComponent>(model->GetUID(), path);
-
-			int submeshIndex = 0;
-			for (auto& mesh : model->GetSubmeshes()) {
-				auto& subMeshEntity = m_Context->CreateEntity(mesh.mesh->name);
-				subMeshEntity.SetParent(modelEntity);
-				subMeshEntity.AddComponent<SubmeshComponent>(model->GetUID(), submeshIndex++);
-			}
-			createModel = true;
+			m_Context->LoadModel(path.string());
+			
 		}
 		else if (ext == ".png" || ext == ".jpg" || ext == ".jpeg")
 		{
@@ -76,7 +55,6 @@ namespace GameEngine {
 
 	void FolderPreviewPanel::OnImGuiRender()
 	{
-		createModel = false;
 		ImGui::Begin("Content Browser");
 
 		DrawToolbar();

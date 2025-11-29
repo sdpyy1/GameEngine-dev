@@ -4,13 +4,15 @@
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
+#include "Hazel/Scene/SceneManager.h"
+
 namespace GameEngine {
 
 
 	void SkyPass::Init()
 	{
 		{
-			TransmittanceLutShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "TransmittanceLut.comp.spv", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
+			TransmittanceLutShader = std::make_shared<Shader>(APP_SHADER_PATH + "TransmittanceLut.comp.spv", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
 			RHIRootSignatureInfo info= {};
 			info.AddEntryFromReflect(TransmittanceLutShader);
 			TransmittanceLutRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
@@ -21,7 +23,7 @@ namespace GameEngine {
 		}
 
 		{
-			MultiScatteringLutShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "MultiScatteringLut.comp.spv", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
+			MultiScatteringLutShader = std::make_shared<Shader>(APP_SHADER_PATH + "MultiScatteringLut.comp.spv", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
             RHIRootSignatureInfo info = {};
 			info.AddEntryFromReflect(MultiScatteringLutShader)
 				.AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo());
@@ -33,7 +35,7 @@ namespace GameEngine {
 		}
 
 		{ 
-			SkyViewLutShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "SkyViewLut.comp.spv", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
+			SkyViewLutShader = std::make_shared<Shader>(APP_SHADER_PATH + "SkyViewLut.comp.spv", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
             RHIRootSignatureInfo info = {};
             info.AddEntryFromReflect(SkyViewLutShader)
 				.AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo())
@@ -47,8 +49,8 @@ namespace GameEngine {
 		}
 
 		{
-			m_VertShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "SkyVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-			m_FragShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "SkyFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+			m_VertShader = std::make_shared<Shader>(APP_SHADER_PATH + "SkyVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+			m_FragShader = std::make_shared<Shader>(APP_SHADER_PATH + "SkyFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
 			RHIRootSignatureInfo info = {};
 			info.AddEntryFromReflect(m_VertShader)
 				.AddEntryFromReflect(m_FragShader)

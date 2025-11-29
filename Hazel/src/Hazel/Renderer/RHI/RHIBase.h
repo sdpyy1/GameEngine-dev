@@ -83,6 +83,8 @@ namespace GameEngine {
 
 		RHI_RESOURCE_TYPE_MAX_CNT,	//
 	};
+	const char* RHIResourceTypeToString(RHIResourceType type);
+
 	enum QueueType : uint32_t
 	{
 		QUEUE_TYPE_GRAPHICS = 0,

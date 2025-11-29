@@ -10,7 +10,7 @@ namespace GameEngine {
 	void LightCollector::CollectLight()
 	{
 		auto& scene = APP_SCENEMANAGER->GetActiveScene();
-		V2::LightInfo lightInfo;
+		LightInfo lightInfo;
 		{
 			auto dirLightEntity = scene->GetAllEntitiesWith<DirectionalLightComponent>();
 			for (auto entity : dirLightEntity)
@@ -21,7 +21,7 @@ namespace GameEngine {
 				auto& dirLightComp = curEntity.GetComponent<DirectionalLightComponent>();
 				auto& transformComp = curEntity.GetComponent<TransformComponent>();
 
-				V2::DirLightInfo dirLightInfo;
+				DirLightInfo dirLightInfo;
 				lightInfo.dirLights.direction = glm::normalize(transformComp.GetDirection());
 				lightInfo.dirLights.radiance = dirLightComp.Radiance;
 				lightInfo.dirLights.intensity = dirLightComp.Intensity;

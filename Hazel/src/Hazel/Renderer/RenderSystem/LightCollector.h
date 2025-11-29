@@ -1,5 +1,5 @@
 #pragma once
-#include "Hazel/Renderer/old/EditorCamera.h"
+#include "Hazel/Scene/EditorCamera.h"
 namespace GameEngine
 {
 	struct CascadeData

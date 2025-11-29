@@ -1,9 +1,7 @@
 #include "hzpch.h"
 #include "Hazel/Core/Input.h"
-#include "Window.h"
 
 #include "Hazel/Core/Application.h"
-#include "Hazel/Platform/Windows/WindowsWindow.h"
 
 #include <GLFW/glfw3.h>
 #include <imgui_internal.h>
@@ -72,8 +70,6 @@ namespace GameEngine {
 
 	std::pair<float, float> Input::GetMousePosition()
 	{
-		auto& window = static_cast<Window&>(*Application::Get().GetWindow());
-
 		double x, y;
 		glfwGetCursorPos(APP_GLFWWINDOW, &x, &y);
 		return { (float)x, (float)y };
@@ -83,13 +79,11 @@ namespace GameEngine {
 	//		of the screen when it reaches the edge
 	void Input::SetCursorMode(CursorMode mode)
 	{
-		auto& window = static_cast<Window&>(*Application::Get().GetWindow());
 		glfwSetInputMode(APP_GLFWWINDOW, GLFW_CURSOR, GLFW_CURSOR_NORMAL + (int)mode);
 	}
 
 	CursorMode Input::GetCursorMode()
 	{
-		auto& window = static_cast<Window&>(*Application::Get().GetWindow());
 		return (CursorMode)(glfwGetInputMode(APP_GLFWWINDOW, GLFW_CURSOR) - GLFW_CURSOR_NORMAL);
 	}
 }

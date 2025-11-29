@@ -4,16 +4,11 @@
 #include "Hazel/Core/Application.h"
 #include "Components.h"
 #include "ScriptableEntity.h"
-#include "Hazel/Renderer/old/Renderer.h"
+#include "Hazel/Scene/EditorCamera.h"
 #define GLM_FORCE_DEPTH_ZERO_TO_FE
 #include <glm/glm.hpp>
 
-#include "Hazel/Utils/UIUtils.h"
-#include "Hazel/Renderer/old/RendererManager.h"
 #include <imgui.h>
-#include <Hazel/Asset/AssetImporter.h>
-#include <Hazel/Asset/Model/Mesh.h>
-#include "SceneRender.h"
 
 namespace GameEngine {
 	Scene::Scene()
@@ -84,75 +79,6 @@ namespace GameEngine {
 	}
 
 
-	void Scene::UpdateAnimation(Timestep ts) {
-		auto view = GetAllEntitiesWith<AnimationComponent>();
-		for (auto e : view) {
-			Entity entity = { e, this };
-			auto& animComp = entity.GetComponent<AnimationComponent>();
-
-			if (animComp.meshSource == 0 || animComp.BoneEntityIds.empty() || !animComp.CurrentAnimation)
-				continue;
-
-			const auto& animation = animComp.CurrentAnimation;
-			float duration = animation->GetDuration();
-
-			if (ts > 0.0f) {
-				animComp.CurrentTime += ts;
-				if (animComp.IsLooping)
-					animComp.CurrentTime = std::fmod(animComp.CurrentTime, duration);
-				else
-					animComp.CurrentTime = std::clamp(animComp.CurrentTime, 0.0f, duration);
-
-				animation->Sample(animComp.CurrentTime, animComp.CurrentPose);
-
-				for (size_t i = 0; i < animComp.BoneEntityIds.size(); ++i) {
-					Entity boneEntity = GetEntityByUUID(animComp.BoneEntityIds[i]);
-					if (!boneEntity.HasComponent<TransformComponent>())
-						continue;
-					auto& boneTransform = boneEntity.GetComponent<TransformComponent>();
-					const auto& sampled = animComp.CurrentPose.BoneTransforms[i == 0 ? 0 : i + 1];  // ？？？ 这应该和设计有关系
-
-					boneTransform.Translation = sampled.Translation;
-					boneTransform.SetRotation(sampled.Rotation);
-					boneTransform.Scale = sampled.Scale;
-				}
-			}
-		}
-	}
-
-	void Scene::OutputViewport()
-	{
-		IconData iconData;
-		iconData.LoadIconData("Assets/Texture/texture.jpg",false);
-		//UI::Image(Application::GetRendererManager()->GetFinalImage(), ImGui::GetContentRegionAvail(), { 0, 0 }, { 1, 1 });
-		ImGui::Image(iconData.textureID->RawHandle(), ImGui::GetContentRegionAvail(), { 0, 0 }, { 1, 1 });
-	}
-
-	void Scene::CollectRenderableEntities()
-	{
-		
-	}
-	std::vector<glm::mat4> Scene::GetModelSpaceBoneTransforms(const std::vector<UUID>& boneEntityIds, Ref<MeshSource> meshSource)
-	{
-		std::vector<glm::mat4> boneTransforms(boneEntityIds.size());
-		if (meshSource)
-		{
-			if (const auto skeleton = meshSource->GetSkeleton(); skeleton)
-			{
-				// Can get mismatches if user changes which mesh an entity refers to after the bone entities have been set up
-				// TODO(0x): need a better way to handle the bone entities
-				//ASSERT(boneEntityIds.size() == skeleton.GetNumBones(), "Wrong number of boneEntityIds for mesh skeleton!");
-				for (uint32_t i = 0; i < std::min(skeleton->GetNumBones(), (uint32_t)boneEntityIds.size()); ++i)
-				{
-					auto boneEntity = GetEntityByUUID(boneEntityIds[i]);
-					glm::mat4 localTransform = boneEntity ? boneEntity.GetComponent<TransformComponent>().GetTransform() : glm::identity<glm::mat4>();
-					auto parentIndex = skeleton->GetParentBoneIndex(i);
-					boneTransforms[i] = (parentIndex == Skeleton::NullIndex) ? localTransform : boneTransforms[parentIndex] * localTransform;
-				}
-			}
-		}
-		return boneTransforms;
-	}
 	glm::mat4 Scene::GetWorldSpaceTransformMatrix(Entity entity)
 	{
 		glm::mat4 transform(1.0f);
@@ -162,6 +88,16 @@ namespace GameEngine {
 			transform = GetWorldSpaceTransformMatrix(parent);
 
 		return transform * entity.Transform().GetTransform();
+	}
+	glm::mat4 Scene::GetLocalTransformMatrix(Entity entity, const glm::mat4& worldMatrix)
+	{
+		glm::mat4 parentWorld(1.0f);
+		Entity parent = GetEntityByUUID(entity.GetParentUUID());
+		if (parent)
+			parentWorld = GetWorldSpaceTransformMatrix(parent);
+
+		// 局部矩阵 = 父矩阵逆 * 世界矩阵
+		return glm::inverse(parentWorld) * worldMatrix;
 	}
 	template<typename... Component>
 	static void CopyComponent(entt::registry& dst, entt::registry& src, const std::unordered_map<UUID, entt::entity>& enttMap)
@@ -236,16 +172,28 @@ namespace GameEngine {
 				return static_cast<uint32_t>(lhsEntity->second) < static_cast<uint32_t>(rhsEntity->second);
 			});
 	}
-	void Scene::DestroyEntity(Entity entity)
+	void Scene::DestroyEntity(Entity entity, bool destroyChilds)
 	{
+		if (destroyChilds) {
+			auto uuidChilds = entity.Children();
+			if (!uuidChilds.empty()) {
+				for (auto child : uuidChilds) {
+					Entity &c = GetEntityByUUID(child);
+					if (c) {
+						DestroyEntity(c, destroyChilds);
+					}
+				}
+			}
+		}
 		m_EntityIDMap.erase(entity.GetUUID());
 		m_Registry.destroy(entity);
+
 	}
 	void Scene::ClearEntities()
 	{
 		m_Registry.each([this](entt::entity entityID) {
 			Entity entity{ entityID, this };
-			DestroyEntity(entity); // 执行自定义清理
+			DestroyEntity(entity,false);  // 因为它会遍历所有的清除，不需要递归清除
 			});
 		m_Registry.clear();
 		m_EntityIDMap.clear();
@@ -278,105 +226,7 @@ namespace GameEngine {
 		return Entity{};
 	}
 
-	Entity Scene::BuildDynamicMeshEntity(Ref<MeshSource> mesh, Entity& root, const std::filesystem::path& path)
-	{
-		AssetHandle handle = mesh->Handle;
-		root.AddComponent<AnimationComponent>(handle, path);
-		auto com = root.GetComponent<AnimationComponent>();
-		BuildMeshEntityHierarchy(root, mesh, mesh->GetRootNode());
-		BuildBoneEntityIds(root);
-		return root;
-	}
-
-	void Scene::BuildBoneEntityIds(Entity entity)
-	{
-		// 给这个Entity所有包含SubMesh组件的子Entity设置SubMesh组件的骨骼信息
-		BuildMeshBoneEntityIds(entity, entity);
-
-		//// AnimationComponent may not be a direct child of the entity.
-		//// We must rebuild the animation component bone entity ids from the oldest ancestor
-		// 从下往上找到谁包含动画组件
-		Entity animationEntity = entity;
-		Entity parent = entity.GetParent();
-		while (parent)
-		{
-			if (parent.HasComponent<AnimationComponent>())
-			{
-				animationEntity = parent;
-			}
-			parent = parent.GetParent();
-		}
-
-		BuildAnimationBoneEntityIds(animationEntity, animationEntity);
-	}
-	void Scene::BuildAnimationBoneEntityIds(Entity entity, Entity rootEntity)
-	{
-		if (entity.HasComponent<AnimationComponent>()) {
-			auto& anim = entity.GetComponent<AnimationComponent>();
-			anim.BoneEntityIds = FindBoneEntityIds(entity, rootEntity, AssetManager::GetAsset<MeshSource>(anim.meshSource)->GetSkeleton());
-		}
-		for (auto childId : entity.Children())
-		{
-			Entity child = GetEntityByUUID(childId);
-			if (child) {
-				BuildAnimationBoneEntityIds(child, rootEntity);
-			}
-		}
-	}
-	void Scene::BuildMeshBoneEntityIds(Entity entity, Entity rootEntity)
-	{
-		if (entity.HasComponent<SubmeshComponent>()) {
-			SubmeshComponent& mc = entity.GetComponent<SubmeshComponent>();
-			AssetHandle meshSourceHandle = mc.Mesh;
-			Ref<MeshSource> meshSource = AssetManager::GetAsset<MeshSource>(meshSourceHandle);
-			mc.BoneEntityIds = FindBoneEntityIds(entity, rootEntity, meshSource->GetSkeleton()); // 设置组件的骨骼信息
-		}
-		for (auto childId : entity.Children())
-		{
-			Entity child = GetEntityByUUID(childId);
-			if (child) {
-				BuildMeshBoneEntityIds(child, rootEntity);
-			}
-		}
-	}
-	std::vector<UUID> Scene::FindBoneEntityIds(Entity entity, Entity rootEntity, const Skeleton* skeleton)
-	{
-		std::vector<UUID> boneEntityIds;
-
-		// 从下往上一层一层找，直到找到Skeleton所有的骨骼Entity
-		if (skeleton)
-		{
-			Entity rootParentEntity = rootEntity ? rootEntity.GetParent() : rootEntity;
-			{
-				auto boneNames = skeleton->GetBoneNames();
-				boneEntityIds.reserve(boneNames.size());
-				bool foundAtLeastOne = false;
-				for (const auto& boneName : boneNames)
-				{
-					bool found = false;
-					Entity e = entity;
-					while (e && e != rootParentEntity)
-					{
-						Entity boneEntity = TryGetDescendantEntityWithTag(e, boneName);
-						if (boneEntity)
-						{
-							boneEntityIds.emplace_back(boneEntity.GetUUID());
-							found = true;
-							break;
-						}
-						e = e.GetParent();
-					}
-					if (found)
-						foundAtLeastOne = true;
-					else
-						boneEntityIds.emplace_back(0);
-				}
-				if (!foundAtLeastOne)
-					boneEntityIds.resize(0);
-			}
-		}
-		return boneEntityIds;
-	}
+	
 	Entity Scene::TryGetDescendantEntityWithTag(Entity entity, const std::string& tag)
 	{
 		//HZ_PROFILE_FUNC();
@@ -393,80 +243,6 @@ namespace GameEngine {
 			}
 		}
 		return {};
-	}
-	void Scene::BuildMeshEntityHierarchy(Entity parent, Ref<MeshSource> meshSource, const MeshNode& node)
-	{
-		const auto& nodes = meshSource->GetNodes();
-
-		// capture meshSource and nodes so we don't have to keep getting them as we recurse
-		std::function<void(Entity, const MeshNode&)> recurse = [&](Entity parent, const MeshNode& node)
-			{
-				// Skip empty root node
-				// We should still apply its transform though, as there will sometimes be a 90 degree rotation here
-				// particularly for GLTF assets (where DCC tool may have tried to convert Z-up to Y-up)
-				if (node.IsRoot() && node.Submeshes.size() == 0)
-				{
-					for (uint32_t child : node.Children)
-					{
-						MeshNode childNode = nodes[child];
-						childNode.LocalTransform = node.LocalTransform * childNode.LocalTransform;
-						recurse(parent, childNode);
-					}
-					return;
-				}
-
-				Entity nodeEntity = CreateChildEntity(parent, node.Name);
-				nodeEntity.Transform().SetTransform(node.LocalTransform);
-				//nodeEntity.AddComponent<MeshTagComponent>(); // TODO: (0x) Add correct root entity id
-
-				if (node.Submeshes.size() == 1)
-				{
-					// Node == Mesh in this case
-					uint32_t submeshIndex = node.Submeshes[0];
-					auto& mc = nodeEntity.AddComponent<SubmeshComponent>(meshSource->Handle, submeshIndex);
-
-					/*if (mesh->ShouldGenerateColliders())
-					{
-						auto& colliderComponent = nodeEntity.AddComponent<MeshColliderComponent>();
-						Ref<MeshColliderAsset> colliderAsset = PhysicsSystem::GetOrCreateColliderAsset(nodeEntity, colliderComponent);
-						colliderComponent.ColliderAsset = colliderAsset->Handle;
-						colliderComponent.SubmeshIndex = submeshIndex;
-						colliderComponent.UseSharedShape = colliderAsset->AlwaysShareShape;
-						nodeEntity.AddComponent<RigidBodyComponent>();
-					}*/
-				}
-				else if (node.Submeshes.size() > 1)
-				{
-					// Create one entity per child mesh, parented under node
-					for (uint32_t i = 0; i < node.Submeshes.size(); i++)
-					{
-						uint32_t submeshIndex = node.Submeshes[i];
-
-						// NOTE(Yan): original implemenation use to use "mesh name" from assimp;
-						//            we don't store that so use node name instead. Maybe we
-						//            should store it?
-						Entity childEntity = CreateChildEntity(nodeEntity, node.Name);
-
-						//childEntity.AddComponent<MeshTagComponent>(); // TODO: (0x) Add correct root entity id
-						childEntity.AddComponent<SubmeshComponent>(meshSource->Handle, submeshIndex);
-
-						/*if (mesh->ShouldGenerateColliders())
-						{
-							auto& colliderComponent = childEntity.AddComponent<MeshColliderComponent>();
-							Ref<MeshColliderAsset> colliderAsset = PhysicsSystem::GetOrCreateColliderAsset(childEntity, colliderComponent);
-							colliderComponent.ColliderAsset = colliderAsset->Handle;
-							colliderComponent.SubmeshIndex = submeshIndex;
-							colliderComponent.UseSharedShape = colliderAsset->AlwaysShareShape;
-							childEntity.AddComponent<RigidBodyComponent>();
-						}*/
-					}
-				}
-
-				for (uint32_t child : node.Children)
-					recurse(nodeEntity, nodes[child]);
-			};
-
-		recurse(parent, node);
 	}
 	Scene::~Scene()
 	{
@@ -513,10 +289,7 @@ namespace GameEngine {
 	void Scene::OnComponentAdded<SubmeshComponent>(Entity entity, SubmeshComponent& component)
 	{
 	}
-	template<>
-	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
-	{
-	}
+
 
 	template<>
 	void Scene::OnComponentAdded<CircleRendererComponent>(Entity entity, CircleRendererComponent& component)
@@ -551,10 +324,6 @@ namespace GameEngine {
 	{
 	}
 
-	template<>
-	void Scene::OnComponentAdded<TextComponent>(Entity entity, TextComponent& component)
-	{
-	}
 	template<>
 	void Scene::OnComponentAdded<DirectionalLightComponent>(Entity entity, DirectionalLightComponent& component)
 	{
@@ -593,7 +362,35 @@ namespace GameEngine {
 		}
 	}
 
+	void Scene::LoadModel(const std::filesystem::path& path)
+	{
+		ModelRef model = AssetManager::LoadModel(path.string());
+		model->OnLoadAsset();
+		Entity modelEntity = CreateEntity(path.string());
 
+		auto& modelComponent = modelEntity.AddComponent<ModelComponent>(model->GetUUID(), path);
 
+		int submeshIndex = 0;
+		for (auto& mesh : model->GetSubmeshes()) {
+			auto& subMeshEntity = CreateChildEntity(modelEntity, mesh.mesh->name);
+			subMeshEntity.AddComponent<SubmeshComponent>(model->GetUUID(), submeshIndex++);
+		}
+	}
+
+	GameEngine::Entity Scene::GetSelectedEntity()
+	{
+		if (m_SelectedEntity) {
+			return *m_SelectedEntity;
+		}
+		return {};
+	}
+
+	void Scene::SetSelectedEntity(Entity entity)
+	{
+		if (!entity) {
+			m_SelectedEntity = nullptr;
+		}
+		m_SelectedEntity = std::make_shared<Entity>(entity);
+	}
 
 }

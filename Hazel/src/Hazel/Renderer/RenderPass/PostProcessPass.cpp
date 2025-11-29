@@ -4,6 +4,8 @@
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
+#include "Hazel/Scene/SceneManager.h"
+
 // ÆØ¹â¡¢ ToneMapping ¡¢ ColorGrading
 namespace GameEngine {
 
@@ -11,8 +13,8 @@ namespace GameEngine {
 	void PostProcessPass::Init()
 	{
 		{
-			m_VertShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "FinalColorVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-			m_FragShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "FinalColorFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+			m_VertShader = std::make_shared<Shader>(APP_SHADER_PATH + "FinalColorVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+			m_FragShader = std::make_shared<Shader>(APP_SHADER_PATH + "FinalColorFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
 			RHIRootSignatureInfo info = {};
 			info.AddEntryFromReflect(m_VertShader).AddEntryFromReflect(m_FragShader).AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo());
 			m_RootSignature = APP_DYNAMICRHI->CreateRootSignature(info);

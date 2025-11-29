@@ -1,6 +1,6 @@
 #pragma once
 namespace GameEngine {
-#define FRAMES_IN_FLIGHT 3							//帧缓冲数目
+#define FRAMES_IN_FLIGHT 2							//帧缓冲数目
 
 #define APP_FRAMEINDEX Application::GetFrameIndex()
 #define APP_GLFWWINDOW Application::GetWindowManager()->GetGLFWWindow()

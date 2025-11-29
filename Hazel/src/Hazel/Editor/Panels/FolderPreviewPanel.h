@@ -5,8 +5,6 @@
 #include "Hazel/Asset/AssetManager.h"
 #include "EditorPanel.h"
 #include "Hazel/Scene/Scene.h"
-#include "Hazel/Utils/UIUtils.h"
-#include <Hazel/Platform/Vulkan/VulkanTexture.h>
 enum class BrowserMode
 {
 	Directory,
@@ -50,10 +48,6 @@ namespace GameEngine {
 		IconData m_SceneIcon;
 		IconData m_ModelIcon;
 		IconData m_PreviewTexture;
-
-
-
-
 
 		std::filesystem::path m_SelectedFile;
 		std::string m_SelectedCategory;

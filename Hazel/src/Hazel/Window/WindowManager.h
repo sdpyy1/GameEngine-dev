@@ -1,5 +1,5 @@
 #pragma once
-#include <Hazel/Events/Event.h>
+#include <Hazel/Core/Events/Event.h>
 #include <GLFW/glfw3.h>
 namespace GameEngine { 
 	struct WindowSpec

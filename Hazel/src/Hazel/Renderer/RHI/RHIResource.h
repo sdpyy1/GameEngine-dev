@@ -12,7 +12,7 @@ namespace GameEngine {
 		inline RHIResourceType GetType() { return resourceType; }
 
 		virtual void* RawHandle() { return nullptr; };		// 底层资源的裸指针，仅debug时使用
-
+		void printRawHandle();
 	private:
 		RHIResourceType resourceType;
 		uint32_t lastUseTick = 0;

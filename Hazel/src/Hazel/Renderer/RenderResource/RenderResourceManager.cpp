@@ -151,7 +151,7 @@ namespace GameEngine {
 
 	void RenderResourceManager::UpdateCameraInfo()
 	{
-		V2::CameraData tmpdata;
+		CameraData tmpdata;
 		EditorCamera& camera = m_SceneInfoFromScene.camera;
 		tmpdata.view = camera.GetViewMatrix();
 		tmpdata.proj = camera.GetProjectionMatrix();
@@ -170,6 +170,7 @@ namespace GameEngine {
 		m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer.SetData(tmpdata);
 	}
 
+	// TODO: 实时加载新模型，在这里更新所有帧会报错
 	uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot)
 	{
 		// 给这个资源分配一个ID

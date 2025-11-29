@@ -36,7 +36,7 @@ namespace GameEngine {
 
     struct SubmeshData
     {
-        std::shared_ptr<V2::Mesh> mesh;                                 // CPU端的mesh和cluster信息
+        std::shared_ptr<Mesh> mesh;                                 // CPU端的mesh和cluster信息
         VertexBufferRef vertexBuffer;                               // GPU端的顶点和索引缓冲，既可能存储单个submesh的全部顶点和索引，也可能存储其全部cluster合并后的数据
         IndexBufferRef indexBuffer;
 
@@ -54,18 +54,20 @@ namespace GameEngine {
     };
 
 
-	class Model : public V2::Asset {
+	class Model : public Asset {
     public:
 		Model(std::string path, ModelProcessSetting processSetting);
         void LoadFromFile(std::string path);
         virtual std::string GetAssetTypeName() override { return "Model Asset"; }
-        virtual V2::AssetType GetAssetType() override { return V2::ASSET_TYPE_MODEL; }
+        virtual AssetType GetAssetType() override { return ASSET_TYPE_MODEL; }
         virtual void OnLoadAsset() override;
         virtual void OnSaveAsset() override;
         bool hasBone() {return findBone;}
         std::vector<SubmeshData>& GetSubmeshes() { return submeshes; }
         SubmeshData& GetSubmesh(uint32_t index) { return submeshes[index]; }
+        MeshRef GetSubMesh(uint32_t index) { return submeshes[index].mesh; }
         std::vector<MaterialRef>& GetMaterials() { return materials; }
+        std::string GetPath() { return path; }
     private:
         std::string path;
         ModelProcessSetting processSetting;
@@ -78,7 +80,7 @@ namespace GameEngine {
         std::unordered_map<std::string, TextureRef> textureMap; // Cache
         void ProcessNode(aiNode* node, const aiScene* scene, std::vector<aiMesh*>& processMeshes);
         void ProcessMesh(aiMesh* mesh, const aiScene* scene, int index);
-        void ExtractBoneWeights(V2::Mesh* submesh, aiMesh* mesh, const aiScene* scene);
+        void ExtractBoneWeights(Mesh* submesh, aiMesh* mesh, const aiScene* scene);
         std::shared_ptr<V2::Texture> LoadMaterialTexture(aiMaterial* mat, aiTextureType type);
         bool findBone = false;
     };

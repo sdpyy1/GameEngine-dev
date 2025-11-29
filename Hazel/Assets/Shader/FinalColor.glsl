@@ -44,7 +44,7 @@ layout(set = 0, binding = 1) uniform texture2D BloomRes;
 layout(set = 1, binding = 0) uniform sampler SAMPLER[];
 void main(){
 
-	float BloomScale = 1.0;  // TODO: Setting
+	float BloomScale = 0.2;  // TODO: Setting
 
 
 	vec3 finalColor = texture(sampler2D(lightRes,SAMPLER[0]), in_texCoord).rgb;

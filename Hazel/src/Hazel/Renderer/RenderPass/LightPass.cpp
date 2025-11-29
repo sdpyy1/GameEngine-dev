@@ -4,11 +4,13 @@
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
+#include "Hazel/Scene/SceneManager.h"
+
 namespace GameEngine {
 	void LightPass::Init()
 	{
-		m_VertShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "LightingVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-		m_FragShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "LightingFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+		m_VertShader = std::make_shared<Shader>(APP_SHADER_PATH + "LightingVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+		m_FragShader = std::make_shared<Shader>(APP_SHADER_PATH + "LightingFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
 		RHIRootSignatureInfo info = {};
 		info.AddEntryFromReflect(m_VertShader).AddEntryFromReflect(m_FragShader);
 		m_RootSignature = APP_DYNAMICRHI->CreateRootSignature(info);

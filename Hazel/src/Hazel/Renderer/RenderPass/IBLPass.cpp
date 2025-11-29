@@ -3,13 +3,15 @@
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
+#include "Hazel/Scene/SceneManager.h"
+
 namespace GameEngine
 {
 	void IBLPass::Init()
 	{
 		SetEnable(true);
 		{
-			equirectangularConversionCompShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "EquirectangularToCubeMap.comp.spv", SHADER_FREQUENCY_COMPUTE);
+			equirectangularConversionCompShader = std::make_shared<Shader>(APP_SHADER_PATH + "EquirectangularToCubeMap.comp.spv", SHADER_FREQUENCY_COMPUTE);
 			RHIRootSignatureInfo rootSignatureInfo = {};
 			rootSignatureInfo.AddEntryFromReflect(equirectangularConversionCompShader->GetRHIShader()).AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo());
 			equirectangularConversionCompRootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
@@ -20,7 +22,7 @@ namespace GameEngine
 		}
 
 		{
-			environmentIrradianceCompShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "EnvironmentIrradiance.comp.spv", SHADER_FREQUENCY_COMPUTE);
+			environmentIrradianceCompShader = std::make_shared<Shader>(APP_SHADER_PATH + "EnvironmentIrradiance.comp.spv", SHADER_FREQUENCY_COMPUTE);
 			RHIRootSignatureInfo rootSignatureInfo = {};
 			rootSignatureInfo.AddEntryFromReflect(environmentIrradianceCompShader->GetRHIShader())
 				.AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo())
@@ -33,7 +35,7 @@ namespace GameEngine
 		}
 
 		{
-            environmentMipFilterCompShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "EnvironmentMipFilter.comp.spv", SHADER_FREQUENCY_COMPUTE);
+            environmentMipFilterCompShader = std::make_shared<Shader>(APP_SHADER_PATH + "EnvironmentMipFilter.comp.spv", SHADER_FREQUENCY_COMPUTE);
             RHIRootSignatureInfo rootSignatureInfo = {};
             rootSignatureInfo.AddEntryFromReflect(environmentMipFilterCompShader->GetRHIShader())
                 .AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo())

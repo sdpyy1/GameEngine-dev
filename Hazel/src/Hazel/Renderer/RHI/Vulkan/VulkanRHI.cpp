@@ -394,7 +394,7 @@ namespace GameEngine
         poolInfo.poolSizeCount = static_cast<uint32_t>(descriptorPoolSizes.size());
         poolInfo.pPoolSizes = descriptorPoolSizes.data();
         poolInfo.maxSets = 8192;
-        poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT| VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;   // 使得描述符可以实时更新
+        poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT | VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;   // 使得描述符可以实时更新
 
         VK_CHECK_RESULT(vkCreateDescriptorPool(m_LogicalDevice, &poolInfo, nullptr, &m_DescriptorPool));
 	}

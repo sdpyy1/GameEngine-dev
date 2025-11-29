@@ -3,21 +3,20 @@
 #include "Hazel/Utils/FileSystem.h"
 #include "SceneSerializer.h"
 #include "Hazel/Core/Application.h"
+#include "Hazel/Scene/Entity.h"
 namespace GameEngine
 {
 	SceneManager::SceneManager()
 	{
 		m_CurrentScene = std::make_shared<Scene>();
 		
-		m_EditorCamera = std::make_shared<EditorCamera>(45.0f, APP_WINDOWSIZE.first, APP_WINDOWSIZE.second, 0.1f, 1000.0f);
+		m_EditorCamera = std::make_shared<EditorCamera>(45.0f, Application::Get().GetWindowManager()->GetWindowSize().first, Application::Get().GetWindowManager()->GetWindowSize().second, 0.1f, 1000.0f);
 	}
 
 	void SceneManager::Tick(Timestep ts)
 	{
-		// LOG_TRACE("SceneManager::Tick");
 		m_EditorCamera->OnUpdate(ts);
 		m_CurrentScene->PackupSceneInfo(*m_EditorCamera); // 打包场景数据
-		m_CurrentScene->UpdateAnimation(ts); // 更新动画
 	}
 
 	bool SceneManager::OpenScene()
@@ -43,6 +42,7 @@ namespace GameEngine
 		if (m_CurrentScene) {
 			m_CurrentScene->ClearEntities();
 		}
+		m_CurrentScene->SetSelectedEntity({});
 		SceneSerializer serializer(m_CurrentScene);  // 目前打开一个场景，就是把当前场景清空，加载新场景的Entity
 		serializer.Deserialize(filepath.string());
 		m_CurrentSceneFilePath = filepath.string();
@@ -84,6 +84,11 @@ namespace GameEngine
 	bool SceneManager::HasDirLight()
 	{
 		return m_CurrentScene->HasDirLight();
+	}
+
+	std::pair<unsigned int, unsigned int> SceneManager::GetViewportSize()
+	{
+		return { m_EditorCamera->GetViewportWidth(),m_EditorCamera->GetViewportHeight() };
 	}
 
 }

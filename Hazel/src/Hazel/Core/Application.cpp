@@ -3,14 +3,9 @@
 #include <nfd.hpp>
 #include <GLFW/glfw3.h>
 #include "Hazel/Core/Application.h"
-#include "Hazel/Events/Event.h"
-#include "Hazel/Events/ApplicationEvent.h"
-#include "Hazel/Renderer/old/Renderer.h"
-#include "Hazel/Asset/AssetImporter.h"
+#include "Hazel/Core/Events/Event.h"
+#include "Hazel/Core/Events/ApplicationEvent.h"
 #include "Hazel/Scene/SceneManager.h"
-#include <Hazel/Renderer/old/RendererManager.h>
-#include "Hazel/Platform/Windows/WindowsWindow.h"
-#include "Hazel/Core/Window.h"
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 
 namespace GameEngine {
@@ -25,9 +20,6 @@ namespace GameEngine {
 
 
 		NFD::Init();
-		// m_RendererManager = std::make_shared<RendererManager>();
-		AssetImporter::Init();
-
 
 		m_WindowManager = std::make_shared<WindowManager>(WindowSpec(m_Specification.Name, 1950, 1300));
 		m_WindowManager->SetEventCallback(HZ_BIND_EVENT_FN(Application::OnEvent));
@@ -81,9 +73,9 @@ namespace GameEngine {
 		dispatcher.Dispatch<WindowCloseEvent>(HZ_BIND_EVENT_FN(Application::OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowResize));
 		dispatcher.Dispatch<WindowMinimizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowMinimize));
-		/*if (m_RendererManager->OnEvent(e)) {
+		if (m_RenderSystem->OnEvent(e)) {
 			return;
-		}*/
+		}
 	}
 	bool Application::OnWindowMinimize(WindowMinimizeEvent& e)
 	{
@@ -116,15 +108,6 @@ namespace GameEngine {
 		return false;
 	}
 
-	GameEngine::Ref<GameEngine::WindowsWindow>& Application::GetWindow()
-	{
-		return m_GLFWWindow.As<WindowsWindow>();
-	}
-
-	GameEngine::Ref<GameEngine::RenderContext> Application::GetRenderContext()
-	{
-		return GetWindow()->GetRenderContext();
-	}
 
 	std::shared_ptr<GameEngine::RendererManager> Application::GetRendererManager()
 	{

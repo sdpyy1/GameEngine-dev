@@ -1,16 +1,14 @@
 #pragma once
 
 #include "Hazel/Core/UUID.h"
-#include "Hazel/Renderer/old/Texture.h"
-#include "Hazel/Renderer/old/Font.h"
+
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <Hazel/Math/Math.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
-#include <Hazel/Renderer/old/EditorCamera.h>
-#include <Hazel/Asset/Model/Animation.h>
+
 #include "Hazel/Asset/AssetManager.h"
 #include "Hazel/Renderer/RenderResource/RenderStruct.h"
 #include "Hazel/Core/Application.h"
@@ -50,7 +48,7 @@ namespace GameEngine {
 	};
 	struct ModelComponent
 	{
-		AssetHandle StaticMesh = 0;
+		UUID ModelID = 0;
 		ModelRef model;
 		std::filesystem::path path = "";
 
@@ -60,8 +58,8 @@ namespace GameEngine {
 		std::vector<MaterialRef> materials;
 		bool castShadow = true;
 		ModelComponent() = default;
-		ModelComponent(AssetHandle staticMesh, std::filesystem::path filePath)
-			: StaticMesh(staticMesh),path(filePath){
+		ModelComponent(UUID staticMesh, std::filesystem::path filePath)
+			: ModelID(staticMesh),path(filePath){
 			model = AssetManager::GetAssetByAssetHandle<Model>(staticMesh);
 			isDynamic = model->hasBone();
 			materials = model->GetMaterials();   // TODO:注意这个可能导致所有实例都引用同一个材质
@@ -70,7 +68,7 @@ namespace GameEngine {
 
 	struct SubmeshComponent
 	{
-		AssetHandle Mesh;
+		UUID Mesh;
 		uint32_t SubmeshIndex = 0;
 		bool Visible = true;
 		std::vector<UUID> BoneEntityIds;
@@ -78,14 +76,14 @@ namespace GameEngine {
         MaterialRef material;
 		bool castShadow = true;
 
-		V2::MeshInfo meshInfo;
+		MeshInfo meshInfo;
 		uint32_t meshInfoID = 0;
 
 		SubmeshComponent() = default;
 		void updateMeshInfo() {
 			RENDER_RESOURCEMANAGER->SetMeshInfo(meshInfo, meshInfoID);
 		}
-		SubmeshComponent(AssetHandle mesh, uint32_t submeshIndex = 0)
+		SubmeshComponent(UUID mesh, uint32_t submeshIndex = 0)
 			: Mesh(mesh), SubmeshIndex(submeshIndex)
 		{
             model = AssetManager::GetAssetByAssetHandle<Model>(mesh);
@@ -98,19 +96,22 @@ namespace GameEngine {
 			meshInfo.materialID = model->GetMaterials()[SubmeshIndex] ? model->GetMaterials()[SubmeshIndex]->GetMaterialID() : 0;
 
 			RENDER_RESOURCEMANAGER->SetMeshInfo(meshInfo, meshInfoID);
+		}
 
+		MeshRef GetMesh() {
+			return model->GetSubMesh(SubmeshIndex);
 		}
 	};
 
 
 	struct DynamicModelComponent
 	{
-		AssetHandle meshSource = 0;
+		UUID meshSource = 0;
 		std::filesystem::path path = "";
 		bool Visible = true;
 
 		DynamicModelComponent() = default;
-		DynamicModelComponent(AssetHandle handle, std::filesystem::path filePath) {
+		DynamicModelComponent(UUID handle, std::filesystem::path filePath) {
 			path = filePath;
 		}
 	};
@@ -130,16 +131,16 @@ namespace GameEngine {
 	};
 	struct AnimationComponent
 	{
-		AssetHandle meshSource = 0;
+		UUID meshSource = 0;
 		std::filesystem::path path;
-		const Animation* CurrentAnimation = nullptr; 
+		// const Animation* CurrentAnimation = nullptr; 
 		float CurrentTime = 0.0f;
 		bool IsLooping = true; 
-		Pose CurrentPose;      
+		// Pose CurrentPose;      
 		int SelectedAnimIndex = 0;
 		std::vector<UUID> BoneEntityIds; 
 		AnimationComponent() = default;
-		AnimationComponent(AssetHandle mesh, std::filesystem::path filePath) :meshSource(mesh), path(filePath)
+		AnimationComponent(UUID mesh, std::filesystem::path filePath) :meshSource(mesh), path(filePath)
 		{
 		}
 	};
@@ -286,14 +287,7 @@ namespace GameEngine {
 
 	struct SpriteRendererComponent
 	{
-		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
-		Ref<Texture2D> Texture;
-		float TilingFactor = 1.0f;
-
-		SpriteRendererComponent() = default;
-		SpriteRendererComponent(const SpriteRendererComponent&) = default;
-		SpriteRendererComponent(const glm::vec4& color)
-			: Color(color) {}
+		
 	};
 
 	struct CircleRendererComponent
@@ -393,11 +387,7 @@ namespace GameEngine {
 
 	struct TextComponent
 	{
-		std::string TextString;
-		Ref<Font> FontAsset = Font::GetDefault();
-		glm::vec4 Color{ 1.0f };
-		float Kerning = 0.0f;
-		float LineSpacing = 0.0f;
+		
 	};
 
 	template<typename... Component>
@@ -406,9 +396,9 @@ namespace GameEngine {
 	};
 
 	using AllComponents = 
-		ComponentGroup<ModelComponent,TransformComponent, SpriteRendererComponent,PointLightComponent,
+		ComponentGroup<ModelComponent,TransformComponent,PointLightComponent,
 			CircleRendererComponent, CameraComponent, ScriptComponent, SpotLightComponent,
 			NativeScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent, SkyComponent,
-			CircleCollider2DComponent, TextComponent, RelationshipComponent, DirectionalLightComponent, SubmeshComponent,DynamicModelComponent, AnimationComponent>;
+			CircleCollider2DComponent, RelationshipComponent, DirectionalLightComponent, SubmeshComponent,DynamicModelComponent, AnimationComponent>;
 
 }

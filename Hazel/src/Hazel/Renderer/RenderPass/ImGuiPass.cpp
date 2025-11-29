@@ -3,7 +3,7 @@
 #include "Hazel/Core/Application.h"
 #include <backends/imgui_impl_vulkan.h>
 #include <backends/imgui_impl_glfw.h>
-#include <Hazel/Editor/ImGuiRendererManager.h>
+#include <Hazel/Editor/PanelManager.h>
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 #include "Hazel/Scene/SceneManager.h"
 
@@ -12,8 +12,8 @@ namespace GameEngine
     void ImGuiPass::Init()
     {
         APP_DYNAMICRHI->InitImGui(APP_GLFWWINDOW);
-        m_ImGuiRendererManager = std::make_shared<ImGuiRendererManager>();
-
+        m_PanelManager = std::make_shared<PanelManager>();
+        APP_RENDERSYSTEM->SetPanelManager(m_PanelManager);  // 因为要传递事件给他
     }
     void ImGuiPass::Build(RDGBuilder& builder)
 	{
@@ -41,11 +41,12 @@ namespace GameEngine
                         RHICommandListRef command = context.command;
         
                         viewportID[APP_FRAMEINDEX] = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+
                         ImGui_ImplVulkan_NewFrame();
                         ImGui_ImplGlfw_NewFrame();
                         ImGui::NewFrame();
-                        m_ImGuiRendererManager->SetGPUTimeInfo(RENDER_GPU_TIME_INFO);
-                        m_ImGuiRendererManager->ImGuiCommand(viewportID[APP_FRAMEINDEX], viewportID[APP_FRAMEINDEX]);
+                        m_PanelManager->SetGPUTimeInfo(RENDER_GPU_TIME_INFO);
+                        m_PanelManager->ImGuiCommand(viewportID[APP_FRAMEINDEX], viewportID[APP_FRAMEINDEX]);
                         ImGui::Render();
                         command->ImGuiRenderDrawData();
                     })

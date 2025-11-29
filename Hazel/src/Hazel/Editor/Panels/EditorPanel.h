@@ -1,5 +1,5 @@
 #pragma once
-#include <Hazel/Events/Event.h>
+#include <Hazel/Core/Events/Event.h>
 #include "Hazel/Renderer/RenderResource/Texture.h"
 namespace GameEngine {
 	struct IconData {
@@ -14,7 +14,7 @@ namespace GameEngine {
 			textureID = icon->GetImGuiID();
 		}
 	};
-	class EditorPanel : public RefCounted
+	class EditorPanel
 	{
 	public:
 		virtual ~EditorPanel() = default;

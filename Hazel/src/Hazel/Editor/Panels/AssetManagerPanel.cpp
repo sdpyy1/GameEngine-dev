@@ -9,9 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <cstring>
 #include <filesystem>
-#include <Hazel/Utils/UIUtils.h>
 #include "Hazel/Asset/AssetManager.h"
-#include "Hazel/Asset/Model/Mesh.h"
 #ifdef _MSVC_LANG
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -363,45 +361,7 @@ namespace GameEngine {
 			});
 		DrawComponent<AnimationComponent>("Animation", entity, [](auto& component)
 			{
-				ImGui::Text("Mesh Source Handle: %llu", (uint64_t)component.meshSource);
-
-				Ref<MeshSource> meshSource = AssetManager::GetAsset<MeshSource>(component.meshSource);
-				if (meshSource)
-				{
-					std::vector<std::string> animNames = meshSource->GetAnimationNames();
-					if (!animNames.empty())
-					{
-						component.SelectedAnimIndex = glm::clamp(component.SelectedAnimIndex, 0, (int)animNames.size() - 1);
-
-						ImGui::Text("Animation");
-						ImGui::SameLine();
-						if (ImGui::BeginCombo("##AnimationSelector", animNames[component.SelectedAnimIndex].c_str()))
-						{
-							for (int i = 0; i < animNames.size(); i++)
-							{
-								bool isSelected = (component.SelectedAnimIndex == i);
-								if (ImGui::Selectable(animNames[i].c_str(), isSelected))
-								{
-									component.SelectedAnimIndex = i;
-									component.CurrentAnimation = meshSource->GetAnimation(
-										animNames[i], *meshSource->GetSkeleton(), false, glm::vec3(1), 0
-									);
-								}
-								if (isSelected)
-									ImGui::SetItemDefaultFocus();
-							}
-							ImGui::EndCombo();
-						}
-					}
-					else
-					{
-						ImGui::Text("No animations available");
-					}
-				}
-				else
-				{
-					ImGui::Text("Invalid MeshSource asset");
-				}
+				
 			});
 	}
 	template<typename T>
@@ -429,7 +389,7 @@ namespace GameEngine {
 		return ext == "png" || ext == "jpg" || ext == "jpeg" ||
 			ext == "tga" || ext == "bmp" || ext == "hdr";
 	}
-	void AssetManagerPanel::DrawMaterial(AssetHandle meshSourceHandle)
+	void AssetManagerPanel::DrawMaterial(UUID meshSourceHandle)
 	{
 		
 	}

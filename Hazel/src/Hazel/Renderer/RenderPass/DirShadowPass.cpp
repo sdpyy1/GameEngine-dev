@@ -4,6 +4,8 @@
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
+#include "Hazel/Scene/SceneManager.h"
+
 namespace GameEngine {
 	void DirShadowPassProcessor::OnCollectBatch(const DrawBatch& batch)
 	{
@@ -19,8 +21,8 @@ namespace GameEngine {
 	{
 		meshPassProcessor = std::make_shared<DirShadowPassProcessor>(this);
 		MeshPass::Init();
-		m_VertShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "DirShadowMapVert.spv", SHADER_FREQUENCY_VERTEX);
-		m_FragShader = std::make_shared<V2::Shader>(APP_SHADER_PATH + "DirShadowMapFrag.spv", SHADER_FREQUENCY_FRAGMENT);
+		m_VertShader = std::make_shared<Shader>(APP_SHADER_PATH + "DirShadowMapVert.spv", SHADER_FREQUENCY_VERTEX);
+		m_FragShader = std::make_shared<Shader>(APP_SHADER_PATH + "DirShadowMapFrag.spv", SHADER_FREQUENCY_FRAGMENT);
 		RHIRootSignatureInfo rootSignatureInfo = {};
 		rootSignatureInfo.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo())
 			.AddPushConstant({ 4, SHADER_FREQUENCY_VERTEX });

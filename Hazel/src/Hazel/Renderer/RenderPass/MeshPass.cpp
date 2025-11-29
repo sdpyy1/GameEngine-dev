@@ -1,6 +1,8 @@
 #include "hzpch.h"
 #include "MeshPass.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
+#include "Hazel/Scene/SceneManager.h"
+
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #define MAX_PER_PASS_PIPELINE_STATE_COUNT 1024      //每个mesh pass支持的最大的不同管线状态数目
 
@@ -53,7 +55,7 @@ namespace GameEngine
 		}
 
 		// 5.将准备好的全部数据提交给GPU端
-		V2::IndirectSetting meshDrawSetting;
+		IndirectSetting meshDrawSetting;
 		meshDrawSetting.processSize = (uint32_t)meshDrawInfos.size();
 		meshDrawSetting.pipelineStateSize = pipelineIndex;
 		meshDrawSetting.drawSize = 0;
@@ -61,8 +63,8 @@ namespace GameEngine
 		meshDrawSetting.occlusionCull = 0;
 		
 		auto buffers = GetIndirectBuffers();
-		buffers->meshDrawDataBuffer.SetData(&meshDrawSetting, sizeof(V2::IndirectSetting), 0);
-		buffers->meshDrawDataBuffer.SetData(meshDrawInfos.data(), meshDrawInfos.size() * sizeof(V2::IndirectMeshDrawInfo), sizeof(V2::IndirectSetting));
+		buffers->meshDrawDataBuffer.SetData(&meshDrawSetting, sizeof(IndirectSetting), 0);
+		buffers->meshDrawDataBuffer.SetData(meshDrawInfos.data(), meshDrawInfos.size() * sizeof(IndirectMeshDrawInfo), sizeof(IndirectSetting));
 		buffers->meshDrawCommandBuffer.SetData(meshDrawCommands.data(), meshDrawCommands.size() * sizeof(RHIIndirectCommand), 0);
 
 	}
@@ -129,7 +131,7 @@ namespace GameEngine
 		// 遍历当前pipeline下所有需要绘制的SubMesh信息（DrawGeometryInfo）
 		uint32_t meshCount = 0;
 		for (auto& geometry : geometries) {
-			V2::IndirectMeshDrawInfo meshDrawInfo;
+			IndirectMeshDrawInfo meshDrawInfo;
 
 			meshDrawInfo.objectID = geometry.objectID;
 			meshDrawInfo.commandID = (uint32_t)meshDrawCommands.size();

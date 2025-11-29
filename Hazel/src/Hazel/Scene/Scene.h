@@ -2,7 +2,7 @@
 
 #include "Hazel/Core/Timestep.h"
 #include "Hazel/Core/UUID.h"
-#include "Hazel/Renderer/old/EditorCamera.h"
+#include "Hazel/Scene/EditorCamera.h"
 #include "entt.hpp"
 
 class b2World;
@@ -83,23 +83,25 @@ namespace GameEngine {
 		RenderSettingData RenderSettingData;
 		AtmosphereParameter AtmosphereParameter;
 	};
-	class Scene : public RefCounted
+	class Scene
 	{
 	public:
 		Scene();
 		void PackupSceneInfo(EditorCamera& editorCamera);
 		~Scene();
 		void testButton() { LOG_INFO("Test");};
-		void UpdateAnimation(Timestep ts);
-		void OutputViewport();
 		void ShowDebugTexture();
 		void SetViewprotSize(float width, float height) { m_ViewportWidth = width; m_ViewportHeight = height; }
+		void LoadModel(const std::filesystem::path& path);
+		Entity GetSelectedEntity();
+		void SetSelectedEntity(Entity entity);
+
+
 	public:
-		void CollectRenderableEntities();
 		Entity CreateEntity(const std::string& name = std::string());
 		Entity CreateChildEntity(Entity parent, const std::string& name);
 		void SortEntities();
-		void DestroyEntity(Entity entity);
+		void DestroyEntity(Entity entity, bool destroyChilds = true);
 		Entity DuplicateEntity(Entity entity);
 		Entity FindEntityByName(std::string_view name);
 		Entity GetEntityByUUID(UUID uuid);
@@ -110,21 +112,15 @@ namespace GameEngine {
 			return m_Registry.view<Components...>();
 		}
 		entt::registry& GetRegistry() { return m_Registry; }
-		Entity BuildDynamicMeshEntity(Ref<MeshSource> mesh, Entity& root, const std::filesystem::path& path);
 		RenderSettingData& GetRenderSettingData() { return m_SceneInfo.RenderSettingData; }
 		SceneInfo& GetSceneInfo() { return m_SceneInfo; }
 		glm::mat4 GetWorldSpaceTransformMatrix(Entity entity);
-
+		bool HasDirLight();
+		glm::mat4 GetLocalTransformMatrix(Entity entity, const glm::mat4& worldMatrix);
 	private:
-		void BuildMeshBoneEntityIds(Entity entity, Entity rootEntity);
 		Entity TryGetDescendantEntityWithTag(Entity entity, const std::string& tag);
-		void BuildBoneEntityIds(Entity entity);
-		void BuildAnimationBoneEntityIds(Entity entity, Entity rootEntity);
-		void BuildMeshEntityHierarchy(Entity parent, Ref<MeshSource> mesh, const MeshNode& node);
-		std::vector<UUID> FindBoneEntityIds(Entity entity, Entity rootEntity, const Skeleton* skeleton);
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
-		std::vector<glm::mat4> GetModelSpaceBoneTransforms(const std::vector<UUID>& boneEntityIds, Ref<MeshSource> meshSource);
 
 	private:
 		entt::registry m_Registry;
@@ -135,7 +131,6 @@ namespace GameEngine {
 		friend class SceneSerializer;
 		friend class SceneRender;
 		SceneInfo m_SceneInfo;
-	public:
-		bool HasDirLight();
+		std::shared_ptr<Entity> m_SelectedEntity;
 	};
 }

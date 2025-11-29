@@ -84,56 +84,54 @@ namespace GameEngine
 	template<typename Type, size_t arraySize>
 	using ArrayBufferRef = std::shared_ptr<ArrayBuffer<Type, arraySize>>;
 
-	namespace V2 {
-		class VertexBuffer {
-		public:
-			VertexBuffer();
-			~VertexBuffer();
-			void SetPosition(const std::vector<glm::vec3>& position);
-			void SetNormal(const std::vector<glm::vec3>& normal);
-			void SetTangent(const std::vector<glm::vec4>& tangent);
-			void SetTexCoord(const std::vector<glm::vec2>& texCoord);
-			void SetColor(const std::vector<glm::vec3>& color);
-			void SetBoneIndex(const std::vector<glm::ivec4>& boneIndex);
-			void SetBoneWeight(const std::vector<glm::vec4>& boneWeight);
+	class VertexBuffer {
+	public:
+		VertexBuffer();
+		~VertexBuffer();
+		void SetPosition(const std::vector<glm::vec3>& position);
+		void SetNormal(const std::vector<glm::vec3>& normal);
+		void SetTangent(const std::vector<glm::vec4>& tangent);
+		void SetTexCoord(const std::vector<glm::vec2>& texCoord);
+		void SetColor(const std::vector<glm::vec3>& color);
+		void SetBoneIndex(const std::vector<glm::ivec4>& boneIndex);
+		void SetBoneWeight(const std::vector<glm::vec4>& boneWeight);
 
-			RHIBufferRef positionBuffer;
-			RHIBufferRef normalBuffer;
-			RHIBufferRef tangentBuffer;
-			RHIBufferRef texCoordBuffer;
-			RHIBufferRef colorBuffer;
-			RHIBufferRef boneIndexBuffer;
-			RHIBufferRef boneWeightBuffer;
-			V2::VertexInfo vertexInfo;
-			uint32_t vertexID = 0;
-			inline uint32_t VertexNum() { return vertexNum; }
+		RHIBufferRef positionBuffer;
+		RHIBufferRef normalBuffer;
+		RHIBufferRef tangentBuffer;
+		RHIBufferRef texCoordBuffer;
+		RHIBufferRef colorBuffer;
+		RHIBufferRef boneIndexBuffer;
+		RHIBufferRef boneWeightBuffer;
+		VertexInfo vertexInfo;
+		uint32_t vertexID = 0;
+		inline uint32_t VertexNum() { return vertexNum; }
 
-		private:
-			void SetBufferData(void* data, uint32_t size, RHIBufferRef& buffer, uint32_t& id, uint32_t slot);
-			uint32_t vertexNum = 0;
+	private:
+		void SetBufferData(void* data, uint32_t size, RHIBufferRef& buffer, uint32_t& id, uint32_t slot);
+		uint32_t vertexNum = 0;
 
-		};
-		class IndexBuffer
-		{
-		public:
-			IndexBuffer() {};
-			~IndexBuffer();
+	};
+	class IndexBuffer
+	{
+	public:
+		IndexBuffer() {};
+		~IndexBuffer();
 
-			void SetIndex(const std::vector<uint32_t>& index);
+		void SetIndex(const std::vector<uint32_t>& index);
 
-			RHIBufferRef buffer;
+		RHIBufferRef buffer;
 
-			uint32_t indexID = 0;
+		uint32_t indexID = 0;
 
-			inline uint32_t IndexNum() { return indexNum; }
-			inline uint32_t TriangleNum() { return indexNum / 3; }
+		inline uint32_t IndexNum() { return indexNum; }
+		inline uint32_t TriangleNum() { return indexNum / 3; }
 
-		private:
-			uint32_t indexNum = 0;
-		};
-	}
-	using VertexBufferRef = std::shared_ptr<V2::VertexBuffer>;
-	using IndexBufferRef = std::shared_ptr<V2::IndexBuffer>;
+	private:
+		uint32_t indexNum = 0;
+	};
+	using VertexBufferRef = std::shared_ptr<VertexBuffer>;
+	using IndexBufferRef = std::shared_ptr<IndexBuffer>;
 
 }
 

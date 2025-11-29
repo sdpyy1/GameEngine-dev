@@ -84,7 +84,7 @@ namespace GameEngine {
 
 	void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene, int index)
 	{
-        std::shared_ptr<V2::Mesh> submesh = std::make_shared<V2::Mesh>();
+        std::shared_ptr<Mesh> submesh = std::make_shared<Mesh>();
 
         // 顶点位置
         submesh->position = std::vector<glm::vec3>(mesh->mNumVertices);
@@ -178,7 +178,7 @@ namespace GameEngine {
 
             if (materials[index] == nullptr) // 首次创建；后续通过序列化创建时会绑定第一次创建的材质
             {
-                materials[index] = std::make_shared<V2::Material>();
+                materials[index] = std::make_shared<Material>();
                 std::shared_ptr<V2::Texture> diffuse = LoadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
                 std::shared_ptr<V2::Texture> normal = LoadMaterialTexture(aiMaterial, aiTextureType_NORMALS);
                 std::shared_ptr<V2::Texture> specular = LoadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
@@ -223,7 +223,7 @@ namespace GameEngine {
         LOG_TRACE("  - Index Count: {}", submeshes[index].mesh->index.size());
 
         // 上传到GPU
-        VertexBufferRef vertexBuffer = std::make_shared<V2::VertexBuffer>();
+        VertexBufferRef vertexBuffer = std::make_shared<VertexBuffer>();
         vertexBuffer->SetPosition(submesh->position);
         vertexBuffer->SetNormal(submesh->normal);
         vertexBuffer->SetTangent(submesh->tangent);
@@ -232,7 +232,7 @@ namespace GameEngine {
         vertexBuffer->SetBoneIndex(submesh->boneIndex);
         vertexBuffer->SetBoneWeight(submesh->boneWeight);
         submeshes[index].vertexBuffer = vertexBuffer;
-        const V2::VertexInfo& vi = vertexBuffer->vertexInfo;
+        const VertexInfo& vi = vertexBuffer->vertexInfo;
         LOG_TRACE("  - Vertex Buffer Info:");
         LOG_TRACE("    positionID:    {}", vi.positionID);
         LOG_TRACE("    normalID:      {}", vi.normalID);
@@ -241,12 +241,12 @@ namespace GameEngine {
         LOG_TRACE("    colorID:       {}", vi.colorID);
         LOG_TRACE("    boneIndexID:   {}", vi.boneIndexID);
         LOG_TRACE("    boneWeightID:  {}", vi.boneWeightID);
-        IndexBufferRef indexBuffer = std::make_shared<V2::IndexBuffer>();
+        IndexBufferRef indexBuffer = std::make_shared<IndexBuffer>();
         indexBuffer->SetIndex(submeshes[index].mesh->index);
         submeshes[index].indexBuffer = indexBuffer;
         LOG_TRACE("    IndexBufferID: {}", indexBuffer->indexID);
 	}
-    void Model::ExtractBoneWeights(V2::Mesh* submesh, aiMesh* mesh, const aiScene* scene)
+    void Model::ExtractBoneWeights(Mesh* submesh, aiMesh* mesh, const aiScene* scene)
     {
         LOG_TRACE("Find Bone Info. Extracting bone weights...");
         findBone = true;
@@ -281,7 +281,7 @@ namespace GameEngine {
             // 不是在当前Submesh上
             if (!find)
             {
-                V2::BoneInfo newBoneInfo;
+                BoneInfo newBoneInfo;
                 newBoneInfo.index = (int)submesh->bone.size();
                 newBoneInfo.name = boneName;
                 for (int i = 0; i < 4; i++)
@@ -349,7 +349,6 @@ namespace GameEngine {
         {
             aiString str;
             mat->GetTexture(type, i, &str);
-
             std::string texturePath = str.C_Str();
 
             auto iter = textureMap.find(texturePath);   // 先从缓存中找
