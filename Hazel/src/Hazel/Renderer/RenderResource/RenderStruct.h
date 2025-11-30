@@ -10,11 +10,14 @@
 namespace GameEngine {
     struct DirLightInfo
     {
+        glm::vec3 position;
+        float _padding1;
+
         glm::vec3 direction;
         float intensity;
 
         glm::vec3 radiance;
-        float _padding;
+        float _padding2;
 
         glm::mat4 view[CSM_LEVEL_COUNT];
         glm::mat4 projection[CSM_LEVEL_COUNT];
@@ -43,7 +46,7 @@ namespace GameEngine {
         float intensity;
         float range;
         float falloff;
-
+        float _padding1[2];
         glm::mat4 view;
         glm::mat4 projection;
         glm::mat4 viewProj;
@@ -88,7 +91,8 @@ namespace GameEngine {
         uint32_t vertexID;
         uint32_t indexID;
     }MeshInfo;
-
+    
+    // TODO:gpu剔除赶紧搞起来~
     typedef struct IndirectSetting
     {
         uint32_t processSize = 0;               // 本轮需要处理的全部batch/cluster/cluster group数目
@@ -163,5 +167,67 @@ namespace GameEngine {
 
     } MaterialInfo;
 
-      
+
+    typedef struct GizmoBoxInfo
+    {
+        glm::vec3 center;
+        float _padding0;
+        glm::vec3 extent;
+        float _padding1;
+        glm::vec4 color;
+    } GizmoBoxInfo;
+
+    typedef struct GizmoSphereInfo
+    {
+        glm::vec3 center;
+        float radious;
+        glm::vec4 color;
+
+    } GizmoSphereInfo;
+
+    typedef struct GizmoLineInfo
+    {
+        glm::vec3 from;
+        float _padding0;
+        glm::vec3 to;
+        float _padding1;
+        glm::vec4 color;
+    } GizmoLineInfo;
+
+    struct GizmoBillboardInfo
+    {
+        glm::vec3 center;
+        uint32_t textureID;
+        glm::vec2 extent;
+        glm::vec2 _padding;
+        glm::vec4 color;
+    };
+
+# define MAX_GIZMO_PRIMITIVE_COUNT 20
+    struct GizmoDrawData {
+
+        RHIIndexedIndirectCommand command[4];  // 用于给GPU传递间接渲染指令
+
+        GizmoBoxInfo boxes[MAX_GIZMO_PRIMITIVE_COUNT];
+        GizmoSphereInfo spheres[MAX_GIZMO_PRIMITIVE_COUNT];
+        GizmoLineInfo lines[MAX_GIZMO_PRIMITIVE_COUNT];
+        GizmoBillboardInfo worldBillboards[MAX_GIZMO_PRIMITIVE_COUNT];
+
+    };
+
+    struct IconTextureInfo
+    {
+        uint32_t dirLightID;
+        uint32_t pointLightID;
+        uint32_t spotLightID;
+        uint32_t _padding;
+    };
+
+
+    struct GlobalSettingInfo
+    { 
+
+        IconTextureInfo iconTextures;
+
+    };
 }

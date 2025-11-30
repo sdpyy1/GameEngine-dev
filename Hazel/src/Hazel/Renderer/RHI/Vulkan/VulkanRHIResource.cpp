@@ -959,7 +959,7 @@ namespace GameEngine
             LOG_ERROR("Failed to allocate descriptor set!");
         }
 
-        printRawHandle();
+        // printRawHandle();
 	}
 
 	VulkanRHIDescriptorSet::VulkanRHIDescriptorSet(VkDescriptorSet aSet)
@@ -1084,7 +1084,7 @@ namespace GameEngine
 
 
         // 光栅固定管线状态
-       // VkPipelineVertexInputStateCreateInfo vertexInputInfo = GetInputStateCreateInfo(info.vertexInputState);
+        VkPipelineVertexInputStateCreateInfo vertexInputInfo = GetInputStateCreateInfo(info.vertexInputState);
         VkPipelineInputAssemblyStateCreateInfo inputAssembly = GetPipelineInputAssemblyStateCreateInfo(info.primitiveType);
         VkPipelineViewportStateCreateInfo viewportState = GetPipelineViewportStateCreateInfo();
         VkPipelineRasterizationStateCreateInfo rasterizer = GetPipelineRasterizationStateCreateInfo(info.rasterizerState);
@@ -1093,7 +1093,7 @@ namespace GameEngine
         VkPipelineDepthStencilStateCreateInfo depthStencil = GetPipelineDepthStencilStateCreateInfo(info.depthStencilState);
         VkPipelineDynamicStateCreateInfo dynamicState = GetPipelineDynamicStateCreateInfo();
 
-        //GetDynamicInputStateCreateInfo(info.vertexInputState);
+        GetDynamicInputStateCreateInfo(info.vertexInputState);
 
 
         VkGraphicsPipelineCreateInfo pipelineInfo = {};

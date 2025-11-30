@@ -2,7 +2,9 @@
 
 #include "AssetManagerPanel.h"
 #include "Hazel/Scene/Components.h"
-
+#include "Hazel/Core/Application.h"
+#include "Hazel/Scene/Scene.h"
+#include "Hazel/Scene/SceneManager.h"
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
@@ -20,13 +22,13 @@ namespace GameEngine {
 		m_EntityIcon.LoadIconData("Assets/Icon/Entity.png",false);
 		m_DirLightIcon.LoadIconData("Assets/Icon/Sun.png", false);
 		m_SpotLightIcon.LoadIconData("Assets/Icon/Spotlight.png", false);
+		m_PointLightIcon.LoadIconData("Assets/Icon/pointLight.png", false);
 		m_SkyLightIcon.LoadIconData("Assets/Icon/img.png", false);
 	}
 
 	void AssetManagerPanel::SetContext(std::shared_ptr<Scene>& context)
 	{
 		m_Context = context;
-		m_SelectionContext = {};
 	}
 
 	void AssetManagerPanel::OnImGuiRender()
@@ -48,7 +50,7 @@ namespace GameEngine {
 				});
 
 			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
-				m_SelectionContext = {};
+				Application::GetSceneManager()->GetActiveScene()->SetSelectedEntity(Entity());
 
 			if (ImGui::BeginPopupContextWindow("SceneManagerContext", 1, false))
 			{
@@ -58,6 +60,8 @@ namespace GameEngine {
 					m_Context->CreateEntity("Directional Light").AddComponent<DirectionalLightComponent>();
 				if (ImGui::MenuItem("Create Spot Light"))
 					m_Context->CreateEntity("Spot Light").AddComponent<SpotLightComponent>();
+                if (ImGui::MenuItem("Create Point Light"))
+					m_Context->CreateEntity("Point Light").AddComponent<PointLightComponent>();
 				if (ImGui::MenuItem("Create Sky Light"))
 					m_Context->CreateEntity("Sky Light").AddComponent<SkyComponent>(); // TODO: add component
 				ImGui::EndPopup();
@@ -67,13 +71,13 @@ namespace GameEngine {
 
 		// Properties panel
 		ImGui::Begin("Properties");
-		if (m_SelectionContext)
-			DrawComponents(m_SelectionContext);
+		if (Application::GetSceneManager()->GetActiveScene()->GetSelectedEntity())
+			DrawComponents(Application::GetSceneManager()->GetActiveScene()->GetSelectedEntity());
 		ImGui::End();
 	}
 	void AssetManagerPanel::SetSelectedEntity(Entity entity)
 	{
-		m_SelectionContext = entity;
+		Application::GetSceneManager()->GetActiveScene()->SetSelectedEntity(entity);
 	}
 	void AssetManagerPanel::DrawEntityNode(Entity entity)
 	{
@@ -82,7 +86,7 @@ namespace GameEngine {
 		bool hasChildren = !relationship.Children.empty();
 
 		// 调整标志位：增加NoTreePushOnOpen，避免自动推送节点
-		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) |
+		ImGuiTreeNodeFlags flags = ((Application::GetSceneManager()->GetActiveScene()->GetSelectedEntity() == entity) ? ImGuiTreeNodeFlags_Selected : 0) |
 			ImGuiTreeNodeFlags_OpenOnArrow |
 			ImGuiTreeNodeFlags_SpanAvailWidth |
 			ImGuiTreeNodeFlags_AllowItemOverlap |
@@ -109,16 +113,16 @@ namespace GameEngine {
 			icon = m_SpotLightIcon;
 		if (entity.HasComponent<SkyComponent>())
 			icon = m_SkyLightIcon;
+        if (entity.HasComponent<PointLightComponent>())
+			icon = m_PointLightIcon;
 		ImGui::Image(icon.textureID->RawHandle(), { iconSize, iconSize });
 
 
 		ImGui::SameLine(0.0f, iconSpacing);
 
-		// 调整Selectable标志位：不跨列，避免覆盖箭头
-		if (ImGui::Selectable(tag.c_str(), m_SelectionContext == entity, ImGuiSelectableFlags_None))
-			m_SelectionContext = entity;
+		if (ImGui::Selectable(tag.c_str(), Application::GetSceneManager()->GetActiveScene()->GetSelectedEntity() == entity, ImGuiSelectableFlags_None))
+			Application::GetSceneManager()->GetActiveScene()->SetSelectedEntity(entity);
 
-		// 右键菜单（保持不变）
 		bool entityDeleted = false;
 		if (ImGui::BeginPopupContextItem(("EntityPopup_" + std::to_string((uint64_t)(uint32_t)entity)).c_str()))
 		{
@@ -127,10 +131,9 @@ namespace GameEngine {
 			ImGui::EndPopup();
 		}
 
-		// 递归绘制子实体（手动处理TreePush/TreePop，因为前面用了NoTreePushOnOpen）
 		if (opened)
 		{
-			ImGui::TreePush((void*)(uint64_t)(uint32_t)entity);  // 手动推送
+			ImGui::TreePush((void*)(uint64_t)(uint32_t)entity);
 			for (const UUID& childId : relationship.Children)
 			{
 				Entity child = m_Context->GetEntityByUUID(childId);
@@ -140,12 +143,11 @@ namespace GameEngine {
 			ImGui::TreePop();
 		}
 
-		// 删除实体（保持不变）
 		if (entityDeleted)
 		{
 			m_Context->DestroyEntity(entity);
-			if (m_SelectionContext == entity)
-				m_SelectionContext = {};
+			if (Application::GetSceneManager()->GetActiveScene()->GetSelectedEntity() == entity)
+				Application::GetSceneManager()->GetActiveScene()->SetSelectedEntity({});
 		}
 
 		ImGui::PopID();
@@ -367,11 +369,11 @@ namespace GameEngine {
 	template<typename T>
 	void AssetManagerPanel::DisplayAddComponentEntry(const std::string& entryName)
 	{
-		if (!m_SelectionContext.HasComponent<T>())
+		if (!Application::GetSceneManager()->GetActiveScene()->GetSelectedEntity().HasComponent<T>())
 		{
 			if (ImGui::MenuItem(entryName.c_str()))
 			{
-				m_SelectionContext.AddComponent<T>();
+				Application::GetSceneManager()->GetActiveScene()->GetSelectedEntity().AddComponent<T>();
 				ImGui::CloseCurrentPopup();
 			}
 		}

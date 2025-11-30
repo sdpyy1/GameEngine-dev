@@ -6,11 +6,11 @@ namespace GameEngine {
 		TextureRef icon;
 		RHIDescriptorSetRef textureID;
 		void LoadIconData(const std::string& path,bool isYFlip = true) {
-			V2::TextureSpec spec;
+			TextureSpec spec;
 			spec.path = path;
 			spec.yFlip = isYFlip;
 			spec.srgb = false;  // 目前看图标都不是SRGB空间的
-			icon = std::make_shared<V2::Texture>(spec);
+			icon = std::make_shared<Texture>(spec);
 			textureID = icon->GetImGuiID();
 		}
 	};

@@ -302,7 +302,6 @@ namespace GameEngine {
 			}
 			else {
 				Application::GetSceneManager()->GetActiveScene()->SetSelectedEntity({});
-
 			}
 		}
 

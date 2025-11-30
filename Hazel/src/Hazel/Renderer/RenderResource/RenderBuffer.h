@@ -9,7 +9,6 @@ namespace GameEngine
 	template<typename Type>   // 直接指明Buffer要存储的数据类型
 	class RenderBuffer
 	{
-
 	public:
 		RenderBuffer(ResourceType type = RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_UNIFORM_BUFFER, MemoryUsage usage = MEMORY_USAGE_CPU_TO_GPU) {
 			m_Size = sizeof(Type);

@@ -179,9 +179,9 @@ namespace GameEngine {
             if (materials[index] == nullptr) // 首次创建；后续通过序列化创建时会绑定第一次创建的材质
             {
                 materials[index] = std::make_shared<Material>();
-                std::shared_ptr<V2::Texture> diffuse = LoadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
-                std::shared_ptr<V2::Texture> normal = LoadMaterialTexture(aiMaterial, aiTextureType_NORMALS);
-                std::shared_ptr<V2::Texture> specular = LoadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
+                std::shared_ptr<Texture> diffuse = LoadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
+                std::shared_ptr<Texture> normal = LoadMaterialTexture(aiMaterial, aiTextureType_NORMALS);
+                std::shared_ptr<Texture> specular = LoadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
                 //std::shared_ptr<Texture> unknownTexture = LoadMaterialTexture(aiMaterial, aiTextureType_UNKNOWN);
 
                 materials[index]->SetDiffuse(diffuse);
@@ -343,7 +343,7 @@ namespace GameEngine {
     }
 
 
-    std::shared_ptr<V2::Texture> Model::LoadMaterialTexture(aiMaterial* mat, aiTextureType type)
+    std::shared_ptr<Texture> Model::LoadMaterialTexture(aiMaterial* mat, aiTextureType type)
     {
         for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)   //可以有很多个，只用了一个
         {
@@ -355,13 +355,13 @@ namespace GameEngine {
             if (iter != textureMap.end())    return iter->second;
             else
             {
-                V2::TextureSpec textureSpec;
+                TextureSpec textureSpec;
                 textureSpec.yFlip = true;
                 std::filesystem::path fs_path(path);
                 fs_path = fs_path.parent_path();
                 std::filesystem::path new_texture_path = fs_path / texturePath;
                 textureSpec.path = new_texture_path.string();
-                std::shared_ptr<V2::Texture> texture = std::make_shared<V2::Texture>(textureSpec);
+                std::shared_ptr<Texture> texture = std::make_shared<Texture>(textureSpec);
                 LOG_TRACE("Load Texture: {0}  Bindless ID:{1}", textureSpec.path, texture->GetbindlessID());
                 textureMap[texturePath] = texture;
                 return texture;

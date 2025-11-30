@@ -9,6 +9,7 @@
 #define MAX_POINT_LIGHT_SIZE 16
 #define MAX_SPOT_LIGHT_SIZE 16
 #define CSM_LEVEL_COUNT 4
+#define MAX_GIZMO_PRIMITIVE_COUNT 20            //gizmo可以绘制的最大图元数目
 
 
 struct BoundingSphere
@@ -19,6 +20,8 @@ struct BoundingSphere
 
 struct DirLightInfo
 {
+    vec3 position;
+    float _padding1;
     vec3 direction;
     float intensity;
 
@@ -52,6 +55,7 @@ struct SpotLightInfo
     float intensity;
     float range;
     float falloff;
+    float _padding1[2];
 
     mat4 view;
     mat4 projection;
@@ -91,6 +95,40 @@ struct RHIIndirectCommand
     uint firstVertex;
     uint firstInstance;
 };
+struct GizmoBoxInfo 
+{
+    vec3 center;
+    float _padding0;
+    vec3 extent;
+    float _padding1;
+    vec4 color;
+};
+
+struct GizmoSphereInfo 
+{
+    vec3 center;
+    float radious;
+    vec4 color;
+};
+
+struct GizmoLineInfo 
+{
+    vec3 from;
+    float _padding0;
+    vec3 to;
+    float _padding1;
+    vec4 color;
+};
+
+struct GizmoBillboardInfo 
+{
+    vec3 center;
+    uint textureID;
+    vec2 extent;
+    vec2 _padding;
+    vec4 color;
+};
+
 struct MeshInfo 
 {
     mat4 model;
@@ -156,6 +194,29 @@ struct Camera{
 	vec3 CameraPosition;
     float padding;
 };
+
+
+
+struct IconTextureInfo
+{
+    uint dirLightID;
+    uint pointLightID;
+    uint spotLightID;
+    uint _padding;
+};
+
+
+struct GlobalSettingInfo
+{ 
+
+    IconTextureInfo iconTextures;
+
+};
+
+
+
+
+
 // 全局资源绑定点
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION 0 
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL 1
@@ -183,13 +244,18 @@ struct Camera{
 #define GLORBAL_RESOURCE_BINDING_MATERIALINFO 19
 #define GLORBAL_RESOURCE_BINDING_VERTEXINFO 20
 #define GLORBAL_RESOURCE_BINDING_LIGHTINFO 21
+#define GLORBAL_RESOURCE_BINDING_GIZMO 22
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO) readonly buffer LightInfoBuffer {
 
     LightInfo data;
 
 } u_LightInfo;
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_SETTING) readonly buffer globalSettingBuffer {
 
+    GlobalSettingInfo data;
+
+} GLOBAL_SETTING;
 layout(set = 0,binding = GLORBAL_RESOURCE_BINDING_CAMERA) readonly buffer CameraDataUniform{
 
     Camera data;
@@ -215,7 +281,15 @@ layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_VERTEXINFO) readonly buffer v
 
 } m_VertexInfo;
 
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_GIZMO) buffer gizmoDrawData 
+{ 
+    RHIIndexedIndirectCommand command[4];
+    GizmoBoxInfo boxes[MAX_GIZMO_PRIMITIVE_COUNT];
+    GizmoSphereInfo spheres[MAX_GIZMO_PRIMITIVE_COUNT];
+    GizmoLineInfo lines[MAX_GIZMO_PRIMITIVE_COUNT];
+    GizmoBillboardInfo worldBillboards[MAX_GIZMO_PRIMITIVE_COUNT];
 
+} GIZMO_DRAW_DATA;
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION) readonly buffer positions { 
 

@@ -14,6 +14,7 @@ namespace GameEngine
         APP_DYNAMICRHI->InitImGui(APP_GLFWWINDOW);
         m_PanelManager = std::make_shared<PanelManager>();
         APP_RENDERSYSTEM->SetPanelManager(m_PanelManager);  // 因为要传递事件给他
+
     }
     void ImGuiPass::Build(RDGBuilder& builder)
 	{
@@ -40,7 +41,7 @@ namespace GameEngine
                         Extent2D windowExtent = { w, h };
                         RHICommandListRef command = context.command;
         
-                        viewportID[APP_FRAMEINDEX] = V2::Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+                        viewportID[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
 
                         ImGui_ImplVulkan_NewFrame();
                         ImGui_ImplGlfw_NewFrame();

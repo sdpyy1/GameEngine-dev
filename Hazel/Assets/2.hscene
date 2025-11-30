@@ -1,62 +1,58 @@
 Scene: Untitled
 Entities:
-  - Entity: 3352267729794105175
+  - Entity: 925406168176308841
+    TagComponent:
+      Tag: Point Light
+    Parent: 0
+    Children:
+      []
+    PointLightComponent:
+      Intensity: 1
+      Radiance: [1, 1, 1]
+      Radius: 1
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5504004272576880821
     TagComponent:
       Tag: assets\Model\helmet\DamagedHelmet.gltf
     Parent: 0
     Children:
       - Handle: 17284182160588925902
       - Handle: 8932949847917029108
+      - Handle: 4931715043248785976
+      - Handle: 3697365346775377416
+      - Handle: 17373922907475634407
+      - Handle: 16222289516167933956
     TransformComponent:
-      Translation: [0, 2.11073565, 0]
+      Translation: [0, 3.32757092, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     ModelComponent:
       MeshSourcePath: assets\Model\helmet\DamagedHelmet.gltf
       Visible: true
-  - Entity: 8932949847917029108
+  - Entity: 6026508473406465345
     TagComponent:
       Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 3352267729794105175
+    Parent: 3848983085120957262
     Children:
       []
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 9980482105149865643
+  - Entity: 8906428389006762850
     TagComponent:
-      Tag: Spot Light
-    Parent: 0
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 6353270704464954339
     Children:
       []
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    SpotLightComponent:
-      Direction: [0, -1, 0]
-      Intensity: 1
-      Radiance: [1, 1, 1]
-      Position: [0, 0, 0]
-  - Entity: 14155917776762302107
-    TagComponent:
-      Tag: Directional Light
-    Parent: 0
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    DirectionalLightComponent:
-      Intensity: 1
-      Radiance: [1, 1, 1]
-      CastShadows: true
-      SoftShadows: true
-      LightSize: 0.5
-      ShadowAmount: 1
-  - Entity: 14686418789282310267
+  - Entity: 9036342305607251036
     TagComponent:
       Tag: mesh_helmet_LP_13930damagedHelmet
     Parent: 11465060197000209399
@@ -66,16 +62,78 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 18425823307345658819
+  - Entity: 9705304307879495681
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 3352267729794105175
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13869581226782081861
     TagComponent:
       Tag: Sky Light
     Parent: 0
     Children:
       []
     TransformComponent:
-      Translation: [0.0581958294, 0.634575367, 0.261737347]
+      Translation: [3.02581167, 1.01515913, -1.75298715]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     SkyComponent:
       DynamicSky: false
       selectedIBL: 3
+  - Entity: 14358277874746210247
+    TagComponent:
+      Tag: Spot Light
+    Parent: 0
+    Children:
+      []
+    TransformComponent:
+      Translation: [2.65274763, 2.71179819, -3.54304504]
+      Rotation: [1.43637443, 0, 0]
+      Scale: [1, 0.999999821, 0.999999821]
+    SpotLightComponent:
+      Direction: [0, -1, 0]
+      Intensity: 1
+      Radiance: [1, 1, 1]
+      Position: [0, 0, 0]
+  - Entity: 16222289516167933956
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 5504004272576880821
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16888796078105479313
+    TagComponent:
+      Tag: Directional Light
+    Parent: 0
+    Children:
+      []
+    TransformComponent:
+      Translation: [3.99168396, 1.5421623, 0]
+      Rotation: [0, 0, 0.774455786]
+      Scale: [0.999999881, 0.999999881, 1]
+    DirectionalLightComponent:
+      Intensity: 1
+      Radiance: [1, 1, 1]
+      CastShadows: true
+      SoftShadows: true
+      LightSize: 0.5
+      ShadowAmount: 1
+  - Entity: 18218570782029613144
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 15063204212595500144
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]

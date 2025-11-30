@@ -6,7 +6,7 @@
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RDG/RDGPool.h"
-namespace GameEngine::V2
+namespace GameEngine
 {
 	Texture::Texture(TextureSpec& spec) : m_Spec(spec)
 	{
@@ -143,11 +143,13 @@ namespace GameEngine::V2
 
 		APP_DYNAMICRHI->GetImmediateCommandList()->Flush();
 
-		// bindless
-		BindlessResourceInfo bindlessResourceInfo;
-        bindlessResourceInfo.textureView = m_Spec.textureView;
-        bindlessResourceInfo.resourceType = RESOURCE_TYPE_TEXTURE;
-		m_Spec.bindlessId = RENDER_RESOURCEMANAGER->AllocateBindlessID(bindlessResourceInfo, TextureTypeToBindlessSlot(m_Spec.type));		
+		if (m_Spec.bindless) {
+			// bindless
+			BindlessResourceInfo bindlessResourceInfo;
+			bindlessResourceInfo.textureView = m_Spec.textureView;
+			bindlessResourceInfo.resourceType = RESOURCE_TYPE_TEXTURE;
+			m_Spec.bindlessId = RENDER_RESOURCEMANAGER->AllocateBindlessID(bindlessResourceInfo, TextureTypeToBindlessSlot(m_Spec.type));
+		}
 	}
 
 	RHIDescriptorSetRef Texture::GetImGuiID()

@@ -965,7 +965,7 @@ namespace GameEngine {
 
 		RHIRootSignatureRef				rootSignature;
 
-		// VertexInputStateInfo            vertexInputState = {};   // TODO：因为并没使用这个字段，会自动创建，会导致info的Hash计算错误，缓存错误
+		VertexInputStateInfo            vertexInputState = {};   // TODO：因为并没使用这个字段，会自动创建，会导致info的Hash计算错误，缓存错误
 		PrimitiveType					primitiveType = PRIMITIVE_TYPE_TRIANGLE_LIST;
 		RHIRasterizerStateInfo			rasterizerState = {};
 		RHIBlendStateInfo				blendState = {};

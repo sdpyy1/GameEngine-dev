@@ -47,13 +47,14 @@ namespace GameEngine
             environmentMipFilterCompPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
 		}
 
-		V2::TextureSpec spec;
+		
+		TextureSpec spec;
 		spec.path = APP_HDR_PATH + "6.hdr";
-		HDRTexture = std::make_shared<V2::Texture>(spec);
+		HDRTexture = std::make_shared<Texture>(spec);
 
 		spec.path = APP_TEXTURE_PATH + "BRDF_LUT.png";
 		spec.srgb = false;
-		Lut = std::make_shared<V2::Texture>(spec);
+		Lut = std::make_shared<Texture>(spec);
 
 
 		{

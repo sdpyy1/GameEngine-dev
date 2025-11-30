@@ -32,6 +32,7 @@ namespace GameEngine {
 
 	void GridPass::Build(RDGBuilder& builder)
 	{
+
 		auto [w, h] = APP_WINDOWSIZE;
 		RDGTextureHandle viewPort = builder.GetTexture("ViewPort");
 		RDGTextureHandle outDepth = builder.GetTexture("Depth");

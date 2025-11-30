@@ -12,9 +12,13 @@ namespace GameEngine {
 	{
 		for (auto& alloctor : m_BindlessIDAlloctor) alloctor = IndexAllocator(MAX_BINDLESS_RESOURCE_SIZE);
 		InitMultiFrameGlobalResources();
-
 		InitPerFrameGlobalResources();
+
+		LoadGizmoIcon();
+
+
 	}
+	
 
 	void RenderResourceManager::InitPerFrameGlobalResources()
 	{
@@ -48,6 +52,7 @@ namespace GameEngine {
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_SETTING, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_LIGHTINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_GIZMO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 
 
 		m_GlobalResourcePreFrameRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
@@ -65,8 +70,16 @@ namespace GameEngine {
 				resource.descriptorSet->UpdateDescriptor(cameraUpdateInfo);
 			}
 			
-			// Setting
-
+			
+			{
+				// Setting
+                RHIDescriptorUpdateInfo settingUpdateInfo = {};
+                settingUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+                settingUpdateInfo.buffer = m_MultiFrameGlobalResources.globalSettingInfoBuffer.GetRHIBuffer();
+                settingUpdateInfo.index = 0;
+                settingUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_SETTING;
+                resource.descriptorSet->UpdateDescriptor(settingUpdateInfo);
+			}
 
 			{
 				// meshInfo
@@ -127,6 +140,15 @@ namespace GameEngine {
                 lightUpdateInfo.index = 0;
                 lightUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO;
                 resource.descriptorSet->UpdateDescriptor(lightUpdateInfo);
+			}
+			{
+				// gizmo
+                RHIDescriptorUpdateInfo gizmoUpdateInfo = {};
+                gizmoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+                gizmoUpdateInfo.buffer = resource.gizmoBuffer.GetRHIBuffer();
+                gizmoUpdateInfo.index = 0;
+                gizmoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_GIZMO;
+                resource.descriptorSet->UpdateDescriptor(gizmoUpdateInfo);
 			}
 		}
 		
@@ -237,6 +259,46 @@ namespace GameEngine {
 				m_MultiFrameGlobalResources.samplerDescriptorSet->UpdateDescriptor(updateInfo);
 			}
 		}
+	}
+
+	void RenderResourceManager::SetGizmoDataCommand(void* data, int size)
+	{
+		m_PerFrameGlobalResources[APP_FRAMEINDEX].gizmoBuffer.SetData(
+			data,
+			size * sizeof(RHIIndexedIndirectCommand),
+			0);
+	}
+
+	RHIBufferRef RenderResourceManager::GetGizmoDataBuffer()
+	{
+		return m_PerFrameGlobalResources[APP_FRAMEINDEX].gizmoBuffer.GetRHIBuffer();
+	}
+
+
+
+	uint32_t RenderResourceManager::LoadIconFromFile(std::string filePath) {
+		TextureSpec spec;
+		spec.srgb = false;
+		spec.bindless = false; // 因为一些初始化流程原因，在执行内部无法直接申请Bindless,所以在下边手动申请
+		spec.path = filePath;
+		TextureRef icon = std::make_shared<Texture>(spec);
+		BindlessResourceInfo bindlessResourceInfo;
+		bindlessResourceInfo.textureView = icon->GetRHITextureView();
+		bindlessResourceInfo.resourceType = RESOURCE_TYPE_TEXTURE;
+		spec.bindlessId = AllocateBindlessID(bindlessResourceInfo, BINDLESS_SLOT_TEXTURE_2D);
+		return spec.bindlessId;
+	}
+
+	void RenderResourceManager::LoadGizmoIcon()
+	{
+		uint32_t pointlightIcon = LoadIconFromFile(APP_ICON_PATH + "pointLight.png");
+		uint32_t SpotlightIcon = LoadIconFromFile(APP_ICON_PATH + "Spotlight.png");
+		uint32_t directionlightIcon = LoadIconFromFile(APP_ICON_PATH + "sun.png");
+
+		m_GlobalSettingInfo.iconTextures.pointLightID = pointlightIcon;
+		m_GlobalSettingInfo.iconTextures.spotLightID = SpotlightIcon;
+		m_GlobalSettingInfo.iconTextures.dirLightID = directionlightIcon;
+		SetGlobalSettingInfo();
 	}
 
 }

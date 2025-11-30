@@ -68,6 +68,8 @@ namespace GameEngine {
         MeshRef GetSubMesh(uint32_t index) { return submeshes[index].mesh; }
         std::vector<MaterialRef>& GetMaterials() { return materials; }
         std::string GetPath() { return path; }
+        VertexBufferRef GetVertexBuffer(int index){return submeshes[index].vertexBuffer;}
+        IndexBufferRef GetIndexBuffer(int index){return submeshes[index].indexBuffer;}
     private:
         std::string path;
         ModelProcessSetting processSetting;
@@ -81,7 +83,7 @@ namespace GameEngine {
         void ProcessNode(aiNode* node, const aiScene* scene, std::vector<aiMesh*>& processMeshes);
         void ProcessMesh(aiMesh* mesh, const aiScene* scene, int index);
         void ExtractBoneWeights(Mesh* submesh, aiMesh* mesh, const aiScene* scene);
-        std::shared_ptr<V2::Texture> LoadMaterialTexture(aiMaterial* mat, aiTextureType type);
+        std::shared_ptr<Texture> LoadMaterialTexture(aiMaterial* mat, aiTextureType type);
         bool findBone = false;
     };
 

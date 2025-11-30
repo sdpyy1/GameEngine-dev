@@ -17,6 +17,7 @@
 #include <Hazel/Renderer/RenderPass/PostProcessPass.h>
 #include <Hazel/Renderer/RenderPass/LightPass.h>
 #include <Hazel/Renderer/RenderPass/PreDepthPass.h>
+#include <Hazel/Renderer/RenderPass/GizmoPass.h>
 
 namespace GameEngine {
 	RenderSystem::RenderSystem()
@@ -73,6 +74,7 @@ namespace GameEngine {
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
 		passes[PREDEPTH_PASS] = meshPasses[MESH_PASS_PREDEPTH_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();
+		passes[GIZMO_PASS] = std::make_shared<GizmoPass>();
 		passes[SKY_PASS] = std::make_shared<SkyPass>();
 		passes[LIGHT_PASS] = std::make_shared<LightPass>();
         passes[BLOOM_PASS] = std::make_shared<BloomPass>();

@@ -16,7 +16,8 @@ namespace GameEngine {
 #define APP_SHADER_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/Shader/spv/")
 #define APP_HDR_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/HDR/")
 #define APP_TEXTURE_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/Texture/")
-
+#define APP_ICON_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/Icon/")
+#define APP_MODEL_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/Model/")
 
 
 

@@ -61,6 +61,8 @@ namespace GameEngine {
 #define GLORBAL_RESOURCE_BINDING_MATERIALINFO 19
 #define GLORBAL_RESOURCE_BINDING_VERTEXINFO 20
 #define GLORBAL_RESOURCE_BINDING_LIGHTINFO 21
+#define GLORBAL_RESOURCE_BINDING_GIZMO 22
+
 
     // 每帧都需要更新的资源，每个飞行帧一份，防止冲突
     struct PreFrameGlobalResources
@@ -68,6 +70,8 @@ namespace GameEngine {
         RHIDescriptorSetRef descriptorSet;
         RenderBuffer<CameraData> cameraDataBuffer;
         RenderBuffer<LightInfo> lightInfoBuffer;
+
+        RenderBuffer<GizmoDrawData> gizmoBuffer = RenderBuffer<GizmoDrawData>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
     };
     
 
@@ -79,7 +83,7 @@ namespace GameEngine {
         std::vector<SamplerRef> samplers;
 
 
-
+        RenderBuffer<GlobalSettingInfo> globalSettingInfoBuffer;
 
 
         // 各种InfoBuffer，存储每个资源在Bindless 中的索引
@@ -121,6 +125,10 @@ namespace GameEngine {
             uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot);
             void ReleaseBindlessID(uint32_t id, BindlessSlot slot);
 
+            // Global Setting
+            void SetGlobalSettingInfo(const GlobalSettingInfo& globalSettingInfo) {m_MultiFrameGlobalResources.globalSettingInfoBuffer.SetData(globalSettingInfo);};
+            void SetGlobalSettingInfo() {m_MultiFrameGlobalResources.globalSettingInfoBuffer.SetData(m_GlobalSettingInfo);};
+
             // 材质Info
             uint32_t AllocateMaterialID() { return m_MultiFrameGlobalResources.materialBuffer.Allocate(); }
             void ReleaseMaterialID(uint32_t id) { m_MultiFrameGlobalResources.materialBuffer.Release(id); }
@@ -143,10 +151,12 @@ namespace GameEngine {
             void RenderResourceManager::UpdateCameraInfo();
             RenderBuffer<CameraData>& GetCameraDataBuffer() { return m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer; }
 
-
-
-
-
+            // Gizmo
+            void SetGizmoDataCommand(void* data, int size);
+            RHIBufferRef GetGizmoDataBuffer();
+    private:
+        uint32_t LoadIconFromFile(std::string filePath);
+        void LoadGizmoIcon();
 	private:
         // 每个飞行帧一份
         std::array<PreFrameGlobalResources, FRAMES_IN_FLIGHT> m_PerFrameGlobalResources; 
@@ -159,9 +169,13 @@ namespace GameEngine {
 		std::array<IndexAllocator, BINDLESS_SLOT_MAX_ENUM> m_BindlessIDAlloctor;
         RHIRootSignatureRef m_GlobalResourcePreFrameRootSignature; 
 
+        // 一些资源，用于方便设置，并copy到buffer（其实可以直接定义在RenderBuffer内部）
+        GlobalSettingInfo m_GlobalSettingInfo;
+
 
 
         SceneInfo m_SceneInfoFromScene;
+
     };
 }
 

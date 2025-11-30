@@ -25,6 +25,7 @@ namespace GameEngine {
 				lightInfo.dirLights.direction = glm::normalize(transformComp.GetDirection());
 				lightInfo.dirLights.radiance = dirLightComp.Radiance;
 				lightInfo.dirLights.intensity = dirLightComp.Intensity;
+                lightInfo.dirLights.position = transformComp.Translation;
 				// CSM
 				CascadeData cascades[CSM_LEVEL_COUNT];
 				CalculateCascades(cascades, APP_SCENE_CAMERA, lightInfo.dirLights.direction);

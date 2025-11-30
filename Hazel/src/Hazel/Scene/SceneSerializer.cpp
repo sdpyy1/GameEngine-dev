@@ -198,6 +198,15 @@ namespace GameEngine {
 			}
 			out << YAML::EndSeq;
 		}
+		if (entity.HasComponent<PointLightComponent>()) {
+            out << YAML::Key << "PointLightComponent";
+            out << YAML::BeginMap;
+            out << YAML::Key << "Intensity" << YAML::Value << entity.GetComponent<PointLightComponent>().Intensity;
+            out << YAML::Key << "Radiance" << YAML::Value << entity.GetComponent<PointLightComponent>().Radiance;
+            out << YAML::Key << "Radius" << YAML::Value << entity.GetComponent<PointLightComponent>().Radius;
+			out << YAML::EndMap;
+
+		}
 		if (entity.HasComponent<TransformComponent>())
 		{
 			out << YAML::Key << "TransformComponent";
@@ -390,6 +399,12 @@ namespace GameEngine {
                     deserializedEntity.AddComponent<SkyComponent>();
                     deserializedEntity.GetComponent<SkyComponent>().DynamicSky = skyComponent["DynamicSky"].as<bool>(false);
                     deserializedEntity.GetComponent<SkyComponent>().selectedIBL = skyComponent["selectedIBL"].as<uint32_t>(0);
+				}
+				if (auto pointLightComponent = entity["PointLightComponent"]; pointLightComponent) {
+                    deserializedEntity.AddComponent<PointLightComponent>();
+                    deserializedEntity.GetComponent<PointLightComponent>().Intensity = pointLightComponent["Intensity"].as<float>(1.0f);
+                    deserializedEntity.GetComponent<PointLightComponent>().Radiance = pointLightComponent["Radiance"].as<glm::vec3>(glm::vec3(1.0f));
+                    deserializedEntity.GetComponent<PointLightComponent>().Radius = pointLightComponent["Radius"].as<float>(1.0f);
 				}
 			}
 		}

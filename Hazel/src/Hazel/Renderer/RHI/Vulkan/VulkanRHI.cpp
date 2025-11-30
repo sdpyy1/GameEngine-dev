@@ -257,6 +257,7 @@ namespace GameEngine
         deviceFeatures.drawIndirectFirstInstance = VK_TRUE; //允许间接绘制的firstInstance不为0
         deviceFeatures.shaderInt64 = VK_TRUE;               //64位支持
         deviceFeatures.shaderFloat64 = VK_TRUE;
+        deviceFeatures.vertexPipelineStoresAndAtomics = VK_TRUE;
         createInfo.pEnabledFeatures = &deviceFeatures;
 
         VkPhysicalDeviceVulkan12Features vulkan12Features{};                                        //1.2版本的其他支持

@@ -15,6 +15,7 @@ namespace GameEngine {
 		SKY_PASS,
 		BLOOM_PASS,
 		POST_PROCESS_PASS,
+		GIZMO_PASS,
 		GRID_PASS,
 		IMGUI_PASS,
 		PRESENT_PASS,

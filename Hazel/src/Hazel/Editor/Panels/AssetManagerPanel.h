@@ -9,11 +9,9 @@ namespace GameEngine {
 		AssetManagerPanel();
 
 		void SetContext(std::shared_ptr<Scene>& context);
-		void ClearState() { m_SelectionContext = {}; m_RenameEntity = {}; }
+		void ClearState() { m_RenameEntity = {}; }
 		void OnImGuiRender() override;
-
 		void SetSelectedEntity(Entity entity);
-		Entity GetSelectedEntity() { return m_SelectionContext; }
 	private:
 		void DrawEntityNode(Entity entity);
 
@@ -24,13 +22,13 @@ namespace GameEngine {
 
 	private:
 		std::shared_ptr<Scene> m_Context;
-		Entity m_SelectionContext;
 		Entity m_RenameEntity;
 		char m_RenameBuffer[256]{};
 		IconData m_EntityIcon;
 		IconData m_DirLightIcon;
 		IconData m_SpotLightIcon;
 		IconData m_SkyLightIcon;
+		IconData m_PointLightIcon;
 		template<typename T, typename UIFunction>
 		void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction);
 		template<typename T>
