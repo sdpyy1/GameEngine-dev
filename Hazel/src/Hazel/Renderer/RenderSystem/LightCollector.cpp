@@ -26,6 +26,7 @@ namespace GameEngine {
 				lightInfo.dirLights.radiance = dirLightComp.Radiance;
 				lightInfo.dirLights.intensity = dirLightComp.Intensity;
                 lightInfo.dirLights.position = transformComp.Translation;
+                lightInfo.dirLights.showDirection = dirLightComp.showDirection?1:0;
 				// CSM
 				CascadeData cascades[CSM_LEVEL_COUNT];
 				CalculateCascades(cascades, APP_SCENE_CAMERA, lightInfo.dirLights.direction);
@@ -54,6 +55,7 @@ namespace GameEngine {
 				lightInfo.pointLights[pointLightCount].radiance = pointLightComp.Radiance;
 				lightInfo.pointLights[pointLightCount].intensity = pointLightComp.Intensity;
 				lightInfo.pointLights[pointLightCount].sphere = { lightInfo.pointLights[pointLightCount].position,pointLightComp.Radius };
+                lightInfo.pointLights[pointLightCount].showRadius = pointLightComp.showRadius? 1:0;
 				// TODO£º6¸öÃæµÄview proj
 				// lightInfo.pointLights[pointLightCount].view = 
 				pointLightCount++;
@@ -71,6 +73,8 @@ namespace GameEngine {
 				lightInfo.spotLights[spotLightCount].position = curEntity.GetComponent<TransformComponent>().Translation;
 				lightInfo.spotLights[spotLightCount].radiance = spotLightComp.Radiance;
 				lightInfo.spotLights[spotLightCount].intensity = spotLightComp.Intensity;
+				lightInfo.spotLights[spotLightCount].showRange = spotLightComp.showRadius?1:0;
+				lightInfo.spotLights[spotLightCount].range = spotLightComp.range;
 				spotLightCount++;
 			}
 			lightInfo.spotLightCount = spotLightCount;

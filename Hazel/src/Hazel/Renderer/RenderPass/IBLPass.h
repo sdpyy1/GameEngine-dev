@@ -3,7 +3,15 @@
 #include "Hazel/Renderer/RenderResource/Shader.h"
 #include <Hazel/Renderer/RenderResource/Texture.h>
 namespace GameEngine {
-
+	struct EnvironmentMap
+	{
+		bool hasPreCompute = false;
+		TextureRef HDRTexture;
+		TextureRef LutTexture;
+		RHITextureRef IrradianceMap;
+		RHITextureRef PreFilterMap;
+		RHITextureRef CubeMap;
+	};
 	class IBLPass: public RenderPassNew
 	{
 	public:
@@ -16,18 +24,14 @@ namespace GameEngine {
 
 		virtual std::string GetName() { return "IBLPass"; }
 		virtual PassType GetType() override final { return GRID_PASS; }
-
+		void LoadEnv(std::string iblPath,std::string customKey = "");
 	private:
-		TextureRef HDRTexture;
 		TextureRef Lut;
 
 		bool hasPreCompute = false;   // 控制只有第一帧计算
 
-		RHITextureRef IrradianceMap;
-		RHITextureRef PreFilterMap;
-		RHITextureRef CubeMap;
 
-
+		std::unordered_map<std::string, EnvironmentMap> environmentMaps;
 
 
 		ShaderRef equirectangularConversionCompShader;

@@ -8,6 +8,7 @@
 #include "Hazel/Scene/Scene.h"
 #include "Sampler.h"
 #include "Hazel/Renderer/RenderPass/Meshpass.h"
+#include "Hazel/Scene/SceneManager.h"
 #define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
 namespace GameEngine {
     // 使用Bindless的资源
@@ -154,6 +155,10 @@ namespace GameEngine {
             // Gizmo
             void SetGizmoDataCommand(void* data, int size);
             RHIBufferRef GetGizmoDataBuffer();
+
+    public:
+        CPURenderSetting GetCPURenderSetting() { return cpuRenderSetting; };
+
     private:
         uint32_t LoadIconFromFile(std::string filePath);
         void LoadGizmoIcon();
@@ -162,9 +167,6 @@ namespace GameEngine {
         std::array<PreFrameGlobalResources, FRAMES_IN_FLIGHT> m_PerFrameGlobalResources; 
         // 全局一份
         MultiFrameGlobalResources m_MultiFrameGlobalResources; 
-
-
-
         // 每种类型的bindless资源，都有一个ID分配器，处理资源映射到Bindless的ID的获取和释放
 		std::array<IndexAllocator, BINDLESS_SLOT_MAX_ENUM> m_BindlessIDAlloctor;
         RHIRootSignatureRef m_GlobalResourcePreFrameRootSignature; 
@@ -173,9 +175,7 @@ namespace GameEngine {
         GlobalSettingInfo m_GlobalSettingInfo;
 
 
-
-        SceneInfo m_SceneInfoFromScene;
-
+        CPURenderSetting cpuRenderSetting; // 从场景传递过来的一些渲染参数，只在CPU使用
     };
 }
 

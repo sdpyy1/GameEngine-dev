@@ -13,10 +13,50 @@ namespace GameEngine
 		m_EditorCamera = std::make_shared<EditorCamera>(45.0f, Application::Get().GetWindowManager()->GetWindowSize().first, Application::Get().GetWindowManager()->GetWindowSize().second, 0.1f, 1000.0f);
 	}
 
+	void SceneManager::PackSettingForRender() {
+
+		// 灯光设置
+		auto dirLight = m_CurrentScene->GetFirstEntityWith<DirectionalLightComponent>();
+		Entity dirLightEntity = Entity{ dirLight ,m_CurrentScene };
+		if (dirLightEntity) {
+			auto& component = dirLightEntity.GetComponent<DirectionalLightComponent>();
+			m_SceneInfo.globalSettingInfos.shadowSetting.ShadowType = component.shadowType;
+			m_SceneInfo.globalSettingInfos.shadowSetting.DebugCSM = component.showCSM;
+		}
+
+		// 后处理设置
+		auto postprocess = m_CurrentScene->GetFirstEntityWith<PostProcessingComponent>();
+		Entity postProcessEntity = Entity{ postprocess ,m_CurrentScene };
+        if (postProcessEntity) {
+			auto& component = postProcessEntity.GetComponent<PostProcessingComponent>();
+			m_SceneInfo.globalSettingInfos.postprocess.bloomScale = component.bloomScale;
+		}
+
+		// 天空设置
+		auto skyLight = m_CurrentScene->GetFirstEntityWith<SkyComponent>();
+		Entity skyLightEntity = Entity{ skyLight ,m_CurrentScene };
+        if (skyLightEntity) {
+			auto& component = skyLightEntity.GetComponent<SkyComponent>();
+			m_SceneInfo.globalSettingInfos.skySetting.isDynamicSky = component.DynamicSky?1:0;
+			m_SceneInfo.cpuRenderSetting.IBLPath = component.iblPath[component.selectedIBL].string();
+		}
+	}
+
+
+	void SceneManager::PackInfo(){
+		m_SceneInfo = {};
+		m_SceneInfo.camera = *m_EditorCamera;
+		PackSettingForRender();
+	};
+
+
+
+
+
 	void SceneManager::Tick(Timestep ts)
 	{
 		m_EditorCamera->OnUpdate(ts);
-		m_CurrentScene->PackupSceneInfo(*m_EditorCamera); // 打包场景数据
+		PackInfo();
 	}
 
 	bool SceneManager::OpenScene()

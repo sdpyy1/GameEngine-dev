@@ -17,7 +17,7 @@ namespace GameEngine {
         float intensity;
 
         glm::vec3 radiance;
-        float _padding2;
+        uint32_t showDirection;
 
         glm::mat4 view[CSM_LEVEL_COUNT];
         glm::mat4 projection[CSM_LEVEL_COUNT];
@@ -35,7 +35,7 @@ namespace GameEngine {
         glm::mat4 viewProj[6];
 
         glm::vec3 radiance;
-        float _padding;
+        uint32_t showRadius;
 
         BoundingSphere sphere;
     };
@@ -52,7 +52,7 @@ namespace GameEngine {
         glm::mat4 viewProj;
 
         glm::vec3 radiance;
-        float _padding;
+        uint32_t showRange;
 
         BoundingSphere sphere;
     };
@@ -222,12 +222,32 @@ namespace GameEngine {
         uint32_t spotLightID;
         uint32_t _padding;
     };
-
-
+    enum ShadowType: uint32_t
+    {
+        SHADOW_TYPE_NONE = 0,
+        SHADOW_TYPE_HARD,
+        SHADOW_TYPE_PCF,
+        SHADOW_TYPE_PCSS,
+        SHADOW_TYPE_VSM
+    };
+    struct ShadowSetting
+    {
+        uint32_t DebugCSM;
+        uint32_t ShadowType = SHADOW_TYPE_PCSS;
+    };
+    struct PostprocessInfo {
+        float bloomScale;
+        float pading[3];
+    };
+    struct SkySetting {
+        uint32_t isDynamicSky;
+        float pading[3];
+    };
     struct GlobalSettingInfo
     { 
-
+        SkySetting skySetting;
+        PostprocessInfo postprocess;
+        ShadowSetting shadowSetting;
         IconTextureInfo iconTextures;
-
     };
 }

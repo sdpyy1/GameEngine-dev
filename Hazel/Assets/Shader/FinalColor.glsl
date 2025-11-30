@@ -1,4 +1,5 @@
 #version 450 core
+#include "common/common.glsl"
 #ifdef VERTEX_SHADER
 vec2 NDC[3] = vec2[](
     vec2(-1.0, -1.0), 
@@ -39,13 +40,12 @@ vec3 GammaCorrect(vec3 color, float gamma)
 layout(location = 0) in vec2 in_texCoord;
 layout(location = 0) out vec4 out_color;
 
-layout(set = 0, binding = 0) uniform texture2D lightRes;
-layout(set = 0, binding = 1) uniform texture2D BloomRes;
+layout(set = 2, binding = 0) uniform texture2D lightRes;
+layout(set = 2, binding = 1) uniform texture2D BloomRes;
 layout(set = 1, binding = 0) uniform sampler SAMPLER[];
 void main(){
 
-	float BloomScale = 0.2;  // TODO: Setting
-
+	float BloomScale = FetchPostprocessSetting().bloomScale;   // 没有后处理组件时，BloomScale为0
 
 	vec3 finalColor = texture(sampler2D(lightRes,SAMPLER[0]), in_texCoord).rgb;
 	finalColor += texture(sampler2D(BloomRes,SAMPLER[0]), in_texCoord).rgb * BloomScale;

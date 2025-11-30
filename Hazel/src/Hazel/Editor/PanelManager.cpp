@@ -233,21 +233,21 @@ namespace GameEngine {
 		if (ImGui::CollapsingHeader("Shadow", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			// 阴影类型选择
-			ImGui::RadioButton("Hard Shadow", &Application::GetSceneManager()->GetActiveScene()
+			/*ImGui::RadioButton("Hard Shadow", &Application::GetSceneManager()->GetActiveScene()
 				->GetRenderSettingData().ShadowType, 0);
 			ImGui::RadioButton("PCF", &Application::GetSceneManager()->GetActiveScene()
 				->GetRenderSettingData().ShadowType, 1);
 			ImGui::RadioButton("PCSS", &Application::GetSceneManager()->GetActiveScene()
 				->GetRenderSettingData().ShadowType, 2);
 			int& deBugCSM = Application::GetSceneManager()->GetActiveScene()
-				->GetRenderSettingData().deBugCSM;
+				->GetRenderSettingData().deBugCSM;*/
 
-			// 临时 bool
-			bool tmp = (deBugCSM != 0);
-			if (ImGui::Checkbox("Show Cascade", &tmp))
-			{
-				deBugCSM = tmp ? 1 : 0; // 用户点击后更新 int
-			}
+			//// 临时 bool
+			//bool tmp = (deBugCSM != 0);
+			//if (ImGui::Checkbox("Show Cascade", &tmp))
+			//{
+			//	deBugCSM = tmp ? 1 : 0; // 用户点击后更新 int
+			//}
 		}
 
 		ImGui::End();
@@ -301,7 +301,7 @@ namespace GameEngine {
 				}
 			}
 			else {
-				Application::GetSceneManager()->GetActiveScene()->SetSelectedEntity({});
+				// Application::GetSceneManager()->GetActiveScene()->SetSelectedEntity({});
 			}
 		}
 

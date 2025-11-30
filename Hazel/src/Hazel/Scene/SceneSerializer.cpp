@@ -204,6 +204,7 @@ namespace GameEngine {
             out << YAML::Key << "Intensity" << YAML::Value << entity.GetComponent<PointLightComponent>().Intensity;
             out << YAML::Key << "Radiance" << YAML::Value << entity.GetComponent<PointLightComponent>().Radiance;
             out << YAML::Key << "Radius" << YAML::Value << entity.GetComponent<PointLightComponent>().Radius;
+            out << YAML::Key << "ShowRadius" << YAML::Value << entity.GetComponent<PointLightComponent>().showRadius;
 			out << YAML::EndMap;
 
 		}
@@ -227,28 +228,16 @@ namespace GameEngine {
 			out << YAML::Key << "Visible" << YAML::Value << smc.Visible;
 			out << YAML::EndMap; // ModelComponent
 		}
-		if (entity.HasComponent<DynamicModelComponent>())
-		{
-			out << YAML::Key << "DynamicModelComponent";
-			out << YAML::BeginMap; // ModelComponent
 
-			auto& smc = entity.GetComponent<DynamicModelComponent>();
-			out << YAML::Key << "MeshSourcePath" << YAML::Value << smc.path.string();
-			out << YAML::EndMap; // ModelComponent
-		}
 		if (entity.HasComponent<DirectionalLightComponent>())
 		{
 			out << YAML::Key << "DirectionalLightComponent";
-			out << YAML::BeginMap; // DirectionalLightComponent
-
-			auto& directionalLightComponent = entity.GetComponent<DirectionalLightComponent>();
-			out << YAML::Key << "Intensity" << YAML::Value << directionalLightComponent.Intensity;
-			out << YAML::Key << "Radiance" << YAML::Value << directionalLightComponent.Radiance;
-			out << YAML::Key << "CastShadows" << YAML::Value << directionalLightComponent.CastShadows;
-			out << YAML::Key << "SoftShadows" << YAML::Value << directionalLightComponent.SoftShadows;
-			out << YAML::Key << "LightSize" << YAML::Value << directionalLightComponent.LightSize;
-			out << YAML::Key << "ShadowAmount" << YAML::Value << directionalLightComponent.ShadowAmount;
-
+			out << YAML::BeginMap;
+            out << YAML::Key << "ShowCSM" << YAML::Value << entity.GetComponent<DirectionalLightComponent>().showCSM;
+            out << YAML::Key << "ShowDirection" << YAML::Value << entity.GetComponent<DirectionalLightComponent>().showDirection;
+            out << YAML::Key << "ShadowType" << YAML::Value << entity.GetComponent<DirectionalLightComponent>().shadowType;
+            out << YAML::Key << "Intensity" << YAML::Value << entity.GetComponent<DirectionalLightComponent>().Intensity;
+            out << YAML::Key << "Radiance" << YAML::Value << entity.GetComponent<DirectionalLightComponent>().Radiance;
 			out << YAML::EndMap; // DirectionalLightComponent
 		}
         if (entity.HasComponent<SpotLightComponent>())
@@ -256,10 +245,10 @@ namespace GameEngine {
 			out << YAML::Key << "SpotLightComponent";
 			out << YAML::BeginMap;
             auto& spotLightComponent = entity.GetComponent<SpotLightComponent>();
-            out << YAML::Key << "Direction" << YAML::Value << spotLightComponent.Direction;
             out << YAML::Key << "Intensity" << YAML::Value << spotLightComponent.Intensity;
             out << YAML::Key << "Radiance" << YAML::Value << spotLightComponent.Radiance;
-            out << YAML::Key << "Position" << YAML::Value << spotLightComponent.Position;
+            out << YAML::Key << "Range" << YAML::Value << spotLightComponent.range;
+            out << YAML::Key << "ShowRadius" << YAML::Value << spotLightComponent.showRadius;
             out << YAML::EndMap;
 		}
         if (entity.HasComponent<SkyComponent>())
@@ -269,6 +258,15 @@ namespace GameEngine {
             auto& skyComponent = entity.GetComponent<SkyComponent>();
             out << YAML::Key << "DynamicSky" << YAML::Value << skyComponent.DynamicSky;
             out << YAML::Key << "selectedIBL" << YAML::Value << skyComponent.selectedIBL;
+
+			out << YAML::EndMap;
+		}
+		if (entity.HasComponent<PostProcessingComponent>())
+		{
+			out << YAML::Key << "PostProcessingComponent";
+			out << YAML::BeginMap;
+			auto& postProcessingComponent = entity.GetComponent<PostProcessingComponent>();
+			out << YAML::Key << "BloomScale" << YAML::Value << postProcessingComponent.bloomScale;
 			out << YAML::EndMap;
 		}
 		out << YAML::EndMap; // Entity
@@ -363,6 +361,7 @@ namespace GameEngine {
 					model->OnLoadAsset();
 					auto& modelComponent = deserializedEntity.AddComponent<ModelComponent>(model->GetUUID(), staticMeshComponent["MeshSourcePath"].as<std::string>());
 
+					// 添加SubMesh的组件
 					int submeshIndex = 0;
 					for (auto& mesh : model->GetSubmeshes()) {
 						auto& subMeshEntity = m_Scene->CreateChildEntity(deserializedEntity,mesh.mesh->name);
@@ -374,25 +373,24 @@ namespace GameEngine {
 					com.ModelID = model->GetUUID();
 					com.Visible = staticMeshComponent["Visible"].as<bool>();
 				}
-				auto dynamicMeshComponent = entity["DynamicModelComponent"];
 				
 				if (auto directionalLightComponent = entity["DirectionalLightComponent"]; directionalLightComponent)
 				{
 					auto& component = deserializedEntity.AddComponent<DirectionalLightComponent>();
 					component.Intensity = directionalLightComponent["Intensity"].as<float>(1.0f);
 					component.Radiance = directionalLightComponent["Radiance"].as<glm::vec3>(glm::vec3(1.0f));
-					component.CastShadows = directionalLightComponent["CastShadows"].as<bool>(true);
-					component.SoftShadows = directionalLightComponent["SoftShadows"].as<bool>(true);
-					component.LightSize = directionalLightComponent["LightSize"].as<float>(0.5f);
-					component.ShadowAmount = directionalLightComponent["ShadowAmount"].as<float>(1.0f);
+                    component.shadowType = (ShadowType)directionalLightComponent["ShadowType"].as<uint32_t>(1);
+                    component.showCSM = directionalLightComponent["ShowCSM"].as<bool>(false);
+                    component.showDirection = directionalLightComponent["ShowDirection"].as<bool>(false);
+			
 				}
 				if (auto spotLightComponent = entity["SpotLightComponent"]; spotLightComponent)
 				{
                     deserializedEntity.AddComponent<SpotLightComponent>();
-                    deserializedEntity.GetComponent<SpotLightComponent>().Direction = spotLightComponent["Direction"].as<glm::vec3>(glm::vec3(0.0f, -1.0f, 0.0f));
                     deserializedEntity.GetComponent<SpotLightComponent>().Intensity = spotLightComponent["Intensity"].as<float>(1.0f);
                     deserializedEntity.GetComponent<SpotLightComponent>().Radiance = spotLightComponent["Radiance"].as<glm::vec3>(glm::vec3(1.0f));
-					deserializedEntity.GetComponent<SpotLightComponent>().Position = spotLightComponent["Position"].as<glm::vec3>(glm::vec3(0.0f));
+                    deserializedEntity.GetComponent<SpotLightComponent>().range = spotLightComponent["Range"].as<float>(1.0f);
+                    deserializedEntity.GetComponent<SpotLightComponent>().showRadius = spotLightComponent["ShowRadius"].as<bool>(false);
 				}
 				if (auto skyComponent = entity["SkyComponent"]; skyComponent)
 				{
@@ -405,6 +403,11 @@ namespace GameEngine {
                     deserializedEntity.GetComponent<PointLightComponent>().Intensity = pointLightComponent["Intensity"].as<float>(1.0f);
                     deserializedEntity.GetComponent<PointLightComponent>().Radiance = pointLightComponent["Radiance"].as<glm::vec3>(glm::vec3(1.0f));
                     deserializedEntity.GetComponent<PointLightComponent>().Radius = pointLightComponent["Radius"].as<float>(1.0f);
+                    deserializedEntity.GetComponent<PointLightComponent>().showRadius = pointLightComponent["ShowRadius"].as<bool>(false);
+				}
+				if (auto postprocessComponent = entity["PostProcessingComponent"]; postprocessComponent) {
+                    deserializedEntity.AddComponent<PostProcessingComponent>();
+                    deserializedEntity.GetComponent<PostProcessingComponent>().bloomScale = postprocessComponent["BloomScale"].as<float>(1.0);
 				}
 			}
 		}

@@ -8,7 +8,7 @@ namespace GameEngine {
 #define MAX_SHADER_IN_OUT_VARIABLES 8	//允许着色器最大的输入和输出变量数目
 #define MAX_RENDER_TARGETS 8			//允许同时绑定的最大RT数目
 #define MAX_DESCRIPTOR_SETS 8			//允许绑定的最大描述符集数目
-	
+#define MAX_TIMEQUERYPOOL_SIZE 10000
 #define RHI_COLOR_FROMAT FORMAT_R32G32B32A32_SFLOAT
 #define RHI_DEPTH_FROMAT FORMAT_D32_SFLOAT
 
@@ -959,11 +959,11 @@ namespace GameEngine {
 	} RHIDepthStencilStateInfo;
 	typedef struct RHIGraphicsPipelineInfo
 	{
-		RHIShaderRef					vertexShader;
-		RHIShaderRef					geometryShader;
-		RHIShaderRef	 				fragmentShader;
+		RHIShaderRef					vertexShader = nullptr;
+		RHIShaderRef					geometryShader = nullptr;
+		RHIShaderRef	 				fragmentShader = nullptr;
 
-		RHIRootSignatureRef				rootSignature;
+		RHIRootSignatureRef				rootSignature = nullptr;
 
 		VertexInputStateInfo            vertexInputState = {};   // TODO：因为并没使用这个字段，会自动创建，会导致info的Hash计算错误，缓存错误
 		PrimitiveType					primitiveType = PRIMITIVE_TYPE_TRIANGLE_LIST;
@@ -993,6 +993,7 @@ namespace GameEngine {
 		}
 
 	} RHIGraphicsPipelineInfo;
+	
 	enum AttachmentLoadOp : uint32_t
 	{
 		ATTACHMENT_LOAD_OP_LOAD = 0,

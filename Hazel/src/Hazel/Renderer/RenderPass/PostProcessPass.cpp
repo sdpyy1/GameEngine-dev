@@ -16,7 +16,10 @@ namespace GameEngine {
 			m_VertShader = std::make_shared<Shader>(APP_SHADER_PATH + "FinalColorVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
 			m_FragShader = std::make_shared<Shader>(APP_SHADER_PATH + "FinalColorFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
 			RHIRootSignatureInfo info = {};
-			info.AddEntryFromReflect(m_VertShader).AddEntryFromReflect(m_FragShader).AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo());
+			info.AddEntryFromReflect(m_VertShader)
+				.AddEntryFromReflect(m_FragShader)
+				.AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo())
+				.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());
 			m_RootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
 			RHIGraphicsPipelineInfo pipelineInfo = {};
 			pipelineInfo.rootSignature = m_RootSignature;
@@ -39,8 +42,8 @@ namespace GameEngine {
 		builder.CreateRenderPass("PostProcess")
 			.RootSignature(m_RootSignature)
 			.Color(0, viewport,ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE)
-			.Read(0, 0, 0, viewport)
-			.Read(0, 1, 0, bloomRes)
+			.Read(2, 0, 0, viewport)
+			.Read(2, 1, 0, bloomRes)
 			.Execute([&](RDGPassContext context) {
 				auto [w, h] = APP_WINDOWSIZE;
 				RHICommandListRef command = context.command;
@@ -48,8 +51,9 @@ namespace GameEngine {
 				command->SetViewport({ 0, 0 }, { w,h });
 				command->SetScissor({ 0, 0 }, { w,h });
 				command->SetDepthBias(0.0f, 0.0f, 0.0f);
-				command->BindDescriptorSet(Application::GetRenderSystem()->GetRenderResourceManager()->GetSamplerDescriptorSet(), 1);
-				command->BindDescriptorSet(context.descriptors[0], 0);
+				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetSamplerDescriptorSet(), 1);
+				command->BindDescriptorSet(context.descriptors[2], 2);
+				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
 				command->Draw(3);
 			})
 			.Finish();

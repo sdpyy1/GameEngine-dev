@@ -24,11 +24,144 @@ namespace GameEngine {
 		m_SpotLightIcon.LoadIconData("Assets/Icon/Spotlight.png", false);
 		m_PointLightIcon.LoadIconData("Assets/Icon/pointLight.png", false);
 		m_SkyLightIcon.LoadIconData("Assets/Icon/img.png", false);
+		m_PostprocesstIcon.LoadIconData("Assets/Icon/post.png", false);
 	}
 
 	void AssetManagerPanel::SetContext(std::shared_ptr<Scene>& context)
 	{
 		m_Context = context;
+	}
+
+	void AssetManagerPanel::DrawComponents(Entity entity)
+	{
+		if (entity.HasComponent<TagComponent>())
+		{
+			auto& tag = entity.GetComponent<TagComponent>().Tag;
+			char buffer[256];
+			memset(buffer, 0, sizeof(buffer));
+			strncpy_s(buffer, sizeof(buffer), tag.c_str(), sizeof(buffer));
+			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
+			{
+				tag = std::string(buffer);
+			}
+		}
+
+		ImGui::SameLine();
+		ImGui::PushItemWidth(-1);
+
+		// Add Component
+		if (ImGui::Button("Add Component"))
+			ImGui::OpenPopup("AddComponent");
+
+		if (ImGui::BeginPopup("AddComponent"))
+		{
+			DisplayAddComponentEntry<ModelComponent>("Model");
+			DisplayAddComponentEntry<SubmeshComponent>("Submesh");
+			DisplayAddComponentEntry<DirectionalLightComponent>("DirctionalLight");
+			DisplayAddComponentEntry<PostProcessingComponent>("PostProcessing");
+			DisplayAddComponentEntry<SpotLightComponent>("SpotLight");
+			ImGui::EndPopup();
+		}
+
+		ImGui::PopItemWidth();
+
+		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
+			{
+				DrawVec3Control("Translation", component.Translation);
+
+				glm::vec3 rotationEuler = component.GetRotationEuler();
+				glm::vec3 rotation = glm::degrees(rotationEuler);
+				DrawVec3Control("Rotation", rotation);
+				component.SetRotationEuler(glm::radians(rotation));
+
+				static bool lockScale = true;
+				ImGui::Checkbox("Lock Scale", &lockScale);
+				DrawVec3Control("Scale", component.Scale, 1.0f, lockScale);
+			});
+
+		DrawComponent<SubmeshComponent>("Submesh", entity, [](auto& component)
+			{
+				ImGui::Checkbox("Visible", &component.Visible);
+			});
+
+		DrawComponent<ModelComponent>("Model", entity, [](auto& component)
+			{
+				ImGui::Checkbox("Visible", &component.Visible);
+				ImGui::Checkbox("Cast Shadow", &component.castShadow);
+			});
+
+		DrawComponent<DirectionalLightComponent>("DirectionalLight", entity, [](auto& component)
+			{
+				ImGui::ColorEdit3("Radiance", &component.Radiance.x, ImGuiColorEditFlags_Float);
+				ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 100.0f, "%.2f");
+				const char* shadowTypeNames[] = {
+					"None",
+					"Hard Shadow",
+					"PCF",
+					"PCSS",
+					"VSM"
+				};
+				int currentShadowType = static_cast<int>(component.shadowType);
+				if (ImGui::Combo("Shadow Type", &currentShadowType, shadowTypeNames, IM_ARRAYSIZE(shadowTypeNames))) {
+					component.shadowType = static_cast<ShadowType>(currentShadowType);
+				}
+				ImGui::Checkbox("Show Direction", &component.showDirection);
+				ImGui::Checkbox("Show CSM", &component.showCSM);
+			});
+		DrawComponent<PointLightComponent>("PointLight", entity, [](auto& component)
+			{
+				ImGui::ColorEdit3("Radiance", &component.Radiance.x, ImGuiColorEditFlags_Float);
+				ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 3.0f, "%.2f");
+				ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f, 20.0f, "%.2f");
+				ImGui::Checkbox("Show Radius", &component.showRadius);
+			});
+		DrawComponent<SpotLightComponent>("Spot Light", entity, [](auto& component)
+			{
+				ImGui::ColorEdit3("Radiance", &component.Radiance.x, ImGuiColorEditFlags_Float);
+				ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 3.0f, "%.2f");
+				ImGui::DragFloat("Range", &component.range, 0.1f, 0.0f, 20.0f, "%.2f");
+
+				ImGui::Checkbox("Show Radius", &component.showRadius);
+			});
+		DrawComponent<PostProcessingComponent>("PostProcessing", entity, [](auto& component)
+			{
+				ImGui::SliderFloat("Bloom Scale", &component.bloomScale, 0.0f, 2.0f);
+			});
+
+
+		DrawComponent<SkyComponent>("Sky Light", entity, [](auto& component)
+			{
+				ImGui::Checkbox("DynamicSky", &component.DynamicSky);
+				if (component.selectedIBL > component.iblPath.size()) {
+					component.selectedIBL = -1;
+				}
+				if (!component.iblPath.empty())
+				{
+					std::vector<std::string> itemStrings;
+					std::vector<const char*> items;
+
+					for (auto& path : component.iblPath)
+					{
+						std::filesystem::path relative = std::filesystem::relative(path, "Assets");
+						itemStrings.push_back(relative.u8string());
+					}
+
+					for (auto& str : itemStrings)
+						items.push_back(str.c_str());
+
+					ImGui::Text("Select HDR:");
+					ImGui::Combo("##HDRCombo", &component.selectedIBL, items.data(), (int)items.size());
+				}
+				else
+				{
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "No HDR found in Assets!");
+					component.selectedIBL = -1;
+				}
+			});
+		DrawComponent<AnimationComponent>("Animation", entity, [](auto& component)
+			{
+
+			});
 	}
 
 	void AssetManagerPanel::OnImGuiRender()
@@ -49,8 +182,8 @@ namespace GameEngine {
 					}
 				});
 
-			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
-				Application::GetSceneManager()->GetActiveScene()->SetSelectedEntity(Entity());
+			/*if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+				Application::GetSceneManager()->GetActiveScene()->SetSelectedEntity(Entity());*/
 
 			if (ImGui::BeginPopupContextWindow("SceneManagerContext", 1, false))
 			{
@@ -63,7 +196,9 @@ namespace GameEngine {
                 if (ImGui::MenuItem("Create Point Light"))
 					m_Context->CreateEntity("Point Light").AddComponent<PointLightComponent>();
 				if (ImGui::MenuItem("Create Sky Light"))
-					m_Context->CreateEntity("Sky Light").AddComponent<SkyComponent>(); // TODO: add component
+					m_Context->CreateEntity("Sky Light").AddComponent<SkyComponent>();
+				if (ImGui::MenuItem("Create PostProcess"))
+                    m_Context->CreateEntity("PostProcess").AddComponent<PostProcessingComponent>();
 				ImGui::EndPopup();
 			}
 		}
@@ -105,7 +240,6 @@ namespace GameEngine {
 
 		ImGui::SameLine(0.0f, iconSpacing);
 
-		// 绘制图标（保持不变）
 		IconData icon = m_EntityIcon;
 		if (entity.HasComponent<DirectionalLightComponent>())
 			icon = m_DirLightIcon;
@@ -115,6 +249,8 @@ namespace GameEngine {
 			icon = m_SkyLightIcon;
         if (entity.HasComponent<PointLightComponent>())
 			icon = m_PointLightIcon;
+        if (entity.HasComponent<PostProcessingComponent>())
+			icon = m_PostprocesstIcon;
 		ImGui::Image(icon.textureID->RawHandle(), { iconSize, iconSize });
 
 
@@ -153,7 +289,7 @@ namespace GameEngine {
 		ImGui::PopID();
 	}
 
-	static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
+	static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f,bool lock = false, float columnWidth = 100.0f)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		auto boldFont = io.Fonts->Fonts[0];
@@ -186,6 +322,8 @@ namespace GameEngine {
 		ImGui::SameLine();
 
 		// Y
+		if (lock) ImGui::BeginDisabled();
+
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.8f, 0.3f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
@@ -217,6 +355,13 @@ namespace GameEngine {
 		ImGui::PopStyleVar();
 		ImGui::Columns(1);
 		ImGui::PopID();
+		if (lock) ImGui::EndDisabled(); // 结束禁用块
+
+		if (lock) {
+			values.y = values.x;
+			values.z = values.x;
+		}
+
 	}
 
 	template<typename T, typename UIFunction>
@@ -260,112 +405,6 @@ namespace GameEngine {
 		}
 	}
 
-	void AssetManagerPanel::DrawComponents(Entity entity)
-	{
-		// Tag
-		if (entity.HasComponent<TagComponent>())
-		{
-			auto& tag = entity.GetComponent<TagComponent>().Tag;
-			char buffer[256];
-			memset(buffer, 0, sizeof(buffer));
-			strncpy_s(buffer, sizeof(buffer), tag.c_str(), sizeof(buffer));
-			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
-			{
-				tag = std::string(buffer);
-			}
-		}
-
-		ImGui::SameLine();
-		ImGui::PushItemWidth(-1);
-
-		// Add Component
-		if (ImGui::Button("Add Component"))
-			ImGui::OpenPopup("AddComponent");
-
-		if (ImGui::BeginPopup("AddComponent"))
-		{
-			// TODO:这里添加新组件的添加按钮
-			DisplayAddComponentEntry<ModelComponent>("StaticModel");
-			DisplayAddComponentEntry<DynamicModelComponent>("DynamicModel");
-			DisplayAddComponentEntry<DirectionalLightComponent>("DirctionalLight");
-			ImGui::EndPopup();
-		}
-
-		ImGui::PopItemWidth();
-
-		// 这里描述组件渲染
-		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
-			{
-				DrawVec3Control("Translation", component.Translation);
-				glm::vec3 rotationEuler = component.GetRotationEuler();
-				glm::vec3 rotation = glm::degrees(rotationEuler);
-				DrawVec3Control("Rotation", rotation);
-				component.SetRotationEuler(glm::radians(rotation));
-				DrawVec3Control("Scale", component.Scale, 1.0f);
-			});
-		DrawComponent<SubmeshComponent>("SubmeshComponent", entity, [](auto& component)
-			{
-				ImGui::Checkbox("Visible", &component.Visible);
-				
-			});
-		DrawComponent<ModelComponent>("StaticModel", entity, [](auto& component)
-			{
-				ImGui::Checkbox("Visible", &component.Visible);
-			});
-		DrawComponent<DynamicModelComponent>("DynamicModel", entity, [](auto& component)
-			{
-				ImGui::Checkbox("Visible", &component.Visible);
-
-			});
-
-
-		DrawComponent<DirectionalLightComponent>("DirectionalLight", entity, [](auto& component)
-			{
-				ImGui::Text("DirectionalLight Add!");
-			});
-
-
-
-		DrawComponent<SpotLightComponent>("Spot Light", entity, [](auto& component)
-			{
-				ImGui::Text("SpotLight Add!");
-				return;
-			});
-		DrawComponent<SkyComponent>("Sky Light", entity, [](auto& component)
-			{
-				ImGui::Checkbox("DynamicSky", &component.DynamicSky);
-				if (component.selectedIBL > component.iblPath.size()) {
-					component.selectedIBL = -1;
-				}
-				ImGui::SliderFloat("Bloom Scale", &component.bloomScale, 0.0f, 3.0f);
-				if (!component.iblPath.empty())
-				{
-					std::vector<std::string> itemStrings;
-					std::vector<const char*> items;
-
-					for (auto& path : component.iblPath)
-					{
-						std::filesystem::path relative = std::filesystem::relative(path, "Assets");
-						itemStrings.push_back(relative.u8string());
-					}
-
-					for (auto& str : itemStrings)
-						items.push_back(str.c_str());
-
-					ImGui::Text("Select HDR:");
-					ImGui::Combo("##HDRCombo", &component.selectedIBL, items.data(), (int)items.size());
-				}
-				else
-				{
-					ImGui::TextColored(ImVec4(1, 0, 0, 1), "No HDR found in Assets!");
-					component.selectedIBL = -1;
-				}
-			});
-		DrawComponent<AnimationComponent>("Animation", entity, [](auto& component)
-			{
-				
-			});
-	}
 	template<typename T>
 	void AssetManagerPanel::DisplayAddComponentEntry(const std::string& entryName)
 	{

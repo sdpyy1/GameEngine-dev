@@ -9,7 +9,6 @@ namespace GameEngine
 {
 	void IBLPass::Init()
 	{
-		SetEnable(true);
 		{
 			equirectangularConversionCompShader = std::make_shared<Shader>(APP_SHADER_PATH + "EquirectangularToCubeMap.comp.spv", SHADER_FREQUENCY_COMPUTE);
 			RHIRootSignatureInfo rootSignatureInfo = {};
@@ -47,41 +46,25 @@ namespace GameEngine
             environmentMipFilterCompPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
 		}
 
-		
-		TextureSpec spec;
-		spec.path = APP_HDR_PATH + "6.hdr";
-		HDRTexture = std::make_shared<Texture>(spec);
-
-		spec.path = APP_TEXTURE_PATH + "BRDF_LUT.png";
-		spec.srgb = false;
-		Lut = std::make_shared<Texture>(spec);
-
-
-		{
-			RHITextureInfo rhiTextureInfo;
-			rhiTextureInfo.extent = { 1024, 1024, 1 };
-			rhiTextureInfo.format = FORMAT_R32G32B32A32_SFLOAT;
-			rhiTextureInfo.mipLevels = rhiTextureInfo.extent.MipSize();
-			rhiTextureInfo.arrayLayers = 6;
-			rhiTextureInfo.type = RESOURCE_TYPE_TEXTURE | RESOURCE_TYPE_RW_TEXTURE | RESOURCE_TYPE_TEXTURE_CUBE;
-			CubeMap = APP_DYNAMICRHI->CreateTexture(rhiTextureInfo);
-			PreFilterMap = APP_DYNAMICRHI->CreateTexture(rhiTextureInfo);
-		}
-
-		{
-			RHITextureInfo rhiTextureInfo;
-			rhiTextureInfo.extent = { 32, 32, 1 };
-            rhiTextureInfo.format = FORMAT_R32G32B32A32_SFLOAT;
-            rhiTextureInfo.mipLevels = 1;
-            rhiTextureInfo.arrayLayers = 6;
-            rhiTextureInfo.type = RESOURCE_TYPE_TEXTURE | RESOURCE_TYPE_RW_TEXTURE | RESOURCE_TYPE_TEXTURE_CUBE;
-
-			IrradianceMap = APP_DYNAMICRHI->CreateTexture(rhiTextureInfo);
-		}
+		// 默认的IBL
+		LoadEnv(APP_HDR_PATH + "black.jpg","Default");
 	}
+	
 
 	void IBLPass::Build(RDGBuilder& builder)
 	{
+		std::string iblPath = RENDER_RESOURCEMANAGER->GetCPURenderSetting().IBLPath;
+		if (iblPath.empty())
+		{
+			iblPath = "Default";
+		}
+		if (environmentMaps.find(iblPath) == environmentMaps.end())
+		{
+			LoadEnv(iblPath);
+		}
+
+		auto& [hasPreCompute ,HDRTexture, LutTexture, IrradianceMap, PreFilterMap, CubeMap] = environmentMaps[iblPath];
+		
 		if (IsEnabled()) {
 			auto [w, h] = APP_WINDOWSIZE;
 			if (!hasPreCompute) {
@@ -115,6 +98,7 @@ namespace GameEngine
 							command->Dispatch(1024 / 32, 1024 / 32, 6);
 						})
 					.Finish();
+
 				// 把prefilter的mip0拷贝到CubeMap，并生成mip，后续prefilter计算mip时会用到
 				builder.CreateCopyPass(GetName() + "/HDR->CubeMap")
 					.From(prefilterMap)
@@ -186,10 +170,44 @@ namespace GameEngine
 	}
 
 
+	void IBLPass::LoadEnv(std::string iblPath, std::string customKey) {
+		EnvironmentMap environmentMap;
+		TextureSpec spec;
+		spec.path = iblPath;
+		environmentMap.HDRTexture = std::make_shared<Texture>(spec);
 
+		spec.path = APP_TEXTURE_PATH + "BRDF_LUT.png"; // 这个直接用已经有的就行
+		spec.srgb = false;
+		environmentMap.LutTexture = std::make_shared<Texture>(spec);
 
+		{
+			RHITextureInfo rhiTextureInfo;
+			rhiTextureInfo.extent = { 1024, 1024, 1 };
+			rhiTextureInfo.format = FORMAT_R32G32B32A32_SFLOAT;
+			rhiTextureInfo.mipLevels = rhiTextureInfo.extent.MipSize();
+			rhiTextureInfo.arrayLayers = 6;
+			rhiTextureInfo.type = RESOURCE_TYPE_TEXTURE | RESOURCE_TYPE_RW_TEXTURE | RESOURCE_TYPE_TEXTURE_CUBE;
+			environmentMap.CubeMap = APP_DYNAMICRHI->CreateTexture(rhiTextureInfo);
+			environmentMap.PreFilterMap = APP_DYNAMICRHI->CreateTexture(rhiTextureInfo);
+		}
 
+		{
+			RHITextureInfo rhiTextureInfo;
+			rhiTextureInfo.extent = { 32, 32, 1 };
+			rhiTextureInfo.format = FORMAT_R32G32B32A32_SFLOAT;
+			rhiTextureInfo.mipLevels = 1;
+			rhiTextureInfo.arrayLayers = 6;
+			rhiTextureInfo.type = RESOURCE_TYPE_TEXTURE | RESOURCE_TYPE_RW_TEXTURE | RESOURCE_TYPE_TEXTURE_CUBE;
 
+			environmentMap.IrradianceMap = APP_DYNAMICRHI->CreateTexture(rhiTextureInfo);
+		}
+		if (customKey.empty()) {
+			environmentMaps[iblPath] = environmentMap;
+		}
+		else {
+			environmentMaps[customKey] = environmentMap;
+		}
+	}
 
 
 

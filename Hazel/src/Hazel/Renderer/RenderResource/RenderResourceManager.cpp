@@ -167,14 +167,21 @@ namespace GameEngine {
 	// 更新资源
 	void RenderResourceManager::Tick()
 	{
-		m_SceneInfoFromScene = APP_SCENEMANAGER->GetSceneInfo();
+		auto setting = APP_SCENEMANAGER->GetSceneInfo().globalSettingInfos;
+		setting.iconTextures.dirLightID = m_GlobalSettingInfo.iconTextures.dirLightID;
+        setting.iconTextures.pointLightID = m_GlobalSettingInfo.iconTextures.pointLightID;
+        setting.iconTextures.spotLightID = m_GlobalSettingInfo.iconTextures.spotLightID;
+		SetGlobalSettingInfo(setting);
+
+		cpuRenderSetting = APP_SCENEMANAGER->GetSceneInfo().cpuRenderSetting;
+
 		UpdateCameraInfo();
 	}
 
 	void RenderResourceManager::UpdateCameraInfo()
 	{
 		CameraData tmpdata;
-		EditorCamera& camera = m_SceneInfoFromScene.camera;
+		EditorCamera& camera = APP_SCENEMANAGER->GetSceneInfo().camera;
 		tmpdata.view = camera.GetViewMatrix();
 		tmpdata.proj = camera.GetProjectionMatrix();
 		//tmpdata.proj[1][1] *= -1;  // TODO：Y轴反转

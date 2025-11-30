@@ -14,70 +14,12 @@ namespace GameEngine {
 	Scene::Scene()
 	{
 	}
-	void Scene::ShowDebugTexture()
-	{
-		// UI::Image(Application::GetRendererManager()->GetTextureWhichNeedDebug(), ImGui::GetContentRegionAvail(), {0, 0}, {1, 1});
-	}
+
 	bool Scene::HasDirLight()
 	{
 		auto& views = GetAllEntitiesWith<DirectionalLightComponent>();
         return !views.empty();
 	}
-	// 打包一帧的场景数据
-	void Scene::PackupSceneInfo(EditorCamera& editorCamera) {
-		m_SceneInfo.camera = editorCamera;
-		auto& light = m_SceneInfo.SceneLightEnvironment;
-		light = LightEnvironment{};
-		// Directional Lights
-		{
-			auto lights = m_Registry.group<DirectionalLightComponent>(entt::get<TransformComponent>);
-			uint32_t directionalLightIndex = 0;
-			for (auto entity : lights)
-			{
-				auto [transformComponent, lightComponent] = lights.get<TransformComponent, DirectionalLightComponent>(entity);
-
-				glm::vec3 direction = glm::normalize(-transformComponent.Translation);
-
-				ASSERT(directionalLightIndex < LightEnvironment::MaxDirectionalLights);
-				light.DirectionalLights[directionalLightIndex++] =
-				{
-					direction,
-					lightComponent.Intensity,
-					lightComponent.Radiance,
-					lightComponent.ShadowAmount,	
-				};
-			}
-		}
-		// Spot Lights
-        {
-            auto lights = m_Registry.group<SpotLightComponent>(entt::get<TransformComponent>);
-            uint32_t spotLightIndex = 0;
-			light.SpotLights.resize(lights.size());
-            for (auto entity : lights)
-            {
-                auto [transformComponent, lightComponent] = lights.get<TransformComponent, SpotLightComponent>(entity);
-                glm::vec3 direction = glm::normalize(transformComponent.GetDirection());
-                light.SpotLights[spotLightIndex++] =
-                {
-					transformComponent.Translation,
-                    lightComponent.Intensity,
-					direction,
-                    lightComponent.Radiance,
-                };
-            }
-        }
-
-		auto skyLight = GetAllEntitiesWith<SkyComponent>();
-        if (!skyLight.empty()) {
-            auto& skyComponent = skyLight.get<SkyComponent>(skyLight[0]);
-			light.SkyLightSetting = {
-				skyComponent.DynamicSky,
-				skyComponent.iblPath[skyComponent.selectedIBL]
-			};
-			m_SceneInfo.RenderSettingData.bloomScale = skyComponent.bloomScale;
-        }
-	}
-
 
 	glm::mat4 Scene::GetWorldSpaceTransformMatrix(Entity entity)
 	{
@@ -335,6 +277,10 @@ namespace GameEngine {
 	}
 	template<>
 	void Scene::OnComponentAdded<PointLightComponent>(Entity entity, PointLightComponent& component)
+	{
+	}
+	template<>
+	void Scene::OnComponentAdded<PostProcessingComponent>(Entity entity, PostProcessingComponent& component)
 	{
 	}
 	template<>

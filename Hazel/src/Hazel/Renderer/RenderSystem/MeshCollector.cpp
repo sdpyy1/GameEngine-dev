@@ -17,7 +17,8 @@ namespace GameEngine
 		for (auto entity : allEntityOwnSubmesh)
 		{
 			auto meshComponent = allEntityOwnSubmesh.get<SubmeshComponent>(entity);
-			if (meshComponent.model == nullptr || !meshComponent.Visible) continue;
+			Entity parent = Entity(entity, scene);
+			if (meshComponent.model == nullptr || !parent.GetParent().GetComponent<ModelComponent>().Visible ||!meshComponent.Visible) continue;
 
 			Entity e = Entity(entity, scene.get());
 			glm::mat4 transform = scene->GetWorldSpaceTransformMatrix(e);

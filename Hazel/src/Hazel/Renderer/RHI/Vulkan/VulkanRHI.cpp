@@ -875,7 +875,7 @@ namespace GameEngine
         VkQueryPoolCreateInfo queryPoolInfo{};
         queryPoolInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
         queryPoolInfo.queryType = VK_QUERY_TYPE_TIMESTAMP;
-        queryPoolInfo.queryCount = 100; // 每个阶段需要 2 个查询（开始 + 结束）
+        queryPoolInfo.queryCount = MAX_TIMEQUERYPOOL_SIZE; // 每个阶段需要 2 个查询（开始 + 结束）
 
         vkCreateQueryPool(VULKAN_DEVICE, &queryPoolInfo, nullptr, &m_TimestampQueryPool);
     }
@@ -1426,7 +1426,7 @@ namespace GameEngine
     {
         m_TimestampQueryIndex = 0;
         m_FinishedLabels.clear();
-        vkCmdResetQueryPool(handle, m_TimestampQueryPool, 0, 100);
+        vkCmdResetQueryPool(handle, m_TimestampQueryPool, 0, MAX_TIMEQUERYPOOL_SIZE);
     }
 	std::vector<RHIGPUTimeInfo> VulkanRHICommandContext::GetGPUTime()
 	{

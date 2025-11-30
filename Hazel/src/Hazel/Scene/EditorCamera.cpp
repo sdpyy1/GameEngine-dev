@@ -26,7 +26,7 @@ namespace GameEngine {
 
 	void EditorCamera::Init()
 	{
-		constexpr glm::vec3 position = { -5, 5, 5 };
+		constexpr glm::vec3 position = { -10, 10, 10 };
 		m_Distance = glm::distance(position, m_FocalPoint);
 
 		m_Yaw = 3.0f * glm::pi<float>() / 4.0f;

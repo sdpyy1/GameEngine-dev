@@ -75,7 +75,6 @@ namespace GameEngine {
 		ModelRef model;
         MaterialRef material;
 		bool castShadow = true;
-
 		MeshInfo meshInfo;
 		uint32_t meshInfoID = 0;
 
@@ -249,14 +248,17 @@ namespace GameEngine {
 		}
 		friend class SceneSerializer;
 	};
+
+
+
+
 	struct DirectionalLightComponent
 	{
 		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
 		float Intensity = 1.0f;
-		bool CastShadows = true;
-		bool SoftShadows = true;
-		float LightSize = 0.5f; // For PCSS
-		float ShadowAmount = 1.0f; // 阴影程度
+		ShadowType shadowType = SHADOW_TYPE_PCSS;
+		bool showDirection = false;
+		bool showCSM = false;
 	};
 
 
@@ -265,24 +267,26 @@ namespace GameEngine {
 		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
 		float Intensity = 1.0f;
 		float Radius = 1.0f;
+		bool showRadius = false;
 	};
-
-
-
-
 
 	struct SpotLightComponent
 	{ 
         glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
         float Intensity = 1.0f;
-		glm::vec3 Direction = { 0.0f, -1.0f, 0.0f };
-		glm::vec3 Position = { 0.0f, 0.0f, 0.0f };
+		float range = 1.0f;
+		bool showRadius = false;
 	};
+
+	struct PostProcessingComponent
+	{
+		float bloomScale = 0.3f;
+	};
+
 	struct SkyComponent {
 		bool DynamicSky = false;
 		std::vector<std::filesystem::path> iblPath;
 		int selectedIBL = 0;
-		float bloomScale = 1.0f; // TODO:临时放在这里，等待整合设置流转架构
 	};
 
 	struct SpriteRendererComponent
@@ -399,6 +403,6 @@ namespace GameEngine {
 		ComponentGroup<ModelComponent,TransformComponent,PointLightComponent,
 			CircleRendererComponent, CameraComponent, ScriptComponent, SpotLightComponent,
 			NativeScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent, SkyComponent,
-			CircleCollider2DComponent, RelationshipComponent, DirectionalLightComponent, SubmeshComponent,DynamicModelComponent, AnimationComponent>;
+			CircleCollider2DComponent, RelationshipComponent, DirectionalLightComponent, SubmeshComponent,DynamicModelComponent, AnimationComponent, PostProcessingComponent>;
 
 }

@@ -26,7 +26,7 @@ struct DirLightInfo
     float intensity;
 
     vec3 radiance;
-    float _padding;
+    uint showDirection;
 
     mat4 view[CSM_LEVEL_COUNT];
     mat4 projection[CSM_LEVEL_COUNT];
@@ -44,7 +44,7 @@ struct PointLightInfo
     mat4 viewProj[6];
 
     vec3 radiance;
-    float _padding;
+    uint showRadius;
 
     BoundingSphere sphere; 
 };
@@ -62,7 +62,7 @@ struct SpotLightInfo
     mat4 viewProj;
 
     vec3 radiance;
-    float _padding;
+    uint showRange;
 
     BoundingSphere sphere;
 };
@@ -205,12 +205,25 @@ struct IconTextureInfo
     uint _padding;
 };
 
-
+struct ShadowSetting
+{
+    uint DebugCSM;
+    uint ShadowType;
+};
+struct PostprocessInfo {
+    float bloomScale;
+    float pading[3];
+};
+struct SkySetting {
+    uint isDynamicSky;
+    float pading[3];
+};
 struct GlobalSettingInfo
 { 
-
+    SkySetting skySetting;
+    PostprocessInfo postprocessSetting;
+    ShadowSetting shadowSetting;
     IconTextureInfo iconTextures;
-
 };
 
 
@@ -542,5 +555,18 @@ vec4 FetchDiffuse(in Material material, in vec2 coord) {
         return diffuse;
     }
     else return FetchBaseColor(material);
+}
+
+
+ShadowSetting GetShadowSetting(){
+    return GLOBAL_SETTING.data.shadowSetting;
+}
+PostprocessInfo FetchPostprocessSetting()
+{
+    return GLOBAL_SETTING.data.postprocessSetting;
+}
+SkySetting FetchSkySetting()
+{
+    return GLOBAL_SETTING.data.skySetting;
 }
 #endif

@@ -19,8 +19,7 @@ namespace GameEngine
     GraphicsPipelineCache::CachedPipeline GraphicsPipelineCache::Allocate(const RHIGraphicsPipelineInfo& info)
     {
         GraphicsPipelineCache::CachedPipeline ret;
-        Key key(info);
-        //print_memory(&info, sizeof(RHIGraphicsPipelineInfo));
+        // print_memory(&normalizedInfo, sizeof(RHIGraphicsPipelineInfo));
         auto iter = cachedPipelines.find(info);
         if (iter != cachedPipelines.end())
         {

@@ -544,9 +544,11 @@ namespace GameEngine {
         bool init = false;
         ImVec2 nodePosition = ImVec2(0, 0);
         float nodePositionY = 0;
+        static bool open = true;
+        ImGuiWindowFlags flags = ImGuiWindowFlags_None;
+        flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
 
-        ImGui::Begin("RDG");
-
+        ImGui::Begin("RDG", &open, flags);
         {
             if (autoUpdate) autoUpdateCount++;
             if (ImGui::Button("Refresh") || rdgDependencyGraph == nullptr || autoUpdateCount > 100)

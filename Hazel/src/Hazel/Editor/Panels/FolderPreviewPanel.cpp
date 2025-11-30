@@ -60,7 +60,6 @@ namespace GameEngine {
 		DrawToolbar();
 		ImGui::Separator();
 
-		// 左侧面板宽度设置（更窄更实用）
 		static float leftWidth = 200.0f;
 		const float minLeft = 150.0f;
 		const float maxLeft = 320.0f;
@@ -89,7 +88,6 @@ namespace GameEngine {
 		DrawFileGrid();
 		ImGui::EndChild();
 
-		// 弹出图片预览（如果有）
 		DrawPreviewWindow();
 
 		ImGui::End();
