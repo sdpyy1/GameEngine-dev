@@ -26,7 +26,7 @@ IncludeDir["acl"] = "%{wks.location}/Hazel/vendor/acl/include"
 IncludeDir["rtm"] = "%{wks.location}/Hazel/vendor/rtm/include"
 IncludeDir["spirv_reflect"] = "%{wks.location}/Hazel/vendor/spirv_reflect"
 IncludeDir["imgui_node_editor"] = "%{wks.location}/Hazel/vendor/imgui_node_editor"
-
+IncludeDir["mikktspace"] = "%{wks.location}/Hazel/vendor/mikktspace"
 LibraryDir = {}
 
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"

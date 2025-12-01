@@ -149,18 +149,19 @@ struct MeshInfo
 };
 struct Material 
 {
-    float roughness;
-    float metallic;
-    float alphaClip;
-    uint useNormalTexture;
-
-    vec4 baseColor;
+    vec4 diffuse;
     vec4 emission;
 
-    uint textureDiffuse;
+    float roughness; 
+    float metallic;
+    uint useNormaltexture;   // 其实直接判断textureNormal的ID>0就知道用没用了，不需要这个字段 目前刚好当个_padding
     uint textureNormal;
-    uint textureArm;        //AO/Roughness/Metallic
-    uint textureSpecular;
+
+
+    uint textureDiffuse;
+    uint textureRoughness;
+    uint textureMetallic;
+    uint textureEmission;
 
     int ints[8];       
     float floats[8];   
@@ -225,10 +226,6 @@ struct GlobalSettingInfo
     ShadowSetting shadowSetting;
     IconTextureInfo iconTextures;
 };
-
-
-
-
 
 // 全局资源绑定点
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION 0 
@@ -517,7 +514,7 @@ vec4 FetchBoneWeight(in uint objectID, in uint index)
     return FetchVertexBoneWeight(vertexID, index); 
 }
 vec4 FetchBaseColor(in Material material){
-    return material.baseColor;  
+    return material.diffuse;  
 }
 vec4 FetchTex2D(in uint slot, in vec2 coord) {
 	return texture(sampler2D(TEXTURES_2D[slot], SAMPLER[1]), coord);   
@@ -542,22 +539,75 @@ vec4 FetchTex3D(in uint slot, in vec3 vector) {
 vec4 FetchTex3D(in uint slot, in vec3 vector, in float lod) {
 	return textureLod(sampler3D(TEXTURES_3D[slot], SAMPLER[1]), vector, lod);   
 }
+
 Material FetchMaterial(in uint objectID) {
 	return u_MaterialInfo.slot[u_MeshInfo.slot[objectID].materialID]; 
 }
+
 vec4 FetchDiffuse(in Material material, in vec2 coord) {
     if(material.textureDiffuse > 0)    
     {
         vec4 diffuse = FetchTex2D(material.textureDiffuse, coord);
-        diffuse = pow(diffuse, vec4(1.0/2.2));          //gamma矫正
+        diffuse = pow(diffuse, vec4(1.0/2.2));          //gamma矫正  // TODO：设置的图片格式就是SRGB，这里应该不需要手动伽马了
         diffuse = FetchBaseColor(material) * diffuse;         
 
         return diffuse;
     }
     else return FetchBaseColor(material);
 }
+vec4 FetchBaseEmission(in Material material){
+    return material.emission;
+}
+vec4 FetchEmission(in Material material, in vec2 coord){
+    if(material.textureEmission.x > 0.0){
+     vec4 emission = FetchTex2D(material.textureEmission, coord);
+     emission = pow(emission, vec4(1.0/2.2));          //gamma矫正  // TODO：设置的图片格式就是SRGB，这里应该不需要手动伽马了
+     emission = FetchBaseEmission(material) * emission;         
+     return emission;
+    }
+     return FetchBaseEmission(material);
+}
 
+float FetchRoughness(in Material material, in vec2 coord){
+    if(material.textureRoughness > 0)        
+    {
+        vec3 arm = FetchTex2D(material.textureRoughness, coord).xyz;
+        arm = pow(arm, vec3(1.0/2.2));          //gamma矫正  // TODO：设置的图片格式就是SRGB，这里应该不需要手动伽马了
+        return arm.y;
+    }
+    else return clamp(material.roughness, 0.00001, 0.99999); 
+}
+float FetchMetallic(in Material material, in vec2 coord){
+    if(material.textureMetallic > 0)        
+    {
+        vec3 arm = FetchTex2D(material.textureMetallic, coord).xyz;
+        arm = pow(arm, vec3(1.0/2.2));          //gamma矫正
 
+        return arm.z;
+    }
+    else return clamp(material.metallic, 0.00001, 0.99999);   
+}
+vec3 FetchNormal(in Material material, in vec2 coord, in vec3 normal, in vec4 tangent) {
+	if(material.textureNormal > 0)     
+    {
+        //计算每像素的tbn矩阵可以避免在vert shader输出上的额外两个vec3的插值，其实还会更快！
+        float fSign = tangent.w < 0 ? -1 : 1;        
+        vec3 n = normalize(normal);
+        vec3 t = normalize(tangent.xyz);       
+        vec3 b = -fSign * normalize(cross(n, t));
+        t = fSign * normalize(cross(n, t));
+
+        mat3 TBN = mat3(t, b, n);
+
+        vec3 texNormal = FetchTex2D(material.textureNormal, coord).xyz;
+        vec3 outNormal = normalize(texNormal * 2.0 - 1.0);  
+        outNormal = normalize(TBN * outNormal);
+
+        return outNormal;
+    }
+
+    else return normal;
+}
 ShadowSetting GetShadowSetting(){
     return GLOBAL_SETTING.data.shadowSetting;
 }

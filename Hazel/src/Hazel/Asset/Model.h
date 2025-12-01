@@ -14,7 +14,7 @@ namespace GameEngine {
         bool smoothNormal = false;                  // 生成平滑法线
         bool flipUV = false;                        // 翻转UV
         bool loadMaterials = true;                 // 读取文件中的材质并生成材质资源
-        bool tangentSpace = false;                  // 生成切线
+        bool tangentSpace = true;                  // 生成切线,必须生成，否则法线重建失效
         bool generateBVH = false;                   // 生成BVH
         bool generateCluster = false;               // 生成Cluster
         bool generateVirtualMesh = false;           // 生成虚拟几何体
@@ -71,6 +71,11 @@ namespace GameEngine {
         VertexBufferRef GetVertexBuffer(int index){return submeshes[index].vertexBuffer;}
         IndexBufferRef GetIndexBuffer(int index){return submeshes[index].indexBuffer;}
     private:
+        void ProcessNode(aiNode* node, const aiScene* scene, std::vector<aiMesh*>& processMeshes);
+        void ProcessMesh(aiMesh* mesh, const aiScene* scene, int index);
+        void ExtractBoneWeights(Mesh* submesh, aiMesh* mesh, const aiScene* scene);
+        std::shared_ptr<Texture> Model::LoadMaterialTexture(std::string texturePath);
+    private:
         std::string path;
         ModelProcessSetting processSetting;
         uint64_t totalIndex = 0;    // 统计信息
@@ -80,10 +85,7 @@ namespace GameEngine {
         std::vector<SubmeshData> submeshes;
         std::vector<MaterialRef> materials;
         std::unordered_map<std::string, TextureRef> textureMap; // Cache
-        void ProcessNode(aiNode* node, const aiScene* scene, std::vector<aiMesh*>& processMeshes);
-        void ProcessMesh(aiMesh* mesh, const aiScene* scene, int index);
-        void ExtractBoneWeights(Mesh* submesh, aiMesh* mesh, const aiScene* scene);
-        std::shared_ptr<Texture> LoadMaterialTexture(aiMaterial* mat, aiTextureType type);
+
         bool findBone = false;
     };
 

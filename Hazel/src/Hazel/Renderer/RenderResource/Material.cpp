@@ -22,15 +22,15 @@ namespace GameEngine
         materialInfo = {};
         materialInfo.roughness = roughness;
         materialInfo.metallic = metallic;
-        materialInfo.alphaClip = alphaClip;
         materialInfo.useNormaltexture = useNormalTexture;
         materialInfo.diffuse = diffuse;
         materialInfo.emission = emission;
 
         if (textureDiffuse)  materialInfo.textureDiffuse = textureDiffuse->GetbindlessID();
         if (textureNormal)   materialInfo.textureNormal = textureNormal->GetbindlessID();
-        if (textureArm)      materialInfo.textureArm = textureArm->GetbindlessID();
-        if (textureSpecular) materialInfo.textureSpecular = textureSpecular->GetbindlessID();
+        if (textureRoughness) materialInfo.textureRoughness = textureRoughness->GetbindlessID();
+        if (textureMetallic) materialInfo.textureMetallic = textureMetallic->GetbindlessID();
+        if (textureEmission) materialInfo.textureEmission = textureEmission->GetbindlessID();
 
         materialInfo.ints = ints;
         materialInfo.floats = floats;

@@ -27,6 +27,15 @@ namespace GameEngine {
 	}
     void LightPass::Build(RDGBuilder& builder)
     {
-        
+		auto [w,h] = APP_WINDOWSIZE;
+		RDGTextureHandle ViewPort = builder.CreateTexture("ViewPort")
+			.Exetent({ w, h, 1 })
+			.Format(FORMAT_R32G32B32A32_SFLOAT)
+			.ArrayLayers(1)
+			.MipLevels(1)
+			.MemoryUsage(MEMORY_USAGE_GPU_ONLY)
+			.AllowReadWrite()
+			.AllowRenderTarget()
+			.Finish();
     }
 }

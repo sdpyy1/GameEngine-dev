@@ -33,25 +33,32 @@ namespace GameEngine {
 		uint32_t GetMaterialID() { return materialID; }
 
 		void Update();
+
 		void SetDiffuse(glm::vec4 diffuse) { this->diffuse = diffuse;      Update(); }
+		void SetDiffuse(TextureRef texture) { textureDiffuse = texture;     Update(); }
+
 		void SetEmission(glm::vec4 emission) { this->emission = emission;    Update(); }
+		void SetEmission(TextureRef texture) { textureEmission = texture;    Update(); }
+
 		void SetRoughness(float roughness) { this->roughness = roughness;  Update(); }
+		void SetRoughness(TextureRef texture) { textureRoughness = texture;  Update(); }
+
 		void SetMetallic(float metallic) { this->metallic = metallic;    Update(); }
-		void SetAlphaClip(float alphaClip) { this->alphaClip = alphaClip;  Update(); }
+        void SetMetallic(TextureRef texture) { textureMetallic = texture;  Update(); }
+
+		void SetNormal(TextureRef texture) { textureNormal = texture;      Update(); }
+		void SetUseNormalTexture(bool use) { useNormalTexture = use ? 1 : 0;      Update(); }
+
+		// 额外信息
 		void SetInt(int32_t data, uint32_t index) { ints[index] = data;           Update(); }
 		void SetFloat(float data, uint32_t index) { floats[index] = data;         Update(); }
 		void SetColor(glm::vec4 data, uint32_t index) { colors[index] = data;         Update(); }
-		void SetDiffuse(TextureRef texture) { textureDiffuse = texture;     Update(); }
-		void SetNormal(TextureRef texture) { textureNormal = texture;      Update(); }
-		void SetARM(TextureRef texture) { textureArm = texture;         Update(); }
-		void SetSpecular(TextureRef texture) { textureSpecular = texture;    Update(); }
 		void SetTexture2D(TextureRef texture, uint32_t index) { texture2D[index] = texture;   Update(); }
 		void SetTextureCube(TextureRef texture, uint32_t index) { textureCube[index] = texture; Update(); }
 		void SetTexture3D(TextureRef texture, uint32_t index) { texture3D[index] = texture;   Update(); }
 		void SetVertexShader(ShaderRef shader) { vertexShader = shader; }
 		void SetGeometryShader(ShaderRef shader) { geometryShader = shader; }
 		void SetFragmentShader(ShaderRef shader) { fragmentShader = shader; }
-		void SetUseNormalTexture(uint32_t use) { useNormalTexture = use;      Update(); }
 		inline ShaderRef GetVertexShader() const { return vertexShader; }
 		inline ShaderRef GetGeometryShader() const { return geometryShader; }
 		inline ShaderRef GetFragmentShader() const { return fragmentShader; }
@@ -80,36 +87,32 @@ namespace GameEngine {
 
 		glm::vec4 diffuse = glm::vec4(1);
 		glm::vec4 emission = glm::vec4(0);
-
 		float roughness = 0.5f;
 		float metallic = 0.0f;
-		float alphaClip = 0.0f;
 		uint32_t useNormalTexture = 1;
+
 		TextureRef textureDiffuse = nullptr;
 		TextureRef textureNormal = nullptr;
-		TextureRef textureArm = nullptr;
-		TextureRef textureSpecular = nullptr;
 		TextureRef textureEmission = nullptr;
+		TextureRef textureRoughness = nullptr;
+        TextureRef textureMetallic = nullptr;
 
 
+		// 额外信息
 		std::array<int32_t, 8> ints = { 0 };
 		std::array<float, 8> floats = { 0.0f };
 		std::array<glm::vec4, 8> colors = { glm::zero<glm::vec4>() };
-
-
 
 		std::array<TextureRef, 8> texture2D;
 		std::array<TextureRef, 4> textureCube;
 		std::array<TextureRef, 4> texture3D;
 
+
+		// 管线信息
 		ShaderRef vertexShader;                                     // 材质使用的着色器，若为空则可能使用各个pass的默认着色器
 		ShaderRef geometryShader;
 		ShaderRef fragmentShader;
 		MaterialInfo materialInfo;
-
-
-
-
 
 		// 材质系统才是创建不同Pipeline的依据
 		uint32_t renderQueue = 1000;                                // 用于指示渲染顺序
@@ -124,8 +127,6 @@ namespace GameEngine {
 
 		bool useForDepthPass = true;                                // 是否加入深度pass渲染
 		bool castShadow = true;                                     // 是否加入阴影pass渲染
-
-
 
 	};
 

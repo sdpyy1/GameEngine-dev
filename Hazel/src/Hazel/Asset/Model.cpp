@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "Model.h"
 #include "Hazel/Renderer/RenderResource/Material.h"
+#include <Hazel/Math/TangentSpace.h>
 
 namespace GameEngine {
 	Model::Model(std::string path, ModelProcessSetting processSetting) : path(path), processSetting(processSetting) {}
@@ -166,29 +167,120 @@ namespace GameEngine {
             {
                 submesh->tangent = std::vector<glm::vec4>(mesh->mNumVertices);
 
-                //TangentSpace tangentCalculator = TangentSpace();
-                //tangentCalculator.Generate(submesh.get());  // 需要先把上面的信息准备完成    TODO: 切线空间！！！！
+                TangentSpace tangentCalculator = TangentSpace();
+                tangentCalculator.Generate(submesh.get());  // 需要先把上面的信息准备完成
             }
         }
 
         // 处理材质
         if (processSetting.loadMaterials && mesh->mMaterialIndex >= 0)
         {
-            aiMaterial* aiMaterial = scene->mMaterials[mesh->mMaterialIndex];
+            aiMaterial* aiMaterial = scene->mMaterials[mesh->mMaterialIndex];  // 这就获得了当前SubMesh相关的材质信息
+			auto aiMaterialName = aiMaterial->GetName();
+			LOG_TRACE("Load Material [{}]", aiMaterialName.data);
 
-            if (materials[index] == nullptr) // 首次创建；后续通过序列化创建时会绑定第一次创建的材质
-            {
-                materials[index] = std::make_shared<Material>();
-                std::shared_ptr<Texture> diffuse = LoadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
-                std::shared_ptr<Texture> normal = LoadMaterialTexture(aiMaterial, aiTextureType_NORMALS);
-                std::shared_ptr<Texture> specular = LoadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
-                //std::shared_ptr<Texture> unknownTexture = LoadMaterialTexture(aiMaterial, aiTextureType_UNKNOWN);
+			MaterialRef ma = std::make_shared<Material>();
 
-                materials[index]->SetDiffuse(diffuse);
-                materials[index]->SetNormal(normal);
-                materials[index]->SetSpecular(specular);
-            }
-        }
+			aiString aiTexPath;
+			glm::vec4 albedoColor(1.0f);
+			glm::vec4 emission(0,0,0,1);
+			aiColor3D aiColor(1.0f), aiEmission(0.0f);
+			if (aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == AI_SUCCESS)
+				albedoColor = { aiColor.r, aiColor.g, aiColor.b ,1.0};
+
+			if (aiMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, aiEmission) == AI_SUCCESS)
+				emission = { aiEmission.r, aiEmission.g ,aiEmission.b, 1.0 };
+
+			ma->SetDiffuse(albedoColor);
+			ma->SetEmission(emission);
+
+			float roughness, metalness;
+			if (aiMaterial->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness) != aiReturn_SUCCESS)
+				roughness = 0.4f; // Default value
+
+			if (aiMaterial->Get(AI_MATKEY_REFLECTIVITY, metalness) != aiReturn_SUCCESS)
+				metalness = 0.0f;
+
+			// TODO: 这是在干什么
+			// Physically realistic materials are either metal (1.0) or not (0.0)
+			// Some models seem to come in with 0.5 which seems wrong - materials are either metal or they are not.
+			// (maybe these are specular workflow, and what we're seeing is specular = 0.5 in AI_MATKEY_REFLECTIVITY (?))
+			if (metalness < 0.9f)
+				metalness = 0.0f;
+			else
+				metalness = 1.0f;
+
+			ma->SetRoughness(roughness);
+			ma->SetMetallic(metalness);
+
+			LOG_TRACE("    COLOR = {0}, {1}, {2}", aiColor.r, aiColor.g, aiColor.b);
+            LOG_TRACE("    ROUGHNESS = {0}", roughness);
+            LOG_TRACE("    METALNESS = {0}", metalness);
+
+
+			// 颜色贴图
+			bool hasAlbedoMap = aiMaterial->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &aiTexPath) == AI_SUCCESS;
+			if (!hasAlbedoMap)
+			{
+				// no PBR base color. Try old-school diffuse  (note: should probably combine with specular in this case)
+				hasAlbedoMap = aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTexPath) == AI_SUCCESS;
+			}
+			if (hasAlbedoMap)
+			{
+				TextureRef albedo = LoadMaterialTexture(aiTexPath.C_Str());
+				ma->SetDiffuse(albedo);
+				ma->SetDiffuse(glm::vec4(1.0f));  // 有贴图就就不需要了
+			}
+
+
+
+			// 自发光贴图
+			bool hasEmissiveMap = aiMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &aiTexPath) == AI_SUCCESS;
+			if (hasEmissiveMap) {
+                TextureRef emission = LoadMaterialTexture(aiTexPath.C_Str());
+				ma->SetEmission(emission);
+
+			}
+
+			// 法线贴图
+			bool hasNormalMap = aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTexPath) == AI_SUCCESS;
+			if (hasNormalMap)
+			{
+                TextureRef textureHandle = LoadMaterialTexture(aiTexPath.C_Str());
+				ma->SetNormal(textureHandle);
+				ma->SetUseNormalTexture(true);
+			}
+
+			// 粗糙度贴图
+			bool hasRoughnessMap = aiMaterial->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &aiTexPath) == AI_SUCCESS;
+			bool invertRoughness = false;
+			if (!hasRoughnessMap)
+			{
+				// no PBR roughness. Try old-school shininess.  (note: this also picks up the gloss texture from PBR specular/gloss workflow).
+				// Either way, Roughness = (1 - shininess)
+				hasRoughnessMap = aiMaterial->GetTexture(aiTextureType_SHININESS, 0, &aiTexPath) == AI_SUCCESS;
+				invertRoughness = true;
+			}
+
+			if (hasRoughnessMap)
+			{
+                TextureRef roughnessTextureHandle = LoadMaterialTexture(aiTexPath.C_Str());
+				ma->SetRoughness(roughnessTextureHandle);
+				ma->SetRoughness(1.0f);
+			}
+
+			// Metalness map
+			bool hasMetalnessMap = aiMaterial->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &aiTexPath) == AI_SUCCESS;
+			if (hasMetalnessMap)
+			{
+				
+                TextureRef metalnessTextureHandle = LoadMaterialTexture(aiTexPath.C_Str());
+
+				ma->SetMetallic(metalnessTextureHandle);
+				ma->SetMetallic(1.0f);
+			}
+            materials[index] = ma;
+		}
 
         // 处理骨骼
         if (mesh->HasBones())   ExtractBoneWeights(submesh.get(), mesh, scene);
@@ -343,30 +435,17 @@ namespace GameEngine {
     }
 
 
-    std::shared_ptr<Texture> Model::LoadMaterialTexture(aiMaterial* mat, aiTextureType type)
+    std::shared_ptr<Texture> Model::LoadMaterialTexture(std::string texturePath)
     {
-        for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)   //可以有很多个，只用了一个
-        {
-            aiString str;
-            mat->GetTexture(type, i, &str);
-            std::string texturePath = str.C_Str();
-
-            auto iter = textureMap.find(texturePath);   // 先从缓存中找
-            if (iter != textureMap.end())    return iter->second;
-            else
-            {
-                TextureSpec textureSpec;
-                textureSpec.yFlip = true;
-                std::filesystem::path fs_path(path);
-                fs_path = fs_path.parent_path();
-                std::filesystem::path new_texture_path = fs_path / texturePath;
-                textureSpec.path = new_texture_path.string();
-                std::shared_ptr<Texture> texture = std::make_shared<Texture>(textureSpec);
-                LOG_TRACE("Load Texture: {0}  Bindless ID:{1}", textureSpec.path, texture->GetbindlessID());
-                textureMap[texturePath] = texture;
-                return texture;
-            }
-        }
-        return nullptr;
+		TextureSpec textureSpec;
+		textureSpec.yFlip = true;
+		std::filesystem::path fs_path(path);
+		fs_path = fs_path.parent_path();
+		std::filesystem::path new_texture_path = fs_path / texturePath;
+		textureSpec.path = new_texture_path.string();
+		std::shared_ptr<Texture> texture = std::make_shared<Texture>(textureSpec);
+		LOG_TRACE("Load Texture: {0}  Bindless ID:{1}", textureSpec.path, texture->GetbindlessID());
+		textureMap[texturePath] = texture;
+		return texture;
     }
 }

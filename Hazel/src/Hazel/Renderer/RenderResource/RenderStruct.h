@@ -8,6 +8,66 @@
 
 
 namespace GameEngine {
+    // 使用Bindless的资源
+    enum BindlessSlot
+    {
+        BINDLESS_SLOT_POSITION = 0,
+        BINDLESS_SLOT_NORMAL,
+        BINDLESS_SLOT_TANGENT,
+        BINDLESS_SLOT_TEXCOORD,
+        BINDLESS_SLOT_COLOR,
+        BINDLESS_SLOT_BONE_INDEX,
+        BINDLESS_SLOT_BONE_WEIGHT,
+        BINDLESS_SLOT_ANIMATION,
+        BINDLESS_SLOT_INDEX,
+
+        BINDLESS_SLOT_SAMPLER,
+        BINDLESS_SLOT_TEXTURE_1D,
+        BINDLESS_SLOT_TEXTURE_1D_ARRAY,
+        BINDLESS_SLOT_TEXTURE_2D,
+        BINDLESS_SLOT_TEXTURE_2D_ARRAY,
+        BINDLESS_SLOT_TEXTURE_CUBE,
+        BINDLESS_SLOT_TEXTURE_3D,
+
+        BINDLESS_SLOT_MAX_ENUM,     //
+    };
+
+// G-Buffer 资源绑定点  Set = 3
+#define GBUFFER_POSITION_BINDING 0
+#define GBUFFER_NORMAL_BINDING 1
+#define GBUFFER_MATERIAL_BINDING 2
+#define GBUFFER_ALBEDO_BINDING 3
+// 全局资源绑定点
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION 0 
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL 1
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TANGENT 2
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXCOORD 3
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_COLOR 4
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_INDEX 5
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_WEIGHT 6
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_ANIMATION 7
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_INDEX 8
+
+// 采样资源
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER 9
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D 10
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D_ARRAY 11
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D 12
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D_ARRAY 13
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE 14
+#define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_3D 15
+
+// 常规资源
+#define GLORBAL_RESOURCE_BINDING_SETTING 16
+#define GLORBAL_RESOURCE_BINDING_CAMERA 17
+#define GLORBAL_RESOURCE_BINDING_MESHINFO 18
+#define GLORBAL_RESOURCE_BINDING_MATERIALINFO 19
+#define GLORBAL_RESOURCE_BINDING_VERTEXINFO 20
+#define GLORBAL_RESOURCE_BINDING_LIGHTINFO 21
+#define GLORBAL_RESOURCE_BINDING_GIZMO 22
+
+
+
     struct DirLightInfo
     {
         glm::vec3 position;
@@ -143,18 +203,21 @@ namespace GameEngine {
 
     typedef struct MaterialInfo
     {
-        float roughness;
-        float metallic;
-        float alphaClip;
-        uint32_t useNormaltexture;
-
         glm::vec4 diffuse;
         glm::vec4 emission;
 
-        uint32_t textureDiffuse;
+        float roughness;
+        float metallic;
+        uint32_t useNormaltexture;
         uint32_t textureNormal;
-        uint32_t textureArm;        //AO/Roughness/Metallic
-        uint32_t textureSpecular;
+
+
+        uint32_t textureDiffuse;
+        uint32_t textureRoughness;
+        uint32_t textureMetallic;
+        uint32_t textureEmission;
+
+
 
         //预留的通用槽位///////////////////////////////
         std::array<int32_t, 8> ints;

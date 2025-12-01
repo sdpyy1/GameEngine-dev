@@ -23,6 +23,7 @@ project "Hazel"
 		"vendor/ImGuizmo/ImGuizmo.h",
 		"vendor/ImGuizmo/ImGuizmo.cpp",
 		"vendor/spirv_reflect/spirv_reflect.c",
+		"%{IncludeDir.mikktspace}/mikktspace.c",
 		"%{IncludeDir.VulkanSDK}/Include/Volk/volk.c",  -- 添加编译后会让原来架构找不到Vulkan接口找不到
 		-- "%{IncludeDir.imgui_node_editor}/**.cpp"
 	}
@@ -59,7 +60,8 @@ project "Hazel"
 		"%{IncludeDir.rtm}",
 		"%{IncludeDir.spirv_reflect}",
 		"%{IncludeDir.cereal}",
-		"%{IncludeDir.imgui_node_editor}"
+		"%{IncludeDir.imgui_node_editor}",
+		"%{IncludeDir.mikktspace}"
 	}
 
 	libdirs
@@ -93,7 +95,8 @@ project "Hazel"
     flags { "NoPCH" }
 	filter "files:**/volk.c"
     flags { "NoPCH" } 
-
+	filter "files:**/mikktspace.c"
+    flags { "NoPCH" } 
 
 	filter "system:windows"
 		systemversion "latest"
