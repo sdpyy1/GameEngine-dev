@@ -75,11 +75,12 @@ namespace GameEngine
 					.Import(CubeMap, RESOURCE_STATE_UNDEFINED)
 					.Finish();
 
-
 				RDGTextureHandle prefilterMap = builder.CreateTexture("PrefilterMap")
 					.Import(PreFilterMap, RESOURCE_STATE_UNDEFINED)
 					.Finish();
-
+				RDGTextureHandle lutTexture = builder.CreateTexture("BRDFLut")
+					.Import(LutTexture->GetRHITexture(), RESOURCE_STATE_UNDEFINED)
+					.Finish();
 
 				RDGTextureHandle irradianceMap = builder.CreateTexture("IrradianceMap")
 					.Import(IrradianceMap, RESOURCE_STATE_UNDEFINED)
@@ -164,6 +165,9 @@ namespace GameEngine
 					.Finish();
 				RDGTextureHandle irradianceMap = builder.CreateTexture("IrradianceMap")
 					.Import(IrradianceMap, RESOURCE_STATE_SHADER_RESOURCE)
+					.Finish();
+				RDGTextureHandle lutTexture = builder.CreateTexture("BRDFLut")
+					.Import(LutTexture->GetRHITexture(), RESOURCE_STATE_UNDEFINED)
 					.Finish();
 			}
 		}

@@ -1,5 +1,7 @@
 #version 450 core
-#include "include/Buffer.glslh"
+#include "common/common.glsl"
+#include "common/Gbuffer.glsl"
+#include "include/Common.glslh"
 #ifdef VERTEX_SHADER
 vec3 kNdcPoints[3] = vec3[](
     vec3(-1.0, -1.0, 0.0), 
@@ -16,10 +18,12 @@ void main()
 
 #ifdef FRAGMENT_SHADER
 
-
 layout(location = 0) in vec2 TexCoord;
 layout(location = 0) out vec4 o_Color;
-
+layout(set = 1, binding = 0) uniform texture2DArray u_DirShadowMapTexture;
+layout(set = 1, binding = 1) uniform textureCube u_EnvRadianceTex;
+layout(set = 1, binding = 2) uniform textureCube u_EnvIrradianceTex;
+layout(set = 1, binding = 3) uniform texture2D u_BRDFLUTTexture;
 struct PBRParameters
 {
 	vec3 Albedo;
@@ -30,11 +34,13 @@ struct PBRParameters
 	vec3 View;
 	float NdotV;
 } m_Params;
+#include "common/PBR.glsl"  // 必须放在这里，需要上边的这些参数
 
-#include "include/PBR.glslh"
+
+
 void main()
 {
-    vec3 WorldPosition = texture(u_PositionTexture, TexCoord).xyz;
+    vec3 WorldPosition = FetchGBufferPosition(TexCoord);
 	if (WorldPosition == vec3(0.0)) { // 这部分无模型，后续天空盒渲染
 		o_Color = vec4(0.0, 0.0, 0.0, 1.0);
 		return;
@@ -43,31 +49,34 @@ void main()
 	// 阴影
 	float shadowScale = 1.0;
 	uint cascadeIndex = 0;
-
-	if(u_Scene.DirectionalLights.Radiance != vec3(0.0)){
-		vec3 CameraPosition = u_CameraData.CameraPosition;
+	DirLightInfo dirLight = FetchDirLightInfo();
+	Camera u_CameraData = FetchCamera();
+	if(dirLight.radiance != vec3(0.0)){
+		vec3 CameraPosition = FetchCamera().CameraPosition;
 		float dis = length(WorldPosition - CameraPosition);
 		for (uint i = 0; i < 4; i++)
 		{
-			if (dis < u_RendererData.CascadeSplits[i])
+			if (dis < dirLight.SplitDepth[i])
 			{
 				cascadeIndex = i;
 				break;
 			}
 		}
-		vec4 shadowCoords = u_DirShadow.DirLightMatrices[cascadeIndex] * vec4(WorldPosition, 1.0);
+		vec4 shadowCoords = dirLight.viewProj[cascadeIndex] * vec4(WorldPosition, 1.0);
 		vec3 shadowTex = shadowCoords.xyz / shadowCoords.w;
 		vec3 shadowMapCoords = shadowTex;
-		if(u_RendererData.ShadowType == 0) shadowScale = HardShadows_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords);
-		else if(u_RendererData.ShadowType == 1) shadowScale = PCF_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords,u_RendererData.LightSize);
-		else if(u_RendererData.ShadowType == 2) shadowScale = PCSS_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords, u_RendererData.LightSize);
+		
+
+		if(GetShadowSetting().ShadowType == 1) shadowScale = HardShadows_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords);
+		else if(GetShadowSetting().ShadowType == 2) shadowScale = PCF_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords,0.5);
+		else if(GetShadowSetting().ShadowType == 3) shadowScale = PCSS_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords, 0.5);
 	}
 
 	// 直接光照
-	m_Params.Albedo = texture(u_AlbedoTexture, TexCoord).xyz;
-	m_Params.Metalness = texture(u_MRTexture, TexCoord).b;
-    m_Params.Roughness = texture(u_MRTexture, TexCoord).g;
-    m_Params.Normal = texture(u_NormalTexture, TexCoord).xyz;
+	m_Params.Albedo = FetchGBufferAlbedo(TexCoord);
+	m_Params.Metalness = FetchGBufferMetalness(TexCoord);
+    m_Params.Roughness = FetchGBufferRoughness(TexCoord);
+    m_Params.Normal = FetchGBufferNormal(TexCoord);
 	m_Params.View = normalize(u_CameraData.CameraPosition - WorldPosition); 
 	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
@@ -76,13 +85,13 @@ void main()
 	vec3 lightContribution = CalculateDirLights(F0) * shadowScale;
 	
 	// IBL
-	vec3 iblContribution = IBL(F0, Lr) * u_Scene.EnvironmentMapIntensity;
+	vec3 iblContribution = IBL(F0, Lr);   // TODO environment Intensity Setting
 
 	vec3 finalColor = lightContribution + iblContribution;
 
 	o_Color = vec4(finalColor,1);
 	// Debug
-	if(u_RendererData.debugCSM == 1)
+	if(GetShadowSetting().DebugCSM == 1)
 	{
 		vec3 cascadeColor;
 			switch(cascadeIndex) {

@@ -21,6 +21,7 @@ namespace GameEngine {
 		std::shared_ptr<PanelManager> m_PanelManager;
 		TextureRef viewportTexture;
 		RHIDescriptorSetRef viewportID[FRAMES_IN_FLIGHT];
+		RHIDescriptorSetRef debugId[FRAMES_IN_FLIGHT];
 
 	};
 

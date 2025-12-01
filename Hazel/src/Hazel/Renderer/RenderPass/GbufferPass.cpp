@@ -87,7 +87,7 @@ namespace GameEngine
 			.AllowReadWrite()
 			.AllowRenderTarget()
 			.Finish();
-		RDGTextureHandle normal = builder.CreateTexture("ViewPort")
+		RDGTextureHandle normal = builder.CreateTexture("GBufferNormal")
 			.Exetent({ w, h, 1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
 			.ArrayLayers(1)

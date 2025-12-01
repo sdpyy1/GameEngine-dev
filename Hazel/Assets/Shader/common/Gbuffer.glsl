@@ -3,7 +3,29 @@
 #define GBUFFER_NORMAL_BINDING 1
 #define GBUFFER_MATERIAL_BINDING 2
 #define GBUFFER_ALBEDO_BINDING 3
-layout(set = 3, binding = GBUFFER_POSITION_BINDING) uniform texture2D u_GBufferPosition;
-layout(set = 3, binding = GBUFFER_NORMAL_BINDING) uniform texture2D u_GBufferNormal;
-layout(set = 3, binding = GBUFFER_MATERIAL_BINDING) uniform texture2D u_GBufferMaterial;
-layout(set = 3, binding = GBUFFER_ALBEDO_BINDING) uniform texture2D u_GBufferAlbedo;
+layout(set = 2, binding = GBUFFER_POSITION_BINDING) uniform texture2D u_GBufferPosition;
+layout(set = 2, binding = GBUFFER_NORMAL_BINDING) uniform texture2D u_GBufferNormal;
+layout(set = 2, binding = GBUFFER_MATERIAL_BINDING) uniform texture2D u_GBufferMaterial;
+layout(set = 2, binding = GBUFFER_ALBEDO_BINDING) uniform texture2D u_GBufferAlbedo;
+
+
+vec3 FetchGBufferPosition(vec2 uv)
+{
+    return texture(sampler2D(u_GBufferPosition, SAMPLER[0]), uv).xyz;
+}
+vec3 FetchGBufferNormal(vec2 uv)
+{
+    return texture(sampler2D(u_GBufferNormal, SAMPLER[0]), uv).xyz;
+}
+vec3 FetchGBufferAlbedo(vec2 uv)
+{
+    return texture(sampler2D(u_GBufferAlbedo, SAMPLER[0]), uv).xyz;
+}
+float FetchGBufferMetalness(vec2 uv)
+{
+    return texture(sampler2D(u_GBufferMaterial, SAMPLER[0]), uv).y;
+}
+float FetchGBufferRoughness(vec2 uv)
+{
+    return texture(sampler2D(u_GBufferMaterial, SAMPLER[0]), uv).x;
+}

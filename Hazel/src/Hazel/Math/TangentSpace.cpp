@@ -39,7 +39,7 @@ namespace GameEngine {
         return 3;
     }
 
-    void TangentSpace::GetPosition(const SMikkTSpaceContext* context, float* outpos, const int iFace, const int iVert)
+    void TangentSpace::GetPosition(const SMikkTSpaceContext* context, float outpos[],int iFace, int iVert)
     {
         Mesh* mesh = static_cast<Mesh*> (context->m_pUserData);
 
@@ -49,7 +49,7 @@ namespace GameEngine {
         outpos[2] = mesh->position[index].z;
     }
 
-    void TangentSpace::GetNormal(const SMikkTSpaceContext* context, float* outnormal, const int iFace, const int iVert)
+    void TangentSpace::GetNormal(const SMikkTSpaceContext* context, float outnormal[],int iFace, int iVert)
     {
         Mesh* mesh = static_cast<Mesh*> (context->m_pUserData);
 
@@ -59,7 +59,7 @@ namespace GameEngine {
         outnormal[2] = mesh->normal[index].z;
     }
 
-    void TangentSpace::GetTexcoords(const SMikkTSpaceContext* context, float* outuv, const int iFace, const int iVert)
+    void TangentSpace::GetTexcoords(const SMikkTSpaceContext* context, float outuv[],int iFace, int iVert)
     {
         Mesh* mesh = static_cast<Mesh*> (context->m_pUserData);
 
@@ -68,7 +68,7 @@ namespace GameEngine {
         outuv[1] = mesh->texCoord[index].y;
     }
 
-    void TangentSpace::SetTspaceBasic(const SMikkTSpaceContext* context, const float* tangentu, const float fSign, const int iFace, const int iVert)
+    void TangentSpace::SetTspaceBasic(const SMikkTSpaceContext* context,const float tangentu[],float fSign, int iFace, int iVert)
     {
         Mesh* mesh = static_cast<Mesh*> (context->m_pUserData);
 

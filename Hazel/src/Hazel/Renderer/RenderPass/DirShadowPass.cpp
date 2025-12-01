@@ -67,6 +67,7 @@ namespace GameEngine {
 						command->PushConstants(&csmIndex, sizeof(uint32_t), SHADER_FREQUENCY_VERTEX);
 						meshPassProcessor->Draw(command);
 					})
+					.OutputRead(depth, { TEXTURE_ASPECT_DEPTH,0,1,(uint32_t)i,1 })
 					.Finish();
 			}
 		}

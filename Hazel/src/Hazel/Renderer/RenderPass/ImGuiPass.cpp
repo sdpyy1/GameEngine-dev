@@ -18,10 +18,16 @@ namespace GameEngine
     }
     void ImGuiPass::Build(RDGBuilder& builder)
 	{
+        static std::string debugName = "GBufferAlbedo";  // 需要Debug的图片写在这里
+        
+        
         if (IsEnabled())
         {
             if (viewportID[APP_FRAMEINDEX]) {
                 ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)viewportID[APP_FRAMEINDEX]->RawHandle());
+            }
+            if (debugId[APP_FRAMEINDEX]) {
+                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)debugId[APP_FRAMEINDEX]->RawHandle());
             }
             RDGTextureHandle viewport = builder.GetTexture("ViewPort");
 
@@ -32,22 +38,24 @@ namespace GameEngine
                 .Format(FORMAT_R8G8B8A8_UNORM)
                 .AllowRenderTarget()
                 .Finish();
-            
+            RDGTextureHandle debug = builder.GetTexture(debugName);
+
             RDGRenderPassHandle pass = builder.CreateRenderPass(GetName())
                 .Color(0, UI, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
                 .Read(0,0,0, viewport)  // 只是使用也可以这样防止不创建资源
+                .Read(0,0,0, debug)  // 只是使用也可以这样防止不创建资源
                 .Execute([&](RDGPassContext context) {
                         auto [w, h] = APP_WINDOWSIZE;
                         Extent2D windowExtent = { w, h };
                         RHICommandListRef command = context.command;
         
                         viewportID[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
-
+                        debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture(debugName));
                         ImGui_ImplVulkan_NewFrame();
                         ImGui_ImplGlfw_NewFrame();
                         ImGui::NewFrame();
                         m_PanelManager->SetGPUTimeInfo(RENDER_GPU_TIME_INFO);
-                        m_PanelManager->ImGuiCommand(viewportID[APP_FRAMEINDEX], viewportID[APP_FRAMEINDEX]);
+                        m_PanelManager->ImGuiCommand(viewportID[APP_FRAMEINDEX], debugId[APP_FRAMEINDEX]);
                         ImGui::Render();
                         command->ImGuiRenderDrawData();
                     })

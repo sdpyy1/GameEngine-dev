@@ -619,4 +619,20 @@ SkySetting FetchSkySetting()
 {
     return GLOBAL_SETTING.data.skySetting;
 }
+DirLightInfo FetchDirLightInfo()
+{
+    return u_LightInfo.data.dirLights;
+}
+PointLightInfo FetchPointLightInfo(int index)
+{
+    return u_LightInfo.data.pointLights[index];
+}
+SpotLightInfo FetchSpotLightInfo(int index)
+{
+    return u_LightInfo.data.spotLights[index];
+}
+Camera FetchCamera()
+{
+    return u_CameraData.data;
+}
 #endif

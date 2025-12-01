@@ -74,9 +74,9 @@ namespace GameEngine {
 				DrawVec3Control("Rotation", rotation);
 				component.SetRotationEuler(glm::radians(rotation));
 
-				static bool lockScale = true;
-				ImGui::Checkbox("Lock Scale", &lockScale);
-				DrawVec3Control("Scale", component.Scale, 1.0f, lockScale);
+				// static bool lockScale = true;
+				// ImGui::Checkbox("Lock Scale", &lockScale);  // TODO：锁定缩放有Bug，会让缩放突然变化
+				DrawVec3Control("Scale", component.Scale, 1.0f); 
 			});
 
 		DrawComponent<SubmeshComponent>("Submesh", entity, [](auto& component)
@@ -104,11 +104,12 @@ namespace GameEngine {
 				int currentShadowType = static_cast<int>(component.shadowType);
 				if (ImGui::Combo("Shadow Type", &currentShadowType, shadowTypeNames, IM_ARRAYSIZE(shadowTypeNames))) {
 					component.shadowType = static_cast<ShadowType>(currentShadowType);
+					LOG_INFO("Directional Light Shadow Type Changed To {0} {1}", shadowTypeNames[currentShadowType], component.shadowType);
 				}
 				ImGui::Checkbox("Show Direction", &component.showDirection);
 				ImGui::Checkbox("Show CSM", &component.showCSM);
 			});
-		DrawComponent<PointLightComponent>("PointLight", entity, [](auto& component)
+		DrawComponent<PointLightComponent>("Point Light", entity, [](auto& component)
 			{
 				ImGui::ColorEdit3("Radiance", &component.Radiance.x, ImGuiColorEditFlags_Float);
 				ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 3.0f, "%.2f");
@@ -123,7 +124,7 @@ namespace GameEngine {
 
 				ImGui::Checkbox("Show Radius", &component.showRadius);
 			});
-		DrawComponent<PostProcessingComponent>("PostProcessing", entity, [](auto& component)
+		DrawComponent<PostProcessingComponent>("PostProcess", entity, [](auto& component)
 			{
 				ImGui::SliderFloat("Bloom Scale", &component.bloomScale, 0.0f, 2.0f);
 			});
