@@ -9,7 +9,7 @@
 #define MAX_POINT_LIGHT_SIZE 16
 #define MAX_SPOT_LIGHT_SIZE 16
 #define CSM_LEVEL_COUNT 4
-#define MAX_GIZMO_PRIMITIVE_COUNT 20            //gizmo可以绘制的最大图元数目
+#define MAX_GIZMO_PRIMITIVE_COUNT 200            //gizmo可以绘制的最大图元数目
 
 
 struct BoundingSphere
@@ -40,7 +40,7 @@ struct PointLightInfo
     float intensity;
 
     mat4 view[6];
-    mat4 projection;
+    mat4 proj;
     mat4 viewProj[6];
 
     vec3 radiance;
@@ -217,7 +217,8 @@ struct PostprocessInfo {
 };
 struct SkySetting {
     uint isDynamicSky;
-    float pading[3];
+    float IbLScale;
+    float pading[2];
 };
 struct GlobalSettingInfo
 { 
@@ -623,11 +624,11 @@ DirLightInfo FetchDirLightInfo()
 {
     return u_LightInfo.data.dirLights;
 }
-PointLightInfo FetchPointLightInfo(int index)
+PointLightInfo FetchPointLightInfo(uint index)
 {
     return u_LightInfo.data.pointLights[index];
 }
-SpotLightInfo FetchSpotLightInfo(int index)
+SpotLightInfo FetchSpotLightInfo(uint index)
 {
     return u_LightInfo.data.spotLights[index];
 }

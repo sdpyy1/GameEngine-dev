@@ -18,6 +18,7 @@
 #include <Hazel/Renderer/RenderPass/LightPass.h>
 #include <Hazel/Renderer/RenderPass/PreDepthPass.h>
 #include <Hazel/Renderer/RenderPass/GizmoPass.h>
+#include <Hazel/Renderer/RenderPass/PointShadowPass.h>
 
 namespace GameEngine {
 	RenderSystem::RenderSystem()
@@ -68,9 +69,11 @@ namespace GameEngine {
 		//model->OnLoadAsset();
 		passes[IBL_PASS] = std::make_shared<IBLPass>();
 		meshPasses[MESH_PASS_DIRSHADOW_PASS] = std::make_shared<DirShadowPass>();
+		meshPasses[MESH_PASS_POINTSHADOW_PASS] = std::make_shared<PointShadowPass>();
 		meshPasses[MESH_PASS_GBUFFER_PASS] = std::make_shared<GBufferPass>();
 		meshPasses[MESH_PASS_PREDEPTH_PASS] = std::make_shared<PreDepthPass>();
 		passes[DIR_SHADOW_PASS] = meshPasses[MESH_PASS_DIRSHADOW_PASS];
+		passes[POINT_SHADOW_PASS] = meshPasses[MESH_PASS_POINTSHADOW_PASS];
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
 		passes[PREDEPTH_PASS] = meshPasses[MESH_PASS_PREDEPTH_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();

@@ -158,6 +158,8 @@ namespace GameEngine {
 					ImGui::TextColored(ImVec4(1, 0, 0, 1), "No HDR found in Assets!");
 					component.selectedIBL = -1;
 				}
+				// IBLScale
+                ImGui::SliderFloat("IBL Scale", &component.IBLScale, 0.0f, 1.0f);
 			});
 		DrawComponent<AnimationComponent>("Animation", entity, [](auto& component)
 			{

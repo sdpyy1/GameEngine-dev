@@ -287,6 +287,7 @@ namespace GameEngine {
 		bool DynamicSky = false;
 		std::vector<std::filesystem::path> iblPath;
 		int selectedIBL = 0;
+		float IBLScale = 1.0f;
 	};
 
 	struct SpriteRendererComponent

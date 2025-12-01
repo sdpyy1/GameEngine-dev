@@ -38,6 +38,7 @@ namespace GameEngine
         if (skyLightEntity) {
 			auto& component = skyLightEntity.GetComponent<SkyComponent>();
 			m_SceneInfo.globalSettingInfos.skySetting.isDynamicSky = component.DynamicSky?1:0;
+			m_SceneInfo.globalSettingInfos.skySetting.IbLScale = component.IBLScale;
 			m_SceneInfo.cpuRenderSetting.IBLPath = component.iblPath[component.selectedIBL].string();
 		}
 	}

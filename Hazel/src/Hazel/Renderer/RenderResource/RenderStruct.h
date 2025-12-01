@@ -1,7 +1,11 @@
 #pragma once
 #include <glm/ext/matrix_float4x4.hpp>
 #include <Hazel/Math/collision.h>
+
+#define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
+#define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless 单个binding的最大描述符数目
 #define MAX_PER_FRAME_OBJECT_SIZE 10240			    //全局最大支持的物体数目
+
 #define MAX_POINT_LIGHT_SIZE 16
 #define MAX_SPOT_LIGHT_SIZE 16
 #define CSM_LEVEL_COUNT 4
@@ -266,7 +270,7 @@ namespace GameEngine {
         glm::vec4 color;
     };
 
-# define MAX_GIZMO_PRIMITIVE_COUNT 20
+# define MAX_GIZMO_PRIMITIVE_COUNT 200
     struct GizmoDrawData {
 
         RHIIndexedIndirectCommand command[4];  // 用于给GPU传递间接渲染指令
@@ -304,7 +308,8 @@ namespace GameEngine {
     };
     struct SkySetting {
         uint32_t isDynamicSky;
-        float pading[3];
+        float IbLScale;
+        float pading[2];
     };
     struct GlobalSettingInfo
     { 

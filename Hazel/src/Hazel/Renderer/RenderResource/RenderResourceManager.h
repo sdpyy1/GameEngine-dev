@@ -9,7 +9,6 @@
 #include "Sampler.h"
 #include "Hazel/Renderer/RenderPass/Meshpass.h"
 #include "Hazel/Scene/SceneManager.h"
-#define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
 namespace GameEngine {
 
     // 每帧都需要更新的资源，每个飞行帧一份，防止冲突

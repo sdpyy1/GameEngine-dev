@@ -1,5 +1,6 @@
 #pragma once
 #include "Hazel/Scene/EditorCamera.h"
+#include "Hazel/Renderer/RenderResource/RenderStruct.h"
 namespace GameEngine
 {
 	struct CascadeData
@@ -16,8 +17,10 @@ namespace GameEngine
 		static void CollectLight();
 		static void CalculateCascades(CascadeData* cascades, std::shared_ptr<EditorCamera> sceneCamera, const glm::vec3& lightDirection);
 
+		static LightInfo GetLightInfo() { return s_LightInfo; };
 	private:
 
+		static LightInfo s_LightInfo;
 	};
 
 }

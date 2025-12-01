@@ -18,7 +18,7 @@ namespace GameEngine
     }
     void ImGuiPass::Build(RDGBuilder& builder)
 	{
-        static std::string debugName = "GBufferAlbedo";  // 需要Debug的图片写在这里
+        static std::string debugName = "pointShadowDepth[0]";  // 需要Debug的图片写在这里
         
         
         if (IsEnabled())
@@ -38,6 +38,7 @@ namespace GameEngine
                 .Format(FORMAT_R8G8B8A8_UNORM)
                 .AllowRenderTarget()
                 .Finish();
+
             RDGTextureHandle debug = builder.GetTexture(debugName);
 
             RDGRenderPassHandle pass = builder.CreateRenderPass(GetName())
@@ -50,7 +51,12 @@ namespace GameEngine
                         RHICommandListRef command = context.command;
         
                         viewportID[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
-                        debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture(debugName));
+                        if (builder.GetTexture(debugName)!= UINT32_MAX) {
+                            debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture(debugName));
+                        }
+                        else {
+                            debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+                        }
                         ImGui_ImplVulkan_NewFrame();
                         ImGui_ImplGlfw_NewFrame();
                         ImGui::NewFrame();

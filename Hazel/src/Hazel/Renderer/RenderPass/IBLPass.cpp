@@ -120,7 +120,7 @@ namespace GameEngine
 							command->SetComputePipeline(environmentIrradianceCompPipeline);
 							command->BindDescriptorSet(context.descriptors[0], 0);
 							command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetSamplerDescriptorSet(), 1);
-							uint32_t samleperCount = 1;    // 配好IBL后这里要改为512
+							uint32_t samleperCount = 512;    // 配好IBL后这里要改为512
 							command->PushConstants(&samleperCount, sizeof(uint32_t), SHADER_FREQUENCY_COMPUTE);
 							command->Dispatch(32 / 32, 32 / 32, 6);
 						})
@@ -128,13 +128,13 @@ namespace GameEngine
 
 
 				uint32_t mipLevels = (uint32_t)(std::floor(std::log2(std::max(1024, 1024)))) + 1;
-				const float deltaRoughness = 1.0f / glm::max((float)mipLevels - 1.0f, 1.0f);
+				static const float deltaRoughness = 1.0f / glm::max((float)mipLevels - 1.0f, 1.0f);
 				for (uint32_t i = 1, size = 1024; i < mipLevels; i++, size /= 2) {
 					// 注意外部定义的变量只能拿进来初始值
 					builder.CreateComputePass(GetName() + "/PrefilterMapMip" + std::to_string(i))
 						.Read(0, 1, 0, cubeMap, VIEW_TYPE_CUBE)
 						.PassIndex(size, i)
-						.ReadWrite(0, 0, 0, prefilterMap, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR, i, 1, 0, 6 })   // TODO: FIX 资源屏障流程
+						.ReadWrite(0, 0, 0, prefilterMap, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR, i, 1, 0, 6 })
 						.RootSignature(environmentMipFilterCompRootSignature)
 						.Execute([&](RDGPassContext context)
 							{
@@ -144,7 +144,7 @@ namespace GameEngine
 								command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetSamplerDescriptorSet(), 1);
 
 								uint32_t numGroups = glm::max(1u, context.passIndex[0] / 32);
-								float roughness = context.passIndex[1] * 0.1; // TODO: FIX  0.1是上边计算的deltaRoughness，没传递进来
+								float roughness = context.passIndex[1] * deltaRoughness;
 								command->PushConstants(&roughness, sizeof(float), SHADER_FREQUENCY_COMPUTE);
 								command->Dispatch(numGroups, numGroups, 6);
 							})
@@ -167,7 +167,7 @@ namespace GameEngine
 					.Import(IrradianceMap, RESOURCE_STATE_SHADER_RESOURCE)
 					.Finish();
 				RDGTextureHandle lutTexture = builder.CreateTexture("BRDFLut")
-					.Import(LutTexture->GetRHITexture(), RESOURCE_STATE_UNDEFINED)
+					.Import(LutTexture->GetRHITexture(), RESOURCE_STATE_SHADER_RESOURCE)
 					.Finish();
 			}
 		}
@@ -182,6 +182,8 @@ namespace GameEngine
 
 		spec.path = APP_TEXTURE_PATH + "BRDF_LUT.png"; // 这个直接用已经有的就行
 		spec.srgb = false;
+		spec.yFlip = true; // TODO: 这个用不用倒置
+		spec.generateMipmap = true;
 		environmentMap.LutTexture = std::make_shared<Texture>(spec);
 
 		{

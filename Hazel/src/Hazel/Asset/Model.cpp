@@ -437,6 +437,10 @@ namespace GameEngine {
 
     std::shared_ptr<Texture> Model::LoadMaterialTexture(std::string texturePath)
     {
+        if (textureMap.find(texturePath) != textureMap.end())
+		{
+			return textureMap[texturePath];
+		}
 		TextureSpec textureSpec;
 		textureSpec.yFlip = true;
 		std::filesystem::path fs_path(path);

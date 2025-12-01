@@ -1,0 +1,3485 @@
+Scene: Untitled
+Entities:
+  - Entity: 53828180669680109
+    TagComponent:
+      Tag: meshes[0]-18
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 64948802969064506
+    TagComponent:
+      Tag: meshes[0]-29
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 120588966200761731
+    TagComponent:
+      Tag: meshes[0]-65
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 167600121067810050
+    TagComponent:
+      Tag: meshes[0]-60
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 262488179986147291
+    TagComponent:
+      Tag: meshes[0]-48
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 310118737457524434
+    TagComponent:
+      Tag: meshes[0]-88
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 340831143001729902
+    TagComponent:
+      Tag: meshes[0]-76
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 404486153635249263
+    TagComponent:
+      Tag: meshes[0]-43
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 461541426160236611
+    TagComponent:
+      Tag: meshes[0]-71
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 496846136187351261
+    TagComponent:
+      Tag: meshes[0]-58
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 539877097767909908
+    TagComponent:
+      Tag: meshes[0]-66
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 579154598833375020
+    TagComponent:
+      Tag: meshes[0]-27
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 620028834453749221
+    TagComponent:
+      Tag: meshes[0]-11
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 633094062724207387
+    TagComponent:
+      Tag: meshes[0]-99
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 663017178364748864
+    TagComponent:
+      Tag: meshes[0]-98
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 693332889143572144
+    TagComponent:
+      Tag: meshes[0]-60
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 722241364667190291
+    TagComponent:
+      Tag: meshes[0]-23
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 806466480242311223
+    TagComponent:
+      Tag: meshes[0]-69
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 935875337496381288
+    TagComponent:
+      Tag: meshes[0]-21
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1025693924329012764
+    TagComponent:
+      Tag: meshes[0]-44
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1046329832822419563
+    TagComponent:
+      Tag: meshes[0]-37
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1057719390786160270
+    TagComponent:
+      Tag: meshes[0]-35
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1092426829093775663
+    TagComponent:
+      Tag: meshes[0]-46
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1151897080888447155
+    TagComponent:
+      Tag: meshes[0]-94
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1389188941382550411
+    TagComponent:
+      Tag: meshes[0]-23
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1535511591275737833
+    TagComponent:
+      Tag: meshes[0]-69
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1565417957485486293
+    TagComponent:
+      Tag: meshes[0]-50
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1705963333869474844
+    TagComponent:
+      Tag: meshes[0]-2
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1775150389528051263
+    TagComponent:
+      Tag: meshes[0]-84
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1827430191553683502
+    TagComponent:
+      Tag: meshes[0]-92
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1852465934254490730
+    TagComponent:
+      Tag: meshes[0]-25
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1861319443344533873
+    TagComponent:
+      Tag: meshes[0]-22
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1904671212768479347
+    TagComponent:
+      Tag: meshes[0]-54
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1941678093156154036
+    TagComponent:
+      Tag: meshes[0]-83
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1967625803056431273
+    TagComponent:
+      Tag: meshes[0]-23
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2002027078236562534
+    TagComponent:
+      Tag: meshes[0]-61
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2059929564350691867
+    TagComponent:
+      Tag: meshes[0]-65
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2107548134848902878
+    TagComponent:
+      Tag: meshes[0]-26
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2138539375484539396
+    TagComponent:
+      Tag: meshes[0]-102
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2150367932464343179
+    TagComponent:
+      Tag: meshes[0]-59
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2154493190309462087
+    TagComponent:
+      Tag: meshes[0]-86
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2238756653476524408
+    TagComponent:
+      Tag: meshes[0]-61
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2269180448243842169
+    TagComponent:
+      Tag: meshes[0]-14
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2342788281244654323
+    TagComponent:
+      Tag: meshes[0]-5
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2361574273883601422
+    TagComponent:
+      Tag: meshes[0]-99
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2434157027726530994
+    TagComponent:
+      Tag: meshes[0]-11
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2538593864111463340
+    TagComponent:
+      Tag: meshes[0]-74
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2612627729970984841
+    TagComponent:
+      Tag: meshes[0]-25
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2619602177112766904
+    TagComponent:
+      Tag: meshes[0]-93
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2713388063528437695
+    TagComponent:
+      Tag: meshes[0]-92
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2791122827247074047
+    TagComponent:
+      Tag: meshes[0]-98
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2791373095421053967
+    TagComponent:
+      Tag: meshes[0]-43
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2902805776813311978
+    TagComponent:
+      Tag: meshes[0]-83
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2908349184469881430
+    TagComponent:
+      Tag: meshes[0]-53
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2910405713971978410
+    TagComponent:
+      Tag: meshes[0]-46
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2952138382354345212
+    TagComponent:
+      Tag: meshes[0]-4
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2954663562917415931
+    TagComponent:
+      Tag: meshes[0]-12
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2964619630695412547
+    TagComponent:
+      Tag: meshes[0]-12
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2977297090086029943
+    TagComponent:
+      Tag: meshes[0]-93
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3008904028758351480
+    TagComponent:
+      Tag: meshes[0]-78
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3030675295506099196
+    TagComponent:
+      Tag: meshes[0]-38
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3079444967605011304
+    TagComponent:
+      Tag: meshes[0]-72
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3255674818282762210
+    TagComponent:
+      Tag: meshes[0]-15
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3404084556324653138
+    TagComponent:
+      Tag: meshes[0]-19
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3455837542788394816
+    TagComponent:
+      Tag: meshes[0]-16
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3460099839667030768
+    TagComponent:
+      Tag: meshes[0]-80
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3501972189249274744
+    TagComponent:
+      Tag: meshes[0]-6
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3507299209567001743
+    TagComponent:
+      Tag: meshes[0]-28
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3532409211328321641
+    TagComponent:
+      Tag: meshes[0]-31
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3593059150294149827
+    TagComponent:
+      Tag: meshes[0]-81
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3613148559030538001
+    TagComponent:
+      Tag: meshes[0]-33
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3615622137563230711
+    TagComponent:
+      Tag: meshes[0]-44
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3686383522558970661
+    TagComponent:
+      Tag: meshes[0]-40
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3697059353866599209
+    TagComponent:
+      Tag: meshes[0]-79
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3813943883016672554
+    TagComponent:
+      Tag: meshes[0]-89
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3844118813591179292
+    TagComponent:
+      Tag: meshes[0]-97
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3925464284751625638
+    TagComponent:
+      Tag: meshes[0]-17
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3940996522087607411
+    TagComponent:
+      Tag: meshes[0]-73
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3943923003984438021
+    TagComponent:
+      Tag: meshes[0]-1
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4033887609454679571
+    TagComponent:
+      Tag: meshes[0]-32
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4039206785927818589
+    TagComponent:
+      Tag: meshes[0]-39
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4046478882574895666
+    TagComponent:
+      Tag: meshes[0]-69
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4105864427374534424
+    TagComponent:
+      Tag: meshes[0]-1
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4211353318868467565
+    TagComponent:
+      Tag: meshes[0]-36
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4428044360309566011
+    TagComponent:
+      Tag: meshes[0]-101
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4485237791419124689
+    TagComponent:
+      Tag: meshes[0]-88
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4535140696263977424
+    TagComponent:
+      Tag: meshes[0]-29
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4561131524602997421
+    TagComponent:
+      Tag: PostProcess
+    Parent: 0
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PostProcessingComponent:
+      BloomScale: 0.0430000015
+  - Entity: 4604324041474049847
+    TagComponent:
+      Tag: meshes[0]-30
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4608100379633065621
+    TagComponent:
+      Tag: meshes[0]-89
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4656878140848824005
+    TagComponent:
+      Tag: meshes[0]-74
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4847882121797345591
+    TagComponent:
+      Tag: meshes[0]-3
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4889966729281845851
+    TagComponent:
+      Tag: meshes[0]-102
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4912667446546732752
+    TagComponent:
+      Tag: meshes[0]-72
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4970542368191549934
+    TagComponent:
+      Tag: meshes[0]-52
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5186249597247207176
+    TagComponent:
+      Tag: meshes[0]-24
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5230042747715581633
+    TagComponent:
+      Tag: meshes[0]-6
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5236196809015804932
+    TagComponent:
+      Tag: meshes[0]-85
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5237654427866948826
+    TagComponent:
+      Tag: meshes[0]-94
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5350446062741204244
+    TagComponent:
+      Tag: meshes[0]-56
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5360733276749879526
+    TagComponent:
+      Tag: Point Light
+    Parent: 0
+    Children:
+      []
+    PointLightComponent:
+      Intensity: 1
+      Radiance: [1, 1, 1]
+      Radius: 1
+      ShowRadius: false
+    TransformComponent:
+      Translation: [2.99765491, 7.1251297, 0.214111328]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5376214187391282271
+    TagComponent:
+      Tag: meshes[0]-78
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5402573293326153813
+    TagComponent:
+      Tag: meshes[0]-87
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5407171951660894977
+    TagComponent:
+      Tag: meshes[0]-28
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5454945492283431839
+    TagComponent:
+      Tag: meshes[0]-95
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5474399183285555547
+    TagComponent:
+      Tag: meshes[0]-64
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5632870677489220174
+    TagComponent:
+      Tag: meshes[0]-0
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5695374602028346587
+    TagComponent:
+      Tag: meshes[0]-77
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5799831656005395543
+    TagComponent:
+      Tag: meshes[0]-52
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5821345622037666597
+    TagComponent:
+      Tag: meshes[0]-68
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5847854979814240388
+    TagComponent:
+      Tag: meshes[0]-99
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5930511206294232326
+    TagComponent:
+      Tag: meshes[0]-55
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5947196905636144051
+    TagComponent:
+      Tag: meshes[0]-57
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6097072841735262152
+    TagComponent:
+      Tag: meshes[0]-63
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6099373888253642604
+    TagComponent:
+      Tag: meshes[0]-30
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6133106512641311417
+    TagComponent:
+      Tag: meshes[0]-100
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6177677951515031954
+    TagComponent:
+      Tag: meshes[0]-53
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6206816039380316541
+    TagComponent:
+      Tag: meshes[0]-85
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6282326271070930792
+    TagComponent:
+      Tag: meshes[0]-7
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6359673798262840029
+    TagComponent:
+      Tag: meshes[0]-16
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6378213830790118037
+    TagComponent:
+      Tag: meshes[0]-43
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6390569523312721564
+    TagComponent:
+      Tag: meshes[0]-66
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6418407097606513672
+    TagComponent:
+      Tag: meshes[0]-46
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6491964861652488538
+    TagComponent:
+      Tag: meshes[0]-5
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6522915419056164069
+    TagComponent:
+      Tag: meshes[0]-31
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6523495903684704497
+    TagComponent:
+      Tag: meshes[0]-19
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6527360370670750942
+    TagComponent:
+      Tag: meshes[0]-4
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6584068339220936588
+    TagComponent:
+      Tag: meshes[0]-87
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6642325915342766947
+    TagComponent:
+      Tag: meshes[0]-25
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6697225863004448474
+    TagComponent:
+      Tag: meshes[0]-18
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6704027495023964491
+    TagComponent:
+      Tag: meshes[0]-35
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6737100129508519358
+    TagComponent:
+      Tag: meshes[0]-62
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6828157265212747797
+    TagComponent:
+      Tag: meshes[0]-101
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6864990186496237923
+    TagComponent:
+      Tag: meshes[0]-3
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6878987624556340614
+    TagComponent:
+      Tag: meshes[0]-71
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6901706970527865184
+    TagComponent:
+      Tag: meshes[0]-67
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6926559839400320485
+    TagComponent:
+      Tag: meshes[0]-54
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6961955531727353091
+    TagComponent:
+      Tag: meshes[0]-77
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7038934467329601999
+    TagComponent:
+      Tag: meshes[0]-98
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7131731304627892779
+    TagComponent:
+      Tag: meshes[0]-62
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7135065470185974277
+    TagComponent:
+      Tag: meshes[0]-78
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7294170364881988543
+    TagComponent:
+      Tag: meshes[0]-55
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7307754885669814778
+    TagComponent:
+      Tag: meshes[0]-81
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7330649867355567634
+    TagComponent:
+      Tag: meshes[0]-50
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7350403200301148762
+    TagComponent:
+      Tag: meshes[0]-79
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7405209007255882527
+    TagComponent:
+      Tag: meshes[0]-38
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7491684825189470793
+    TagComponent:
+      Tag: meshes[0]-8
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7556071178544342046
+    TagComponent:
+      Tag: meshes[0]-40
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7582415142496381362
+    TagComponent:
+      Tag: meshes[0]-44
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7595918129992435326
+    TagComponent:
+      Tag: meshes[0]-90
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7617939577015237846
+    TagComponent:
+      Tag: meshes[0]-27
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7624988811324710557
+    TagComponent:
+      Tag: assets\Model\Sponza\glTF\Sponza.gltf
+    Parent: 0
+    Children:
+      - Handle: 17256415656375323596
+      - Handle: 4567145093210703556
+      - Handle: 698392651563022334
+      - Handle: 10329091520065465135
+      - Handle: 17130275705461286264
+      - Handle: 8337857659359325446
+      - Handle: 15583740937494516701
+      - Handle: 15770488214224794219
+      - Handle: 10539646998094240623
+      - Handle: 7573847598043145139
+      - Handle: 3619408855165166946
+      - Handle: 2022989060629420743
+      - Handle: 15613824265229893569
+      - Handle: 4954114732382756633
+      - Handle: 14729455492691868226
+      - Handle: 13690242561558338888
+      - Handle: 4734501455736338186
+      - Handle: 6143116784462368133
+      - Handle: 11223778537229266534
+      - Handle: 15931456144263802363
+      - Handle: 1555833846670492490
+      - Handle: 285313128816888780
+      - Handle: 10865336343298713888
+      - Handle: 12941119500157924927
+      - Handle: 12678538787028890628
+      - Handle: 9395257906689817016
+      - Handle: 5857945208499108858
+      - Handle: 15656723927422478198
+      - Handle: 6037763754353523728
+      - Handle: 6478318790796824145
+      - Handle: 12400688951453970761
+      - Handle: 17300897965722146842
+      - Handle: 1868691590225416911
+      - Handle: 14721288112717501726
+      - Handle: 13423475657604816039
+      - Handle: 17562266211589197854
+      - Handle: 10878479092406072890
+      - Handle: 5575218887807310367
+      - Handle: 14579689560070590946
+      - Handle: 774862680466764801
+      - Handle: 1629674044717648539
+      - Handle: 10626157799803667605
+      - Handle: 6850916426080409696
+      - Handle: 12988642185060100392
+      - Handle: 16835736663402097675
+      - Handle: 8262290239206517183
+      - Handle: 13600035465079527703
+      - Handle: 9532063212215761587
+      - Handle: 463944193063583659
+      - Handle: 10797579208556706468
+      - Handle: 12667691360952717363
+      - Handle: 586984673080113028
+      - Handle: 10163401853304773619
+      - Handle: 7944390020606478656
+      - Handle: 10156733137212509172
+      - Handle: 5091307412371515890
+      - Handle: 14668668163480112912
+      - Handle: 13226077736788138561
+      - Handle: 17363751766037254670
+      - Handle: 6475308679492722626
+      - Handle: 531064416636365414
+      - Handle: 1147388817562837892
+      - Handle: 7686447917203257924
+      - Handle: 15025027147703653171
+      - Handle: 950019033899098468
+      - Handle: 13672810708473159515
+      - Handle: 1500206713121845972
+      - Handle: 18156542880340992088
+      - Handle: 5954948754481465267
+      - Handle: 14470873596006545369
+      - Handle: 9829853181132583516
+      - Handle: 1603481145232511232
+      - Handle: 8549923357774907151
+      - Handle: 6037815452272226528
+      - Handle: 1286268046080334602
+      - Handle: 10520022371711233489
+      - Handle: 15464825757293328677
+      - Handle: 6658437712275576881
+      - Handle: 3191061266679370645
+      - Handle: 15374751285931647942
+      - Handle: 2032299321146642889
+      - Handle: 11944431473124182530
+      - Handle: 8985351041296339485
+      - Handle: 3139047202119637054
+      - Handle: 3636181934758758717
+      - Handle: 6353547765396377361
+      - Handle: 11212567841242314129
+      - Handle: 2689649357799884605
+      - Handle: 11937378196217344738
+      - Handle: 12346490860782060356
+      - Handle: 7600116917937661639
+      - Handle: 12833004459834316682
+      - Handle: 4366577651568701456
+      - Handle: 12993180628137618191
+      - Handle: 16074087858759171426
+      - Handle: 15114722824394777349
+      - Handle: 15430823334220545188
+      - Handle: 287209489952733952
+      - Handle: 16518662328017602122
+      - Handle: 3053229757270508715
+      - Handle: 2374611496700328407
+      - Handle: 1160419613610676329
+      - Handle: 12684832918169163215
+      - Handle: 8476238082302489344
+      - Handle: 17676118190444851388
+      - Handle: 16249189472953287949
+      - Handle: 3357805782448449516
+      - Handle: 10954963263757712737
+      - Handle: 6082985595304737083
+      - Handle: 16990237553478663474
+      - Handle: 16685141787557717800
+      - Handle: 3505339007041581725
+      - Handle: 7153929214376859964
+      - Handle: 736113658147712700
+      - Handle: 700449198593877339
+      - Handle: 16817889369651102708
+      - Handle: 16915704305728036625
+      - Handle: 3142283964778828521
+      - Handle: 11677214759635526194
+      - Handle: 5540731725899046011
+      - Handle: 13058800293640917539
+      - Handle: 6179603333745742024
+      - Handle: 3535147379103293944
+      - Handle: 15901253974269378436
+      - Handle: 3207503340304898439
+      - Handle: 8554463851657301477
+      - Handle: 373547989270113307
+      - Handle: 11173762096942780474
+      - Handle: 1815278276004385864
+      - Handle: 3548451997771342254
+      - Handle: 5528859550154620139
+      - Handle: 13676298908474207301
+      - Handle: 11109734318177116000
+      - Handle: 13522842585660082562
+      - Handle: 6919871322447802855
+      - Handle: 3487121568874638370
+      - Handle: 3568281997856656072
+      - Handle: 7120054864313927699
+      - Handle: 2063718436614023884
+      - Handle: 15604552641346892950
+      - Handle: 6359214039707968019
+      - Handle: 13685746535561558353
+      - Handle: 8199293119682913640
+      - Handle: 10613057285342903313
+      - Handle: 1396504981933317896
+      - Handle: 277460895461808117
+      - Handle: 18064193404840687529
+      - Handle: 1762137843891435586
+      - Handle: 11894250687081765253
+      - Handle: 9219079527739023215
+      - Handle: 17320272483580741989
+      - Handle: 4166566136506973945
+      - Handle: 7121945710215989833
+      - Handle: 12134238794741630686
+      - Handle: 4073544218241583172
+      - Handle: 14036905742039252384
+      - Handle: 9154389206701737009
+      - Handle: 2102517768145501757
+      - Handle: 2913767989480894107
+      - Handle: 13964077140542071497
+      - Handle: 2928422644992254262
+      - Handle: 922618233653597352
+      - Handle: 9386939405941444283
+      - Handle: 15865242390559146156
+      - Handle: 17695069127669524591
+      - Handle: 17438008314703041847
+      - Handle: 14951767576811401834
+      - Handle: 17319317817107875669
+      - Handle: 14665574670461564517
+      - Handle: 9396039613409033062
+      - Handle: 9657057664585171306
+      - Handle: 11993835188615376062
+      - Handle: 4915166878337051697
+      - Handle: 187352688427778669
+      - Handle: 1662915205158460539
+      - Handle: 15498887946867100312
+      - Handle: 3003597323658852072
+      - Handle: 10310236887961097363
+      - Handle: 16784264231744533826
+      - Handle: 5871589361487381618
+      - Handle: 13055812789480950767
+      - Handle: 17999661719999995564
+      - Handle: 17894634478043831618
+      - Handle: 17400694846832421967
+      - Handle: 8843023191288720536
+      - Handle: 7042732674020326876
+      - Handle: 16955351901714491438
+      - Handle: 1908465827433086023
+      - Handle: 1402169401943812558
+      - Handle: 14135039305943606199
+      - Handle: 4412168354638224920
+      - Handle: 8767560380285572086
+      - Handle: 5686131587077345551
+      - Handle: 1153190931233689605
+      - Handle: 9885911202365973856
+      - Handle: 10962038938884539546
+      - Handle: 14124633566811224560
+      - Handle: 9669621409148552148
+      - Handle: 18039339504465448352
+      - Handle: 9745974311601678334
+      - Handle: 6064146432263327677
+      - Handle: 13779114846324386044
+      - Handle: 8195712158484067176
+      - Handle: 9175818592604677548
+      - Handle: 1935560468801433325
+      - Handle: 13566932289898653475
+      - Handle: 10093441445403227926
+      - Handle: 4105864427374534424
+      - Handle: 16702323852040297609
+      - Handle: 13300280774766227478
+      - Handle: 2952138382354345212
+      - Handle: 6491964861652488538
+      - Handle: 5230042747715581633
+      - Handle: 6282326271070930792
+      - Handle: 7491684825189470793
+      - Handle: 17954541259940318021
+      - Handle: 13966163871945976724
+      - Handle: 2434157027726530994
+      - Handle: 2964619630695412547
+      - Handle: 11490973597091901835
+      - Handle: 11882363433987729271
+      - Handle: 17156847000109065388
+      - Handle: 6359673798262840029
+      - Handle: 12702398392786947397
+      - Handle: 6697225863004448474
+      - Handle: 3404084556324653138
+      - Handle: 18297978809112721394
+      - Handle: 17675994361344214721
+      - Handle: 17374335796410791891
+      - Handle: 1389188941382550411
+      - Handle: 5186249597247207176
+      - Handle: 1852465934254490730
+      - Handle: 15279656788150942961
+      - Handle: 7617939577015237846
+      - Handle: 5407171951660894977
+      - Handle: 9467429841513799195
+      - Handle: 18032767206870614902
+      - Handle: 11041388291185670556
+      - Handle: 4033887609454679571
+      - Handle: 9801441127266133941
+      - Handle: 7893244847626739204
+      - Handle: 9054878179193855271
+      - Handle: 15413686495200879046
+      - Handle: 15975772039366481128
+      - Handle: 3030675295506099196
+      - Handle: 7770259673156743001
+      - Handle: 7556071178544342046
+      - Handle: 14810073008843745260
+      - Handle: 14708323925442707573
+      - Handle: 6378213830790118037
+      - Handle: 1025693924329012764
+      - Handle: 13022943367369908784
+      - Handle: 1092426829093775663
+      - Handle: 12723215701241800055
+      - Handle: 262488179986147291
+      - Handle: 8792888628144743915
+      - Handle: 17484774776105030577
+      - Handle: 16823128077494475952
+      - Handle: 14653234626191098096
+      - Handle: 2908349184469881430
+      - Handle: 6926559839400320485
+      - Handle: 5930511206294232326
+      - Handle: 14034593024270398832
+      - Handle: 5947196905636144051
+      - Handle: 496846136187351261
+      - Handle: 2150367932464343179
+      - Handle: 167600121067810050
+      - Handle: 10368714282560425171
+      - Handle: 7131731304627892779
+      - Handle: 17394947396196463778
+      - Handle: 5474399183285555547
+      - Handle: 2059929564350691867
+      - Handle: 539877097767909908
+      - Handle: 17294757293813886933
+      - Handle: 5821345622037666597
+      - Handle: 806466480242311223
+      - Handle: 9560397888413798658
+      - Handle: 6878987624556340614
+      - Handle: 4912667446546732752
+      - Handle: 3940996522087607411
+      - Handle: 4656878140848824005
+      - Handle: 12213169347106472271
+      - Handle: 16203487055868658239
+      - Handle: 5695374602028346587
+      - Handle: 5376214187391282271
+      - Handle: 12633462900249933290
+      - Handle: 16617125752595288519
+      - Handle: 3593059150294149827
+      - Handle: 17685541637700875292
+      - Handle: 14084106942071807865
+      - Handle: 10785408807404294881
+      - Handle: 5236196809015804932
+      - Handle: 2154493190309462087
+      - Handle: 5402573293326153813
+      - Handle: 17761664701512142625
+      - Handle: 10684751928060932355
+      - Handle: 15735350254314331369
+      - Handle: 12850538689765159183
+      - Handle: 1827430191553683502
+      - Handle: 16588189711686124581
+      - Handle: 5237654427866948826
+      - Handle: 12261933415773757607
+      - Handle: 11079096102252782855
+      - Handle: 9706349405655124163
+      - Handle: 2791122827247074047
+      - Handle: 5847854979814240388
+      - Handle: 16045144493722647474
+      - Handle: 16793101428804882316
+      - Handle: 4889966729281845851
+    TransformComponent:
+      Translation: [0, 0.818487406, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.0210000016, 0.0210000016, 0.0210000016]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Sponza\glTF\Sponza.gltf
+      Visible: true
+  - Entity: 7770259673156743001
+    TagComponent:
+      Tag: meshes[0]-39
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7800619126888958946
+    TagComponent:
+      Tag: meshes[0]-64
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7814613775616409394
+    TagComponent:
+      Tag: meshes[0]-64
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7893244847626739204
+    TagComponent:
+      Tag: meshes[0]-34
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7905890516439680639
+    TagComponent:
+      Tag: meshes[0]-13
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7943116199142131985
+    TagComponent:
+      Tag: meshes[0]-2
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8013323328647250320
+    TagComponent:
+      Tag: meshes[0]-48
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8236278963915783729
+    TagComponent:
+      Tag: meshes[0]-36
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8457018772955691831
+    TagComponent:
+      Tag: meshes[0]-76
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8614425541354503205
+    TagComponent:
+      Tag: meshes[0]-66
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8651368320578970441
+    TagComponent:
+      Tag: meshes[0]-12
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8700337081579628354
+    TagComponent:
+      Tag: meshes[0]-17
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8726636058873141151
+    TagComponent:
+      Tag: meshes[0]-57
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8759658084719256855
+    TagComponent:
+      Tag: meshes[0]-84
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8760777737629514076
+    TagComponent:
+      Tag: meshes[0]-95
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8783781549405025598
+    TagComponent:
+      Tag: meshes[0]-24
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8792888628144743915
+    TagComponent:
+      Tag: meshes[0]-49
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8969108481795671942
+    TagComponent:
+      Tag: meshes[0]-77
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9000989093898310530
+    TagComponent:
+      Tag: meshes[0]-27
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9008965335423783418
+    TagComponent:
+      Tag: meshes[0]-10
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9027075465362807756
+    TagComponent:
+      Tag: meshes[0]-58
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9042131441642389605
+    TagComponent:
+      Tag: meshes[0]-7
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9042874220245741862
+    TagComponent:
+      Tag: meshes[0]-80
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9054878179193855271
+    TagComponent:
+      Tag: meshes[0]-35
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9388545113354272197
+    TagComponent:
+      Tag: meshes[0]-9
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9412903537194703719
+    TagComponent:
+      Tag: meshes[0]-24
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9441586187228871802
+    TagComponent:
+      Tag: meshes[0]-21
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9467429841513799195
+    TagComponent:
+      Tag: meshes[0]-29
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9560397888413798658
+    TagComponent:
+      Tag: meshes[0]-70
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9704207309520077505
+    TagComponent:
+      Tag: meshes[0]-53
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9706349405655124163
+    TagComponent:
+      Tag: meshes[0]-97
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9731352972431064833
+    TagComponent:
+      Tag: meshes[0]-59
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9735094305316691267
+    TagComponent:
+      Tag: meshes[0]-40
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9801441127266133941
+    TagComponent:
+      Tag: meshes[0]-33
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9817094700031126080
+    TagComponent:
+      Tag: meshes[0]-42
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9834321485494980861
+    TagComponent:
+      Tag: meshes[0]-45
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9858461334451623461
+    TagComponent:
+      Tag: Directional Light
+    Parent: 0
+    Children:
+      []
+    TransformComponent:
+      Translation: [4.26315308, 9.8108139, -1.60355043]
+      Rotation: [0.0629827976, 0.0588159561, 1.55143189]
+      Scale: [1.00000203, 1.00000083, 1]
+    DirectionalLightComponent:
+      ShowCSM: false
+      ShowDirection: true
+      ShadowType: 3
+      Intensity: 1
+      Radiance: [1, 1, 1]
+  - Entity: 9887611626311197029
+    TagComponent:
+      Tag: meshes[0]-37
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9942069246304321720
+    TagComponent:
+      Tag: meshes[0]-41
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9969720521805935015
+    TagComponent:
+      Tag: meshes[0]-86
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10093441445403227926
+    TagComponent:
+      Tag: meshes[0]-0
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10099310054378101068
+    TagComponent:
+      Tag: meshes[0]-81
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10100074359243719138
+    TagComponent:
+      Tag: meshes[0]-75
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10196757404412801715
+    TagComponent:
+      Tag: meshes[0]-63
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10254536943858287795
+    TagComponent:
+      Tag: meshes[0]-87
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10269596119853333522
+    TagComponent:
+      Tag: meshes[0]-19
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10324826943747530821
+    TagComponent:
+      Tag: meshes[0]-96
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10368714282560425171
+    TagComponent:
+      Tag: meshes[0]-61
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10684751928060932355
+    TagComponent:
+      Tag: meshes[0]-89
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10742308019757233646
+    TagComponent:
+      Tag: meshes[0]-0
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10785408807404294881
+    TagComponent:
+      Tag: meshes[0]-84
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10796110021811501200
+    TagComponent:
+      Tag: meshes[0]-34
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10934807082884614255
+    TagComponent:
+      Tag: meshes[0]-8
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10939676005150341778
+    TagComponent:
+      Tag: meshes[0]-47
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11020080796754301865
+    TagComponent:
+      Tag: meshes[0]-49
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11041388291185670556
+    TagComponent:
+      Tag: meshes[0]-31
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11079096102252782855
+    TagComponent:
+      Tag: meshes[0]-96
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11140036117706918644
+    TagComponent:
+      Tag: meshes[0]-41
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11313985659012314676
+    TagComponent:
+      Tag: meshes[0]-62
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11353320181052272131
+    TagComponent:
+      Tag: meshes[0]-32
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11405517828608189515
+    TagComponent:
+      Tag: meshes[0]-7
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11412415311208768682
+    TagComponent:
+      Tag: meshes[0]-14
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11490973597091901835
+    TagComponent:
+      Tag: meshes[0]-13
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11505677407587227843
+    TagComponent:
+      Tag: meshes[0]-97
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11513854952362555980
+    TagComponent:
+      Tag: meshes[0]-42
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11560160136895020472
+    TagComponent:
+      Tag: meshes[0]-28
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11682250804990001819
+    TagComponent:
+      Tag: meshes[0]-47
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11783664664292128372
+    TagComponent:
+      Tag: meshes[0]-10
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11793134823179508832
+    TagComponent:
+      Tag: meshes[0]-73
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11882363433987729271
+    TagComponent:
+      Tag: meshes[0]-14
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11919988688052708392
+    TagComponent:
+      Tag: meshes[0]-100
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12001335876018682066
+    TagComponent:
+      Tag: meshes[0]-68
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12007367596788615895
+    TagComponent:
+      Tag: meshes[0]-48
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12213169347106472271
+    TagComponent:
+      Tag: meshes[0]-75
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12234330281457593957
+    TagComponent:
+      Tag: Sky Light
+    Parent: 0
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SkyComponent:
+      DynamicSky: true
+      selectedIBL: 7
+      IBLScale: 0.899999976
+  - Entity: 12261933415773757607
+    TagComponent:
+      Tag: meshes[0]-95
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12277258328309130124
+    TagComponent:
+      Tag: meshes[0]-54
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12298284706949009892
+    TagComponent:
+      Tag: meshes[0]-74
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12315480705903245579
+    TagComponent:
+      Tag: meshes[0]-20
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12329333420945534702
+    TagComponent:
+      Tag: meshes[0]-9
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12389996575486206469
+    TagComponent:
+      Tag: meshes[0]-1
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12481384433457164319
+    TagComponent:
+      Tag: meshes[0]-59
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12633462900249933290
+    TagComponent:
+      Tag: meshes[0]-79
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12691703652080539533
+    TagComponent:
+      Tag: meshes[0]-22
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12702398392786947397
+    TagComponent:
+      Tag: meshes[0]-17
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12723215701241800055
+    TagComponent:
+      Tag: meshes[0]-47
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12850538689765159183
+    TagComponent:
+      Tag: meshes[0]-91
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12851294678472766369
+    TagComponent:
+      Tag: meshes[0]-92
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12959528389258338522
+    TagComponent:
+      Tag: meshes[0]-18
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13007034808200648001
+    TagComponent:
+      Tag: meshes[0]-65
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13022943367369908784
+    TagComponent:
+      Tag: meshes[0]-45
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13070470412548298781
+    TagComponent:
+      Tag: meshes[0]-45
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13123677703088699373
+    TagComponent:
+      Tag: meshes[0]-90
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13131409934550420942
+    TagComponent:
+      Tag: meshes[0]-72
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13247211150902122496
+    TagComponent:
+      Tag: meshes[0]-86
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13300280774766227478
+    TagComponent:
+      Tag: meshes[0]-3
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13677532636903956721
+    TagComponent:
+      Tag: meshes[0]-15
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13760318849644122453
+    TagComponent:
+      Tag: meshes[0]-6
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13801258387898110718
+    TagComponent:
+      Tag: meshes[0]-91
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13966163871945976724
+    TagComponent:
+      Tag: meshes[0]-10
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14019538068390125059
+    TagComponent:
+      Tag: meshes[0]-71
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14034593024270398832
+    TagComponent:
+      Tag: meshes[0]-56
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14045666608536796057
+    TagComponent:
+      Tag: meshes[0]-82
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14084106942071807865
+    TagComponent:
+      Tag: meshes[0]-83
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14105884435066104553
+    TagComponent:
+      Tag: meshes[0]-8
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14498372046339402392
+    TagComponent:
+      Tag: meshes[0]-91
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14515521657059489806
+    TagComponent:
+      Tag: meshes[0]-57
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14652948563578157927
+    TagComponent:
+      Tag: meshes[0]-33
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14653234626191098096
+    TagComponent:
+      Tag: meshes[0]-52
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14708323925442707573
+    TagComponent:
+      Tag: meshes[0]-42
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14768169795268060157
+    TagComponent:
+      Tag: meshes[0]-55
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14810073008843745260
+    TagComponent:
+      Tag: meshes[0]-41
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14885357461545783997
+    TagComponent:
+      Tag: meshes[0]-85
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15044411309177426691
+    TagComponent:
+      Tag: meshes[0]-96
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15279656788150942961
+    TagComponent:
+      Tag: meshes[0]-26
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15303645832840388576
+    TagComponent:
+      Tag: meshes[0]-58
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15321147762933421665
+    TagComponent:
+      Tag: meshes[0]-11
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15413686495200879046
+    TagComponent:
+      Tag: meshes[0]-36
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15735350254314331369
+    TagComponent:
+      Tag: meshes[0]-90
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15754360468469738143
+    TagComponent:
+      Tag: meshes[0]-39
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15772958315664005391
+    TagComponent:
+      Tag: meshes[0]-34
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15841940676295908259
+    TagComponent:
+      Tag: meshes[0]-4
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15888840778686879057
+    TagComponent:
+      Tag: meshes[0]-20
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15975772039366481128
+    TagComponent:
+      Tag: meshes[0]-37
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16045144493722647474
+    TagComponent:
+      Tag: meshes[0]-100
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16095479905730599219
+    TagComponent:
+      Tag: meshes[0]-5
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16138254196763172546
+    TagComponent:
+      Tag: meshes[0]-26
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16192208902108508763
+    TagComponent:
+      Tag: Spot Light
+    Parent: 0
+    Children:
+      []
+    TransformComponent:
+      Translation: [2.63730717, 5.90858364, -1.94317126]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpotLightComponent:
+      Intensity: 1
+      Radiance: [1, 1, 1]
+      Range: 1
+      ShowRadius: false
+  - Entity: 16203487055868658239
+    TagComponent:
+      Tag: meshes[0]-76
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16212344689908723584
+    TagComponent:
+      Tag: meshes[0]-13
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16283888520391094125
+    TagComponent:
+      Tag: meshes[0]-70
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16425255698911769344
+    TagComponent:
+      Tag: meshes[0]-60
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16430653088938541589
+    TagComponent:
+      Tag: meshes[0]-75
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16588189711686124581
+    TagComponent:
+      Tag: meshes[0]-93
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16617125752595288519
+    TagComponent:
+      Tag: meshes[0]-80
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16669087580988142557
+    TagComponent:
+      Tag: meshes[0]-67
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16702323852040297609
+    TagComponent:
+      Tag: meshes[0]-2
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16727003201412064524
+    TagComponent:
+      Tag: meshes[0]-49
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16793101428804882316
+    TagComponent:
+      Tag: meshes[0]-101
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16823128077494475952
+    TagComponent:
+      Tag: meshes[0]-51
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17069916287601664312
+    TagComponent:
+      Tag: meshes[0]-32
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17130024705365509697
+    TagComponent:
+      Tag: meshes[0]-56
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17135523373111901365
+    TagComponent:
+      Tag: meshes[0]-51
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17156847000109065388
+    TagComponent:
+      Tag: meshes[0]-15
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17294757293813886933
+    TagComponent:
+      Tag: meshes[0]-67
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17374335796410791891
+    TagComponent:
+      Tag: meshes[0]-22
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17394947396196463778
+    TagComponent:
+      Tag: meshes[0]-63
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17484774776105030577
+    TagComponent:
+      Tag: meshes[0]-50
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17511630247444625544
+    TagComponent:
+      Tag: meshes[0]-16
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17556265354503986540
+    TagComponent:
+      Tag: meshes[0]-51
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17558314766797731704
+    TagComponent:
+      Tag: meshes[0]-70
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17605994904343089271
+    TagComponent:
+      Tag: meshes[0]-94
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17671493667982584735
+    TagComponent:
+      Tag: meshes[0]-68
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17675994361344214721
+    TagComponent:
+      Tag: meshes[0]-21
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17685541637700875292
+    TagComponent:
+      Tag: meshes[0]-82
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17761664701512142625
+    TagComponent:
+      Tag: meshes[0]-88
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17863488381247064309
+    TagComponent:
+      Tag: meshes[0]-102
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17928376227766081927
+    TagComponent:
+      Tag: meshes[0]-73
+    Parent: 12864156725892362293
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17954541259940318021
+    TagComponent:
+      Tag: meshes[0]-9
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 18032767206870614902
+    TagComponent:
+      Tag: meshes[0]-30
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 18164400999259358415
+    TagComponent:
+      Tag: meshes[0]-82
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 18297978809112721394
+    TagComponent:
+      Tag: meshes[0]-20
+    Parent: 7624988811324710557
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 18371855441211400567
+    TagComponent:
+      Tag: meshes[0]-38
+    Parent: 15025293416552950158
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]

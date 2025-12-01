@@ -258,6 +258,8 @@ namespace GameEngine {
             auto& skyComponent = entity.GetComponent<SkyComponent>();
             out << YAML::Key << "DynamicSky" << YAML::Value << skyComponent.DynamicSky;
             out << YAML::Key << "selectedIBL" << YAML::Value << skyComponent.selectedIBL;
+            out << YAML::Key << "IBLScale" << YAML::Value << skyComponent.IBLScale;
+
 
 			out << YAML::EndMap;
 		}
@@ -397,6 +399,7 @@ namespace GameEngine {
                     deserializedEntity.AddComponent<SkyComponent>();
                     deserializedEntity.GetComponent<SkyComponent>().DynamicSky = skyComponent["DynamicSky"].as<bool>(false);
                     deserializedEntity.GetComponent<SkyComponent>().selectedIBL = skyComponent["selectedIBL"].as<uint32_t>(0);
+                    deserializedEntity.GetComponent<SkyComponent>().IBLScale = skyComponent["IBLScale"].as<float>(1.0f);
 				}
 				if (auto pointLightComponent = entity["PointLightComponent"]; pointLightComponent) {
                     deserializedEntity.AddComponent<PointLightComponent>();

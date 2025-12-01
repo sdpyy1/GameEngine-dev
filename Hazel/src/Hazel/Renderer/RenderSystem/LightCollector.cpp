@@ -6,6 +6,7 @@
 #include <Hazel/Scene/Entity.h>
 
 namespace GameEngine {
+	LightInfo LightCollector::s_LightInfo = {};
 
 	void LightCollector::CollectLight()
 	{
@@ -56,8 +57,27 @@ namespace GameEngine {
 				lightInfo.pointLights[pointLightCount].intensity = pointLightComp.Intensity;
 				lightInfo.pointLights[pointLightCount].sphere = { lightInfo.pointLights[pointLightCount].position,pointLightComp.Radius };
                 lightInfo.pointLights[pointLightCount].showRadius = pointLightComp.showRadius? 1:0;
-				// TODO：6个面的view proj
-				// lightInfo.pointLights[pointLightCount].view = 
+				// 6个面的view proj
+				auto & position = transformComp.Translation;
+				glm::vec3 up = glm::vec3(0.0f, -1.0f, 0.0f); 
+				lightInfo.pointLights[pointLightCount].view[0] = glm::lookAt(position, position + glm::vec3(0.0f, 1.0f, 0.0f), up);  // +Y
+                lightInfo.pointLights[pointLightCount].view[1] = glm::lookAt(position, position + glm::vec3(0.0f, -1.0f, 0.0f), up); // -Y
+                lightInfo.pointLights[pointLightCount].view[2] = glm::lookAt(position, position + glm::vec3(1.0f, 0.0f, 0.0f), up); // +X
+                lightInfo.pointLights[pointLightCount].view[3] = glm::lookAt(position, position + glm::vec3(-1.0f, 0.0f, 0.0f), up); // -X
+                lightInfo.pointLights[pointLightCount].view[4] = glm::lookAt(position, position + glm::vec3(0.0f, 0.0f, 1.0f), up); // +Z
+                lightInfo.pointLights[pointLightCount].view[5] = glm::lookAt(position, position + glm::vec3(0.0f, 0.0f, -1.0f), up); // -Z
+				constexpr float fov = glm::radians(90.0f);
+				float aspect = 1.0f;
+				float nearPlane = 0.1;
+				float farPlane = lightInfo.pointLights[pointLightCount].sphere.radius;
+				lightInfo.pointLights[pointLightCount].projection = glm::perspective(fov,aspect,nearPlane,farPlane );
+                lightInfo.pointLights[pointLightCount].viewProj[0] = lightInfo.pointLights[pointLightCount].projection * lightInfo.pointLights[pointLightCount].view[0];
+                lightInfo.pointLights[pointLightCount].viewProj[1] = lightInfo.pointLights[pointLightCount].projection * lightInfo.pointLights[pointLightCount].view[1];
+                lightInfo.pointLights[pointLightCount].viewProj[2] = lightInfo.pointLights[pointLightCount].projection * lightInfo.pointLights[pointLightCount].view[2];
+                lightInfo.pointLights[pointLightCount].viewProj[3] = lightInfo.pointLights[pointLightCount].projection * lightInfo.pointLights[pointLightCount].view[3];
+                lightInfo.pointLights[pointLightCount].viewProj[4] = lightInfo.pointLights[pointLightCount].projection * lightInfo.pointLights[pointLightCount].view[4];
+                lightInfo.pointLights[pointLightCount].viewProj[5] = lightInfo.pointLights[pointLightCount].projection * lightInfo.pointLights[pointLightCount].view[5];
+
 				pointLightCount++;
 			}
 			lightInfo.pointLightCount = pointLightCount;
@@ -79,6 +99,7 @@ namespace GameEngine {
 			}
 			lightInfo.spotLightCount = spotLightCount;
 		}
+		s_LightInfo = lightInfo;
 		RENDER_RESOURCEMANAGER->SetLightInfo(lightInfo);
 	}
 
@@ -180,6 +201,7 @@ namespace GameEngine {
 		}
 
 	}
+
 }
 
 

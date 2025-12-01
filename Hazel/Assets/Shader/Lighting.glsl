@@ -85,7 +85,7 @@ void main()
 	vec3 lightContribution = CalculateDirLights(F0) * shadowScale;
 	
 	// IBL
-	vec3 iblContribution = IBL(F0, Lr);   // TODO environment Intensity Setting
+	vec3 iblContribution = IBL(F0, Lr) * FetchSkySetting().IbLScale;  
 
 	vec3 finalColor = lightContribution + iblContribution;
 

@@ -3,7 +3,6 @@
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 #include "Hazel/Scene/SceneManager.h"
-#define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless 单个binding的最大描述符数目
 
 namespace GameEngine {
 	static uint32_t BindlessSlotToPerFrameBinding(BindlessSlot slot) { return slot + (uint32_t)GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION; }
