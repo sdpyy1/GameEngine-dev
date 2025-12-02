@@ -1,6 +1,6 @@
 #version 450 core
 #ifdef COMPUTE_SHADER
-#include "include/Common.glslh"
+#include "common/constant.glsl"
 #extension GL_EXT_samplerless_texture_functions : require
 // Pre-filters environment cube map using GGX NDF importance sampling.
 // Part of specular IBL split-sum approximation.

@@ -1,7 +1,7 @@
 #version 450 core
 #ifdef COMPUTE_SHADER
 #define LOCAL_SIZE 8
-#include "include/SkyCommon.glslh"
+#include "common/Sky.glsl"
 
 layout(rgba32f, binding = 0) uniform writeonly image2D transmittanceLut;
 
@@ -22,7 +22,7 @@ void main()
     vec2 uv = vec2(texelCoord) / vec2(lutSize);
 	float r = 0.0;
 
-	// u·½Ïò£ºcos´Ó1µ½-1£¬v·½Ïò£º¸ß¶È´Ó0µ½1
+	// uï¿½ï¿½ï¿½ï¿½cosï¿½ï¿½1ï¿½ï¿½-1ï¿½ï¿½vï¿½ï¿½ï¿½ò£º¸ß¶È´ï¿½0ï¿½ï¿½1
     UvToTransmittanceLutParams(bottomRadius, topRadius, uv, cos_theta, r);
 	float sin_theta = sqrt(1.0 - cos_theta * cos_theta);
 	vec3 CameraPosition = vec3(0.0, r, 0.0);

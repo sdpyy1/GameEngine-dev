@@ -14,15 +14,15 @@ namespace GameEngine {
 	Application::Application(const ApplicationSpecification& specification)
 		: m_Specification(specification)
 	{
-
+		Log::Init();
 		ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
-
 
 		NFD::Init();
 
 		m_WindowManager = std::make_shared<WindowManager>(WindowSpec(m_Specification.Name, 1950, 1300));
 		m_WindowManager->SetEventCallback(HZ_BIND_EVENT_FN(Application::OnEvent));
+
 		m_SceneManager = std::make_shared<SceneManager>();
 
 		m_RenderSystem = std::make_shared<RenderSystem>();

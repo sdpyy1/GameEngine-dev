@@ -1,9 +1,8 @@
 #version 450 core
 #include "common/common.glsl"
 #include "common/Gbuffer.glsl"
-#include "include/Common.glslh"
 #ifdef VERTEX_SHADER
-vec3 kNdcPoints[3] = vec3[](
+vec3 kNdcPoints[3] = vec3[]( 
     vec3(-1.0, -1.0, 0.0), 
     vec3( 3.0, -1.0, 0.0), 
     vec3(-1.0,  3.0, 0.0) 
@@ -34,23 +33,22 @@ struct PBRParameters
 	vec3 View;
 	float NdotV;
 } m_Params;
-#include "common/PBR.glsl"  // 必须放在这里，需要上边的这些参数
-
-
+#include "common/shadow.glsl"
+#include "common/light.glsl" 
 
 void main()
 {
     vec3 WorldPosition = FetchGBufferPosition(TexCoord);
-	if (WorldPosition == vec3(0.0)) { // 这部分无模型，后续天空盒渲染
-		o_Color = vec4(0.0, 0.0, 0.0, 1.0);
+	if (WorldPosition == vec3(0.0)) {
+		o_Color = vec4(0.0);
 		return;
 	}
 
-	// 阴影
 	float shadowScale = 1.0;
 	uint cascadeIndex = 0;
 	DirLightInfo dirLight = FetchDirLightInfo();
 	Camera u_CameraData = FetchCamera();
+	
 	if(dirLight.radiance != vec3(0.0)){
 		vec3 CameraPosition = FetchCamera().CameraPosition;
 		float dis = length(WorldPosition - CameraPosition);
@@ -72,7 +70,6 @@ void main()
 		else if(GetShadowSetting().ShadowType == 3) shadowScale = PCSS_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords, 0.5);
 	}
 
-	// 直接光照
 	m_Params.Albedo = FetchGBufferAlbedo(TexCoord);
 	m_Params.Metalness = FetchGBufferMetalness(TexCoord);
     m_Params.Roughness = FetchGBufferRoughness(TexCoord);
@@ -82,7 +79,7 @@ void main()
 	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
 	const vec3 Fdielectric = vec3(0.04);
 	vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
-	vec3 lightContribution = CalculateDirLights(F0) * shadowScale;
+	vec3 lightContribution = CalculateDirLights(F0) * shadowScale + CalculatePointLights(F0, WorldPosition) + CalculateSpotLights(F0, WorldPosition);
 	
 	// IBL
 	vec3 iblContribution = IBL(F0, Lr) * FetchSkySetting().IbLScale;  
@@ -95,11 +92,11 @@ void main()
 	{
 		vec3 cascadeColor;
 			switch(cascadeIndex) {
-			case 0: cascadeColor = vec3(1.0, 0.0, 0.0); break; // 红色 - 级联0
-			case 1: cascadeColor = vec3(0.0, 1.0, 0.0); break; // 绿色 - 级联1
-			case 2: cascadeColor = vec3(0.0, 0.0, 1.0); break; // 蓝色 - 级联2
-			case 3: cascadeColor = vec3(1.0, 1.0, 0.0); break; // 黄色 - 级联3
-			default: cascadeColor = vec3(1.0, 0.0, 1.0); // 紫色 - 异常
+			case 0: cascadeColor = vec3(1.0, 0.0, 0.0); break; // 锟斤拷色 - 锟斤拷锟斤拷0
+			case 1: cascadeColor = vec3(0.0, 1.0, 0.0); break; // 锟斤拷色 - 锟斤拷锟斤拷1
+			case 2: cascadeColor = vec3(0.0, 0.0, 1.0); break; // 锟斤拷色 - 锟斤拷锟斤拷2
+			case 3: cascadeColor = vec3(1.0, 1.0, 0.0); break; // 锟斤拷色 - 锟斤拷锟斤拷3
+			default: cascadeColor = vec3(1.0, 0.0, 1.0); // 锟斤拷色 - 锟届常
 		}
 		o_Color = vec4(mix(o_Color.xyz,cascadeColor,0.5), 1.0);
 	}

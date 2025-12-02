@@ -133,7 +133,7 @@ namespace GameEngine
                         for (auto& ext : extensions)
                         {
                             m_PhysicalDeviceSupportedExtensions.push_back(ext.extensionName);
-                            // LOG_TRACE_TAG("PhysicalDevice", "Support Extension: {}", ext.extensionName);
+                            LOG_TRACE_TAG("PhysicalDevice", "Support Extension: {}", ext.extensionName);
                         }
                     }
 
@@ -147,6 +147,20 @@ namespace GameEngine
                         deviceProperties2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
                         deviceProperties2.pNext = &m_PhysicalDeviceRayTracingPipelineProperties;
                         vkGetPhysicalDeviceProperties2(device, &deviceProperties2);
+                        if (m_Config.enableRayTracing)
+                        {
+                            LOG_TRACE_TAG("PhysicalDevice", LOG_LINE);
+                            LOG_TRACE_TAG("PhysicalDevice", "===== Ray Tracing Pipeline Properties (KHR) =====");
+                            LOG_TRACE_TAG("PhysicalDevice", "Shader Group Handle Size: {} bytes", m_PhysicalDeviceRayTracingPipelineProperties.shaderGroupHandleSize);
+                            LOG_TRACE_TAG("PhysicalDevice", "Max Ray Recursion Depth: {}", m_PhysicalDeviceRayTracingPipelineProperties.maxRayRecursionDepth);
+                            LOG_TRACE_TAG("PhysicalDevice", "Max Shader Group Stride: {} bytes", m_PhysicalDeviceRayTracingPipelineProperties.maxShaderGroupStride);
+                            LOG_TRACE_TAG("PhysicalDevice", "Shader Group Base Alignment: {} bytes", m_PhysicalDeviceRayTracingPipelineProperties.shaderGroupBaseAlignment);
+                            LOG_TRACE_TAG("PhysicalDevice", "Shader Group Handle Capture Replay Size: {} bytes", m_PhysicalDeviceRayTracingPipelineProperties.shaderGroupHandleCaptureReplaySize);
+                            LOG_TRACE_TAG("PhysicalDevice", "Max Ray Dispatch Invocation Count: {}", m_PhysicalDeviceRayTracingPipelineProperties.maxRayDispatchInvocationCount);
+                            LOG_TRACE_TAG("PhysicalDevice", "Shader Group Handle Alignment: {} bytes", m_PhysicalDeviceRayTracingPipelineProperties.shaderGroupHandleAlignment);
+                            LOG_TRACE_TAG("PhysicalDevice", "Max Ray Hit Attribute Size: {} bytes", m_PhysicalDeviceRayTracingPipelineProperties.maxRayHitAttributeSize);
+                            LOG_TRACE_TAG("PhysicalDevice", LOG_LINE);
+                        }
                     }
 
                     m_PhysicalDevice = device;
@@ -222,15 +236,22 @@ namespace GameEngine
         createInfo.queueCreateInfoCount = (uint32_t)queueCreateInfos.size();
         createInfo.pQueueCreateInfos = queueCreateInfos.data();
 
-        //扩展信息
+        // 设备拓展
         std::vector<const char*> deviceExtentions;
         for (auto extention : DEVICE_EXTENTIONS) { 
             if (!VulkanUtil::IsExtensionSupported(m_PhysicalDeviceSupportedExtensions, extention)) continue;
             deviceExtentions.push_back(extention);
         };
+
         if (m_Config.enableRayTracing) { 
-            for (auto extention : RAY_TRACING_DEVICE_EXTENTIONS)
-                deviceExtentions.push_back(extention);  // TODO：不检查直接添加不会报错，但是RenderDoc会报错，但是检查添加了，直接运行也会报错
+            for (auto extention : RAY_TRACING_DEVICE_EXTENTIONS) {
+                if (!VulkanUtil::IsExtensionSupported(m_PhysicalDeviceSupportedExtensions, extention)) {
+                    LOG_ERROR("Ray Tracing Device Extention Not Supported: {}", extention);
+                    continue;
+                }
+                deviceExtentions.push_back(extention);  // 开启RT拓展后，RenderDoc会报错(应该RenderDoc不支持RTpipeline的调试)
+
+            }
         }
         createInfo.enabledExtensionCount = (uint32_t)deviceExtentions.size();
         createInfo.ppEnabledExtensionNames = deviceExtentions.data();
@@ -285,15 +306,23 @@ namespace GameEngine
 
             VkPhysicalDeviceAccelerationStructureFeaturesKHR accelerationStructureFeatures = {};    //rt加速结构
             accelerationStructureFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR;
-            accelerationStructureFeatures.accelerationStructure = true;
+            accelerationStructureFeatures.accelerationStructure = VK_TRUE;   // 加速结构支持
+            accelerationStructureFeatures.accelerationStructureCaptureReplay = VK_TRUE; // 保存和重用加速结构设备地址，用于捕获和回放追踪结果
+            accelerationStructureFeatures.descriptorBindingAccelerationStructureUpdateAfterBind = VK_TRUE; // 在绑定后更新加速结构
+
 
             VkPhysicalDeviceRayTracingPipelineFeaturesKHR rayTracingPipelineFeatures = {};          //rt管线
             rayTracingPipelineFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR;
-            rayTracingPipelineFeatures.rayTracingPipeline = true;
+            rayTracingPipelineFeatures.rayTracingPipeline = VK_TRUE; // 光线追踪管线支持
+            rayTracingPipelineFeatures.rayTracingPipelineTraceRaysIndirect = VK_TRUE;// 间接光线追踪调度命令
+            rayTracingPipelineFeatures.rayTraversalPrimitiveCulling = VK_TRUE; // 在光线遍历时剔除图元
+
 
             VkPhysicalDeviceRayQueryFeaturesKHR rayQueryFeatures = {};                              //rt查询
             rayQueryFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR;
             rayQueryFeatures.rayQuery = VK_TRUE;
+
+
             dynamicVertexInputFeatures.pNext = &deviceAddressfeture;
             deviceAddressfeture.pNext = &accelerationStructureFeatures;
             accelerationStructureFeatures.pNext = &rayTracingPipelineFeatures;

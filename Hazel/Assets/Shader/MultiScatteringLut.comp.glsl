@@ -1,7 +1,7 @@
 #version 450 core
 #ifdef COMPUTE_SHADER
 #define LOCAL_SIZE 8
-#include "include/SkyCommon.glslh"
+#include "common/Sky.glsl"
 
 layout(rgba32f, binding = 0) uniform writeonly image2D MultiScatteringLut;
 layout(binding = 1) uniform texture2D u_TransmittanceLut;

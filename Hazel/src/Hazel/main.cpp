@@ -2,9 +2,6 @@
 #include "Hazel/Core/Application.h"
 int main(int argc, char** argv)
 {
-	GameEngine::Log::Init();
-    
-    
 	GameEngine::ApplicationSpecification spec;
 	spec.Name = "Hazelnut";
 	spec.CommandLineArgs = { argc, argv };

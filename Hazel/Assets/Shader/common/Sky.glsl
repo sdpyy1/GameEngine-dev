@@ -1,6 +1,6 @@
-#ifndef SKY_COMMON_GLSL
-#define SKY_COMMON_GLSL
-#include "Common.glslh"
+#ifndef SKY_GLSL
+#define SKY_GLSL
+#include "constant.glsl"
 
 AtmosphereParameter BuildAtmosphereParameter(){
 	AtmosphereParameter Atmosphere;  // TODO: AtmosphereUniform
@@ -34,7 +34,7 @@ AtmosphereParameter BuildAtmosphereParameter(){
 float fromUnitToSubUvs(float u, float resolution) { return (u + 0.5f / resolution) * (resolution / (resolution + 1.0f)); }
 float fromSubUvsToUnit(float u, float resolution) { return (u - 0.5f / resolution) * (resolution / (resolution - 1.0f)); }
 
-// UV ×ª Í¸ÉäÂÊLUT²ÎÊý£¨¸ß¶È¡¢Ìì¶¥½ÇµÄÓàÏÒÖµ£©
+// UV ×ª Í¸ï¿½ï¿½ï¿½ï¿½LUTï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¶È¡ï¿½ï¿½ì¶¥ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
 	void UvToTransmittanceLutParams(float bottomRadius, float topRadius, vec2 uv, out float mu, out float r)
 	{
 		float x_mu = uv.x;
@@ -51,7 +51,7 @@ float fromSubUvsToUnit(float u, float resolution) { return (u - 0.5f / resolutio
 		mu = clamp(mu, -1.0f, 1.0f);
 	}
 
-// ¶þÎ¬ UV ×ø±êµ±×÷ÇòÃæ×ø±ê (¦È, ¦Õ) Ó³Éäµ½µ¥Î»Çò·½ÏòÏòÁ¿¡£
+// ï¿½ï¿½Î¬ UV ï¿½ï¿½ï¿½êµ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½, ï¿½ï¿½) Ó³ï¿½äµ½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 vec3 UVToViewDir(vec2 uv)
 {
     float theta = (1.0 - uv.y) * PI;
@@ -76,7 +76,7 @@ float RayIntersectSphere(vec3 center, float radius, vec3 rayStart, vec3 rayDir)
     // use min distance
     float t1 = SH - PH;
     float t2 = SH + PH;
-    float t = (t1 < 0) ? t2 : t1;  // Ö»·µ»ØÕýÉäÏßDis£¬Î´ÃüÖÐ·µ»Ø-1
+    float t = (t1 < 0) ? t2 : t1;  // Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Disï¿½ï¿½Î´ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½-1
 
     return t;
 }
@@ -128,7 +128,7 @@ float MiePhase(in AtmosphereParameter param, float cos_theta)
     
     return a * b * (c / d);
 }
-// »ý·Ö¼ÆËãÈÎÒâÁ½µã p1, p2 Ö®¼äµÄ transmittance
+// ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ p1, p2 Ö®ï¿½ï¿½ï¿½ transmittance
 vec3 Transmittance(in AtmosphereParameter param, vec3 p1, vec3 p2)
 {
     const int N_SAMPLE = 32;
@@ -169,7 +169,7 @@ vec2 GetTransmittanceLutUv(float bottomRadius, float topRadius, float mu, float 
 
     return vec2(x_mu, x_r);
 }
-// ²é±í¼ÆËãÈÎÒâµã p ÑØ×ÅÈÎÒâ·½Ïò dir µ½´óÆø²ã±ßÔµµÄ transmittance
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ p ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â·½ï¿½ï¿½ dir ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôµï¿½ï¿½ transmittance
 vec3 TransmittanceToAtmosphere(in AtmosphereParameter param, vec3 p, vec3 dir, texture2D lut, sampler u_sampler)
 {
     float bottomRadius = param.PlanetRadius;
@@ -192,7 +192,7 @@ vec3 Scattering(AtmosphereParameter param, vec3 p, vec3 lightDir, vec3 viewDir)
 
     return rayleigh + mie;
 }
-// »ý·Ö¼ÆËã¶àÖØÉ¢Éä²éÕÒ±í
+// ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¢ï¿½ï¿½ï¿½ï¿½Ò±ï¿½
 vec3 IntegralMultiScattering(
     in AtmosphereParameter param, vec3 samplePoint, vec3 lightDir,
     texture2D _transmittanceLut, sampler u_sampler)
@@ -273,7 +273,7 @@ vec3 IntegralMultiScattering(
 
     for(int i=0; i<N_DIRECTION; i++)
     {
-        // ¹âÏßºÍ´óÆø²ãÇó½»
+        // ï¿½ï¿½ï¿½ßºÍ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         vec3 viewDir = RandomSphereSamples[i];
         float dis = RayIntersectSphere(vec3(0,0,0), param.PlanetRadius + param.AtmosphereHeight, samplePoint, viewDir);
         float d = RayIntersectSphere(vec3(0,0,0), param.PlanetRadius, samplePoint, viewDir);
@@ -295,7 +295,7 @@ vec3 IntegralMultiScattering(
             vec3 s  = Scattering(param, p, lightDir, viewDir);
             vec3 t2 = exp(-opticalDepth);
             
-            // ÓÃ 1.0 ´úÌæÌ«Ñô¹âÑÕÉ«, ¸Ã±äÁ¿ÔÚºóÐøµÄ¼ÆËãÖÐ³ËÉÏÈ¥
+            // ï¿½ï¿½ 1.0 ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«, ï¿½Ã±ï¿½ï¿½ï¿½ï¿½Úºï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ð³ï¿½ï¿½ï¿½È¥
             G_2  += t1 * s * t2 * uniform_phase * ds * 1.0;  
             f_ms += t2 * sigma_s * uniform_phase * ds;
 
@@ -309,7 +309,7 @@ vec3 IntegralMultiScattering(
     return G_2 * (1.0 / (1.0 - f_ms));
 }
 
-// ¶ÁÈ¡¶àÖØÉ¢Éä²éÕÒ±í
+// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½É¢ï¿½ï¿½ï¿½ï¿½Ò±ï¿½
 vec3 GetMultiScattering(in AtmosphereParameter param, vec3 p, vec3 lightDir, texture2D lut, sampler u_sampler)
 {
     float h = length(p) - param.PlanetRadius;
@@ -328,13 +328,13 @@ vec3 GetSkyView(
     const int N_SAMPLE = 32;
     vec3 color = vec3(0, 0, 0);
 
-    // ¹âÏßºÍ´óÆø²ãÇó½»
+    // ï¿½ï¿½ï¿½ßºÍ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     float dis = RayIntersectSphere(vec3(0,0,0), param.PlanetRadius + param.AtmosphereHeight, eyePos, viewDir);
-	// ¹âÏßÓëÐÇÇòÇó½»
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     float d = RayIntersectSphere(vec3(0,0,0), param.PlanetRadius, eyePos, viewDir);
     if(dis < 0) return vec3(0.75, 0.75, 0.75); 
     if(d > 0) dis = min(dis, d);
-    if(maxDis > 0) dis = min(dis, maxDis);  // ´ø×î³¤¾àÀë maxDis ÏÞÖÆ, ·½±ã aerial perspective lut ²¿·Ö¸´ÓÃ´úÂë
+    if(maxDis > 0) dis = min(dis, maxDis);  // ï¿½ï¿½ï¿½î³¤ï¿½ï¿½ï¿½ï¿½ maxDis ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ aerial perspective lut ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½Ã´ï¿½ï¿½ï¿½
 
     float ds = dis / float(N_SAMPLE);
     vec3 p = eyePos + (viewDir * ds) * 0.5;
@@ -343,7 +343,7 @@ vec3 GetSkyView(
 
     for(int i=0; i<N_SAMPLE; i++)
     {
-        // »ýÀÛÑØÍ¾µÄäÎÃðÏµÊý
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½
         float h = length(p) - param.PlanetRadius;
         vec3 extinction = RayleighCoefficient(param, h) + MieCoefficient(param, h) +  // scattering
                             OzoneAbsorption(param, h) + MieAbsorption(param, h);        // absorption
@@ -353,11 +353,11 @@ vec3 GetSkyView(
         vec3 s  = Scattering(param, p, lightDir, viewDir);
         vec3 t2 = exp(-opticalDepth);
         
-        // µ¥´ÎÉ¢Éä
-        vec3 inScattering = t1 * s * t2 * ds * sunLuminance * 16;  // TODO: ÎªÊ²Ã´Ô­Ê¼ºÜ°µ
+        // ï¿½ï¿½ï¿½ï¿½É¢ï¿½ï¿½
+        vec3 inScattering = t1 * s * t2 * ds * sunLuminance * 16;  // TODO: ÎªÊ²Ã´Ô­Ê¼ï¿½Ü°ï¿½
         color += inScattering;
 
-        // ¶àÖØÉ¢Éä
+        // ï¿½ï¿½ï¿½ï¿½É¢ï¿½ï¿½
         vec3 multiScattering = GetMultiScattering(param, p, lightDir, _multiScatteringLut,u_sampler);
         color += multiScattering * t2 * ds * sunLuminance;
 

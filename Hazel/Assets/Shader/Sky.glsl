@@ -1,5 +1,5 @@
 #version 450 core
-#include "include/SkyCommon.glslh"
+#include "common/Sky.glsl"
 #include "common/Common.glsl"
 
 #ifdef VERTEX_SHADER
@@ -31,20 +31,20 @@ layout(set = 1, binding = 0) uniform sampler u_Sampler[];
 
 vec3 GetSunDisk(in AtmosphereParameter param, vec3 eyePos, vec3 viewDir, vec3 lightDir)
 {
-    // ¼ÆËãÈëÉä¹âÕÕ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     float cosine_theta = dot(viewDir, lightDir);
     float theta = acos(cosine_theta) * (180.0 / PI);
     vec3 sunLuminance = param.SunLightColor * param.SunLightIntensity;
 
-    // ÅÐ¶Ï¹âÏßÊÇ·ñ±»ÐÇÇò×èµ²
+    // ï¿½Ð¶Ï¹ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½èµ²
     float disToPlanet = RayIntersectSphere(vec3(0,0,0), param.PlanetRadius, eyePos, viewDir);
     if(disToPlanet >= 0) return vec3(0,0,0);
 
-    // ºÍ´óÆø²ãÇó½»
+    // ï¿½Í´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     float disToAtmosphere = RayIntersectSphere(vec3(0,0,0), param.PlanetRadius + param.AtmosphereHeight, eyePos, viewDir);
     if(disToAtmosphere < 0) return vec3(0,0,0);
 
-    // ¼ÆËãË¥¼õ
+    // ï¿½ï¿½ï¿½ï¿½Ë¥ï¿½ï¿½
     sunLuminance *= TransmittanceToAtmosphere(param, eyePos, viewDir, u_TransmittanceLut,u_Sampler[0]);
 
     if(theta < param.SunDiskAngle) return sunLuminance;

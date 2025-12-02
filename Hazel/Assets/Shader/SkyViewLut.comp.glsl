@@ -1,7 +1,7 @@
 #version 450 core
 #ifdef COMPUTE_SHADER
 #define LOCAL_SIZE 8
-#include "include/SkyCommon.glslh"
+#include "common/Sky.glsl"
 #include "common/common.glsl"
 
 layout(set = 1,binding = 0) uniform sampler u_Sampler[];

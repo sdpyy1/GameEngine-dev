@@ -1,6 +1,6 @@
 #version 450 core
 #ifdef COMPUTE_SHADER
-#include"include/Common.glslh"
+#include"common/constant.glsl"
 layout(set = 0, binding = 0, rgba32f) restrict writeonly uniform imageCube o_IrradianceMap;
 layout(set = 0, binding = 1) uniform textureCube u_RadianceMap;
 layout(set = 1, binding = 0) uniform sampler u_Samplers[];

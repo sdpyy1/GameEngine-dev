@@ -1,6 +1,6 @@
 #version 450 core
 #include "common/common.glsl"
-#include "include/Common.glslh"
+#include "common/constant.glsl"
 #ifdef COMPUTE_SHADER
 layout(set = 2, rgba32f, binding = 0) uniform writeonly image2D o_Texture;
 layout(set = 2, binding = 1) uniform texture2D u_InputTexture;
@@ -18,7 +18,7 @@ layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
 #define MODE_UPSAMPLE_FIRST 2
 #define MODE_UPSAMPLE       3
 
-// ¾í»ý
+// ï¿½ï¿½ï¿½ï¿½
 vec3 DownsampleBox13(texture2D tex, float lod, vec2 uv, vec2 texelSize, sampler samplr)
 {
         // Center
@@ -86,7 +86,7 @@ vec3 UpsampleTent9(texture2D tex, float lod, vec2 uv, vec2 texelSize, float radi
 {
     vec4 offset = texelSize.xyxy * vec4(1.0f, 1.0f, -1.0f, 0.0f) * radius;
 
-    // ÖÐÐÄ²ÉÑù
+    // ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½
     vec3 result = textureLod(sampler2D(tex, samplr), uv, lod).rgb * 4.0f;
 
     result += textureLod(sampler2D(tex, samplr), uv - offset.xy, lod).rgb;
@@ -105,14 +105,14 @@ vec3 UpsampleTent9(texture2D tex, float lod, vec2 uv, vec2 texelSize, float radi
 
 void main()
 {
-// ÅäºÏPassÒÑ¾­µ÷ÕûºÃ²»±¨´í£¬Îð¶¯~
+// ï¿½ï¿½ï¿½Passï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~
     vec2 imgSize = vec2(imageSize(o_Texture));
     ivec2 invocID = ivec2(gl_GlobalInvocationID);
     if (invocID.x >= imgSize.x || invocID.y >= imgSize.y) 
         return;
         
     vec2 texCoords = vec2(float(invocID.x) / imgSize.x, float(invocID.y) / imgSize.y);
-    texCoords += (1.0f / imgSize) * 0.5f; // »ñÈ¡ÏñËØÖÐÐÄ×ø±ê
+    texCoords += (1.0f / imgSize) * 0.5f; // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     vec2 texSize = vec2(textureSize(u_InputTexture, int(u_Uniforms.LOD)));
     vec4 color = vec4(0, 0, 0, 1);
@@ -129,12 +129,12 @@ void main()
     }
     else if (u_Uniforms.Mode == MODE_UPSAMPLE)
     {
-        // °ÑÏÂÒ»²ã²ÉÑù´«µÝÉÏÀ´
+        // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         vec2 bloomTexSize = vec2(textureSize(u_InputTexture, 0));
         float sampleScale = 1.0f;
         vec3 upsampledTexture = UpsampleTent9(u_InputTexture,0, texCoords, 1.0f / bloomTexSize, sampleScale, SAMPLER[0]);
 
-        // ¼ÓÉÏ±¾À´Õâ²ã¾ÍÓÐµÄ
+        // ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½
         vec3 existing = textureLod(sampler2D(allDonwTexture, SAMPLER[0]), texCoords,u_Uniforms.LOD).rgb;
         color.rgb = existing + upsampledTexture;
     }
