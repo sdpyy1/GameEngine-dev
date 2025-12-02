@@ -1,6 +1,16 @@
 Scene: Untitled
 Entities:
-  - Entity: 109168570240478504
+  - Entity: 109878982224241458
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 394250853451343171
     TagComponent:
       Tag: Cube
     Parent: 2167496106900639190
@@ -10,87 +20,62 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 129899031052045646
+  - Entity: 647091161387682498
+    TagComponent:
+      Tag: Point Light
+    Parent: 0
+    Children:
+      []
+    PointLightComponent:
+      Intensity: 1
+      Radiance: [1, 0, 0.810811043]
+      Radius: 20
+      ShowRadius: true
+    TransformComponent:
+      Translation: [3.45788741, 3.84750605, -8.7181263]
+      Rotation: [4.76837158e-07, 1.85448098, 4.76837158e-07]
+      Scale: [1.16000021, 1.15999997, 1.16000021]
+  - Entity: 865335263387387170
+    TagComponent:
+      Tag: Cube
+    Parent: 3934353000045454942
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1612605317456445041
     TagComponent:
       Tag: WaterBottle
-    Parent: 11369934938750415303
+    Parent: 8031279963325521562
     Children:
       []
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 168678268607483050
-    TagComponent:
-      Tag: obj1
-    Parent: 7372072473837216595
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 476049293860733523
-    TagComponent:
-      Tag: obj1
-    Parent: 925397801420024063
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 810910292071758205
-    TagComponent:
-      Tag: Cube
-    Parent: 4927747972272982455
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 1081529418154187128
+  - Entity: 1618816252313197576
     TagComponent:
       Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 13513258459603747742
+    Parent: 5478987918772291557
     Children:
       []
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 1269673945017888500
-    TagComponent:
-      Tag: obj1
-    Parent: 925397801420024063
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 2009850195276263461
-    TagComponent:
-      Tag: Cube
-    Parent: 3598505160263927715
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 2058838164739554091
+  - Entity: 1646140321884584855
     TagComponent:
       Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 12553188955629830876
+    Parent: 59344369937433843
     Children:
       []
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 2123362009984531608
+  - Entity: 1710098997349376251
     TagComponent:
       Tag: obj1
     Parent: 925397801420024063
@@ -100,22 +85,7 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 2167496106900639190
-    TagComponent:
-      Tag: assets\Model\Basic\cube.obj
-    Parent: 0
-    Children:
-      - Handle: 11798447628336573587
-      - Handle: 3240582869161893294
-      - Handle: 109168570240478504
-    TransformComponent:
-      Translation: [12.8893433, 4.88616562, -0.637420237]
-      Rotation: [0, 0, 0]
-      Scale: [7.18241405, 6.27148914, 0.909999967]
-    ModelComponent:
-      MeshSourcePath: assets\Model\Basic\cube.obj
-      Visible: true
-  - Entity: 2183792541589329564
+  - Entity: 1712965018045817125
     TagComponent:
       Tag: obj1
     Parent: 925397801420024063
@@ -125,82 +95,27 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 2245531327188761849
+  - Entity: 1745646339270903115
     TagComponent:
       Tag: Cube
-    Parent: 8561215114772884832
+    Parent: 14640570469087655355
     Children:
       []
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 2352076632760364903
-    TagComponent:
-      Tag: obj1
-    Parent: 7372072473837216595
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 2521959379775278830
-    TagComponent:
-      Tag: assets\Model\Basic\cube.obj
-    Parent: 0
-    Children:
-      - Handle: 16475277108609131939
-      - Handle: 7827023808239026086
-      - Handle: 16234395925906202233
-    TransformComponent:
-      Translation: [13.6630888, 3.84668374, -12.8296146]
-      Rotation: [0, 0, 0]
-      Scale: [6.62337923, 7.44329643, 1]
-    ModelComponent:
-      MeshSourcePath: assets\Model\Basic\cube.obj
-      Visible: true
-  - Entity: 2721468616915356012
+  - Entity: 1809061988100725009
     TagComponent:
       Tag: Cube
-    Parent: 9835823563356904454
+    Parent: 9986893763610354734
     Children:
       []
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 2824828614375104016
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 3121914592111446105
-    TagComponent:
-      Tag: Cube
-    Parent: 17053448326886183483
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 3126415857803216556
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 3277809554675037460
+  - Entity: 2193574070349215951
     TagComponent:
       Tag: obj1
     Parent: 925397801420024063
@@ -210,62 +125,7 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 3279247876899639080
-    TagComponent:
-      Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 16888824490273438288
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 3308679667972633795
-    TagComponent:
-      Tag: obj1
-    Parent: 7372072473837216595
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 3363225295427491411
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 3598505160263927715
-    TagComponent:
-      Tag: assets\Model\Basic\cube.obj
-    Parent: 0
-    Children:
-      - Handle: 6727744028574844918
-      - Handle: 2506360225053004422
-      - Handle: 2009850195276263461
-    TransformComponent:
-      Translation: [15.3674135, 11.7252417, -6.26192331]
-      Rotation: [0, 0, 0]
-      Scale: [10.1508532, 0.663387418, 7.49365854]
-    ModelComponent:
-      MeshSourcePath: assets\Model\Basic\cube.obj
-      Visible: true
-  - Entity: 3803197243379609999
-    TagComponent:
-      Tag: Cube
-    Parent: 15245028868377794878
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 4090497240922711680
+  - Entity: 2417469836788708243
     TagComponent:
       Tag: mesh_helmet_LP_13930damagedHelmet
     Parent: 7000690313813670420
@@ -275,7 +135,67 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 4258053201183869461
+  - Entity: 2691658350261803114
+    TagComponent:
+      Tag: Cube
+    Parent: 8561215114772884832
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3363106647217632287
+    TagComponent:
+      Tag: Cube
+    Parent: 17053448326886183483
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3427424474904865509
+    TagComponent:
+      Tag: Cube
+    Parent: 12010860621151577112
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3680514708854145082
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3705067362157671761
+    TagComponent:
+      Tag: Cube
+    Parent: 18437757451322351955
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3765848876605385052
+    TagComponent:
+      Tag: Cube
+    Parent: 8874505652057932552
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3835734231708423195
     TagComponent:
       Tag: Cube
     Parent: 2081363687485885173
@@ -285,7 +205,7 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 4518107193015098097
+  - Entity: 3896296293141915025
     TagComponent:
       Tag: obj1
     Parent: 7372072473837216595
@@ -295,7 +215,646 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 4784430196943043394
+  - Entity: 4066441757525718887
+    TagComponent:
+      Tag: Cube
+    Parent: 8577746660616202665
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4121649597055020335
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4163917275633469923
+    TagComponent:
+      Tag: obj1
+    Parent: 7372072473837216595
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4331374537332648287
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4351050492184711928
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 15780488059641097383
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4424940110377735065
+    TagComponent:
+      Tag: WaterBottle
+    Parent: 11369934938750415303
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4551720152806997200
+    TagComponent:
+      Tag: Cube
+    Parent: 12727882206588730132
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4586847997238152610
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 13935002496033645654
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4802872961593755381
+    TagComponent:
+      Tag: obj1
+    Parent: 925397801420024063
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4933353765305309392
+    TagComponent:
+      Tag: obj1
+    Parent: 925397801420024063
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4986348088437463608
+    TagComponent:
+      Tag: obj1
+    Parent: 925397801420024063
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5034046765751415648
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 13513258459603747742
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5243524486744945505
+    TagComponent:
+      Tag: Cube
+    Parent: 7971249339650534006
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5335450679126555452
+    TagComponent:
+      Tag: WaterBottle
+    Parent: 5449302463515911065
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5336369587336807288
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5618507071950146027
+    TagComponent:
+      Tag: Cube
+    Parent: 6503083787607734309
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5664887552886642795
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5930144053318101727
+    TagComponent:
+      Tag: Cube
+    Parent: 15245028868377794878
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 5937453225545255694
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6177497627079393650
+    TagComponent:
+      Tag: assets\Model\Basic\cube.obj
+    Parent: 0
+    Children:
+      - Handle: 16475277108609131939
+      - Handle: 7827023808239026086
+      - Handle: 16234395925906202233
+      - Handle: 7805332755667561728
+      - Handle: 13946143229485083883
+      - Handle: 10083423775179279754
+    TransformComponent:
+      Translation: [13.6630888, 3.84668374, -12.8296146]
+      Rotation: [0, 0, 0]
+      Scale: [6.62337923, 7.44329643, 1]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Basic\cube.obj
+      Visible: true
+  - Entity: 7070730391329446609
+    TagComponent:
+      Tag: obj1
+    Parent: 7372072473837216595
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7114721026936671533
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7257486416320453607
+    TagComponent:
+      Tag: Cube
+    Parent: 9662362799574844795
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7328708964515232665
+    TagComponent:
+      Tag: Cube
+    Parent: 10132468970454885650
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7343836012976022669
+    TagComponent:
+      Tag: obj1
+    Parent: 7372072473837216595
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7507766835128485214
+    TagComponent:
+      Tag: obj1
+    Parent: 7372072473837216595
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7551701479359507806
+    TagComponent:
+      Tag: assets\Model\helmet\DamagedHelmet.gltf
+    Parent: 0
+    Children:
+      - Handle: 14593231199310742727
+    TransformComponent:
+      Translation: [9.85558033, 4.47332859, -7.80750084]
+      Rotation: [4.76837158e-07, 2.81310964, 4.76837158e-07]
+      Scale: [0.999999404, 1, 0.999999404]
+    ModelComponent:
+      MeshSourcePath: assets\Model\helmet\DamagedHelmet.gltf
+      Visible: true
+  - Entity: 7868621411806692877
+    TagComponent:
+      Tag: Cube
+    Parent: 13819177656448755019
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8363804303038397669
+    TagComponent:
+      Tag: obj1
+    Parent: 7372072473837216595
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8503664852286581395
+    TagComponent:
+      Tag: Cube
+    Parent: 9835823563356904454
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8510884391201779191
+    TagComponent:
+      Tag: obj1
+    Parent: 7372072473837216595
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8577746660616202665
+    TagComponent:
+      Tag: assets\Model\Basic\cube.obj
+    Parent: 0
+    Children:
+      - Handle: 6727744028574844918
+      - Handle: 2506360225053004422
+      - Handle: 2009850195276263461
+      - Handle: 11089624452853690193
+      - Handle: 9092795448213375646
+      - Handle: 4066441757525718887
+    TransformComponent:
+      Translation: [15.3674135, 11.7252417, -6.26192331]
+      Rotation: [0, 0, 0]
+      Scale: [10.1508532, 0.663387418, 7.49365854]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Basic\cube.obj
+      Visible: true
+  - Entity: 8672838022232108763
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 14964286267993903300
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 8839760860593362488
+    TagComponent:
+      Tag: Cube
+    Parent: 2001988752737762392
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9119175993024148139
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 12235799533742192905
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9353622693302231588
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 12553188955629830876
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9896744033232451644
+    TagComponent:
+      Tag: Cube
+    Parent: 8336474036621173270
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 9954584018914529735
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 2185784855438832933
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10083423775179279754
+    TagComponent:
+      Tag: Cube
+    Parent: 6177497627079393650
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10326498398534652704
+    TagComponent:
+      Tag: obj1
+    Parent: 7372072473837216595
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10487184547044037342
+    TagComponent:
+      Tag: assets\Model\Basic\cube.obj
+    Parent: 0
+    Children:
+      - Handle: 15738247088229941951
+      - Handle: 2725142003829240372
+      - Handle: 9982547628700994570
+      - Handle: 4380028434371196163
+      - Handle: 3997545578838999852
+      - Handle: 14969888679207005882
+    TransformComponent:
+      Translation: [20.7488918, 6.03371143, -6.82022953]
+      Rotation: [0, 0, 0]
+      Scale: [0.999999881, 5.15990114, 5.3261838]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Basic\cube.obj
+      Visible: true
+  - Entity: 10773818465587876294
+    TagComponent:
+      Tag: Cube
+    Parent: 432047132074353221
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 10816703507416168853
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11181785029588421335
+    TagComponent:
+      Tag: Cube
+    Parent: 17470005277399463212
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11183436976899513621
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 16888824490273438288
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11335396224446995372
+    TagComponent:
+      Tag: Directional Light
+    Parent: 0
+    Children:
+      []
+    TransformComponent:
+      Translation: [-5.37447739, 5.83548164, -7.35199547]
+      Rotation: [0.653211117, 3.10063529, -2.59860802]
+      Scale: [1.00000346, 0.999999762, 1.00000012]
+    DirectionalLightComponent:
+      ShowCSM: false
+      ShowDirection: true
+      ShadowType: 3
+      Intensity: 1
+      Radiance: [1, 1, 1]
+  - Entity: 11713223228012764455
+    TagComponent:
+      Tag: obj1
+    Parent: 925397801420024063
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12177318455988275270
+    TagComponent:
+      Tag: Cube
+    Parent: 14530719888897774006
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12198267815806439110
+    TagComponent:
+      Tag: WaterBottle
+    Parent: 12824825877860120425
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12204061183845004227
+    TagComponent:
+      Tag: Cube
+    Parent: 10556681993009690545
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12217571642798938798
+    TagComponent:
+      Tag: obj1
+    Parent: 7372072473837216595
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12677361632522310902
+    TagComponent:
+      Tag: obj1
+    Parent: 925397801420024063
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12688671412164513035
+    TagComponent:
+      Tag: Cube
+    Parent: 16457714310027958694
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12727882206588730132
+    TagComponent:
+      Tag: assets\Model\Basic\cube.obj
+    Parent: 0
+    Children:
+      - Handle: 11798447628336573587
+      - Handle: 3240582869161893294
+      - Handle: 109168570240478504
+      - Handle: 1792526624616748770
+      - Handle: 10619135866607397133
+      - Handle: 4551720152806997200
+    TransformComponent:
+      Translation: [13.1561117, 6.1055789, -0.663858712]
+      Rotation: [0, 0, 0]
+      Scale: [7.18241405, 6.27148914, 0.909999967]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Basic\cube.obj
+      Visible: true
+  - Entity: 12798316795890218317
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 12807400016729962132
+    TagComponent:
+      Tag: assets\Model\WaterBottle\glTF\WaterBottle.gltf
+    Parent: 0
+    Children:
+      - Handle: 12258010691481941114
+      - Handle: 10890356935410723191
+      - Handle: 6590499735784061461
+      - Handle: 15365433317468013777
+      - Handle: 15570038962268277562
+      - Handle: 16838236681849515041
+    TransformComponent:
+      Translation: [0.707374871, 2.70741963, -16.0746365]
+      Rotation: [0, 0, 0]
+      Scale: [14.3909979, 14.3909979, 14.3909979]
+    ModelComponent:
+      MeshSourcePath: assets\Model\WaterBottle\glTF\WaterBottle.gltf
+      Visible: true
+  - Entity: 12958002481359368303
+    TagComponent:
+      Tag: Cube
+    Parent: 16325228628529428654
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13143703561235978957
+    TagComponent:
+      Tag: Cube
+    Parent: 10011093973608106768
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13333043487091976355
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13485792230386592123
     TagComponent:
       Tag: Cube
     Parent: 3887859734850577876
@@ -305,7 +864,189 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 5250153630025221624
+  - Entity: 13531476756642712821
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 6670273215467649466
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 13969372688582295884
+    TagComponent:
+      Tag: PostProcess
+    Parent: 0
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PostProcessingComponent:
+      BloomScale: 1.06799996
+  - Entity: 14121503239590351267
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 6331893778663396139
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14220177132040109197
+    TagComponent:
+      Tag: obj1
+    Parent: 925397801420024063
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14282897624922252318
+    TagComponent:
+      Tag: obj1
+    Parent: 7372072473837216595
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14566075205224214612
+    TagComponent:
+      Tag: Cube
+    Parent: 2521959379775278830
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14593231199310742727
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 7551701479359507806
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14779626387142118934
+    TagComponent:
+      Tag: WaterBottle
+    Parent: 5019819801164069654
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14822805702853556324
+    TagComponent:
+      Tag: obj1
+    Parent: 925397801420024063
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14856510470316619027
+    TagComponent:
+      Tag: Cube
+    Parent: 2263428882470659602
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 14969888679207005882
+    TagComponent:
+      Tag: Cube
+    Parent: 10487184547044037342
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15085588141049734678
+    TagComponent:
+      Tag: Cube
+    Parent: 7918895029351798697
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15474508724478810665
+    TagComponent:
+      Tag: Cube
+    Parent: 8472756347037482469
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15510345093845757341
+    TagComponent:
+      Tag: obj1
+    Parent: 7372072473837216595
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15735243456055555364
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    Parent: 10084815846583023003
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 15962175309852853698
+    TagComponent:
+      Tag: obj1
+    Parent: 925397801420024063
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16659019436075781749
+    TagComponent:
+      Tag: Cube
+    Parent: 4927747972272982455
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 16838236681849515041
+    TagComponent:
+      Tag: WaterBottle
+    Parent: 12807400016729962132
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 17266255395558074696
     TagComponent:
       Tag: Sky Light
     Parent: 0
@@ -319,27 +1060,7 @@ Entities:
       DynamicSky: false
       selectedIBL: 4
       IBLScale: 0.612999976
-  - Entity: 5336935373642990061
-    TagComponent:
-      Tag: Cube
-    Parent: 8336474036621173270
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 5604217393357103188
-    TagComponent:
-      Tag: obj1
-    Parent: 925397801420024063
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 5764528691119552946
+  - Entity: 17362512805766587609
     TagComponent:
       Tag: obj1
     Parent: 7372072473837216595
@@ -349,219 +1070,7 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 5935808860660579112
-    TagComponent:
-      Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 2185784855438832933
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 6091286837633324314
-    TagComponent:
-      Tag: obj1
-    Parent: 925397801420024063
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 6105422901676343049
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 6147562026423679569
-    TagComponent:
-      Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 10084815846583023003
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 6166915670094156670
-    TagComponent:
-      Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 6670273215467649466
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 6486185975871812806
-    TagComponent:
-      Tag: PostProcess
-    Parent: 0
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    PostProcessingComponent:
-      BloomScale: 0.00700000022
-  - Entity: 6590499735784061461
-    TagComponent:
-      Tag: WaterBottle
-    Parent: 8031279963325521562
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 7012824318106578114
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 7764129526146866448
-    TagComponent:
-      Tag: Cube
-    Parent: 9662362799574844795
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 7818018511220486623
-    TagComponent:
-      Tag: Spot Light
-    Parent: 0
-    Children:
-      []
-    TransformComponent:
-      Translation: [3.42047119, 4.14725113, -5.37612629]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SpotLightComponent:
-      Intensity: 1
-      Radiance: [1, 1, 1]
-      Range: 1
-      ShowRadius: true
-  - Entity: 7912717170928880606
-    TagComponent:
-      Tag: Cube
-    Parent: 10556681993009690545
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 8031279963325521562
-    TagComponent:
-      Tag: assets\Model\WaterBottle\glTF\WaterBottle.gltf
-    Parent: 0
-    Children:
-      - Handle: 12258010691481941114
-      - Handle: 10890356935410723191
-      - Handle: 6590499735784061461
-    TransformComponent:
-      Translation: [0.707374871, 2.70741963, -16.0746365]
-      Rotation: [0, 0, 0]
-      Scale: [14.3909979, 14.3909979, 14.3909979]
-    ModelComponent:
-      MeshSourcePath: assets\Model\WaterBottle\glTF\WaterBottle.gltf
-      Visible: true
-  - Entity: 8133846994309731539
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 8322536769294787850
-    TagComponent:
-      Tag: Cube
-    Parent: 16457714310027958694
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 8464416223184122312
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 8702011113259978892
-    TagComponent:
-      Tag: Cube
-    Parent: 2263428882470659602
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 8813489902983993509
-    TagComponent:
-      Tag: obj1
-    Parent: 925397801420024063
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 9471410290559788737
-    TagComponent:
-      Tag: WaterBottle
-    Parent: 5019819801164069654
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 9800543543429788512
-    TagComponent:
-      Tag: Cube
-    Parent: 17848104361270735999
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 9936607909270714574
-    TagComponent:
-      Tag: obj1
-    Parent: 925397801420024063
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 9982547628700994570
+  - Entity: 17660906026202214673
     TagComponent:
       Tag: Cube
     Parent: 15098825549717108677
@@ -571,7 +1080,57 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-  - Entity: 10011093973608106768
+  - Entity: 17702371189741687036
+    TagComponent:
+      Tag: Cube
+    Parent: 3598505160263927715
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 18014484894374157886
+    TagComponent:
+      Tag: obj1
+    Parent: 925397801420024063
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 18078521034500777139
+    TagComponent:
+      Tag: Cube
+    Parent: 9774911451056543352
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 18274044115529281748
+    TagComponent:
+      Tag: obj1
+    Parent: 14497397863004769964
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 18286935136936413160
+    TagComponent:
+      Tag: Cube
+    Parent: 17848104361270735999
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 18437757451322351955
     TagComponent:
       Tag: assets\Model\Basic\cube.obj
     Parent: 0
@@ -589,396 +1148,13 @@ Entities:
       - Handle: 15438595478292752947
       - Handle: 5054181323285093887
       - Handle: 17133765911368864934
+      - Handle: 9815615711865894734
+      - Handle: 4952328590925260049
+      - Handle: 3705067362157671761
     TransformComponent:
-      Translation: [0.219421208, -0.568548918, -0.0275714397]
+      Translation: [-0.436095417, -0.435928941, 0.00373913348]
       Rotation: [0, 0, 0]
       Scale: [29.083107, 1.3222084, 23.7331963]
     ModelComponent:
       MeshSourcePath: assets\Model\Basic\cube.obj
       Visible: true
-  - Entity: 10102906568109822565
-    TagComponent:
-      Tag: obj1
-    Parent: 7372072473837216595
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 10281952699917656887
-    TagComponent:
-      Tag: Cube
-    Parent: 6503083787607734309
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 10640346850850641919
-    TagComponent:
-      Tag: obj1
-    Parent: 7372072473837216595
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 11190680340762772569
-    TagComponent:
-      Tag: obj1
-    Parent: 7372072473837216595
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 12013180601259282998
-    TagComponent:
-      Tag: Cube
-    Parent: 17470005277399463212
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 12061279658446789712
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 12235799533742192905
-    TagComponent:
-      Tag: assets\Model\helmet\DamagedHelmet.gltf
-    Parent: 0
-    Children:
-      - Handle: 5259484854749795019
-      - Handle: 13126217900614001475
-      - Handle: 13091434606402503584
-      - Handle: 18178122060683041010
-      - Handle: 5863782869952080649
-      - Handle: 7435372018119642832
-      - Handle: 2723927947171472581
-      - Handle: 12629709331971444746
-      - Handle: 2916832535003452827
-      - Handle: 18201054689489373101
-      - Handle: 2503535845057905082
-      - Handle: 14012238282399691830
-      - Handle: 14114865376932518129
-    TransformComponent:
-      Translation: [6.84015942, 5.28919315, -6.91813374]
-      Rotation: [1.76839089, -2.32344365, -0.0602345467]
-      Scale: [0.999882877, 1.00000155, 1.00000191]
-    ModelComponent:
-      MeshSourcePath: assets\Model\helmet\DamagedHelmet.gltf
-      Visible: true
-  - Entity: 12309613258410345141
-    TagComponent:
-      Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 59344369937433843
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 12358571628374761222
-    TagComponent:
-      Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 5478987918772291557
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 12403652471364566362
-    TagComponent:
-      Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 14964286267993903300
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 12621884282771331734
-    TagComponent:
-      Tag: Cube
-    Parent: 3934353000045454942
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 13661656008290489661
-    TagComponent:
-      Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 13935002496033645654
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 13917068546034825600
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 13965242486332589065
-    TagComponent:
-      Tag: obj1
-    Parent: 925397801420024063
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 14048636904213237826
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 14114865376932518129
-    TagComponent:
-      Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 12235799533742192905
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 14264972601245269205
-    TagComponent:
-      Tag: obj1
-    Parent: 7372072473837216595
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 14497244728270455380
-    TagComponent:
-      Tag: Point Light
-    Parent: 0
-    Children:
-      []
-    PointLightComponent:
-      Intensity: 1
-      Radiance: [1, 1, 1]
-      Radius: 7.9000001
-      ShowRadius: true
-    TransformComponent:
-      Translation: [14.8333883, 10.4495878, -6.04206848]
-      Rotation: [4.76837158e-07, 1.85448098, 4.76837158e-07]
-      Scale: [1.16000021, 1.15999997, 1.16000021]
-  - Entity: 14692598812221482486
-    TagComponent:
-      Tag: mesh_helmet_LP_13930damagedHelmet
-    Parent: 6331893778663396139
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 15048572386869914511
-    TagComponent:
-      Tag: obj1
-    Parent: 7372072473837216595
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 15098825549717108677
-    TagComponent:
-      Tag: assets\Model\Basic\cube.obj
-    Parent: 0
-    Children:
-      - Handle: 15738247088229941951
-      - Handle: 2725142003829240372
-      - Handle: 9982547628700994570
-    TransformComponent:
-      Translation: [20.7488918, 5.9213419, -6.82022953]
-      Rotation: [0, 0, 0]
-      Scale: [0.999999881, 5.15990114, 5.3261838]
-    ModelComponent:
-      MeshSourcePath: assets\Model\Basic\cube.obj
-      Visible: true
-  - Entity: 15109753847812879656
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 15137920946576061065
-    TagComponent:
-      Tag: obj1
-    Parent: 925397801420024063
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 15789864834205757590
-    TagComponent:
-      Tag: Cube
-    Parent: 16325228628529428654
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 15973805756065731812
-    TagComponent:
-      Tag: Point Light
-    Parent: 0
-    Children:
-      []
-    PointLightComponent:
-      Intensity: 1
-      Radiance: [1, 1, 1]
-      Radius: 4.5999999
-      ShowRadius: true
-    TransformComponent:
-      Translation: [3.9814918, 5.78133917, -6.62316656]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 16204336533591310156
-    TagComponent:
-      Tag: Cube
-    Parent: 10132468970454885650
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 16234395925906202233
-    TagComponent:
-      Tag: Cube
-    Parent: 2521959379775278830
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 16348073907549997860
-    TagComponent:
-      Tag: obj1
-    Parent: 925397801420024063
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 17133765911368864934
-    TagComponent:
-      Tag: Cube
-    Parent: 10011093973608106768
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 17170475692917131472
-    TagComponent:
-      Tag: obj1
-    Parent: 14497397863004769964
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 17400637745759350257
-    TagComponent:
-      Tag: Cube
-    Parent: 8874505652057932552
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 17471301572651390484
-    TagComponent:
-      Tag: obj1
-    Parent: 7372072473837216595
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 17652455420391441186
-    TagComponent:
-      Tag: obj1
-    Parent: 7372072473837216595
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 17779117275501748962
-    TagComponent:
-      Tag: Cube
-    Parent: 14530719888897774006
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 17833882252430634451
-    TagComponent:
-      Tag: Directional Light
-    Parent: 0
-    Children:
-      []
-    TransformComponent:
-      Translation: [14.3527527, 15.7638502, -13.1744938]
-      Rotation: [0, 0.13499856, 0.643260241]
-      Scale: [1, 1, 1]
-    DirectionalLightComponent:
-      ShowCSM: false
-      ShowDirection: true
-      ShadowType: 3
-      Intensity: 1
-      Radiance: [1, 1, 1]

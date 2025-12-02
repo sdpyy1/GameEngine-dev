@@ -21,7 +21,12 @@ namespace GameEngine {
 		virtual RHIDescriptorSetRef GetImGuiTextId(RHITextureViewRef textureView) = 0;
 		virtual void Destroy();
 		virtual RHIComputePipelineRef CreateComputePipeline(const RHIComputePipelineInfo& info) = 0;
+		virtual RHITopLevelAccelerationStructureRef CreateTopLevelAccelerationStructure(const RHITopLevelAccelerationStructureInfo& info) = 0;
+		virtual RHIShaderBindingTableRef CreateShaderBindingTable(const RHIShaderBindingTableInfo& info) = 0;
 
+		virtual RHIRayTracingPipelineRef CreateRayTracingPipeline(const RHIRayTracingPipelineInfo& info) = 0;
+
+		virtual RHIBottomLevelAccelerationStructureRef CreateBottomLevelAccelerationStructure(const RHIBottomLevelAccelerationStructureInfo& info) = 0;
 		virtual RHIQueueRef GetQueue(const RHIQueueInfo& info) = 0;
 		virtual RHISurfaceRef CreateSurface(GLFWwindow* window) = 0;
 		virtual RHISwapchainRef CreateSwapChain(const RHISwapchainInfo& info) = 0;
@@ -35,6 +40,15 @@ namespace GameEngine {
 		virtual RHIGraphicsPipelineRef CreateGraphicsPipeline(const RHIGraphicsPipelineInfo& info) = 0;
 		virtual RHIRenderPassRef CreateRenderPass(const RHIRenderPassInfo& info) = 0;
 		virtual RHIRootSignatureRef CreateRootSignature(const RHIRootSignatureInfo& info) = 0;
+
+		// RayTracing
+
+
+
+
+
+
+
 		// Í¬²½
 		virtual RHIFenceRef CreateFence(bool signaled) = 0;
 		virtual RHISemaphoreRef CreateSemaphore() = 0;

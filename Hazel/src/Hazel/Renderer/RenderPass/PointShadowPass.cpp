@@ -67,6 +67,7 @@ namespace GameEngine {
 			RDGTextureHandle depth = builder.CreateTexture("pointShadowDepth[" + std::to_string(i) + "]")
 				.ArrayLayers(6)
 				.AllowDepthStencil()
+				.CubeMap()
 				.Exetent({ PointShadowResolution,PointShadowResolution,1 })
 				.Format(FORMAT_D32_SFLOAT)
 				.Finish();

@@ -36,6 +36,10 @@ namespace GameEngine {
 	typedef std::shared_ptr<class RHIGraphicsPipeline> RHIGraphicsPipelineRef;
 	typedef std::shared_ptr<class RHIRenderPass> RHIRenderPassRef;
 	typedef std::shared_ptr<class RHIComputePipeline> RHIComputePipelineRef;
+	typedef std::shared_ptr<class RHITopLevelAccelerationStructure> RHITopLevelAccelerationStructureRef;
+	typedef std::shared_ptr<class RHIBottomLevelAccelerationStructure> RHIBottomLevelAccelerationStructureRef;
+	typedef std::shared_ptr<class RHIRayTracingPipeline> RHIRayTracingPipelineRef;
+	typedef std::shared_ptr<class RHIShaderBindingTable> RHIShaderBindingTableRef;
 
 	enum API {
 		API_Vulkan,
@@ -60,6 +64,8 @@ namespace GameEngine {
 		RHI_TEXTURE_VIEW,
 		RHI_SAMPLER,
 		RHI_SHADER,
+
+		// RayTracing
 		RHI_SHADER_BINDING_TABLE,
 		RHI_TOP_LEVEL_ACCELERATION_STRUCTURE,
 		RHI_BOTTOM_LEVEL_ACCELERATION_STRUCTURE,
@@ -76,8 +82,10 @@ namespace GameEngine {
 		RHI_SURFACE,
 		RHI_SWAPCHAIN,
 		RHI_COMMAND_POOL,
+
 		RHI_COMMAND_CONTEXT,
 		RHI_COMMAND_CONTEXT_IMMEDIATE,
+
 		RHI_FENCE,
 		RHI_SEMAPHORE,
 
@@ -472,8 +480,8 @@ namespace GameEngine {
 
 		SHADER_FREQUENCY_GRAPHICS = SHADER_FREQUENCY_VERTEX |
 		SHADER_FREQUENCY_FRAGMENT |
-		SHADER_FREQUENCY_GEOMETRY |
-		SHADER_FREQUENCY_MESH,
+		SHADER_FREQUENCY_GEOMETRY ,/*|SHADER_FREQUENCY_MESH,*/
+
 		SHADER_FREQUENCY_RAY_TRACING = SHADER_FREQUENCY_RAY_GEN |
 		SHADER_FREQUENCY_CLOSEST_HIT |
 		SHADER_FREQUENCY_RAY_MISS |
@@ -602,7 +610,6 @@ namespace GameEngine {
 		Extent3D extent;
 		uint32_t arrayLayers = 1;
 		uint32_t mipLevels = 1;
-
 		MemoryUsage memoryUsage = MEMORY_USAGE_GPU_ONLY;
 		ResourceType type = RESOURCE_TYPE_TEXTURE;
 
@@ -1171,7 +1178,71 @@ namespace GameEngine {
 			return 0;
 		}
 	}
+	struct RHIBottomLevelAccelerationStructureInfo {
+		/*
+			每个Mesh一个BLAS,BLAS创建Info需要提供Mesh的Buffer信息
+		*/
+		RHIBufferRef vertexBuffer;  // 其实只需要位置信息？
+		RHIBufferRef indexBuffer;
+		uint32_t vertexCount;
+		uint32_t triangleCount;
+		uint32_t indexOffset = 0;
+		uint32_t vertexOffset = 0;
+		uint32_t vertexStride = 0;
 
+	};
+
+	struct RHIAccelerationStructureInstanceInfo {
+		float    	transform[3][4] = { 0.0f };
+
+		uint32_t    instanceIndex;
+		uint32_t    mask;
+		uint32_t    shaderBindingTableOffset;
+		RHIBottomLevelAccelerationStructureRef blas;
+	};
+
+	struct RHITopLevelAccelerationStructureInfo {
+		uint32_t maxInstance;
+		std::vector<RHIAccelerationStructureInstanceInfo> instanceInfos;
+	};
+
+	typedef struct RHIShaderBindingTableInfo
+	{
+		void AddRayGenGroup(RHIShaderRef rayGenShader) { rayGenGroups.push_back(rayGenShader); }
+		void AddHitGroup(RHIShaderRef closestHitShader,
+			RHIShaderRef anyHitShader,
+			RHIShaderRef intersectionShader)
+		{
+			hitGroups.push_back({ closestHitShader, anyHitShader, intersectionShader });
+		}
+		void AddMissGroup(RHIShaderRef rayMissShader) { missGroups.push_back(rayMissShader); }
+
+		struct HitGroup
+		{
+			RHIShaderRef closestHitShader;
+			RHIShaderRef anyHitShader;
+			RHIShaderRef intersectionShader;
+		};
+
+		std::vector<RHIShaderRef> rayGenGroups;
+		std::vector<HitGroup> hitGroups;
+		std::vector<RHIShaderRef> missGroups;
+
+	} RHIShaderBindingTableInfo;
+
+	typedef struct RHIRayTracingPipelineInfo
+	{
+		RHIShaderBindingTableRef 		shaderBindingTable;
+
+		RHIRootSignatureRef				rootSignature;
+
+		friend bool operator== (const RHIRayTracingPipelineInfo& a, const RHIRayTracingPipelineInfo& b)
+		{
+			return  a.shaderBindingTable.get() == b.shaderBindingTable.get() &&
+				a.rootSignature.get() == b.rootSignature.get();
+		}
+
+	} RHIRayTracingPipelineInfo;
 	// pass执行耗时记录
 	struct RHIGPUTimeInfo{
 		std::string Name;

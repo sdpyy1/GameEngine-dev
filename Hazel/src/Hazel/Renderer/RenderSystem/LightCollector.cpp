@@ -60,12 +60,12 @@ namespace GameEngine {
 				// 6¸öÃæµÄview proj
 				auto & position = transformComp.Translation;
 				glm::vec3 up = glm::vec3(0.0f, -1.0f, 0.0f); 
-				lightInfo.pointLights[pointLightCount].view[0] = glm::lookAt(position, position + glm::vec3(0.0f, 1.0f, 0.0f), up);  // +Y
-                lightInfo.pointLights[pointLightCount].view[1] = glm::lookAt(position, position + glm::vec3(0.0f, -1.0f, 0.0f), up); // -Y
-                lightInfo.pointLights[pointLightCount].view[2] = glm::lookAt(position, position + glm::vec3(1.0f, 0.0f, 0.0f), up); // +X
-                lightInfo.pointLights[pointLightCount].view[3] = glm::lookAt(position, position + glm::vec3(-1.0f, 0.0f, 0.0f), up); // -X
-                lightInfo.pointLights[pointLightCount].view[4] = glm::lookAt(position, position + glm::vec3(0.0f, 0.0f, 1.0f), up); // +Z
-                lightInfo.pointLights[pointLightCount].view[5] = glm::lookAt(position, position + glm::vec3(0.0f, 0.0f, -1.0f), up); // -Z
+				lightInfo.pointLights[pointLightCount].view[0] = glm::lookAt(position, position + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));  // +X
+				lightInfo.pointLights[pointLightCount].view[1] = glm::lookAt(position, position + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)); // -X
+				lightInfo.pointLights[pointLightCount].view[2] = glm::lookAt(position, position + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));  // +Y 
+				lightInfo.pointLights[pointLightCount].view[3] = glm::lookAt(position, position + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)); // -Y 
+				lightInfo.pointLights[pointLightCount].view[4] = glm::lookAt(position, position + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));  // +Z 
+				lightInfo.pointLights[pointLightCount].view[5] = glm::lookAt(position, position + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)); // -Z 
 				constexpr float fov = glm::radians(90.0f);
 				float aspect = 1.0f;
 				float nearPlane = 0.1;

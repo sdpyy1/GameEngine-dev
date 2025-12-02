@@ -228,6 +228,72 @@ namespace GameEngine {
 	protected:
 		RHIRenderPassInfo info;
 	};
+	// ------------------------------------------------------------------------ RayTracing ------------------------------------------------------------------------
+	class RHITopLevelAccelerationStructure : public RHIResource
+	{
+	public:
+		RHITopLevelAccelerationStructure(const RHITopLevelAccelerationStructureInfo& info)
+			: RHIResource(RHI_TOP_LEVEL_ACCELERATION_STRUCTURE)
+			, info(info)
+		{
+		}
+
+		virtual void Update(const std::vector<RHIAccelerationStructureInstanceInfo>& instanceInfos) = 0;
+
+		const RHITopLevelAccelerationStructureInfo& GetInfo() const { return info; }
+
+	protected:
+		RHITopLevelAccelerationStructureInfo info;
+	};
+
+	class RHIBottomLevelAccelerationStructure : public RHIResource
+	{
+	public:
+		RHIBottomLevelAccelerationStructure(const RHIBottomLevelAccelerationStructureInfo& info)
+			: RHIResource(RHI_BOTTOM_LEVEL_ACCELERATION_STRUCTURE)
+			, info(info)
+		{
+		}
+
+		const RHIBottomLevelAccelerationStructureInfo& GetInfo() const { return info; }
+
+	protected:
+		RHIBottomLevelAccelerationStructureInfo info;
+	};
+
+	class RHIShaderBindingTable : public RHIResource
+	{
+	public:
+		RHIShaderBindingTable(const RHIShaderBindingTableInfo& info)
+			: RHIResource(RHI_SHADER_BINDING_TABLE)
+			, info(info)
+		{
+		}
+
+		const RHIShaderBindingTableInfo& GetInfo() const { return info; }
+
+	protected:
+		RHIShaderBindingTableInfo info;
+	};
+	class RHIRayTracingPipeline : public RHIResource
+	{
+	public:
+		RHIRayTracingPipeline(const RHIRayTracingPipelineInfo& info)
+			: RHIResource(RHI_RAY_TRACING_PIPELINE)
+			, info(info)
+		{
+		}
+
+	protected:
+		RHIRayTracingPipelineInfo info;
+	};
+
+
+
+
+
+
+
 	// ------------------------------------------------------------------------ Í¬²½ ------------------------------------------------------------------------
 	class RHIFence : public RHIResource
 	{

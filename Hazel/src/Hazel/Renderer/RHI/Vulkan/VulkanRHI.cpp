@@ -133,7 +133,7 @@ namespace GameEngine
                         for (auto& ext : extensions)
                         {
                             m_PhysicalDeviceSupportedExtensions.push_back(ext.extensionName);
-                            LOG_TRACE_TAG("PhysicalDevice", "Support Extension: {}", ext.extensionName);
+                            // LOG_TRACE_TAG("PhysicalDevice", "Support Extension: {}", ext.extensionName);
                         }
                     }
 
@@ -742,7 +742,39 @@ namespace GameEngine
         return graphicsPipeline;
 	}
 
-	RHIRenderPassRef VulkanDynamicRHI::CreateRenderPass(const RHIRenderPassInfo& info)
+    RHITopLevelAccelerationStructureRef VulkanDynamicRHI::CreateTopLevelAccelerationStructure(const RHITopLevelAccelerationStructureInfo& info)
+    {
+        RHITopLevelAccelerationStructureRef tlas = std::make_shared<VulkanRHITopLevelAccelerationStructure>(info);
+        RegisterResource(tlas);
+
+        return tlas;
+    }
+
+    RHIRayTracingPipelineRef VulkanDynamicRHI::CreateRayTracingPipeline(const RHIRayTracingPipelineInfo& info)
+    {
+        RHIRayTracingPipelineRef rayTracingPipeline = std::make_shared<VulkanRHIRayTracingPipeline>(info);
+        RegisterResource(rayTracingPipeline);
+
+        return rayTracingPipeline;
+    }
+
+    RHIShaderBindingTableRef VulkanDynamicRHI::CreateShaderBindingTable(const RHIShaderBindingTableInfo& info)
+    {
+        RHIShaderBindingTableRef sbt = std::make_shared<VulkanRHIShaderBindingTable>(info);
+        RegisterResource(sbt);
+
+        return sbt;
+    }
+
+    RHIBottomLevelAccelerationStructureRef VulkanDynamicRHI::CreateBottomLevelAccelerationStructure(const RHIBottomLevelAccelerationStructureInfo& info)
+    {
+        RHIBottomLevelAccelerationStructureRef blas = std::make_shared<VulkanRHIBottomLevelAccelerationStructure>(info);
+        RegisterResource(blas);
+
+        return blas;
+    }
+
+    RHIRenderPassRef VulkanDynamicRHI::CreateRenderPass(const RHIRenderPassInfo& info)
 	{
         RHIRenderPassRef renderPass = std::make_shared<VulkanRHIRenderPass>(info);
         RegisterResource(renderPass);

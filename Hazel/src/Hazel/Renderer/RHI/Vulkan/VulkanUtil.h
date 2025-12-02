@@ -183,7 +183,7 @@ namespace GameEngine {
                 case RESOURCE_STATE_SHADER_RESOURCE:                accessFlags = VK_ACCESS_SHADER_READ_BIT;                                break;
                 case RESOURCE_STATE_INDIRECT_ARGUMENT:              accessFlags = VK_ACCESS_INDIRECT_COMMAND_READ_BIT;                      break;
                 case RESOURCE_STATE_PRESENT:                        accessFlags = VK_ACCESS_NONE;                                           break;      // 无效？ 
-            // case RESOURCE_STATE_ACCELERATION_STRUCTURE:         accessFlags = VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR | VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR;   break;
+                case RESOURCE_STATE_ACCELERATION_STRUCTURE:         accessFlags = VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR | VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR;   break;
             default:                                            LOG_ERROR("Unsupported resource state!");
             }
             return accessFlags;
@@ -671,12 +671,12 @@ namespace GameEngine {
             if (type & RESOURCE_TYPE_UNIFORM_BUFFER)        usage |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
             if (type & RESOURCE_TYPE_RW_BUFFER)             usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
             if (type & RESOURCE_TYPE_BUFFER)                usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-            // if (type & RESOURCE_TYPE_INDEX_BUFFER)          usage |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
+            if (type & RESOURCE_TYPE_INDEX_BUFFER)          usage |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
             if (type & RESOURCE_TYPE_INDEX_BUFFER)          usage |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
-            // if (type & RESOURCE_TYPE_VERTEX_BUFFER)         usage |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
+            if (type & RESOURCE_TYPE_VERTEX_BUFFER)         usage |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
             if (type & RESOURCE_TYPE_VERTEX_BUFFER)         usage |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
             if (type & RESOURCE_TYPE_INDIRECT_BUFFER)       usage |= VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT;
-            // if (type & RESOURCE_TYPE_RAY_TRACING)           usage |= VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
+            if (type & RESOURCE_TYPE_RAY_TRACING)           usage |= VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
 
             return usage;
         }
@@ -687,12 +687,12 @@ namespace GameEngine {
             if (frequency & SHADER_FREQUENCY_VERTEX)         stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
             if (frequency & SHADER_FREQUENCY_FRAGMENT)       stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
             if (frequency & SHADER_FREQUENCY_GEOMETRY)       stageFlags |= VK_SHADER_STAGE_GEOMETRY_BIT;
-            // if (frequency & SHADER_FREQUENCY_RAY_GEN)        stageFlags |= VK_SHADER_STAGE_RAYGEN_BIT_KHR;
-            // if (frequency & SHADER_FREQUENCY_CLOSEST_HIT)    stageFlags |= VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR;
-            //if (frequency & SHADER_FREQUENCY_RAY_MISS)       stageFlags |= VK_SHADER_STAGE_MISS_BIT_KHR;
-            // if (frequency & SHADER_FREQUENCY_INTERSECTION)   stageFlags |= VK_SHADER_STAGE_INTERSECTION_BIT_KHR;
-            // if (frequency & SHADER_FREQUENCY_ANY_HIT)        stageFlags |= VK_SHADER_STAGE_ANY_HIT_BIT_KHR;
-            //if (frequency & SHADER_FREQUENCY_MESH)           stageFlags |= VK_SHADER_STAGE_MESH_BIT_EXT;
+            if (frequency & SHADER_FREQUENCY_RAY_GEN)        stageFlags |= VK_SHADER_STAGE_RAYGEN_BIT_KHR;
+            if (frequency & SHADER_FREQUENCY_CLOSEST_HIT)    stageFlags |= VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR;
+            if (frequency & SHADER_FREQUENCY_RAY_MISS)       stageFlags |= VK_SHADER_STAGE_MISS_BIT_KHR;
+            if (frequency & SHADER_FREQUENCY_INTERSECTION)   stageFlags |= VK_SHADER_STAGE_INTERSECTION_BIT_KHR;
+            if (frequency & SHADER_FREQUENCY_ANY_HIT)        stageFlags |= VK_SHADER_STAGE_ANY_HIT_BIT_KHR;
+            if (frequency & SHADER_FREQUENCY_MESH)           stageFlags |= VK_SHADER_STAGE_MESH_BIT_EXT;
             return stageFlags;
         }
         static VkDescriptorType ResourceTypeToVk(ResourceType resourceType)
@@ -890,6 +890,33 @@ namespace GameEngine {
         static VkExtent3D ExtentToVk(const Extent3D& extent)
         {
             return { extent.width, extent.height, extent.depth};
+        }
+
+
+        static uint64_t GetBufferDeviceAddress(VkBuffer buffer, VkDevice device)
+        {
+            VkBufferDeviceAddressInfoKHR bufferDeviceAddressInfo = {};
+            bufferDeviceAddressInfo.sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO;
+            bufferDeviceAddressInfo.buffer = buffer;
+            bufferDeviceAddressInfo.pNext = nullptr;
+            return vkGetBufferDeviceAddress(device, &bufferDeviceAddressInfo);
+        }
+
+        static VkAccelerationStructureInstanceKHR AccelerationStructureInstanceInfoToVk(const RHIAccelerationStructureInstanceInfo& info)
+        {
+            VkAccelerationStructureInstanceKHR instance = {};
+            instance.transform = {
+                info.transform[0][0], info.transform[0][1], info.transform[0][2], info.transform[0][3],
+                info.transform[1][0], info.transform[1][1], info.transform[1][2], info.transform[1][3],
+                info.transform[2][0], info.transform[2][1], info.transform[2][2], info.transform[2][3],
+            };
+            instance.instanceCustomIndex = info.instanceIndex;
+            instance.mask = info.mask;
+            instance.instanceShaderBindingTableRecordOffset = info.shaderBindingTableOffset;
+            instance.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;                 // 剔除模式
+            instance.accelerationStructureReference = CAST<VulkanRHIBottomLevelAccelerationStructure>(info.blas)->GetAddress();
+
+            return instance;
         }
 	}
 

@@ -23,6 +23,7 @@ layout(set = 1, binding = 0) uniform texture2DArray u_DirShadowMapTexture;
 layout(set = 1, binding = 1) uniform textureCube u_EnvRadianceTex;
 layout(set = 1, binding = 2) uniform textureCube u_EnvIrradianceTex;
 layout(set = 1, binding = 3) uniform texture2D u_BRDFLUTTexture;
+layout(set = 1, binding = 4) uniform textureCube u_PointShadowMapTexture;
 struct PBRParameters
 {
 	vec3 Albedo;
@@ -40,7 +41,7 @@ void main()
 {
     vec3 WorldPosition = FetchGBufferPosition(TexCoord);
 	if (WorldPosition == vec3(0.0)) {
-		o_Color = vec4(0.0);
+		o_Color = vec4(0.0, 0.0, 0.0, 1.0);
 		return;
 	}
 

@@ -10,7 +10,6 @@ namespace GameEngine {
 	void DirShadowPassProcessor::OnCollectBatch(const DrawBatch& batch)
 	{
 		if (batch.material->CastShadow()) AddBatch(batch);
-
 	}
 
 	RHIGraphicsPipelineRef DirShadowPassProcessor::OnCreatePipeline(const DrawPipelineState& pipelineState)

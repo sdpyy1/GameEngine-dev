@@ -83,6 +83,7 @@ namespace GameEngine
 	template<typename Type, size_t arraySize>
 	using ArrayBufferRef = std::shared_ptr<ArrayBuffer<Type, arraySize>>;
 
+	// 一个Mesh解析出来的顶点数据被分别存储在多个Bindless位置，这里存一份各种信息的Bindless的ID
 	class VertexBuffer {
 	public:
 		VertexBuffer();

@@ -5,6 +5,7 @@
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
 #include "Hazel/Scene/SceneManager.h"
+#include "Hazel/Renderer/RenderSystem/LightCollector.h"
 
 namespace GameEngine {
 	void LightPass::Init()
@@ -51,18 +52,17 @@ namespace GameEngine {
         RDGTextureHandle envBRDF = builder.GetTexture("BRDFLut");
         RDGTextureHandle envIrradiance = builder.GetTexture("IrradianceMap");
 
-
-		builder.CreateRenderPass(GetName())
+		auto& builde = builder.CreateRenderPass(GetName())
 			.RootSignature(m_RootSignature)
 			.Color(0, ViewPort, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE)
 			.Read(2, GBUFFER_POSITION_BINDING, 0, position)
 			.Read(2, GBUFFER_NORMAL_BINDING, 0, normal)
 			.Read(2, GBUFFER_MATERIAL_BINDING, 0, material)
 			.Read(2, GBUFFER_ALBEDO_BINDING, 0, albedo)
-			.Read(1, 0, 0, dirShadowMap, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_DEPTH ,0,1,0,4})
-            .Read(1, 1, 0, envRadiance,VIEW_TYPE_CUBE,{TEXTURE_ASPECT_COLOR,0,builder.GetRHITexture("PrefilterMap")->GetInfo().mipLevels,0,6})
-            .Read(1, 2, 0, envIrradiance, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR,0,1,0,6 })
-            .Read(1, 3, 0, envBRDF)
+			.Read(1, 0, 0, dirShadowMap, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_DEPTH ,0,1,0,4 })
+			.Read(1, 1, 0, envRadiance, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR,0,builder.GetRHITexture("PrefilterMap")->GetInfo().mipLevels,0,6 })
+			.Read(1, 2, 0, envIrradiance, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR,0,1,0,6 })
+			.Read(1, 3, 0, envBRDF)
 			.Execute([&](RDGPassContext context)
 				{
 					auto [w, h] = APP_WINDOWSIZE;
@@ -75,9 +75,14 @@ namespace GameEngine {
 					command->BindDescriptorSet(context.descriptors[1], 1);
 					command->BindDescriptorSet(context.descriptors[2], 2);
 					command->Draw(3);
-				})
-			.Finish();
+				});
 
+		LightInfo& lightInfo = LightCollector::GetLightInfo();
+		if (lightInfo.pointLightCount > 0) {
+			RDGTextureHandle pointShadowMap = builder.GetTexture("Point Shadow Color[0]");
+			builde.Read(1, 4, 0, pointShadowMap, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_DEPTH,0,1,0,6 });
+		}
+			
 
 
     }

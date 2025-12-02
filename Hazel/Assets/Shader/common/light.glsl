@@ -71,10 +71,29 @@ vec3 CalculatePointLights(in vec3 F0, vec3 worldPos)
 		vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
 		vec3 diffuseBRDF = kd * m_Params.Albedo;
 
+		float pointScale = 1.0;
+		// TODO: 阴影计算简单写在这里,只实现了支持一个阴影
+		if(i==0){
+			vec3 lightToFrag = worldPos.xyz - light.position; 
+			vec3 sampleDir = normalize(lightToFrag);   
+			float actualDepth = length(lightToFrag) / light.sphere.radius;
+			float storedDepth = texture(samplerCube(u_PointShadowMapTexture, SAMPLER[0]), sampleDir).r;
+			float bias = 0.005; 
+			bool inShadow = actualDepth > storedDepth + bias;
+
+			// 5. 阴影系数：在阴影中则为 0，否则为 1
+			pointScale = inShadow ? 0.0f : 1.0f;
+		}
+
+
+
 		// Cook-Torrance
 		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * m_Params.NdotV);
 		specularBRDF = clamp(specularBRDF, vec3(0.0f), vec3(10.0f));
-		result += (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
+		result += (diffuseBRDF + specularBRDF) * Lradiance * cosLi * pointScale;
+
+
+
 	}
 	return result;
 }

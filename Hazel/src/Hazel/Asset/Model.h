@@ -64,7 +64,7 @@ namespace GameEngine {
         virtual void OnSaveAsset() override;
         bool hasBone() {return findBone;}
         std::vector<SubmeshData>& GetSubmeshes() { return submeshes; }
-        SubmeshData& GetSubmesh(uint32_t index) { return submeshes[index]; }
+        SubmeshData& GetSubmeshData(uint32_t index) { return submeshes[index]; }
         MeshRef GetSubMesh(uint32_t index) { return submeshes[index].mesh; }
         std::vector<MaterialRef>& GetMaterials() { return materials; }
         std::string GetPath() { return path; }

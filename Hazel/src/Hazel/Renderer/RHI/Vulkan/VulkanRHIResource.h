@@ -283,6 +283,97 @@ namespace GameEngine {
 		bool mapped = false;
 		void* pointer = nullptr;
 	};
+
+	class VulkanRHIShaderBindingTable : public RHIShaderBindingTable
+	{
+	public:
+		VulkanRHIShaderBindingTable(const RHIShaderBindingTableInfo& info);
+
+		const std::vector<VkPipelineShaderStageCreateInfo>& GetStages() { return stages; }
+		const std::vector<VkRayTracingShaderGroupCreateInfoKHR>& GetGroups() { return groups; }
+
+		uint32_t GetRayGenGroupSize() { return rayGenGroupSize; }
+		uint32_t GetHitGroupSize() { return hitGroupSize; }
+		uint32_t GetRayMissGroupSize() { return rayMissGroupSize; }
+
+		virtual void Destroy() override final;
+
+	private:
+		std::vector<VkPipelineShaderStageCreateInfo>        stages;
+		std::vector<VkRayTracingShaderGroupCreateInfoKHR>   groups;
+		uint32_t rayGenGroupSize = 0;
+		uint32_t hitGroupSize = 0;
+		uint32_t rayMissGroupSize = 0;
+	};
+	class VulkanRHIRayTracingPipeline : public RHIRayTracingPipeline
+	{
+	public:
+		VulkanRHIRayTracingPipeline(const RHIRayTracingPipelineInfo& info);
+
+		VkPipelineLayout GetPipelineLayout() { return pipelineLayout; }
+
+		const VkPipeline& GetHandle() { return handle; }
+		const VkStridedDeviceAddressRegionKHR& GetRaygenRegion() { return raygenRegion; }
+		const VkStridedDeviceAddressRegionKHR& GetRayMissRegion() { return missRegion; }
+		const VkStridedDeviceAddressRegionKHR& GetHitRegion() { return hitRegion; }
+		const VkStridedDeviceAddressRegionKHR& GetCallableRegion() { return callableRegion; }
+
+		void Bind(VkCommandBuffer commandBuffer);
+
+		virtual void Destroy() override final;
+		virtual void* RawHandle() override final { return handle; };
+
+	private:
+		void BuildShaderGroupHandle();
+		VkStridedDeviceAddressRegionKHR raygenRegion{};
+		VkStridedDeviceAddressRegionKHR missRegion{};
+		VkStridedDeviceAddressRegionKHR hitRegion{};
+		VkStridedDeviceAddressRegionKHR callableRegion{};   //TODO：还未实现
+
+		RHIBufferRef shaderGroupHandleBuffer;	// 用于存储SBT的全部句柄
+
+		VkPipeline handle;
+		VkPipelineLayout pipelineLayout;
+	};
+
+	class VulkanRHITopLevelAccelerationStructure : public RHITopLevelAccelerationStructure
+	{
+	public:
+		VulkanRHITopLevelAccelerationStructure(const RHITopLevelAccelerationStructureInfo& info);
+
+		const VkAccelerationStructureKHR& GetHandle() { return handle; }
+		VkDeviceAddress GetAddress() { return address; }
+
+		virtual void Update(const std::vector<RHIAccelerationStructureInstanceInfo>& instanceInfos) override final;
+
+		virtual void Destroy() override final;
+		virtual void* RawHandle() override final { return handle; };
+
+	private:
+		VkAccelerationStructureKHR handle = VK_NULL_HANDLE;
+		VkDeviceAddress address;
+		RHIBufferRef accelerationStructureBuffer;	// 加速结构占用的内存
+		RHIBufferRef instanceBuffer;				// 实例信息内存
+	};
+	class VulkanRHIBottomLevelAccelerationStructure : public RHIBottomLevelAccelerationStructure
+	{
+	public:
+		VulkanRHIBottomLevelAccelerationStructure(const RHIBottomLevelAccelerationStructureInfo& info);
+
+		const VkAccelerationStructureKHR& GetHandle() { return handle; }
+		VkDeviceAddress GetAddress() { return address; }
+
+		virtual void Destroy() override final;
+		virtual void* RawHandle() override final { return handle; };
+
+	private:
+		VkAccelerationStructureKHR handle;
+		VkDeviceAddress address;
+		RHIBufferRef accelerationStructureBuffer;
+	};
+
+
+
 	//同步 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	class VulkanRHIFence : public RHIFence

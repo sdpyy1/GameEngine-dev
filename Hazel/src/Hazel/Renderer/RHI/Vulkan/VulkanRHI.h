@@ -28,7 +28,11 @@ namespace GameEngine
 		virtual RHIRootSignatureRef CreateRootSignature(const RHIRootSignatureInfo& info) override final;
 		virtual RHIGraphicsPipelineRef CreateGraphicsPipeline(const RHIGraphicsPipelineInfo& info) override final;
 		virtual RHIComputePipelineRef CreateComputePipeline(const RHIComputePipelineInfo& info) override final;
+		virtual RHITopLevelAccelerationStructureRef CreateTopLevelAccelerationStructure(const RHITopLevelAccelerationStructureInfo& info) override final;
+		virtual RHIRayTracingPipelineRef CreateRayTracingPipeline(const RHIRayTracingPipelineInfo& info) override final;
+		virtual RHIShaderBindingTableRef CreateShaderBindingTable(const RHIShaderBindingTableInfo& info) override final;
 
+		virtual RHIBottomLevelAccelerationStructureRef CreateBottomLevelAccelerationStructure(const RHIBottomLevelAccelerationStructureInfo& info) override final;
 		virtual RHIRenderPassRef CreateRenderPass(const RHIRenderPassInfo& info) override final;
 
 		virtual RHISamplerRef CreateSampler(const RHISamplerInfo& info) override final;
@@ -48,6 +52,14 @@ namespace GameEngine
 
 		VkFramebuffer FindOrCreateVkFramebuffer(const VkFramebufferCreateInfo& info) { return frameBufferPool.Allocate(info).frameBuffer; }
 		VkFramebuffer CreateVkFramebuffer(const VkFramebufferCreateInfo& info);
+		VkPhysicalDeviceRayTracingPipelinePropertiesKHR GetRayTracingPipelineProperties() { return m_PhysicalDeviceRayTracingPipelineProperties; }
+
+		RHICommandContextImmediateRef GetImmediateCommandContext() {
+			if (!m_ImmediateCommandContext) {
+				LOG_ERROR("请先启动一个CommandListImmediate");
+			}
+			return m_ImmediateCommandContext;
+		}
 	private:
 
 		void CreateInstance();
@@ -164,6 +176,7 @@ namespace GameEngine
 		virtual void CopyBufferToTexture(RHIBufferRef src, uint64_t srcOffset, RHITextureRef dst, TextureSubresourceLayers dstSubresource) override final;
 
 		virtual void TextureBarrier(const RHITextureBarrier& barrier) override final;
+		VkCommandBuffer GetHandle() { return handle; }
 
 
 	private:

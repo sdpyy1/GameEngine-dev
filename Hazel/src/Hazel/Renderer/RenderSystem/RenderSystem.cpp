@@ -25,8 +25,9 @@ namespace GameEngine {
 	{
 		RHIConfig config;
         config.debug = true;
-        config.enableRayTracing = true;
+        config.enableRayTracing = false;
 		config.api = API_Vulkan;
+
 		m_DynamicRHI = DynamicRHI::Init(config);
 		m_Surface = m_DynamicRHI->CreateSurface(APP_GLFWWINDOW);
 		m_GraphicsQueue = m_DynamicRHI->GetQueue({ QUEUE_TYPE_GRAPHICS, 0 });
@@ -68,9 +69,20 @@ namespace GameEngine {
 	void RenderSystem::InitPasses()
 	{
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
-		//ModelProcessSetting setting;
-		//ModelRef model = std::make_shared<Model>("Assets/Model/Klee/klee.obj", setting);
-		//model->OnLoadAsset();
+#ifdef ENABLE_RAY_TRACING
+		ModelProcessSetting setting;
+		ModelRef model = std::make_shared<Model>("Assets/Model/Klee/klee.obj", setting);
+		model->OnLoadAsset();
+
+		RHIBottomLevelAccelerationStructureInfo blasInfo;
+        blasInfo.vertexBuffer = model->GetSubmeshData(0).vertexBuffer->positionBuffer;
+        blasInfo.vertexCount = model->GetSubmeshData(0).vertexBuffer->VertexNum();
+        blasInfo.indexBuffer = model->GetSubmeshData(0).indexBuffer->buffer;
+        blasInfo.vertexStride = 3 * sizeof(float);
+        blasInfo.triangleCount = model->GetSubmeshData(0).indexBuffer->IndexNum() / 3;
+		APP_DYNAMICRHI->CreateBottomLevelAccelerationStructure(blasInfo);
+#endif
+
 		passes[IBL_PASS] = std::make_shared<IBLPass>();
 		meshPasses[MESH_PASS_DIRSHADOW_PASS] = std::make_shared<DirShadowPass>();
 		meshPasses[MESH_PASS_POINTSHADOW_PASS] = std::make_shared<PointShadowPass>();

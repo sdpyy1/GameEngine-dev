@@ -26,8 +26,8 @@ namespace GameEngine
 			meshComponent.updateMeshInfo();  // 需要更新
 
 			DrawBatch drawBatch;
-			drawBatch.indexBuffer = meshComponent.model->GetSubmesh(meshComponent.SubmeshIndex).indexBuffer;
-            drawBatch.vertexBuffer = meshComponent.model->GetSubmesh(meshComponent.SubmeshIndex).vertexBuffer;
+			drawBatch.indexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).indexBuffer;
+            drawBatch.vertexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).vertexBuffer;
 			drawBatch.objectID = meshComponent.meshInfoID;
             drawBatch.material = meshComponent.material;
 			batch.push_back(drawBatch);
