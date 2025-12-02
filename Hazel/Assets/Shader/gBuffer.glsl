@@ -51,8 +51,8 @@ layout (location = 3) out vec4 o_Albedo;
 void main()
 {
     Material material   = FetchMaterial(IN_ID);
-    vec4 color          = vec4(IN_COLOR, 1.0f);  // 顶点颜色
-    vec4 diffuse        = FetchDiffuse(material, IN_TEXCOORD) + color;
+    vec4 color          = vec4(IN_COLOR, 1.0f);
+    vec4 diffuse        = FetchDiffuse(material, IN_TEXCOORD);
     diffuse.a           = 1.0f;
     vec4 emission       = FetchEmission(material,IN_TEXCOORD);
     vec3 normal         = FetchNormal(material, IN_TEXCOORD, IN_NORMAL, IN_TANGENT);
@@ -61,8 +61,8 @@ void main()
 
 
     o_Position    = vec4(IN_POSITION);
-    o_Normal    = vec4(normal,1);
-    o_Material    = vec4(roughness,metallic,1,1);   // TODO：两个位置没用，  AO贴图?
+    o_Normal    = vec4(normal,0);
+    o_Material    = vec4(roughness,metallic,1,1); 
     o_Albedo    = vec4(diffuse + emission);
 }
 #endif

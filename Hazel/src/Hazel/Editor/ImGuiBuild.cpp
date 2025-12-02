@@ -1,5 +1,5 @@
 #include "hzpch.h"
-
+#define GIT_BRANCH_UE
 #include "backends/imgui_impl_glfw.cpp"
 #include "backends/imgui_impl_vulkan.cpp"
 

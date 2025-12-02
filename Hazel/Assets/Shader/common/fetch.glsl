@@ -149,27 +149,27 @@ vec4 FetchBaseColor(in Material material){
     return material.diffuse;  
 }
 vec4 FetchTex2D(in uint slot, in vec2 coord) {
-	return texture(sampler2D(TEXTURES_2D[slot], SAMPLER[1]), coord);   
+	return texture(sampler2D(TEXTURES_2D[slot], SAMPLER[0]), coord);   
 }
 
 vec4 FetchTex2D(in uint slot, in vec2 coord, in float lod) {
-	return textureLod(sampler2D(TEXTURES_2D[slot], SAMPLER[1]), coord, lod);   
+	return textureLod(sampler2D(TEXTURES_2D[slot], SAMPLER[0]), coord, lod);   
 }
 
 vec4 FetchTexCube(in uint slot, in vec3 vector) {
-	return texture(samplerCube(TEXTURES_CUBE[slot], SAMPLER[1]), vector);   
+	return texture(samplerCube(TEXTURES_CUBE[slot], SAMPLER[0]), vector);   
 }
 
 vec4 FetchTexCube(in uint slot, in vec3 vector, in float lod) {
-	return textureLod(samplerCube(TEXTURES_CUBE[slot], SAMPLER[1]), vector, lod);   
+	return textureLod(samplerCube(TEXTURES_CUBE[slot], SAMPLER[0]), vector, lod);   
 }
 
 vec4 FetchTex3D(in uint slot, in vec3 vector) {
-	return texture(sampler3D(TEXTURES_3D[slot], SAMPLER[1]), vector);   
+	return texture(sampler3D(TEXTURES_3D[slot], SAMPLER[0]), vector);   
 }
 
 vec4 FetchTex3D(in uint slot, in vec3 vector, in float lod) {
-	return textureLod(sampler3D(TEXTURES_3D[slot], SAMPLER[1]), vector, lod);   
+	return textureLod(sampler3D(TEXTURES_3D[slot], SAMPLER[0]), vector, lod);   
 }
 
 Material FetchMaterial(in uint objectID) {
@@ -180,7 +180,7 @@ vec4 FetchDiffuse(in Material material, in vec2 coord) {
     if(material.textureDiffuse > 0)    
     {
         vec4 diffuse = FetchTex2D(material.textureDiffuse, coord);
-        diffuse = pow(diffuse, vec4(1.0/2.2));          //gamma����  // TODO�����õ�ͼƬ��ʽ����SRGB������Ӧ�ò���Ҫ�ֶ�٤����
+        diffuse = pow(diffuse, vec4(1.0/2.2)); 
         diffuse = FetchBaseColor(material) * diffuse;         
 
         return diffuse;
@@ -191,20 +191,21 @@ vec4 FetchBaseEmission(in Material material){
     return material.emission;
 }
 vec4 FetchEmission(in Material material, in vec2 coord){
-    if(material.textureEmission.x > 0.0){
-     vec4 emission = FetchTex2D(material.textureEmission, coord);
-     emission = pow(emission, vec4(1.0/2.2));          //gamma����  // TODO�����õ�ͼƬ��ʽ����SRGB������Ӧ�ò���Ҫ�ֶ�٤����
-     emission = FetchBaseEmission(material) * emission;         
-     return emission;
+    if(material.textureEmission > 0.0){
+        vec4 emission = FetchTex2D(material.textureEmission, coord);
+        emission = pow(emission, vec4(1.0/2.2));     
+        emission = FetchBaseEmission(material) * emission;      
+        emission.w = 0;   
+        return emission;
     }
-     return FetchBaseEmission(material);
+     return vec4(0,0,0,0);
 }
 
 float FetchRoughness(in Material material, in vec2 coord){
     if(material.textureRoughness > 0)        
     {
         vec3 arm = FetchTex2D(material.textureRoughness, coord).xyz;
-        arm = pow(arm, vec3(1.0/2.2));          //gamma����  // TODO�����õ�ͼƬ��ʽ����SRGB������Ӧ�ò���Ҫ�ֶ�٤����
+        arm = pow(arm, vec3(1.0/2.2));   
         return arm.y;
     }
     else return clamp(material.roughness, 0.00001, 0.99999); 
@@ -213,32 +214,29 @@ float FetchMetallic(in Material material, in vec2 coord){
     if(material.textureMetallic > 0)        
     {
         vec3 arm = FetchTex2D(material.textureMetallic, coord).xyz;
-        arm = pow(arm, vec3(1.0/2.2));          //gamma����
+        arm = pow(arm, vec3(1.0/2.2));
 
         return arm.z;
     }
     else return clamp(material.metallic, 0.00001, 0.99999);   
 }
-vec3 FetchNormal(in Material material, in vec2 coord, in vec3 normal, in vec4 tangent) {
-	if(material.textureNormal > 0)     
+vec3 FetchNormal(in Material material, in vec2 coord, in vec3 normal, in vec4 tangent)
+{
+    if (material.textureNormal > 0)
     {
-        //����ÿ���ص�tbn������Ա�����vert shader����ϵĶ�������vec3�Ĳ�ֵ����ʵ������죡
-        float fSign = tangent.w < 0 ? -1 : 1;        
-        vec3 n = normalize(normal);
-        vec3 t = normalize(tangent.xyz);       
-        vec3 b = -fSign * normalize(cross(n, t));
-        t = fSign * normalize(cross(n, t));
+        vec3 N = normalize(normal);
+        vec3 T = normalize(tangent.xyz);
+        vec3 B = normalize(cross(N, T)) * tangent.w;
 
-        mat3 TBN = mat3(t, b, n);
+        mat3 TBN = mat3(T, B, N);
 
         vec3 texNormal = FetchTex2D(material.textureNormal, coord).xyz;
-        vec3 outNormal = normalize(texNormal * 2.0 - 1.0);  
-        outNormal = normalize(TBN * outNormal);
-
-        return outNormal;
+        vec3 mapped = normalize(texNormal * 2.0 - 1.0);
+    
+        return normalize(TBN * mapped);
     }
-
-    else return normal;
+    else
+        return normal;
 }
 ShadowSetting GetShadowSetting(){
     return GLOBAL_SETTING.data.shadowSetting;

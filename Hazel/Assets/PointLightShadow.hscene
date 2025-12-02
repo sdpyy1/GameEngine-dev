@@ -1,0 +1,155 @@
+Scene: Untitled
+Entities:
+  - Entity: 580716457861201185
+    TagComponent:
+      Tag: Cube
+    Parent: 4228498329013940576
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 1872979609968049668
+    TagComponent:
+      Tag: Cube
+    Parent: 7599817116737856789
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 2285227975119674307
+    TagComponent:
+      Tag: assets\Model\Basic\cube.obj
+    Parent: 0
+    Children:
+      - Handle: 7487140700783746405
+    TransformComponent:
+      Translation: [5.9782052, 10.16469, -1.40037441]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Basic\cube.obj
+      Visible: true
+  - Entity: 4138273920385431009
+    TagComponent:
+      Tag: Cube
+    Parent: 6511396721039909954
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4228498329013940576
+    TagComponent:
+      Tag: assets\Model\Basic\cube.obj
+    Parent: 0
+    Children:
+      - Handle: 580716457861201185
+    TransformComponent:
+      Translation: [-0.781979799, 7.67025805, -4.3372488]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Basic\cube.obj
+      Visible: true
+  - Entity: 4495880962867618988
+    TagComponent:
+      Tag: Cube
+    Parent: 11218962406418267121
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 6511396721039909954
+    TagComponent:
+      Tag: assets\Model\Basic\cube.obj
+    Parent: 0
+    Children:
+      - Handle: 4138273920385431009
+    TransformComponent:
+      Translation: [-0.739231467, 0.569753647, 0.0240344852]
+      Rotation: [0, 0, 0]
+      Scale: [22.3989124, 1, 20.4870224]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Basic\cube.obj
+      Visible: true
+  - Entity: 7487140700783746405
+    TagComponent:
+      Tag: Cube
+    Parent: 2285227975119674307
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 7599817116737856789
+    TagComponent:
+      Tag: assets\Model\Basic\cube.obj
+    Parent: 0
+    Children:
+      - Handle: 1872979609968049668
+    TransformComponent:
+      Translation: [0, 12.9966068, 0]
+      Rotation: [0, 0, 0]
+      Scale: [12.4250975, 1, 28.29286]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Basic\cube.obj
+      Visible: true
+  - Entity: 10724913253315192331
+    TagComponent:
+      Tag: assets\Model\Basic\cube.obj
+    Parent: 0
+    Children:
+      - Handle: 17355989877954735828
+    TransformComponent:
+      Translation: [-0.0408902243, 3.04703045, 4.2048254]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Basic\cube.obj
+      Visible: true
+  - Entity: 11218962406418267121
+    TagComponent:
+      Tag: assets\Model\Basic\cube.obj
+    Parent: 0
+    Children:
+      - Handle: 4495880962867618988
+    TransformComponent:
+      Translation: [-3.85648751, 3.05639839, 0.710302651]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      MeshSourcePath: assets\Model\Basic\cube.obj
+      Visible: true
+  - Entity: 17355989877954735828
+    TagComponent:
+      Tag: Cube
+    Parent: 10724913253315192331
+    Children:
+      []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 18281539140809843489
+    TagComponent:
+      Tag: Point Light
+    Parent: 0
+    Children:
+      []
+    PointLightComponent:
+      Intensity: 1
+      Radiance: [1, 1, 1]
+      Radius: 20
+      ShowRadius: false
+    TransformComponent:
+      Translation: [-0.852091551, 5.34224081, -0.609329224]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
