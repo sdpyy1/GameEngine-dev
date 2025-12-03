@@ -6,8 +6,9 @@
 #include "RenderStruct.h"
 #include "Sampler.h"
 #include "Hazel/Scene/SceneManager.h"
-namespace GameEngine {
+#include "Texture.h"
 
+namespace GameEngine {
     // 每帧都需要更新的资源，放在这里会自动创建多份
     struct PreFrameGlobalResources
     {
@@ -38,6 +39,11 @@ namespace GameEngine {
         RHIRootSignatureRef samplerRootSignature;
         RHIDescriptorSetRef samplerDescriptorSet;
         std::vector<SamplerRef> samplers;
+
+
+        // 一些有用的资源
+        TextureRef whiteTexture;
+        TextureRef blackTexture;
     };
 
 
@@ -110,10 +116,12 @@ namespace GameEngine {
 
     public:
         CPURenderSetting GetCPURenderSetting() { return cpuRenderSetting; };
-
+        TextureRef GetWhiteTexture() { return m_MultiFrameGlobalResources.whiteTexture; };
+        TextureRef GetBlackTexture() { return m_MultiFrameGlobalResources.blackTexture; };
     private:
+        TextureRef LoadTextureFromFile(std::string filePath);
         uint32_t LoadIconFromFile(std::string filePath);
-        void LoadGizmoIcon();
+        void LoadDefaultTexture();
 	private:
         // 每个飞行帧一份
         std::array<PreFrameGlobalResources, FRAMES_IN_FLIGHT> m_PerFrameGlobalResources; 
@@ -128,6 +136,7 @@ namespace GameEngine {
 
 
         CPURenderSetting cpuRenderSetting; // 从场景传递过来的一些渲染参数，只在CPU使用
+
     };
 }
 

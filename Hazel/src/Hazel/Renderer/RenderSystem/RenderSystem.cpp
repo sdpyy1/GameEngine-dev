@@ -22,6 +22,7 @@
 #include <Hazel/Renderer/RenderPass/RayTracingPass.h>
 
 namespace GameEngine {
+
 	RenderSystem::RenderSystem()
 	{
 		RHIConfig config;

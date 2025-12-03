@@ -1,7 +1,7 @@
 #include "hzpch.h"
 #include "Model.h"
 #include "Hazel/Renderer/RenderResource/Material.h"
-
+#include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 namespace GameEngine {
 	Model::Model(std::string path, ModelProcessSetting processSetting) : path(path), processSetting(processSetting) {}
 
@@ -21,12 +21,10 @@ namespace GameEngine {
         | aiProcess_SortByPType             // Split meshes by primitive type
         | aiProcess_GenNormals              // Make sure we have legit normals
         | aiProcess_GenUVCoords             // Convert UVs if required 
-        //		| aiProcess_OptimizeGraph
         | aiProcess_OptimizeMeshes          // Batch draws where possible
         | aiProcess_JoinIdenticalVertices
         | aiProcess_LimitBoneWeights        // If more than N (=4) bone weights, discard least influencing bones and renormalise sum to 1
         | aiProcess_ValidateDataStructure   // Validation
-        //| aiProcess_GlobalScale             // e.g. convert cm to m for fbx import (and other formats where cm is native)
         ;
     void Model::LoadFromFile(std::string path)
     {
@@ -210,7 +208,7 @@ namespace GameEngine {
 				TextureRef albedo = LoadMaterialTexture(aiTexPath.C_Str());
 				ma->SetDiffuse(albedo);
 				ma->SetDiffuse(glm::vec4(1.0f));  // 有贴图就就不需要了
-			}
+            }
 
 
 
@@ -219,7 +217,6 @@ namespace GameEngine {
 			if (hasEmissiveMap) {
                 TextureRef emission = LoadMaterialTexture(aiTexPath.C_Str());
 				ma->SetEmission(emission);
-
 			}
 
 			// 法线贴图
@@ -247,7 +244,7 @@ namespace GameEngine {
                 TextureRef roughnessTextureHandle = LoadMaterialTexture(aiTexPath.C_Str());
 				ma->SetRoughness(roughnessTextureHandle);
 				ma->SetRoughness(1.0f);
-			}
+            }
 
 			// Metalness map
 			bool hasMetalnessMap = aiMaterial->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &aiTexPath) == AI_SUCCESS;
@@ -258,10 +255,12 @@ namespace GameEngine {
 
 				ma->SetMetallic(metalnessTextureHandle);
 				ma->SetMetallic(1.0f);
-			}
+            }
             materials[index] = ma;
 		}
-
+        else {
+            materials[index] = std::make_shared<Material>(true); // 默认材质
+        }
         // 处理骨骼
         if (mesh->HasBones())   ExtractBoneWeights(submesh.get(), mesh, scene);
 

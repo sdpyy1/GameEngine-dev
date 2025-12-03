@@ -21,6 +21,7 @@ namespace GameEngine {
 	{
 	public:
 		Material();
+		Material(bool init);
 		Material(const Material& other) = default;  // 可以拷贝构造
 		~Material();
 

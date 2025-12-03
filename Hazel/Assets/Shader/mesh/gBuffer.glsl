@@ -51,7 +51,6 @@ layout (location = 3) out vec4 o_Albedo;
 void main()
 {
     MaterialInfo material   = GetMaterial(IN_ID);
-    // vec4 color          = vec4(IN_COLOR, 1.0f);  // 顶点颜色
     vec4 diffuse        = GetDiffuse(material, IN_TEXCOORD);
     vec4 emission       = GetEmission(material,IN_TEXCOORD);
     diffuse += emission;

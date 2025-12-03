@@ -3,7 +3,6 @@
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 #include "Hazel/Scene/SceneManager.h"
-#include "Texture.h"
 
 namespace GameEngine {
 	static uint32_t BindlessSlotToPerFrameBinding(BindlessSlot slot) { return slot + (uint32_t)GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION; }
@@ -13,7 +12,7 @@ namespace GameEngine {
 		for (auto& alloctor : m_BindlessIDAlloctor) alloctor = IndexAllocator(MAX_BINDLESS_RESOURCE_SIZE);
 		InitMultiFrameGlobalResources();
 		InitPerFrameGlobalResources();
-		LoadGizmoIcon();
+		LoadDefaultTexture();
 	}
 	
 
@@ -310,8 +309,20 @@ namespace GameEngine {
 		spec.bindlessId = AllocateBindlessID(bindlessResourceInfo, BINDLESS_SLOT_TEXTURE_2D);
 		return spec.bindlessId;
 	}
-
-	void RenderResourceManager::LoadGizmoIcon()
+	TextureRef RenderResourceManager::LoadTextureFromFile(std::string filePath)
+	{
+		TextureSpec spec;
+		spec.path = filePath;
+        spec.bindless = false;
+		spec.srgb = false;
+		TextureRef texture = std::make_shared<Texture>(spec);
+		BindlessResourceInfo bindlessResourceInfo;
+		bindlessResourceInfo.textureView = texture->GetRHITextureView();
+		bindlessResourceInfo.resourceType = RESOURCE_TYPE_TEXTURE;
+		spec.bindlessId = AllocateBindlessID(bindlessResourceInfo, BINDLESS_SLOT_TEXTURE_2D);
+		return texture;
+	}
+	void RenderResourceManager::LoadDefaultTexture()
 	{
 		uint32_t pointlightIcon = LoadIconFromFile(APP_ICON_PATH + "pointLight.png");
 		uint32_t SpotlightIcon = LoadIconFromFile(APP_ICON_PATH + "Spotlight.png");
@@ -321,6 +332,12 @@ namespace GameEngine {
 		m_GlobalSettingInfo.iconTextures.spotLightID = SpotlightIcon;
 		m_GlobalSettingInfo.iconTextures.dirLightID = directionlightIcon;
 		SetGlobalSettingInfo();
+
+
+
+
+		m_MultiFrameGlobalResources.whiteTexture = LoadTextureFromFile(APP_TEXTURE_PATH + "white.jpg");
+		m_MultiFrameGlobalResources.blackTexture = LoadTextureFromFile(APP_TEXTURE_PATH + "black.jpg");
 	}
 
 	void RenderResourceManager::SetTLAS(const RHITopLevelAccelerationStructureRef& tlas)
@@ -342,5 +359,7 @@ namespace GameEngine {
 			}
 		}
 	}
+
+
 
 }

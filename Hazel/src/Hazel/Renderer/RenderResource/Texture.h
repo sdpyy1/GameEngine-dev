@@ -40,6 +40,7 @@ namespace GameEngine {
 		RHITextureViewRef GetRHITextureView() { return m_Spec.textureView; }
 	private:
 		TextureSpec m_Spec;
+        RHIDescriptorSetRef m_ImGuiIDCache;
 	};
 	typedef std::shared_ptr<Texture> TextureRef;
 

@@ -12,6 +12,17 @@ namespace GameEngine
 		Update();
 	}
 
+	Material::Material(bool init)
+	{
+        if (init) {
+            materialID = RENDER_RESOURCEMANAGER->AllocateMaterialID();
+            textureDiffuse = RENDER_RESOURCEMANAGER->GetWhiteTexture();
+            textureRoughness = RENDER_RESOURCEMANAGER->GetWhiteTexture();
+            textureMetallic = RENDER_RESOURCEMANAGER->GetBlackTexture();
+            Update();
+        }
+	}
+
 	Material::~Material()
 	{
 		// if (APP_RENDERSYSTEM && materialID != 0) RENDER_RESOURCEMANAGER->ReleaseMaterialID(materialID);

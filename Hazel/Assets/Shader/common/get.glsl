@@ -181,7 +181,6 @@ vec4 GetDiffuse(in MaterialInfo material, in vec2 coord) {
     if(material.textureDiffuse > 0)    
     {
         vec4 diffuse = GetTex2D(material.textureDiffuse, coord);
-        diffuse = pow(diffuse, vec4(1.0/2.2));          //gamma矫正  // TODO：设置的图片格式就是SRGB，这里应该不需要手动伽马了
         diffuse = GetBaseColor(material) * diffuse;         
 
         return diffuse;
@@ -194,18 +193,16 @@ vec4 GetBaseEmission(in MaterialInfo material){
 vec4 GetEmission(in MaterialInfo material, in vec2 coord){
     if(material.textureEmission.x > 0.0){
      vec4 emission = GetTex2D(material.textureEmission, coord);
-     emission = pow(emission, vec4(1.0/2.2));          //gamma矫正  // TODO：设置的图片格式就是SRGB，这里应该不需要手动伽马了
      emission = GetBaseEmission(material) * emission;         
      return emission;
     }
-     return vec4(0);
+    return vec4(0);
 }
 
 float GetRoughness(in MaterialInfo material, in vec2 coord){
     if(material.textureRoughness > 0)        
     {
-        vec3 arm = GetTex2D(material.textureRoughness, coord).xyz;
-        arm = pow(arm, vec3(1.0/2.2));          //gamma矫正  // TODO：设置的图片格式就是SRGB，这里应该不需要手动伽马了
+        vec3 arm = GetTex2D(material.textureRoughness, coord).xyz * material.roughness;
         return arm.y;
     }
     else return clamp(material.roughness, 0.00001, 0.99999); 
@@ -213,9 +210,7 @@ float GetRoughness(in MaterialInfo material, in vec2 coord){
 float GetMetallic(in MaterialInfo material, in vec2 coord){
     if(material.textureMetallic > 0)        
     {
-        vec3 arm = GetTex2D(material.textureMetallic, coord).xyz;
-        arm = pow(arm, vec3(1.0/2.2));          //gamma矫正
-
+        vec3 arm = GetTex2D(material.textureMetallic, coord).xyz * material.metallic;
         return arm.z;
     }
     else return clamp(material.metallic, 0.00001, 0.99999);   

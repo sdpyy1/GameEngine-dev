@@ -154,7 +154,10 @@ namespace GameEngine
 
 	RHIDescriptorSetRef Texture::GetImGuiID()
 	{
-		return APP_DYNAMICRHI->GetImGuiTextId(m_Spec.textureView);
+		if (!m_ImGuiIDCache) {
+            m_ImGuiIDCache = APP_DYNAMICRHI->GetImGuiTextId(m_Spec.textureView);
+		}
+		return m_ImGuiIDCache;
 	}
 
 	RHIDescriptorSetRef Texture::GetImGuiID(RHITextureRef texture)

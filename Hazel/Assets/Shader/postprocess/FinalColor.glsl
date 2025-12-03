@@ -33,6 +33,23 @@ vec3 ACESTonemap(vec3 color)
 	vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081;
 	return clamp(m2 * (a / b), 0.0, 1.0);
 }
+
+vec3 RRTAndODTFit(vec3 v)
+{
+    vec3 a = v * (v + 0.0245786) - 0.000090537;
+    vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081;
+    return a / b;
+}
+vec3 ACESFilmToneMapping(vec3 color)
+{
+    // ACES tone mapping 曲线
+    color = RRTAndODTFit(color);
+    // Clamp 到 [0, 1]
+    return clamp(color, 0.0, 1.0);
+}
+
+
+
 vec3 GammaCorrect(vec3 color, float gamma)
 {
 	return pow(color, vec3(1.0f / gamma));
@@ -49,7 +66,7 @@ void main(){
 
 	vec3 finalColor = texture(sampler2D(lightRes,SAMPLER[0]), in_texCoord).rgb;
 	finalColor += texture(sampler2D(BloomRes,SAMPLER[0]), in_texCoord).rgb * BloomScale;
-	finalColor = ACESTonemap(finalColor);
+	finalColor = ACESFilmToneMapping(finalColor);
 
 	const float gamma = 2.2;
 

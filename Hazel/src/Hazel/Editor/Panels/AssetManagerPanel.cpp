@@ -82,12 +82,27 @@ namespace GameEngine {
 		DrawComponent<SubmeshComponent>("Submesh", entity, [](auto& component)
 			{
 				ImGui::Checkbox("Visible", &component.Visible);
+
+				MaterialRef material = component.material;
+
+				DrawMaterialVec4("Diffuse Color", material->diffuse, [&](const glm::vec4& val) { material->SetDiffuse(val); });
+				DrawMaterialVec4("Emission Color", material->emission, [&](const glm::vec4& val) { material->SetEmission(val); });
+				DrawMaterialFloat("Roughness", material->roughness, [&](float val) { material->SetRoughness(val); });
+				DrawMaterialFloat("Metallic", material->metallic, [&](float val) { material->SetMetallic(val); });
+
+				DrawTextureSlot("Diffuse", material->textureDiffuse,[&](TextureRef tex) {material->SetDiffuse(tex);});
+				DrawTextureSlot("Normal", material->textureNormal,[&](TextureRef tex) {material->SetNormal(tex);});
+				DrawTextureSlot("Roughness", material->textureRoughness,[&](TextureRef tex) {material->SetRoughness(tex);});
+				DrawTextureSlot("Metallic", material->textureMetallic,[&](TextureRef tex) {material->SetMetallic(tex);});
+				DrawTextureSlot("Emission", material->textureEmission,[&](TextureRef tex) {material->SetEmission(tex);});
+
 			});
 
 		DrawComponent<ModelComponent>("Model", entity, [](auto& component)
 			{
 				ImGui::Checkbox("Visible", &component.Visible);
 				ImGui::Checkbox("Cast Shadow", &component.castShadow);
+
 			});
 
 		DrawComponent<DirectionalLightComponent>("DirectionalLight", entity, [](auto& component)
@@ -113,7 +128,7 @@ namespace GameEngine {
 			{
 				ImGui::ColorEdit3("Radiance", &component.Radiance.x, ImGuiColorEditFlags_Float);
 				ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 3.0f, "%.2f");
-				ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f, 20.0f, "%.2f");
+				ImGui::DragFloat("Radius", &component.Radius, 0.1f, 0.0f, 50.0f, "%.2f");
 				ImGui::Checkbox("Show Radius", &component.showRadius);
 			});
 		DrawComponent<SpotLightComponent>("Spot Light", entity, [](auto& component)
@@ -433,8 +448,87 @@ namespace GameEngine {
 		return ext == "png" || ext == "jpg" || ext == "jpeg" ||
 			ext == "tga" || ext == "bmp" || ext == "hdr";
 	}
-	void AssetManagerPanel::DrawMaterial(UUID meshSourceHandle)
+
+
+	static void DrawMaterialFloat(const char* label, float& value, std::function<void(float)> onChange)
 	{
-		
+		ImGui::PushID(label);
+		if (ImGui::DragFloat(label, &value, 0.01f, 0.0f, 2.0f))
+		{
+			onChange(value);
+		}
+		ImGui::PopID();
 	}
+
+	static void DrawMaterialInt(const char* label, int32_t& value, std::function<void(int32_t)> onChange)
+	{
+		ImGui::PushID(label);
+		if (ImGui::DragInt(label, &value, 1))
+		{
+			onChange(value);
+		}
+		ImGui::PopID();
+	}
+
+	static void DrawMaterialVec3(const char* label, glm::vec3& value, std::function<void(const glm::vec3&)> onChange)
+	{
+		ImGui::PushID(label);
+		if (ImGui::DragFloat3(label, glm::value_ptr(value), 0.01f))
+		{
+			onChange(value);
+		}
+		ImGui::PopID();
+	}
+
+	static void DrawMaterialVec4(const char* label, glm::vec4& value, std::function<void(const glm::vec4&)> onChange)
+	{
+		ImGui::PushID(label);
+		if (ImGui::ColorEdit4(label, glm::value_ptr(value)))
+		{
+			onChange(value);
+		}
+		ImGui::PopID();
+	}
+
+	static void DrawTextureSlot(const char* label, TextureRef& texture, std::function<void(TextureRef)> onDrop)
+	{
+		ImGui::Text("%s", label);
+
+		ImGui::PushID(label);
+		ImVec2 size = ImVec2(64, 64);
+
+		if (texture)
+		{
+			RHIDescriptorSetRef texID = texture->GetImGuiID();
+			ImGui::Image(texID->RawHandle(), size);
+		}
+		else
+		{
+			ImGui::Button("No Texture", size);
+		}
+
+		// ÍÏ×§Ìæ»»ÎÆÀí
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				IM_ASSERT(payload->DataSize > 0);
+				const char* droppedPath = (const char*)payload->Data;
+				TextureSpec spec;
+				spec.path = droppedPath;
+
+				TextureRef droppedTexture = std::make_shared<Texture>(spec);
+				if (droppedTexture)
+				{
+					onDrop(droppedTexture);
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+
+		ImGui::PopID();
+	}
+
+
+
 } // namespace GameEngine

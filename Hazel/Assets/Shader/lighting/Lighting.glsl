@@ -72,7 +72,7 @@ void main()
 	}
 
 	m_Params.Albedo = GetGBufferAlbedo(TexCoord);
-	m_Params.Metalness = GetGBufferMetalness(TexCoord);
+	m_Params.Metalness = GetGBufferMetalness(TexCoord) ;
     m_Params.Roughness = GetGBufferRoughness(TexCoord);
     m_Params.Normal = GetGBufferNormal(TexCoord);
 	m_Params.View = normalize(CAMERAINFO.CameraPosition - WorldPosition); 
