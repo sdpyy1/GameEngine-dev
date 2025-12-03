@@ -13,7 +13,7 @@ namespace GameEngine {
 #define APP_TICK Application::GetTotalTick()
 #define APP_SCENE_CAMERA Application::GetSceneManager()->GetEditorCamera()
 
-#define APP_SHADER_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/Shader/spv/")
+#define APP_SHADER_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/Shader/")
 #define APP_HDR_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/HDR/")
 #define APP_TEXTURE_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/Texture/")
 #define APP_ICON_PATH std::string("D:/AAA_GameEngine/Hazel/Assets/Icon/")

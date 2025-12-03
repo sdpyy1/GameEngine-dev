@@ -19,13 +19,14 @@
 #include <Hazel/Renderer/RenderPass/PreDepthPass.h>
 #include <Hazel/Renderer/RenderPass/GizmoPass.h>
 #include <Hazel/Renderer/RenderPass/PointShadowPass.h>
+#include <Hazel/Renderer/RenderPass/RayTracingPass.h>
 
 namespace GameEngine {
 	RenderSystem::RenderSystem()
 	{
 		RHIConfig config;
         config.debug = true;
-        config.enableRayTracing = false;
+        config.enableRayTracing = true;
 		config.api = API_Vulkan;
 
 		m_DynamicRHI = DynamicRHI::Init(config);
@@ -69,19 +70,6 @@ namespace GameEngine {
 	void RenderSystem::InitPasses()
 	{
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
-#ifdef ENABLE_RAY_TRACING
-		ModelProcessSetting setting;
-		ModelRef model = std::make_shared<Model>("Assets/Model/Klee/klee.obj", setting);
-		model->OnLoadAsset();
-
-		RHIBottomLevelAccelerationStructureInfo blasInfo;
-        blasInfo.vertexBuffer = model->GetSubmeshData(0).vertexBuffer->positionBuffer;
-        blasInfo.vertexCount = model->GetSubmeshData(0).vertexBuffer->VertexNum();
-        blasInfo.indexBuffer = model->GetSubmeshData(0).indexBuffer->buffer;
-        blasInfo.vertexStride = 3 * sizeof(float);
-        blasInfo.triangleCount = model->GetSubmeshData(0).indexBuffer->IndexNum() / 3;
-		APP_DYNAMICRHI->CreateBottomLevelAccelerationStructure(blasInfo);
-#endif
 
 		passes[IBL_PASS] = std::make_shared<IBLPass>();
 		meshPasses[MESH_PASS_DIRSHADOW_PASS] = std::make_shared<DirShadowPass>();
@@ -91,6 +79,7 @@ namespace GameEngine {
 		passes[DIR_SHADOW_PASS] = meshPasses[MESH_PASS_DIRSHADOW_PASS];
 		passes[POINT_SHADOW_PASS] = meshPasses[MESH_PASS_POINTSHADOW_PASS];
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
+        passes[RAYTRACING_PASS] = std::make_shared<RayTracingPass>();
 		passes[PREDEPTH_PASS] = meshPasses[MESH_PASS_PREDEPTH_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();
 		passes[GIZMO_PASS] = std::make_shared<GizmoPass>();

@@ -9,7 +9,7 @@ void GameEngine::GizmoPass::Init()
 {
 	// init
 	{
-		m_GizmoInitShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoInit.comp.spv", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
+		m_GizmoInitShader = std::make_shared<Shader>("gizmo/GizmoInit", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
 		RHIRootSignatureInfo info = {};
 		info.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());
 		m_RootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
@@ -20,8 +20,8 @@ void GameEngine::GizmoPass::Init()
 	}
 	// Box
 	{
-		m_BoxVertShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoBoxVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-        m_BoxFragShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoBoxFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+		m_BoxVertShader = std::make_shared<Shader>("gizmo/GizmoBox", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+        m_BoxFragShader = std::make_shared<Shader>("gizmo/GizmoBox", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
 		RHIGraphicsPipelineInfo pipelineInfo = {};
         pipelineInfo.vertexShader = m_BoxVertShader;
         pipelineInfo.fragmentShader = m_BoxFragShader;
@@ -45,8 +45,8 @@ void GameEngine::GizmoPass::Init()
 
 	// sphere
 	{
-        m_SphereVertShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoSphereVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-        m_SphereFragShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoSphereFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+        m_SphereVertShader = std::make_shared<Shader>("gizmo/GizmoSphere", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+        m_SphereFragShader = std::make_shared<Shader>("gizmo/GizmoSphere", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
         RHIGraphicsPipelineInfo pipelineInfo = {};
         pipelineInfo.vertexShader = m_SphereVertShader;
         pipelineInfo.fragmentShader = m_SphereFragShader;
@@ -70,9 +70,9 @@ void GameEngine::GizmoPass::Init()
 	
 	// line
 	{
-        m_LineVertShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoLineVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-        m_LineFragShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoLineFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
-		m_LineGeomShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoLineGeom.spv", SHADER_FREQUENCY_GEOMETRY)->GetRHIShader();
+        m_LineVertShader = std::make_shared<Shader>("gizmo/GizmoLine", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+        m_LineFragShader = std::make_shared<Shader>("gizmo/GizmoLine", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+		m_LineGeomShader = std::make_shared<Shader>("gizmo/GizmoLine", SHADER_FREQUENCY_GEOMETRY)->GetRHIShader();
         RHIGraphicsPipelineInfo pipelineInfo = {};
         pipelineInfo.vertexShader = m_LineVertShader;
         pipelineInfo.fragmentShader = m_LineFragShader;
@@ -89,9 +89,9 @@ void GameEngine::GizmoPass::Init()
 
 	// billboard
 	{
-		m_BillboardVertShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoBillboardVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-        m_BillboardFragShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoBillboardFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
-		m_BillboardGeomShader = std::make_shared<Shader>(APP_SHADER_PATH + "GizmoBillboardGeom.spv", SHADER_FREQUENCY_GEOMETRY)->GetRHIShader();
+		m_BillboardVertShader = std::make_shared<Shader>("gizmo/GizmoBillboard", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+        m_BillboardFragShader = std::make_shared<Shader>("gizmo/GizmoBillboard", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+		m_BillboardGeomShader = std::make_shared<Shader>("gizmo/GizmoBillboard", SHADER_FREQUENCY_GEOMETRY)->GetRHIShader();
 
 		RHIGraphicsPipelineInfo pipelineInfo = {};
         pipelineInfo.vertexShader = m_BillboardVertShader;

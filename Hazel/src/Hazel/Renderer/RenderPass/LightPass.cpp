@@ -10,8 +10,8 @@
 namespace GameEngine {
 	void LightPass::Init()
 	{
-		m_VertShader = std::make_shared<Shader>(APP_SHADER_PATH + "LightingVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-		m_FragShader = std::make_shared<Shader>(APP_SHADER_PATH + "LightingFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+		m_VertShader = std::make_shared<Shader>("lighting/Lighting", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+		m_FragShader = std::make_shared<Shader>("lighting/Lighting", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
 		RHIRootSignatureInfo info = {};
 		info.AddEntryFromReflect(m_VertShader)
 			.AddEntryFromReflect(m_FragShader)

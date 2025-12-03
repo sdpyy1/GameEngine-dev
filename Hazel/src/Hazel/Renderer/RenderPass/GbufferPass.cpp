@@ -50,8 +50,8 @@ namespace GameEngine
 		meshPassProcessor = std::make_shared<GBufferPassProcessor>(this);
 		MeshPass::Init();
 
-		vertexShader = std::make_shared<Shader>(APP_SHADER_PATH + "GbufferVert.spv", SHADER_FREQUENCY_VERTEX);
-		fragmentShader = std::make_shared<Shader>(APP_SHADER_PATH + "GbufferFrag.spv", SHADER_FREQUENCY_FRAGMENT);
+		vertexShader = std::make_shared<Shader>("mesh/Gbuffer", SHADER_FREQUENCY_VERTEX);
+		fragmentShader = std::make_shared<Shader>("mesh/Gbuffer", SHADER_FREQUENCY_FRAGMENT);
 
 		RHIRootSignatureInfo rootSignatureInfo = {};
 		rootSignatureInfo.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());  // Set=0 全局资源

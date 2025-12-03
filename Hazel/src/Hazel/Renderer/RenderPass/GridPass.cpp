@@ -10,10 +10,8 @@ namespace GameEngine {
 	void GridPass::Init()
 	{
 		auto RHI = APP_DYNAMICRHI;
-		std::string vertPath =APP_SHADER_PATH + "gridVert.spv";
-		std::string fragPath = APP_SHADER_PATH + "gridFrag.spv";
-		m_VertShader = Shader(vertPath, SHADER_FREQUENCY_VERTEX).GetRHIShader();
-		m_FragShader = Shader(fragPath, SHADER_FREQUENCY_FRAGMENT).GetRHIShader();
+		m_VertShader = Shader("gizmo/grid", SHADER_FREQUENCY_VERTEX).GetRHIShader();
+		m_FragShader = Shader("gizmo/grid", SHADER_FREQUENCY_FRAGMENT).GetRHIShader();
 
 
 		RHIRootSignatureInfo rootSignatureInfo = {};

@@ -22,9 +22,9 @@ namespace GameEngine {
 		meshPassProcessor = std::make_shared<PointShadowPassProcessor>(this);
 		meshPassProcessor->Init();
 
-		m_VertShader = std::make_shared<Shader>(APP_SHADER_PATH + "PointShadowVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-        m_GeomShader = std::make_shared<Shader>(APP_SHADER_PATH + "PointShadowGeom.spv", SHADER_FREQUENCY_GEOMETRY)->GetRHIShader();
-        m_FragShader = std::make_shared<Shader>(APP_SHADER_PATH + "PointShadowFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+		m_VertShader = std::make_shared<Shader>("mesh/shadow/PointShadow", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+        m_GeomShader = std::make_shared<Shader>("mesh/shadow/PointShadow", SHADER_FREQUENCY_GEOMETRY)->GetRHIShader();
+        m_FragShader = std::make_shared<Shader>("mesh/shadow/PointShadow", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
 		
 		RHIRootSignatureInfo rootSignatureInfo = {};
 		rootSignatureInfo.AddEntryFromReflect(m_VertShader)

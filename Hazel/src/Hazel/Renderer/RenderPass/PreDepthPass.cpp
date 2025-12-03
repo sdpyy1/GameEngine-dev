@@ -22,8 +22,8 @@ namespace GameEngine {
 	{
 		meshPassProcessor = std::make_shared<PreDepthPassProcessor>(this);
 		MeshPass::Init();
-		m_VertShader = std::make_shared<Shader>(APP_SHADER_PATH + "PreDepthVert.spv", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
-		m_FragShader = std::make_shared<Shader>(APP_SHADER_PATH + "PreDepthFrag.spv", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
+		m_VertShader = std::make_shared<Shader>("mesh/PreDepth", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
+		m_FragShader = std::make_shared<Shader>("mesh/PreDepth", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
 		RHIRootSignatureInfo info = {};
 		info.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());
 		m_RootSignature = APP_DYNAMICRHI->CreateRootSignature(info);

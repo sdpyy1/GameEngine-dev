@@ -10,7 +10,7 @@ namespace GameEngine
 	void IBLPass::Init()
 	{
 		{
-			equirectangularConversionCompShader = std::make_shared<Shader>(APP_SHADER_PATH + "EquirectangularToCubeMap.comp.spv", SHADER_FREQUENCY_COMPUTE);
+			equirectangularConversionCompShader = std::make_shared<Shader>("IBL/EquirectangularToCubeMap", SHADER_FREQUENCY_COMPUTE);
 			RHIRootSignatureInfo rootSignatureInfo = {};
 			rootSignatureInfo.AddEntryFromReflect(equirectangularConversionCompShader->GetRHIShader()).AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo());
 			equirectangularConversionCompRootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
@@ -21,7 +21,7 @@ namespace GameEngine
 		}
 
 		{
-			environmentIrradianceCompShader = std::make_shared<Shader>(APP_SHADER_PATH + "EnvironmentIrradiance.comp.spv", SHADER_FREQUENCY_COMPUTE);
+			environmentIrradianceCompShader = std::make_shared<Shader>("IBL/EnvironmentIrradiance", SHADER_FREQUENCY_COMPUTE);
 			RHIRootSignatureInfo rootSignatureInfo = {};
 			rootSignatureInfo.AddEntryFromReflect(environmentIrradianceCompShader->GetRHIShader())
 				.AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo())
@@ -34,7 +34,7 @@ namespace GameEngine
 		}
 
 		{
-            environmentMipFilterCompShader = std::make_shared<Shader>(APP_SHADER_PATH + "EnvironmentMipFilter.comp.spv", SHADER_FREQUENCY_COMPUTE);
+            environmentMipFilterCompShader = std::make_shared<Shader>("IBL/EnvironmentMipFilter", SHADER_FREQUENCY_COMPUTE);
             RHIRootSignatureInfo rootSignatureInfo = {};
             rootSignatureInfo.AddEntryFromReflect(environmentMipFilterCompShader->GetRHIShader())
                 .AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo())

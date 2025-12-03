@@ -1,4 +1,5 @@
-// 使用GBuffer时，需要空出Set=3
+#ifndef GBUFFER_GLSL
+#define GBUFFER_GLSL
 #define GBUFFER_POSITION_BINDING 0
 #define GBUFFER_NORMAL_BINDING 1
 #define GBUFFER_MATERIAL_BINDING 2
@@ -29,3 +30,4 @@ float FetchGBufferRoughness(vec2 uv)
 {
     return texture(sampler2D(u_GBufferMaterial, SAMPLER[0]), uv).x;
 }
+#endif

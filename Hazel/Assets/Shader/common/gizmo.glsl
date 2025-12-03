@@ -1,5 +1,5 @@
-// ¸ÃÎÄ¼þ±ØÐë·ÅÔÚcommon.glslÖ®ºó MAX_GIZMO_PRIMITIVE_COUNT
-// ÕâËÄ¸öº¯ÊýÄ¿µÄÊÇÔÚ¼ä½Ó»æÖÆBufferÖÐÌí¼ÓÐÂµÄ»æÖÆÊµÀý
+#ifndef GIZMO_GLSL
+#define GIZMO_GLSL
 void AddGizmoBox(vec3 center, vec3 extent, vec4 color)
 {
     GizmoBoxInfo info;
@@ -7,7 +7,7 @@ void AddGizmoBox(vec3 center, vec3 extent, vec4 color)
     info.extent = extent;
     info.color = color;
 
-    uint offset = atomicAdd(GIZMO_DRAW_DATA.command[0].instanceCount, 1);   // ÊµÀýÊýÁ¿¼Ó1£¬×¢ÒâatomicAdd·µ»ØµÄÊÇ¾ÉÖµ£¬²»ÊÇ¼Ó1µÄ½á¹û
+    uint offset = atomicAdd(GIZMO_DRAW_DATA.command[0].instanceCount, 1);   // Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½×¢ï¿½ï¿½atomicAddï¿½ï¿½ï¿½Øµï¿½ï¿½Ç¾ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Ç¼ï¿½1ï¿½Ä½ï¿½ï¿½
     if(offset < MAX_GIZMO_PRIMITIVE_COUNT) GIZMO_DRAW_DATA.boxes[offset] = info;
 }
 
@@ -44,3 +44,4 @@ void AddGizmoBillboard(vec3 center, vec2 extent, uint textureID, vec4 color)
     uint offset = atomicAdd(GIZMO_DRAW_DATA.command[3].instanceCount, 1);
     if(offset < MAX_GIZMO_PRIMITIVE_COUNT) GIZMO_DRAW_DATA.worldBillboards[offset] = info;
 }
+#endif

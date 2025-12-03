@@ -1,45 +1,63 @@
 @echo off
-:: ==============================================
-:: ×Ô¶¯±àÒëµ±Ç°Ä¿Â¼ÏÂµÄËùÓÐ .glsl ×ÅÉ«Æ÷ÎÄ¼þ
-:: Éú³ÉµÄ spv ÎÄ¼þ·Åµ½ spv ÎÄ¼þ¼ÐÖÐ
-:: ½öµ±ÎÄ¼þÖÐ¶¨ÒåÁË GEOMETRY_SHADER Ê±²Å±àÒë¼¸ºÎ×ÅÉ«Æ÷
-:: ÐèÒª°²×° VulkanSDK ²¢ÅäÖÃÕýÈ·Â·¾¶
-:: ==============================================
-setlocal enabledelayedexpansion
+setlocal EnableDelayedExpansion
 
-set GLSLC="D:\context\VulkanSDK\1.3.243.0\Bin\glslc.exe"
+set "GLSLC=D:\context\VulkanSDK\1.4.309.0\Bin\glslc.exe"
 
-if not exist spv (
-    mkdir spv
-)
+echo ========== Shader Compile Start ==========
 
-echo ==============================================
-echo [Shader Compilation Started]
-echo ==============================================
+for /r %%f in (*.glsl) do (
 
-for %%f in (*.glsl) do (
-
-    echo %%f | findstr /i "\.comp\." >nul
-    if !errorlevel! equ 0 (
-        echo Compiling compute shader: %%f ...
-        %GLSLC% -fshader-stage=comp %%f -DCOMPUTE_SHADER -o spv/%%~nf.spv
+    REM ==== è·³è¿‡ common æ–‡ä»¶å¤¹ ====
+    echo %%f | findstr /i "\\common\\" >nul
+    if not errorlevel 1 (
+        echo Skip common: %%f
     ) else (
-        echo Compiling vertex/fragment shader: %%f ...
-        %GLSLC% -fshader-stage=vert %%f -DVERTEX_SHADER -o spv/%%~nfVert.spv
-        %GLSLC% -fshader-stage=frag %%f -DFRAGMENT_SHADER -o spv/%%~nfFrag.spv
-        
-        findstr /i /m "#define GEOMETRY_SHADER" "%%f" >nul
-        if !errorlevel! equ 0 (
+
+        set "FILE=%%f"
+        set "DIR=%%~dpf"
+        set "NAME=%%~nf"
+
+        REM åˆ›å»º spv ç›®å½•
+        if not exist "%%~dpfspv" (
+            mkdir "%%~dpfspv"
+        )
+        REM ---- Compute Shader  ----
+        findstr /i /m "COMPUTE_SHADER" "%%f" >nul
+        if not errorlevel 1 (
+        echo Compiling compute shader: %%f ...
+        "%GLSLC%" -fshader-stage=comp "%%f" -DCOMPUTE_SHADER -o "%%~dpfspv\%%~nfComp.spv"
+        )
+        REM ---- Vertex Shader ----
+        findstr /i /m "VERTEX_SHADER" "%%f" >nul
+        if not errorlevel 1 (
+            echo Compiling vertex shader: %%f ...
+            "%GLSLC%" -fshader-stage=vert "%%f" -DVERTEX_SHADER -o "%%~dpfspv\%%~nfVert.spv"
+        )
+
+        REM ---- Fragment Shader ----
+        findstr /i /m "FRAGMENT_SHADER" "%%f" >nul
+        if not errorlevel 1 (
+            echo Compiling fragment shader: %%f ...
+            "%GLSLC%" -fshader-stage=frag "%%f" -DFRAGMENT_SHADER -o "%%~dpfspv\%%~nfFrag.spv"
+        )
+
+        REM ---- Geometry Shader ----
+        findstr /i /m " GEOMETRY_SHADER" "%%f" >nul
+        if not errorlevel 1 (
             echo Compiling geometry shader: %%f ...
-            %GLSLC% -fshader-stage=geom %%f -DGEOMETRY_SHADER -o spv/%%~nfGeom.spv
+            "%GLSLC%" -fshader-stage=geom "%%f" -DGEOMETRY_SHADER -o "%%~dpfspv\%%~nfGeom.spv"
+        )
+
+        REM ---- RayGen Shader ----
+        findstr /i /m "RAYGEN_SHADER" "%%f" >nul
+        if not errorlevel 1 (
+            echo Compiling raygen shader: %%f ...
+            "%GLSLC%" -fshader-stage=rgen "%%f" -DRAYGEN_SHADER --target-spv=spv1.4 -o "%%~dpfspv\%%~nfRgen.spv"
+        )
         )
     )
+
 )
-endlocal
 
-echo ==============================================
-echo [All shaders compiled successfully!]
-echo Output folder: spv\
-echo ==============================================
-
+echo ========== Shader Compile Finished ==========
 pause
