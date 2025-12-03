@@ -223,9 +223,12 @@ float GetMetallic(in MaterialInfo material, in vec2 coord){
 vec3 GetNormal(in MaterialInfo material, in vec2 coord, in vec3 normal, in vec4 tangent) {
 	if (material.textureNormal > 0)
     {
+        float fSign = tangent.w < 0 ? -1 : 1;        
+
         vec3 N = normalize(normal);
         vec3 T = normalize(tangent.xyz);
-        vec3 B = normalize(cross(N, T)) * tangent.w;
+        vec3 B = -tangent.w * normalize(cross(N, T));
+        T = fSign * normalize(cross(N, T));
 
         mat3 TBN = mat3(T, B, N);
 

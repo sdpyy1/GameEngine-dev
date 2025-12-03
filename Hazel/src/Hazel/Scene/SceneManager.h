@@ -30,6 +30,8 @@ namespace GameEngine
 		bool OpenScene(const std::filesystem::path& filepath);
 		void SaveScene();
 		void SaveSceneAs();
+		void SetDebugImageName(std::string name) {DebugImageName = name;};
+        std::string GetDebugImageName() { return DebugImageName; };
 	public:
 
 		bool HasDirLight();
@@ -41,7 +43,7 @@ namespace GameEngine
 		std::shared_ptr<Scene> m_CurrentScene;
 		std::shared_ptr<EditorCamera> m_EditorCamera;
 		std::string m_CurrentSceneFilePath;
-
+		std::string DebugImageName;
 	};
 
 }

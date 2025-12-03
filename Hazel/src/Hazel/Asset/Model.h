@@ -11,14 +11,8 @@ namespace GameEngine {
 
     typedef struct ModelProcessSetting
     {
-        bool smoothNormal = false;                  // 生成平滑法线
-        bool flipUV = false;                        // 翻转UV
-        bool loadMaterials = true;                 // 读取文件中的材质并生成材质资源
-        bool tangentSpace = true;                  // 生成切线,必须生成，否则法线重建失效
-        bool generateBVH = false;                   // 生成BVH
-        bool generateCluster = false;               // 生成Cluster
-        bool generateVirtualMesh = false;           // 生成虚拟几何体
-        bool cacheCluster = false;                  // 对于虚拟几何体和Cluster做缓存，只需要生成一次
+        bool flipUV = false;
+        bool loadMaterials = true; 
 
     private:
         BeginSerailize()

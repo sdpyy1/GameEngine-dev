@@ -1,7 +1,6 @@
 #include "hzpch.h"
 #include "Model.h"
 #include "Hazel/Renderer/RenderResource/Material.h"
-#include <Hazel/Math/TangentSpace.h>
 
 namespace GameEngine {
 	Model::Model(std::string path, ModelProcessSetting processSetting) : path(path), processSetting(processSetting) {}
@@ -16,57 +15,54 @@ namespace GameEngine {
 	{
 
 	}
+    static const uint32_t s_MeshImportFlags =
+        aiProcess_CalcTangentSpace          // Create binormals/tangents just in case
+        | aiProcess_Triangulate             // Make sure we're triangles
+        | aiProcess_SortByPType             // Split meshes by primitive type
+        | aiProcess_GenNormals              // Make sure we have legit normals
+        | aiProcess_GenUVCoords             // Convert UVs if required 
+        //		| aiProcess_OptimizeGraph
+        | aiProcess_OptimizeMeshes          // Batch draws where possible
+        | aiProcess_JoinIdenticalVertices
+        | aiProcess_LimitBoneWeights        // If more than N (=4) bone weights, discard least influencing bones and renormalise sum to 1
+        | aiProcess_ValidateDataStructure   // Validation
+        //| aiProcess_GlobalScale             // e.g. convert cm to m for fbx import (and other formats where cm is native)
+        ;
+    void Model::LoadFromFile(std::string path)
+    {
+        Assimp::Importer import;
+        const aiScene* scene = import.ReadFile(path, s_MeshImportFlags);
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+        {
+            LOG_ERROR("Assimp load error : {}", import.GetErrorString());
+            return;
+        }
 
-	void Model::LoadFromFile(std::string path)
-	{
-		if (processSetting.generateVirtualMesh) processSetting.smoothNormal = true;  //对于生成虚拟几何体需要顶点去重，强制平滑法线
-
-		uint32_t processSteps = aiProcess_Triangulate | aiProcess_FixInfacingNormals;
-		if (processSetting.flipUV) processSteps |= aiProcess_FlipUVs;
-		if (processSetting.smoothNormal) processSteps |= aiProcess_DropNormals | aiProcess_GenSmoothNormals;
-		if (!processSetting.smoothNormal) processSteps |= aiProcess_JoinIdenticalVertices | aiProcess_GenNormals;  //不需要平滑法线就可以合并重复顶点了，
-
-		Assimp::Importer import;
-		const aiScene* scene = import.ReadFile(path, processSteps);
-		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-		{
-			LOG_ERROR("Assimp load error : {}", import.GetErrorString());
-			return;
-		}
-
-		std::vector<aiMesh*> processMeshes;
-		ProcessNode(scene->mRootNode, scene, processMeshes);
-		submeshes.resize(processMeshes.size());
-		if (processSetting.loadMaterials) materials.resize(processMeshes.size());
+        std::vector<aiMesh*> processMeshes;
+        ProcessNode(scene->mRootNode, scene, processMeshes);
+        submeshes.resize(processMeshes.size());
+        if (processSetting.loadMaterials) materials.resize(processMeshes.size());
 
         // Submesh
-		for (int i = 0; i < processMeshes.size(); i++)
-		{
-			aiMesh* mesh = processMeshes[i];
-            LOG_INFO_TAG("Model",LOG_LINE);
-			LOG_TRACE("[{}/{}] Start processing mesh [{}].", i+1, scene->mNumMeshes, mesh->mName.C_Str());
-			ProcessMesh(mesh, scene, i);     
+        for (int i = 0; i < processMeshes.size(); i++)
+        {
+            aiMesh* mesh = processMeshes[i];
+            LOG_INFO_TAG("Model", LOG_LINE);
+            LOG_TRACE("[{}/{}] Start processing mesh [{}].", i + 1, scene->mNumMeshes, mesh->mName.C_Str());
+            ProcessMesh(mesh, scene, i);
             LOG_INFO_TAG("Model", LOG_LINE);
         }
-		textureMap.clear();
+        textureMap.clear();
 
-		// 统计信息
-		totalIndex = 0;
-		totalVertex = 0;
-		for (auto& submesh : submeshes)
-		{
-			totalIndex += submesh.mesh->index.size();
-			totalVertex += submesh.mesh->position.size();
-		}
-		if (processSetting.generateCluster)
-		{
-			
-		}
-		if (processSetting.generateVirtualMesh)
-		{
-			
-		}
-	}
+        // 统计信息
+        totalIndex = 0;
+        totalVertex = 0;
+        for (auto& submesh : submeshes)
+        {
+            totalIndex += submesh.mesh->index.size();
+            totalVertex += submesh.mesh->position.size();
+        }
+    }
 
 
 	void Model::ProcessNode(aiNode* node, const aiScene* scene, std::vector<aiMesh*>& processMeshes)
@@ -152,26 +148,10 @@ namespace GameEngine {
                 submesh->tangent[i].x = mesh->mTangents[i].x;
                 submesh->tangent[i].y = mesh->mTangents[i].y;
                 submesh->tangent[i].z = mesh->mTangents[i].z;
-                submesh->tangent[i].w = 1.0f;  //最后一位为符号(手性)
+                submesh->tangent[i].w = 1.0f;
             }
         }
-        else if (processSetting.tangentSpace)
-        {
-            if (submesh->normal.size() == 0 ||
-                submesh->position.size() == 0 ||
-                submesh->texCoord.size() == 0)      // 必须要有这些数据才能生成
-            {
-                LOG_ERROR("Try to generate tangent space but missing necesscary datas!");
-            }
-            else
-            {
-                submesh->tangent = std::vector<glm::vec4>(mesh->mNumVertices);
-
-                TangentSpace tangentCalculator = TangentSpace();
-                tangentCalculator.Generate(submesh.get());  // 需要先把上面的信息准备完成
-            }
-        }
-
+        
         // 处理材质
         if (processSetting.loadMaterials && mesh->mMaterialIndex >= 0)
         {
@@ -299,17 +279,6 @@ namespace GameEngine {
         // 添加到mesh asset
         submeshes[index].mesh = submesh;
 
-        // 处理分簇
-        if (processSetting.generateCluster)
-        {
-            
-        }
-
-        // 处理虚拟几何体
-        if (processSetting.generateVirtualMesh)
-        {
-           
-        }
 
         LOG_TRACE("  - Vertex Count: {}", submeshes[index].mesh->position.size());
         LOG_TRACE("  - Index Count: {}", submeshes[index].mesh->index.size());

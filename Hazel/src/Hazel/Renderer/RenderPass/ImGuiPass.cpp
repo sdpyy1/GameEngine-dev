@@ -18,9 +18,10 @@ namespace GameEngine
     }
     void ImGuiPass::Build(RDGBuilder& builder)
 	{
-        static std::string debugName = "GBufferAlbedo";  // 需要Debug的图片写在这里
-        
-        
+
+        static std::string debugName = "ViewPort";
+        debugName = APP_SCENEMANAGER->GetDebugImageName();
+
         if (IsEnabled())
         {
             if (viewportID[APP_FRAMEINDEX]) {

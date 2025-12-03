@@ -229,27 +229,72 @@ namespace GameEngine {
 			}
 		}
 
-		// 阴影设置栏目
-		if (ImGui::CollapsingHeader("Shadow", ImGuiTreeNodeFlags_DefaultOpen))
+		if (ImGui::CollapsingHeader("DebugColor", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			// 阴影类型选择
-			/*ImGui::RadioButton("Hard Shadow", &Application::GetSceneManager()->GetActiveScene()
-				->GetRenderSettingData().ShadowType, 0);
-			ImGui::RadioButton("PCF", &Application::GetSceneManager()->GetActiveScene()
-				->GetRenderSettingData().ShadowType, 1);
-			ImGui::RadioButton("PCSS", &Application::GetSceneManager()->GetActiveScene()
-				->GetRenderSettingData().ShadowType, 2);
-			int& deBugCSM = Application::GetSceneManager()->GetActiveScene()
-				->GetRenderSettingData().deBugCSM;*/
+			auto& rdgDependencyGraph = APP_RENDERSYSTEM->GetRDGDependenctyGraph();
+			if (rdgDependencyGraph) {
+				auto& textures = rdgDependencyGraph->GetNodes<RDGTextureNode>();
+				static std::string selectedImageName;
+				static char filterBuffer[128] = "";
+				ImGui::Text("Filter:");
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(std::max(100.0f, ImGui::GetContentRegionAvail().x - 80.0f));
+				ImGui::InputTextWithHint("##TextureFilter", "search...", filterBuffer, IM_ARRAYSIZE(filterBuffer));
+				ImGui::Separator();
 
-			//// 临时 bool
-			//bool tmp = (deBugCSM != 0);
-			//if (ImGui::Checkbox("Show Cascade", &tmp))
-			//{
-			//	deBugCSM = tmp ? 1 : 0; // 用户点击后更新 int
-			//}
+				ImGui::Text("Available Textures:");
+				ImVec2 childSize(ImGui::GetContentRegionAvail().x, std::max(100.0f, 300.0f));
+				if (ImGui::BeginChild("##TextureList", childSize, true, ImGuiWindowFlags_HorizontalScrollbar))
+				{
+					for (auto& texture : textures)
+					{
+						if (texture->Name().empty())
+							continue;
+
+						const std::string& textureName = texture->Name();
+						bool matchFilter = true;
+						if (strlen(filterBuffer) > 0)
+						{
+							std::string lowerName = textureName;
+							std::string lowerFilter = filterBuffer;
+							std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+							std::transform(lowerFilter.begin(), lowerFilter.end(), lowerFilter.begin(), ::tolower);
+							matchFilter = (lowerName.find(lowerFilter) != std::string::npos);
+						}
+
+						if (!matchFilter)
+							continue;
+
+						ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+						bool isSelected = (textureName == selectedImageName);
+
+						if (isSelected)
+						{
+							ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.8f, 0.0f, 1.0f)); // 入栈
+							nodeFlags |= ImGuiTreeNodeFlags_Selected;
+						}
+
+						ImGui::SetNextItemWidth(100.0f);
+						if (ImGui::TreeNodeEx(textureName.c_str(), nodeFlags))
+						{
+							if (ImGui::IsItemClicked())
+							{
+								selectedImageName = textureName;
+								APP_SCENEMANAGER->SetDebugImageName(selectedImageName.c_str());
+							}
+						}
+
+						if (isSelected)
+						{
+							ImGui::PopStyleColor();
+						}
+					}
+				}
+				ImGui::EndChild();
+				ImGui::Separator();
+			}
+			
 		}
-
 		ImGui::End();
 	}
 
