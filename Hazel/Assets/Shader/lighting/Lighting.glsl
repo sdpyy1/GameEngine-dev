@@ -39,7 +39,7 @@ struct PBRParameters
 
 void main()
 {
-    vec3 WorldPosition = FetchGBufferPosition(TexCoord);
+    vec3 WorldPosition = GetGBufferPosition(TexCoord);
 	if (WorldPosition == vec3(0.0)) {
 		o_Color = vec4(0.0, 0.0, 0.0, 1.0);
 		return;
@@ -47,11 +47,11 @@ void main()
 
 	float shadowScale = 1.0;
 	uint cascadeIndex = 0;
-	DirLightInfo dirLight = FetchDirLightInfo();
-	Camera u_CameraData = FetchCamera();
+	DirLightInfo dirLight = GetDirLightInfo();
+	Camera u_CameraData = GetCamera();
 	
 	if(dirLight.radiance != vec3(0.0)){
-		vec3 CameraPosition = FetchCamera().CameraPosition;
+		vec3 CameraPosition = GetCamera().CameraPosition;
 		float dis = length(WorldPosition - CameraPosition);
 		for (uint i = 0; i < 4; i++)
 		{
@@ -71,10 +71,10 @@ void main()
 		else if(GetShadowSetting().ShadowType == 3) shadowScale = PCSS_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords, 0.5);
 	}
 
-	m_Params.Albedo = FetchGBufferAlbedo(TexCoord);
-	m_Params.Metalness = FetchGBufferMetalness(TexCoord);
-    m_Params.Roughness = FetchGBufferRoughness(TexCoord);
-    m_Params.Normal = FetchGBufferNormal(TexCoord);
+	m_Params.Albedo = GetGBufferAlbedo(TexCoord);
+	m_Params.Metalness = GetGBufferMetalness(TexCoord);
+    m_Params.Roughness = GetGBufferRoughness(TexCoord);
+    m_Params.Normal = GetGBufferNormal(TexCoord);
 	m_Params.View = normalize(u_CameraData.CameraPosition - WorldPosition); 
 	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
@@ -83,7 +83,7 @@ void main()
 	vec3 lightContribution = CalculateDirLights(F0) * shadowScale + CalculatePointLights(F0, WorldPosition) + CalculateSpotLights(F0, WorldPosition);
 	
 	// IBL
-	vec3 iblContribution = IBL(F0, Lr) * FetchSkySetting().IbLScale;  
+	vec3 iblContribution = IBL(F0, Lr) * GetSkySetting().IbLScale;  
 
 	vec3 finalColor = lightContribution + iblContribution;
 

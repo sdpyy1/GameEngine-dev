@@ -324,7 +324,7 @@ namespace GameEngine {
         vertexBuffer->SetBoneIndex(submesh->boneIndex);
         vertexBuffer->SetBoneWeight(submesh->boneWeight);
         submeshes[index].vertexBuffer = vertexBuffer;
-        const VertexInfo& vi = vertexBuffer->vertexInfo;
+        const MeshInfo& vi = vertexBuffer->vertexInfo;
         LOG_TRACE("  - Vertex Buffer Info:");
         LOG_TRACE("    positionID:    {}", vi.positionID);
         LOG_TRACE("    normalID:      {}", vi.normalID);

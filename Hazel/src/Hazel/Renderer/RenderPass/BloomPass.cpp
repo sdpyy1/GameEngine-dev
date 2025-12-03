@@ -4,6 +4,7 @@
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
+#include <Hazel/Renderer/RenderResource/Shader.h>
 namespace GameEngine
 { 
 	void BloomPass::Init()

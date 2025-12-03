@@ -51,7 +51,7 @@ vec3 GetSunDisk(in AtmosphereParameter param, vec3 eyePos, vec3 viewDir, vec3 li
     return vec3(0,0,0);
 }
 void main(){
-	uint isDynamicSky = FetchSkySetting().isDynamicSky;
+	uint isDynamicSky = GetSkySetting().isDynamicSky;
 	vec4 color = vec4(0,0,0,1);
 	vec3 v_dir = normalize(worldPosition);
 	if(isDynamicSky == 0){

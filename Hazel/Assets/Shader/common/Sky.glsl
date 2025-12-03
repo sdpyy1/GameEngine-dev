@@ -1,7 +1,19 @@
 #ifndef SKY_GLSL
 #define SKY_GLSL
 #include "constant.glsl"
-
+struct AtmosphereParameter {
+	float AtmosphereHeight;
+	float PlanetRadius;
+	float RayleighScatteringScalarHeight;
+	float MieScatteringScalarHeight;
+	float OzoneLevelCenterHeight;
+	float OzoneLevelWidth;
+	float MieAnisotropy;
+	float SeaLevel;
+	vec3 SunLightColor;
+	float SunLightIntensity;
+	float SunDiskAngle;
+};
 AtmosphereParameter BuildAtmosphereParameter(){
 	AtmosphereParameter Atmosphere;  // TODO: AtmosphereUniform
 	Atmosphere.PlanetRadius = 6360000.0;

@@ -14,14 +14,14 @@ void main()
     uint objectID       = gl_InstanceIndex;
     uint indexOffset    = gl_VertexIndex;
 
-    mat4 model          = FetchModel(objectID);
-    // mat4 prevModel      = FetchPrevModel(objectID);
-    uint index          = FetchIndex(objectID, indexOffset);
-    vec4 pos            = FetchPos(objectID, index);
-    vec3 worldNormal    = FetchWorldNormal(FetchNormal(objectID, index), model);
-    vec4 worldTangent   = FetchWorldTangent(FetchTangent(objectID, index), model);
-    vec3 color          = FetchColor(objectID, index); 
-    vec2 texCoord       = FetchTexCoord(objectID, index);      
+    mat4 model          = GetModel(objectID);
+    // mat4 prevModel      = GetPrevModel(objectID);
+    uint index          = GetIndex(objectID, indexOffset);
+    vec4 pos            = GetPos(objectID, index);
+    vec3 worldNormal    = GetWorldNormal(GetNormal(objectID, index), model);
+    vec4 worldTangent   = GetWorldTangent(GetTangent(objectID, index), model);
+    vec3 color          = GetColor(objectID, index); 
+    vec2 texCoord       = GetTexCoord(objectID, index);      
 
     OUT_POSITION        = model * pos;
     // OUT_PREV_POSITION   = prevModel * pos;
@@ -50,14 +50,14 @@ layout (location = 2) out vec4 o_Material;
 layout (location = 3) out vec4 o_Albedo;
 void main()
 {
-    Material material   = FetchMaterial(IN_ID);
+    Material material   = GetMaterial(IN_ID);
     vec4 color          = vec4(IN_COLOR, 1.0f);
-    vec4 diffuse        = FetchDiffuse(material, IN_TEXCOORD);
+    vec4 diffuse        = GetDiffuse(material, IN_TEXCOORD);
     diffuse.a           = 1.0f;
-    vec4 emission       = FetchEmission(material,IN_TEXCOORD);
-    vec3 normal         = FetchNormal(material, IN_TEXCOORD, IN_NORMAL, IN_TANGENT);
-    float roughness     = FetchRoughness(material, IN_TEXCOORD);
-    float metallic      = FetchMetallic(material, IN_TEXCOORD);
+    vec4 emission       = GetEmission(material,IN_TEXCOORD);
+    vec3 normal         = GetNormal(material, IN_TEXCOORD, IN_NORMAL, IN_TANGENT);
+    float roughness     = GetRoughness(material, IN_TEXCOORD);
+    float metallic      = GetMetallic(material, IN_TEXCOORD);
 
 
     o_Position    = vec4(IN_POSITION);

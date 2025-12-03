@@ -669,7 +669,7 @@ namespace GameEngine {
 		RHIBufferRef buffer;
 		RHITextureViewRef textureView;
 		RHISamplerRef sampler;
-		// RHITopLevelAccelerationStructureRef tlas;
+		RHITopLevelAccelerationStructureRef tlas;
 
 		uint64_t bufferOffset = 0;	// ½öbufferÊ¹ÓÃ
 		uint64_t bufferRange = 0;

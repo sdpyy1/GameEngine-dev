@@ -68,7 +68,7 @@ layout (location = 0) out vec4 OUT_COLOR;
 void main()
 {
     OUT_COLOR = IN_COLOR;
-    if(IN_TEXTURE_ID != 0) OUT_COLOR *= pow(FetchTex2D(IN_TEXTURE_ID, IN_UV, 0), vec4(1.0/2.2));         
+    if(IN_TEXTURE_ID != 0) OUT_COLOR *= pow(GetTex2D(IN_TEXTURE_ID, IN_UV, 0), vec4(1.0/2.2));         
 
     if(OUT_COLOR.w < 0.00001f) discard;
 }

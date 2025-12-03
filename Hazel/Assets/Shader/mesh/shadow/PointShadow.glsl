@@ -11,10 +11,10 @@ void main()
 {
     uint objectID       = gl_InstanceIndex;
     uint indexOffset    = gl_VertexIndex;
-    mat4 model          = FetchModel(objectID);
-    uint index          = FetchIndex(objectID, indexOffset);
-    vec4 pos            = FetchPos(objectID, index);
-    vec2 texCoord       = FetchTexCoord(objectID, index);
+    mat4 model          = GetModel(objectID);
+    uint index          = GetIndex(objectID, indexOffset);
+    vec4 pos            = GetPos(objectID, index);
+    vec2 texCoord       = GetTexCoord(objectID, index);
 
     OUT_POS             = model * pos;
     OUT_TEXCOORD        = texCoord;
@@ -70,7 +70,7 @@ void Emit(  in int index,
 
 void main()
 {
-    PointLightInfo light = FetchPointLightInfo(push_LIGHTID.lightID);
+    PointLightInfo light = GetPointLightInfo(push_LIGHTID.lightID);
 
     Emit(0, light, IN_POS, IN_TEXCOORD, IN_ID);
     Emit(1, light, IN_POS, IN_TEXCOORD, IN_ID);
@@ -92,7 +92,7 @@ layout(location = 0) out vec4 OUT_COLOR;
 
 void main()
 {
-    PointLightInfo light = FetchPointLightInfo(push_LIGHTID.lightID);
+    PointLightInfo light = GetPointLightInfo(push_LIGHTID.lightID);
     float depth = length(IN_POS.xyz - light.position) / light.sphere.radius;  // ģ�͵����Դ���룬ѹ����0-1������1��ʾģ���ڵ��Դ��
     OUT_COLOR = vec4(depth, 0.0, 0.0, 1.0); //������Ϊ���
 

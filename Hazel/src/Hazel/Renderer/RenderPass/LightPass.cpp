@@ -6,6 +6,7 @@
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderSystem/LightCollector.h"
+#include <Hazel/Renderer/RenderResource/Shader.h>
 
 namespace GameEngine {
 	void LightPass::Init()
@@ -80,7 +81,7 @@ namespace GameEngine {
 		LightInfo& lightInfo = LightCollector::GetLightInfo();
 		if (lightInfo.pointLightCount > 0) {
 			RDGTextureHandle pointShadowMap = builder.GetTexture("Point Shadow Color[0]");
-			builde.Read(1, 4, 0, pointShadowMap, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_DEPTH,0,1,0,6 });
+			builde.Read(1, 4, 0, pointShadowMap, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR,0,1,0,6 });
 		}
 			
 

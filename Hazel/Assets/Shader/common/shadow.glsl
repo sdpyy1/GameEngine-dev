@@ -10,7 +10,7 @@ float ShadowFade = 1.0;
 float GetDirShadowBias()
 {
 	const float MINIMUM_SHADOW_BIAS = 0.002;
-	float bias = max(MINIMUM_SHADOW_BIAS * (1.0 - dot(m_Params.Normal, FetchDirLightInfo().direction)), MINIMUM_SHADOW_BIAS);
+	float bias = max(MINIMUM_SHADOW_BIAS * (1.0 - dot(m_Params.Normal, GetDirLightInfo().direction)), MINIMUM_SHADOW_BIAS);
 	return bias;
 }
 
@@ -27,7 +27,7 @@ float HardShadows_DirectionalLight(texture2DArray shadowMap, uint cascade, vec3 
 float SearchWidth(float uvLightSize, float receiverDistance)
 {
 	const float NEAR = 0.1;
-	return uvLightSize * (receiverDistance - NEAR) / FetchCamera().CameraPosition.z;
+	return uvLightSize * (receiverDistance - NEAR) / GetCamera().CameraPosition.z;
 }
 
 float SearchRegionRadiusUV(float zWorld)
@@ -214,12 +214,12 @@ float GetDirLightShadowScale()
 {
     float shadowScale = 1.0;
     uint cascadeIndex = 0;
-	DirLightInfo dirLight = FetchDirLightInfo();
+	DirLightInfo dirLight = GetDirLightInfo();
     if(dirLight.radiance == vec3(0.0)){   // no directional light
         return shadowScale;
     }
-	Camera camera = FetchCamera();
-    vec3 WorldPosition = FetchGBufferPosition(TexCoord);
+	Camera camera = GetCamera();
+    vec3 WorldPosition = GetGBufferPosition(TexCoord);
 
     // TODO： 把光照的阴影和光照计算规范一点
     return shadowScale;

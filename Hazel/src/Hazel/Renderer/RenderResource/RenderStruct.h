@@ -5,6 +5,7 @@
 #define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
 #define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless 单个binding的最大描述符数目
 #define MAX_PER_FRAME_OBJECT_SIZE 10240			    //全局最大支持的物体数目
+#define MAX_GIZMO_PRIMITIVE_COUNT 200
 
 #define MAX_POINT_LIGHT_SIZE 16
 #define MAX_SPOT_LIGHT_SIZE 16
@@ -12,7 +13,7 @@
 
 
 namespace GameEngine {
-    // 使用Bindless的资源
+    // 使用Bindless的资源，每个Slot都是Set=0的资源描述符的一个binding，binding绑定的是一个无界数组
     enum BindlessSlot
     {
         BINDLESS_SLOT_POSITION = 0,
@@ -36,12 +37,14 @@ namespace GameEngine {
         BINDLESS_SLOT_MAX_ENUM,     //
     };
 
-// G-Buffer 资源绑定点  Set = 3
+// G-Buffer 资源绑定点  注意Set = 2
 #define GBUFFER_POSITION_BINDING 0
 #define GBUFFER_NORMAL_BINDING 1
 #define GBUFFER_MATERIAL_BINDING 2
 #define GBUFFER_ALBEDO_BINDING 3
-// 全局资源绑定点
+
+
+// Bindless绑定点
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION 0 
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL 1
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_TANGENT 2
@@ -69,10 +72,9 @@ namespace GameEngine {
 #define GLORBAL_RESOURCE_BINDING_VERTEXINFO 20
 #define GLORBAL_RESOURCE_BINDING_LIGHTINFO 21
 #define GLORBAL_RESOURCE_BINDING_GIZMO 22
+#define GLORBAL_RESOURCE_BINDING_TLAS 23
 
-
-
-    struct DirLightInfo
+    struct DirectionLight
     {
         glm::vec3 position;
         float _padding1;
@@ -89,7 +91,7 @@ namespace GameEngine {
         float SplitDepth[CSM_LEVEL_COUNT];
     };
 
-    struct PointLightInfo
+    struct PointLight
     {
         glm::vec3 position;
         float intensity;
@@ -104,7 +106,7 @@ namespace GameEngine {
         BoundingSphere sphere;
     };
 
-    struct SpotLightInfo
+    struct SpotLight
     {
         glm::vec3 position;
         float intensity;
@@ -123,19 +125,18 @@ namespace GameEngine {
 
     struct LightInfo
     {
-        uint32_t dirLightCount = 0;
+        uint32_t directionLightCount = 0;
         uint32_t pointLightCount = 0;
         uint32_t spotLightCount = 0;
         uint32_t _padding0;
 
-        DirLightInfo dirLights;
-        PointLightInfo pointLights[MAX_POINT_LIGHT_SIZE];
-        SpotLightInfo spotLights[MAX_SPOT_LIGHT_SIZE];
+        DirectionLight dirLights;
+        PointLight pointLights[MAX_POINT_LIGHT_SIZE];
+        SpotLight spotLights[MAX_SPOT_LIGHT_SIZE];
     };
 
-
-
-    typedef struct VertexInfo
+    // 读取的Mesh信息
+    typedef struct MeshInfo
     {
         uint32_t positionID = 0;
         uint32_t normalID = 0;
@@ -146,16 +147,18 @@ namespace GameEngine {
         uint32_t boneWeightID = 0;
         uint32_t _padding = 0;
 
-    } VertexInfo;
+    } MeshInfo;
 
-    typedef struct MeshInfo {
+    // Mesh的实例信息
+    typedef struct MeshInstanceInfo {
         glm::mat4 modelMatrix;
         uint32_t animationID;           //TODO:动画索引
         uint32_t materialID;
         uint32_t vertexID;
         uint32_t indexID;
-    }MeshInfo;
+    }MeshInstanceInfo;
     
+
     // TODO:gpu剔除赶紧搞起来~
     typedef struct IndirectSetting
     {
@@ -221,8 +224,6 @@ namespace GameEngine {
         uint32_t textureMetallic;
         uint32_t textureEmission;
 
-
-
         //预留的通用槽位///////////////////////////////
         std::array<int32_t, 8> ints;
         std::array<float, 8> floats;
@@ -270,7 +271,6 @@ namespace GameEngine {
         glm::vec4 color;
     };
 
-# define MAX_GIZMO_PRIMITIVE_COUNT 200
     struct GizmoDrawData {
 
         RHIIndexedIndirectCommand command[4];  // 用于给GPU传递间接渲染指令

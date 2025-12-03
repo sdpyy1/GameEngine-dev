@@ -13,7 +13,7 @@
 vec3 CalculateDirLights(vec3 F0)
 {
 	vec3 result = vec3(0.0);
-	DirLightInfo dirLight = FetchDirLightInfo();
+	DirLightInfo dirLight = GetDirLightInfo();
 	if(dirLight.radiance == vec3(0.0)){
 		return result;
 	}		
@@ -47,9 +47,9 @@ vec3 CalculatePointLights(in vec3 F0, vec3 worldPos)
 {
 	vec3 result = vec3(0.0);
 
-	for (uint i = 0; i < FetchPointLightCount(); i++)
+	for (uint i = 0; i < GetPointLightCount(); i++)
 	{
-		PointLightInfo light = FetchPointLightInfo(i);
+		PointLightInfo light = GetPointLightInfo(i);
 		vec3 Li = normalize(light.position - worldPos);
 		float lightDistance = length(light.position - worldPos);
 		vec3 Lh = normalize(Li + m_Params.View);
@@ -104,7 +104,7 @@ vec3 CalculatePointLights(in vec3 F0, vec3 worldPos)
 vec3 CalculateSpotLights(in vec3 F0, vec3 worldPos)
 {
 	vec3 result = vec3(0.0);
-	for (uint i = 0; i < FetchSpotLightCount(); i++)
+	for (uint i = 0; i < GetSpotLightCount(); i++)
 	{
 		float angle = 60; // TODO:参数
 		float falloff = 1.0; // TODO:参数
@@ -112,7 +112,7 @@ vec3 CalculateSpotLights(in vec3 F0, vec3 worldPos)
 		float AngleAttenuation = 1.0; // TODO:参数
 
 		
-		SpotLightInfo light = FetchSpotLightInfo(i);
+		SpotLightInfo light = GetSpotLightInfo(i);
 		vec3 Li = normalize(light.position - worldPos);
 		float lightDistance = length(light.position - worldPos);
 		float cutoff = cos(radians(angle * 0.5f));

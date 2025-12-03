@@ -1012,12 +1012,12 @@ namespace GameEngine
             descriptorWrite.pBufferInfo = &bufferDescriptor;
             break;
 
-        //case RESOURCE_TYPE_RAY_TRACING:
-        //    accelerationDescriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
-        //    accelerationDescriptor.accelerationStructureCount = 1;
-        //    accelerationDescriptor.pAccelerationStructures = &ResourceCast(descriptorUpdateInfo.tlas)->GetHandle();
-        //    descriptorWrite.pNext = &accelerationDescriptor;
-        //    break;
+        case RESOURCE_TYPE_RAY_TRACING:
+            accelerationDescriptor.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
+            accelerationDescriptor.accelerationStructureCount = 1;
+            accelerationDescriptor.pAccelerationStructures = &CAST<VulkanRHITopLevelAccelerationStructure>(descriptorUpdateInfo.tlas)->GetHandle();
+            descriptorWrite.pNext = &accelerationDescriptor;
+            break;
 
         default:    LOG_ERROR("Unsupported resource type!");
         }

@@ -3,6 +3,7 @@
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderSystem.h"
 #include "Hazel/Scene/SceneManager.h"
+#include "Texture.h"
 
 namespace GameEngine {
 	static uint32_t BindlessSlotToPerFrameBinding(BindlessSlot slot) { return slot + (uint32_t)GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION; }
@@ -12,10 +13,7 @@ namespace GameEngine {
 		for (auto& alloctor : m_BindlessIDAlloctor) alloctor = IndexAllocator(MAX_BINDLESS_RESOURCE_SIZE);
 		InitMultiFrameGlobalResources();
 		InitPerFrameGlobalResources();
-
 		LoadGizmoIcon();
-
-
 	}
 	
 
@@ -166,6 +164,15 @@ namespace GameEngine {
 	// 更新资源
 	void RenderResourceManager::Tick()
 	{
+		// 处理需要更新的资源描述符集
+		auto& resource = m_PerFrameGlobalResources[APP_FRAMEINDEX];
+		if (resource.isNeedUpdate) {
+			for (auto& updateInfo : m_PerFrameGlobalResources[APP_FRAMEINDEX].updateInfos) {
+				m_PerFrameGlobalResources[APP_FRAMEINDEX].descriptorSet->UpdateDescriptor(updateInfo);
+			}
+			resource.isNeedUpdate = false;
+		}
+
 		auto setting = APP_SCENEMANAGER->GetSceneInfo().globalSettingInfos;
 		setting.iconTextures.dirLightID = m_GlobalSettingInfo.iconTextures.dirLightID;
         setting.iconTextures.pointLightID = m_GlobalSettingInfo.iconTextures.pointLightID;
@@ -198,25 +205,35 @@ namespace GameEngine {
 		m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer.SetData(tmpdata);
 	}
 
-	// TODO: 实时加载新模型，在这里更新所有帧会报错
 	uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot)
 	{
 		// 给这个资源分配一个ID
 		uint32_t index = m_BindlessIDAlloctor[slot].Allocate();
-		// 更新描述符（每个飞行帧）
-		for (auto& resource : m_PerFrameGlobalResources)
-		{
-			RHIDescriptorUpdateInfo updateInfo = {};
-			updateInfo.binding = BindlessSlotToPerFrameBinding(slot),
-			updateInfo.index = index;  // bindless数组的index
-			updateInfo.resourceType = resoruceInfo.resourceType;
-			updateInfo.buffer = resoruceInfo.buffer;
-			updateInfo.textureView = resoruceInfo.textureView;
-			updateInfo.sampler = resoruceInfo.sampler;
-			updateInfo.bufferOffset = resoruceInfo.bufferOffset;
-			updateInfo.bufferRange = resoruceInfo.bufferRange;
-			resource.descriptorSet->UpdateDescriptor(updateInfo);
+
+		// 构建更新信息
+		RHIDescriptorUpdateInfo updateInfo = {};
+		updateInfo.binding = BindlessSlotToPerFrameBinding(slot);
+		updateInfo.index = index;  // bindless数组的index
+		updateInfo.resourceType = resoruceInfo.resourceType;
+		updateInfo.buffer = resoruceInfo.buffer;
+		updateInfo.textureView = resoruceInfo.textureView;
+		updateInfo.sampler = resoruceInfo.sampler;
+		updateInfo.bufferOffset = resoruceInfo.bufferOffset;
+		updateInfo.bufferRange = resoruceInfo.bufferRange;
+
+		// 实时更新会因为一些问题报错，暂时不更新本帧，只更新其他帧
+		for (size_t i = 0; i < m_PerFrameGlobalResources.size(); ++i) {
+			if (i == APP_FRAMEINDEX) {
+				auto& resource = m_PerFrameGlobalResources[i];
+				resource.isNeedUpdate = true;
+				resource.updateInfos.push_back(updateInfo);
+			}
+			else {
+				m_PerFrameGlobalResources[i].descriptorSet->UpdateDescriptor(updateInfo);
+			}
+			
 		}
+
 		return index;
 	}
 
@@ -305,6 +322,26 @@ namespace GameEngine {
 		m_GlobalSettingInfo.iconTextures.spotLightID = SpotlightIcon;
 		m_GlobalSettingInfo.iconTextures.dirLightID = directionlightIcon;
 		SetGlobalSettingInfo();
+	}
+
+	void RenderResourceManager::SetTLAS(const RHITopLevelAccelerationStructureRef& tlas)
+	{
+		RHIDescriptorUpdateInfo updateInfo = {};
+		updateInfo.binding = GLORBAL_RESOURCE_BINDING_TLAS;
+		updateInfo.index = 0;
+		updateInfo.resourceType = RESOURCE_TYPE_RAY_TRACING;
+		updateInfo.tlas = tlas;
+
+		for (size_t i = 0; i < m_PerFrameGlobalResources.size(); ++i) {
+			auto& resource = m_PerFrameGlobalResources[i];
+			if (i == APP_FRAMEINDEX) {
+				resource.isNeedUpdate = true;
+				resource.updateInfos.push_back(updateInfo);
+			}
+			else {
+				resource.descriptorSet->UpdateDescriptor(updateInfo);
+			}
+		}
 	}
 
 }

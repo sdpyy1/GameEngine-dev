@@ -16,13 +16,13 @@ namespace GameEngine {
 			auto dirLightEntity = scene->GetAllEntitiesWith<DirectionalLightComponent>();
 			for (auto entity : dirLightEntity)
 			{
-				lightInfo.dirLightCount = 1;
+				lightInfo.directionLightCount = 1;
 
 				Entity curEntity = { entity, scene };
 				auto& dirLightComp = curEntity.GetComponent<DirectionalLightComponent>();
 				auto& transformComp = curEntity.GetComponent<TransformComponent>();
 
-				DirLightInfo dirLightInfo;
+				DirectionLight dirLightInfo;
 				lightInfo.dirLights.direction = glm::normalize(transformComp.GetDirection());
 				lightInfo.dirLights.radiance = dirLightComp.Radiance;
 				lightInfo.dirLights.intensity = dirLightComp.Intensity;

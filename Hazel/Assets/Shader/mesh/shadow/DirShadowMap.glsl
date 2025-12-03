@@ -8,13 +8,13 @@ layout(push_constant) uniform PushConstants
 
 void main()
 { 
-    DirLightInfo light = FetchDirLightInfo();
+    DirLightInfo light = GetDirLightInfo();
     uint objectID       = gl_InstanceIndex;
     uint indexOffset    = gl_VertexIndex;
-    mat4 model          = FetchModel(objectID);
-    uint index          = FetchIndex(objectID, indexOffset);
-    vec4 pos            = FetchPos(objectID, index);
-    vec2 texCoord       = FetchTexCoord(objectID, index);    
+    mat4 model          = GetModel(objectID);
+    uint index          = GetIndex(objectID, indexOffset);
+    vec4 pos            = GetPos(objectID, index);
+    vec2 texCoord       = GetTexCoord(objectID, index);    
 
     gl_Position = light.viewProj[cascadeIndex] * model * pos;
 }

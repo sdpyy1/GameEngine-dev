@@ -18,7 +18,7 @@ namespace GameEngine
     }
     void ImGuiPass::Build(RDGBuilder& builder)
 	{
-        static std::string debugName = "GBufferNormal";  // 需要Debug的图片写在这里
+        static std::string debugName = "UpBloom";  // 需要Debug的图片写在这里
         
         
         if (IsEnabled())

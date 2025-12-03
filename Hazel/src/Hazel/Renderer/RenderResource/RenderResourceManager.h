@@ -1,23 +1,24 @@
 #pragma once
 #include "Hazel/Utils/IndexAllocator.h"
 #include <Hazel/Renderer/RHI/RHI.h>
-#include <Hazel/Renderer/RHI/RHIResource.h>
 #include "RenderBuffer.h"
 #include "Hazel/Core/Definations.h"
 #include "RenderStruct.h"
-#include "Hazel/Scene/Scene.h"
 #include "Sampler.h"
-#include "Hazel/Renderer/RenderPass/Meshpass.h"
 #include "Hazel/Scene/SceneManager.h"
 namespace GameEngine {
 
-    // 每帧都需要更新的资源，每个飞行帧一份，防止冲突
+    // 每帧都需要更新的资源，放在这里会自动创建多份
     struct PreFrameGlobalResources
     {
+
+        bool isNeedUpdate = false; // 当某个实时资源更新时，其他帧也得在自己帧执行时更新好
+        std::vector<RHIDescriptorUpdateInfo> updateInfos;  // 只在isNeedUpdate=true时生效
+
+
         RHIDescriptorSetRef descriptorSet;
         RenderBuffer<CameraData> cameraDataBuffer;
         RenderBuffer<LightInfo> lightInfoBuffer;
-
         RenderBuffer<GizmoDrawData> gizmoBuffer = RenderBuffer<GizmoDrawData>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
     };
     
@@ -25,19 +26,18 @@ namespace GameEngine {
     // 对于更新频率不高的资源，存一份即可,需要时直接Get拿
     struct MultiFrameGlobalResources
     {
-        RHIRootSignatureRef samplerRootSignature;
-        RHIDescriptorSetRef samplerDescriptorSet;   // Set=1, Binding=0 存储缓存的采样器数组
-        std::vector<SamplerRef> samplers;
-
-
         RenderBuffer<GlobalSettingInfo> globalSettingInfoBuffer;
-
-
         // 各种InfoBuffer，存储每个资源在Bindless 中的索引
-        ArrayBuffer<VertexInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> vertexBuffer;
+        ArrayBuffer<MeshInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> vertexBuffer;
         ArrayBuffer<MaterialInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> materialBuffer;
-        ArrayBuffer<MeshInfo, MAX_PER_FRAME_OBJECT_SIZE> meshInfoBuffer;
+        ArrayBuffer<MeshInstanceInfo, MAX_PER_FRAME_OBJECT_SIZE> meshInfoBuffer;
 
+
+
+        // 采样器，其实Set=0里也有，这里单独创建一份Set=1
+        RHIRootSignatureRef samplerRootSignature;
+        RHIDescriptorSetRef samplerDescriptorSet;
+        std::vector<SamplerRef> samplers;
     };
 
 
@@ -84,12 +84,12 @@ namespace GameEngine {
             // 顶点Info
             uint32_t AllocateVertexID() { return m_MultiFrameGlobalResources.vertexBuffer.Allocate(); }
             void ReleaseVertexID(uint32_t id) { m_MultiFrameGlobalResources.vertexBuffer.Release(id); }
-            void SetVertexInfo(const VertexInfo& vertexInfo, uint32_t vertexID) {m_MultiFrameGlobalResources.vertexBuffer.SetData(vertexInfo, vertexID);};
+            void SetVertexInfo(const MeshInfo& vertexInfo, uint32_t vertexID) {m_MultiFrameGlobalResources.vertexBuffer.SetData(vertexInfo, vertexID);};
 
-            // MeshInfo
+            // MeshInstanceInfo
             uint32_t AllocateMeshInfoID() { return m_MultiFrameGlobalResources.meshInfoBuffer.Allocate(); }
             void ReleaseMeshInfoID(uint32_t id) { m_MultiFrameGlobalResources.meshInfoBuffer.Release(id); }
-            void SetMeshInfo(const MeshInfo& meshInfo, uint32_t meshID) {m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfo, meshID);};
+            void SetMeshInfo(const MeshInstanceInfo& meshInfo, uint32_t meshID) {m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfo, meshID);};
 
             // LightInfo
             void SetLightInfo(const LightInfo& lightInfo) {m_PerFrameGlobalResources[APP_FRAMEINDEX].lightInfoBuffer.SetData(lightInfo);};
@@ -101,6 +101,12 @@ namespace GameEngine {
             // Gizmo
             void SetGizmoDataCommand(void* data, int size);
             RHIBufferRef GetGizmoDataBuffer();
+
+            // TLAS
+            void SetTLAS(const RHITopLevelAccelerationStructureRef& tlas);
+
+
+
 
     public:
         CPURenderSetting GetCPURenderSetting() { return cpuRenderSetting; };

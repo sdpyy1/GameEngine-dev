@@ -103,7 +103,7 @@ namespace GameEngine
 		RHIBufferRef colorBuffer;
 		RHIBufferRef boneIndexBuffer;
 		RHIBufferRef boneWeightBuffer;
-		VertexInfo vertexInfo;
+		MeshInfo vertexInfo;
 		uint32_t vertexID = 0;
 		inline uint32_t VertexNum() { return vertexNum; }
 

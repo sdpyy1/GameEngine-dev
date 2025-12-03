@@ -75,7 +75,7 @@ namespace GameEngine {
 		ModelRef model;
         MaterialRef material;
 		bool castShadow = true;
-		MeshInfo meshInfo;
+		MeshInstanceInfo meshInfo;
 		uint32_t meshInfoID = 0;
 
 		SubmeshComponent() = default;
