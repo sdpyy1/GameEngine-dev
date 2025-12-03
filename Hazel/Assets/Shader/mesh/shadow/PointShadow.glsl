@@ -37,7 +37,7 @@ layout(location = 3) out uint OUT_ID;
 
 // ����ÿ�����㶼ʹ�ò�ͬ�Ĺ�ԴView���൱�ڰѵ��Դ���������������6���涼����һ��ͼƬ
 void Emit(  in int index, 
-            in PointLightInfo light, 
+            in PointLight light, 
             in vec4 pos[3], 
             in vec2 coord[3], 
             in uint id[3])
@@ -70,7 +70,7 @@ void Emit(  in int index,
 
 void main()
 {
-    PointLightInfo light = GetPointLightInfo(push_LIGHTID.lightID);
+    PointLight light = GetPointLight(push_LIGHTID.lightID);
 
     Emit(0, light, IN_POS, IN_TEXCOORD, IN_ID);
     Emit(1, light, IN_POS, IN_TEXCOORD, IN_ID);
@@ -92,7 +92,7 @@ layout(location = 0) out vec4 OUT_COLOR;
 
 void main()
 {
-    PointLightInfo light = GetPointLightInfo(push_LIGHTID.lightID);
+    PointLight light = GetPointLight(push_LIGHTID.lightID);
     float depth = length(IN_POS.xyz - light.position) / light.sphere.radius;  // ģ�͵����Դ���룬ѹ����0-1������1��ʾģ���ڵ��Դ��
     OUT_COLOR = vec4(depth, 0.0, 0.0, 1.0); //������Ϊ���
 

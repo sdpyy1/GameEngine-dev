@@ -10,7 +10,7 @@ float ShadowFade = 1.0;
 float GetDirShadowBias()
 {
 	const float MINIMUM_SHADOW_BIAS = 0.002;
-	float bias = max(MINIMUM_SHADOW_BIAS * (1.0 - dot(m_Params.Normal, GetDirLightInfo().direction)), MINIMUM_SHADOW_BIAS);
+	float bias = max(MINIMUM_SHADOW_BIAS * (1.0 - dot(m_Params.Normal, GetDirectionLight().direction)), MINIMUM_SHADOW_BIAS);
 	return bias;
 }
 
@@ -214,7 +214,7 @@ float GetDirLightShadowScale()
 {
     float shadowScale = 1.0;
     uint cascadeIndex = 0;
-	DirLightInfo dirLight = GetDirLightInfo();
+	DirectionLight dirLight = GetDirectionLight();
     if(dirLight.radiance == vec3(0.0)){   // no directional light
         return shadowScale;
     }

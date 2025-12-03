@@ -11,7 +11,7 @@ void main()
     mat4 model          = GetModel(objectID);
     uint index          = GetIndex(objectID, indexOffset);
     vec4 pos            = GetPos(objectID, index);
-    gl_Position = u_CameraData.data.viewProj * model * pos;
+    gl_Position = CAMERAINFO.data.viewProj * model * pos;
 
 }
 #endif

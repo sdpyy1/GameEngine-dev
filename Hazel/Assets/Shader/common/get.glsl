@@ -4,7 +4,7 @@ vec4 GetVertexPos(in uint vertexID, in uint index)
 {
     if(vertexID == 0) return vec4(0.0f);
 
-    uint positionID = m_VertexInfo.slot[vertexID].positionID;
+    uint positionID = MESHINFO.slot[vertexID].positionID;
     if(positionID == 0) return vec4(0.0f);
 
     return vec4(POSITIONS[positionID].position[3 * index], 
@@ -17,7 +17,7 @@ vec3 GetVertexNormal(in uint vertexID, in uint index)
 {
     if(vertexID == 0) return vec3(0.0f, 0.0f, 1.0f);
 
-    uint normalID = m_VertexInfo.slot[vertexID].normalID;
+    uint normalID = MESHINFO.slot[vertexID].normalID;
     if(normalID == 0) return vec3(0.0f, 0.0f, 1.0f);
 
     return vec3(NORMALS[normalID].normal[3 * index], 
@@ -29,7 +29,7 @@ vec4 GetVertexTangent(in uint vertexID, in uint index)
 {
     if(vertexID == 0) return vec4(0.0f);
 
-    uint tangentID = m_VertexInfo.slot[vertexID].tangentID;
+    uint tangentID = MESHINFO.slot[vertexID].tangentID;
     if(tangentID == 0) return vec4(0.0f);
 
     return vec4(TANGENTS[tangentID].tangent[4 * index], 
@@ -42,7 +42,7 @@ vec2 GetVertexTexCoord(in uint vertexID, in uint index)
 {
     if(vertexID == 0) return vec2(0.0f);
 
-    uint texCoordID = m_VertexInfo.slot[vertexID].texCoordID;
+    uint texCoordID = MESHINFO.slot[vertexID].texCoordID;
     if(texCoordID == 0) return vec2(0.0f);
 
     return vec2(TEXCOORDS[texCoordID].texCoord[2 * index], 
@@ -53,7 +53,7 @@ vec3 GetVertexColor(in uint vertexID, in uint index)
 {
     if(vertexID == 0) return vec3(0.0f);
 
-    uint colorID = m_VertexInfo.slot[vertexID].colorID;
+    uint colorID = MESHINFO.slot[vertexID].colorID;
     if(colorID == 0) return vec3(0.0f);
 
     return vec3(COLORS[colorID].color[3 * index], 
@@ -65,7 +65,7 @@ uvec4 GetVertexBoneIndex(in uint vertexID, in uint index)
 {
     if(vertexID == 0) return uvec4(0);
 
-    uint boneIndexID = m_VertexInfo.slot[vertexID].boneIndexID;
+    uint boneIndexID = MESHINFO.slot[vertexID].boneIndexID;
     if(boneIndexID == 0) return uvec4(0);
 
     return uvec4(BONEINDEXS[boneIndexID].boneIndex[4 * index], 
@@ -78,7 +78,7 @@ vec4 GetVertexBoneWeight(in uint vertexID, in uint index)
 {
     if(vertexID == 0) return vec4(0);
 
-    uint boneWeightID = m_VertexInfo.slot[vertexID].boneWeightID;
+    uint boneWeightID = MESHINFO.slot[vertexID].boneWeightID;
     if(boneWeightID == 0) return vec4(0);
 
     return vec4(BONEWEIGHTS[boneWeightID].boneWeight[4 * index], 
@@ -88,29 +88,29 @@ vec4 GetVertexBoneWeight(in uint vertexID, in uint index)
 }
 mat4 GetModel(in uint objectID)
 {
-    return u_MeshInfo.slot[objectID].model;
+    return MESHINSTANCEINFO.slot[objectID].model;
 }
 
 uint GetIndex(in uint objectID, in uint offset)
 {
-    uint indexID = u_MeshInfo.slot[objectID].indexID;
+    uint indexID = MESHINSTANCEINFO.slot[objectID].indexID;
     uint index = INDICES[indexID].index[offset];
 
     return index;
 }
 vec4 GetPos(in uint objectID, in uint index)
 {
-    uint vertexID = u_MeshInfo.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
     return GetVertexPos(vertexID, index);
 }
 vec3 GetNormal(in uint objectID, in uint index)
 {
-    uint vertexID = u_MeshInfo.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
     return GetVertexNormal(vertexID, index);
 }
 vec4 GetTangent(in uint objectID, in uint index)
 {
-    uint vertexID = u_MeshInfo.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
     return GetVertexTangent(vertexID, index);
 }
 vec3 GetWorldNormal(in vec3 normal, in mat4 model)
@@ -125,28 +125,28 @@ vec4 GetWorldTangent(in vec4 tangent, in mat4 model)
 }
 vec2 GetTexCoord(in uint objectID, in uint index)
 {
-    uint vertexID = u_MeshInfo.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
     return GetVertexTexCoord(vertexID, index);
 }
 vec3 GetColor(in uint objectID, in uint index)
 {
-    uint vertexID = u_MeshInfo.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
     return GetVertexColor(vertexID, index);
 }
 
 uvec4 GetBoneIndex(in uint objectID, in uint index)
 {
-    uint vertexID = u_MeshInfo.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
     return GetVertexBoneIndex(vertexID, index);  
 }
 
 vec4 GetBoneWeight(in uint objectID, in uint index)
 {
-    uint vertexID = u_MeshInfo.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
     return GetVertexBoneWeight(vertexID, index); 
 }
-vec4 GetBaseColor(in Material material){
-    return material.diffuse;  
+vec4 GetBaseColor(in MaterialInfo MaterialInfo){
+    return MaterialInfo.diffuse;  
 }
 vec4 GetTex2D(in uint slot, in vec2 coord) {
 	return texture(sampler2D(TEXTURES_2D[slot], SAMPLER[0]), coord);   
@@ -172,57 +172,57 @@ vec4 GetTex3D(in uint slot, in vec3 vector, in float lod) {
 	return textureLod(sampler3D(TEXTURES_3D[slot], SAMPLER[0]), vector, lod);   
 }
 
-Material GetMaterial(in uint objectID) {
-	return u_MaterialInfo.slot[u_MeshInfo.slot[objectID].materialID]; 
+MaterialInfo GetMaterialInfo(in uint objectID) {
+	return MATERIALINFO.slot[MESHINSTANCEINFO.slot[objectID].MaterialInfoID]; 
 }
 
-vec4 GetDiffuse(in Material material, in vec2 coord) {
-    if(material.textureDiffuse > 0)    
+vec4 GetDiffuse(in MaterialInfo MaterialInfo, in vec2 coord) {
+    if(MaterialInfo.textureDiffuse > 0)    
     {
-        vec4 diffuse = GetTex2D(material.textureDiffuse, coord);
+        vec4 diffuse = GetTex2D(MaterialInfo.textureDiffuse, coord);
         diffuse = pow(diffuse, vec4(1.0/2.2)); 
-        diffuse = GetBaseColor(material) * diffuse;         
+        diffuse = GetBaseColor(MaterialInfo) * diffuse;         
 
         return diffuse;
     }
-    else return GetBaseColor(material);
+    else return GetBaseColor(MaterialInfo);
 }
-vec4 GetBaseEmission(in Material material){
-    return material.emission;
+vec4 GetBaseEmission(in MaterialInfo MaterialInfo){
+    return MaterialInfo.emission;
 }
-vec4 GetEmission(in Material material, in vec2 coord){
-    if(material.textureEmission > 0.0){
-        vec4 emission = GetTex2D(material.textureEmission, coord);
+vec4 GetEmission(in MaterialInfo MaterialInfo, in vec2 coord){
+    if(MaterialInfo.textureEmission > 0.0){
+        vec4 emission = GetTex2D(MaterialInfo.textureEmission, coord);
         emission = pow(emission, vec4(1.0/2.2));     
-        emission = GetBaseEmission(material) * emission;      
+        emission = GetBaseEmission(MaterialInfo) * emission;      
         emission.w = 0;   
         return emission;
     }
      return vec4(0,0,0,0);
 }
 
-float GetRoughness(in Material material, in vec2 coord){
-    if(material.textureRoughness > 0)        
+float GetRoughness(in MaterialInfo MaterialInfo, in vec2 coord){
+    if(MaterialInfo.textureRoughness > 0)        
     {
-        vec3 arm = GetTex2D(material.textureRoughness, coord).xyz;
+        vec3 arm = GetTex2D(MaterialInfo.textureRoughness, coord).xyz;
         arm = pow(arm, vec3(1.0/2.2));   
         return arm.y;
     }
-    else return clamp(material.roughness, 0.00001, 0.99999); 
+    else return clamp(MaterialInfo.roughness, 0.00001, 0.99999); 
 }
-float GetMetallic(in Material material, in vec2 coord){
-    if(material.textureMetallic > 0)        
+float GetMetallic(in MaterialInfo MaterialInfo, in vec2 coord){
+    if(MaterialInfo.textureMetallic > 0)        
     {
-        vec3 arm = GetTex2D(material.textureMetallic, coord).xyz;
+        vec3 arm = GetTex2D(MaterialInfo.textureMetallic, coord).xyz;
         arm = pow(arm, vec3(1.0/2.2));
 
         return arm.z;
     }
-    else return clamp(material.metallic, 0.00001, 0.99999);   
+    else return clamp(MaterialInfo.metallic, 0.00001, 0.99999);   
 }
-vec3 GetNormal(in Material material, in vec2 coord, in vec3 normal, in vec4 tangent)
+vec3 GetNormal(in MaterialInfo MaterialInfo, in vec2 coord, in vec3 normal, in vec4 tangent)
 {
-    if (material.textureNormal > 0)
+    if (MaterialInfo.textureNormal > 0)
     {
         vec3 N = normalize(normal);
         vec3 T = normalize(tangent.xyz);
@@ -230,7 +230,7 @@ vec3 GetNormal(in Material material, in vec2 coord, in vec3 normal, in vec4 tang
 
         mat3 TBN = mat3(T, B, N);
 
-        vec3 texNormal = GetTex2D(material.textureNormal, coord).xyz;
+        vec3 texNormal = GetTex2D(MaterialInfo.textureNormal, coord).xyz;
         vec3 mapped = normalize(texNormal * 2.0 - 1.0);
     
         return normalize(TBN * mapped);
@@ -249,29 +249,29 @@ SkySetting GetSkySetting()
 {
     return GLOBAL_SETTING.data.skySetting;
 }
-DirLightInfo GetDirLightInfo()
+DirectionLight GetDirectionLight()
 {
-    return u_LightInfo.data.dirLights;
+    return LIGHTINFO.data.dirLights;
 }
-PointLightInfo GetPointLightInfo(uint index)
+PointLight GetPointLight(uint index)
 {
-    return u_LightInfo.data.pointLights[index];
+    return LIGHTINFO.data.pointLights[index];
 }
-SpotLightInfo GetSpotLightInfo(uint index)
+SpotLight GetSpotLight(uint index)
 {
-    return u_LightInfo.data.spotLights[index];
+    return LIGHTINFO.data.spotLights[index];
 }
 uint GetPointLightCount()
 {
-    return u_LightInfo.data.pointLightCount;
+    return LIGHTINFO.data.pointLightCount;
 }
 uint GetSpotLightCount()
 {
-    return u_LightInfo.data.spotLightCount;
+    return LIGHTINFO.data.spotLightCount;
 }
 Camera GetCamera()
 {
-    return u_CameraData.data;
+    return CAMERAINFO.data;
 }
 
 

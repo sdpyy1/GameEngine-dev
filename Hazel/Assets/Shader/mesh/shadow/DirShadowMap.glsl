@@ -8,7 +8,7 @@ layout(push_constant) uniform PushConstants
 
 void main()
 { 
-    DirLightInfo light = GetDirLightInfo();
+    DirectionLight light = GetDirectionLight();
     uint objectID       = gl_InstanceIndex;
     uint indexOffset    = gl_VertexIndex;
     mat4 model          = GetModel(objectID);

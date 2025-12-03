@@ -18,9 +18,9 @@
 
 #define GLORBAL_RESOURCE_BINDING_SETTING 16
 #define GLORBAL_RESOURCE_BINDING_CAMERA 17
-#define GLORBAL_RESOURCE_BINDING_MESHINFO 18
+#define GLORBAL_RESOURCE_BINDING_MESHINSTANCEINFO 18
 #define GLORBAL_RESOURCE_BINDING_MATERIALINFO 19
-#define GLORBAL_RESOURCE_BINDING_VERTEXINFO 20
+#define GLORBAL_RESOURCE_BINDING_MESHINFO 20
 #define GLORBAL_RESOURCE_BINDING_LIGHTINFO 21
 #define GLORBAL_RESOURCE_BINDING_GIZMO 22
 #define GLORBAL_RESOURCE_BINDING_TLAS 23
@@ -36,7 +36,7 @@ layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO) readonly buffer Li
 
     LightInfo data;
 
-} u_LightInfo;
+} LIGHTINFO;
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_SETTING) readonly buffer globalSettingBuffer {
 
     GlobalSettingInfo data;
@@ -46,26 +46,26 @@ layout(set = 0,binding = GLORBAL_RESOURCE_BINDING_CAMERA) readonly buffer Camera
 
     Camera data;
 
-} u_CameraData;
+} CAMERAINFO;
 
 
-layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_MATERIALINFO) readonly buffer materials { 
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_MATERIALINFO) readonly buffer MaterialInfos { 
 
-    Material slot[MAX_PER_FRAME_RESOURCE_SIZE];
+    MaterialInfo slot[MAX_PER_FRAME_RESOURCE_SIZE];
 
-} u_MaterialInfo;
+} MATERIALINFO;
 
-layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_MESHINFO) readonly buffer objects {
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_MESHINSTANCEINFO) readonly buffer instanceInfo {
 
-    MeshInfo slot[MAX_PER_FRAME_OBJECT_SIZE];
+    MeshInstanceInfo slot[MAX_PER_FRAME_INSTANCE_SIZE];
 
-} u_MeshInfo;
+} MESHINSTANCEINFO;
 
-layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_VERTEXINFO) readonly buffer vertices { 
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_MESHINFO) readonly buffer vertices { 
 
-    VertexStream slot[MAX_PER_FRAME_RESOURCE_SIZE];
+    MeshInfo slot[MAX_PER_FRAME_RESOURCE_SIZE];
 
-} m_VertexInfo;
+} MESHINFO;
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_GIZMO) buffer gizmoDrawData 
 { 
@@ -81,58 +81,58 @@ layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION) readonly b
 
     float position[];
 
-} POSITIONS[MAX_BINDLESS_RESOURCE_SIZE];
+} POSITIONS[];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL) readonly buffer normals { 
 
     float normal[];
 
-} NORMALS[MAX_BINDLESS_RESOURCE_SIZE];
+} NORMALS[];
 
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_TANGENT) readonly buffer tangents { 
 
     float tangent[];
 
-} TANGENTS[MAX_BINDLESS_RESOURCE_SIZE];
+} TANGENTS[];
 
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_TEXCOORD) readonly buffer texCoords { 
 
     float texCoord[];
 
-} TEXCOORDS[MAX_BINDLESS_RESOURCE_SIZE];
+} TEXCOORDS[];
 
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_COLOR) readonly buffer colors { 
 
     float color[];
 
-} COLORS[MAX_BINDLESS_RESOURCE_SIZE];
+} COLORS[];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_INDEX) readonly buffer boneIndexs { 
 
     int boneIndex[];
 
-} BONEINDEXS[MAX_BINDLESS_RESOURCE_SIZE];
+} BONEINDEXS[];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_BONE_WEIGHT) readonly buffer boneWeights { 
 
     float boneWeight[];
 
-} BONEWEIGHTS[MAX_BINDLESS_RESOURCE_SIZE];
+} BONEWEIGHTS[];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_ANIMATION) readonly buffer animations { 
 
     mat4 matrix[];
 
-} ANIMATIONS[MAX_BINDLESS_RESOURCE_SIZE];
+} ANIMATIONS[];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_INDEX) readonly buffer indices { 
 
     uint index[];
 
-} INDICES[MAX_BINDLESS_RESOURCE_SIZE];
+} INDICES[];
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER) uniform sampler SAMPLER[];
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D) uniform texture1D TEXTURES_1D[];

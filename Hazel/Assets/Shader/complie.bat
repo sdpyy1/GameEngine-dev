@@ -60,4 +60,3 @@ for /r %%f in (*.glsl) do (
 )
 
 echo ========== Shader Compile Finished ==========
-pause

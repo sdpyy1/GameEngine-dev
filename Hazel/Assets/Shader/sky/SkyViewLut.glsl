@@ -23,8 +23,8 @@ void main()
 
 	vec2 uv = vec2(texelCoord) / vec2(lutSize);
     vec3 viewDir = UVToViewDir(uv);
-	vec3 lightDir = normalize(-u_LightInfo.data.dirLights.direction);
-	float h = u_CameraData.data.CameraPosition.y - Atmosphere.SeaLevel + Atmosphere.PlanetRadius;
+	vec3 lightDir = normalize(-LIGHTINFO.data.dirLights.direction);
+	float h = CAMERAINFO.data.CameraPosition.y - Atmosphere.SeaLevel + Atmosphere.PlanetRadius;
 	vec3 eyePos = vec3(0, h, 0);
 
 	vec3 color = GetSkyView(Atmosphere, eyePos, viewDir, lightDir, -1.0f, u_TransmittanceLut, u_MultiScatteringLut,u_Sampler[1]);

@@ -20,11 +20,11 @@ layout(location = 0) out vec4 OUT_COLOR;
 
 void Emit(vec3 from, vec3 to, vec4 color)
 {
-	gl_Position = u_CameraData.data.proj * u_CameraData.data.view * vec4(from, 1.0f);
+	gl_Position = CAMERAINFO.data.proj * CAMERAINFO.data.view * vec4(from, 1.0f);
 	OUT_COLOR = color;
 	EmitVertex();
 
-	gl_Position = u_CameraData.data.proj * u_CameraData.data.view * vec4(to, 1.0f);
+	gl_Position = CAMERAINFO.data.proj * CAMERAINFO.data.view * vec4(to, 1.0f);
 	OUT_COLOR = color;
 	EmitVertex();
 

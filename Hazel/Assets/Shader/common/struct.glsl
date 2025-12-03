@@ -7,7 +7,7 @@ struct BoundingSphere
     float radius;
 };
 
-struct DirLightInfo
+struct DirectionLight
 {
     vec3 position;
     float _padding1;
@@ -23,7 +23,7 @@ struct DirLightInfo
     float SplitDepth[CSM_LEVEL_COUNT];
 };
 
-struct PointLightInfo
+struct PointLight
 {
     vec3 position;
     float intensity;
@@ -38,7 +38,7 @@ struct PointLightInfo
     BoundingSphere sphere; 
 };
 
-struct SpotLightInfo
+struct SpotLight
 { 
     vec3 position;
     float intensity;
@@ -63,9 +63,9 @@ struct LightInfo
     uint spotLightCount;
     uint _padding0;
 
-    DirLightInfo dirLights;
-    PointLightInfo pointLights[MAX_POINT_LIGHT_SIZE];
-    SpotLightInfo spotLights[MAX_SPOT_LIGHT_SIZE];
+    DirectionLight dirLights;
+    PointLight pointLights[MAX_POINT_LIGHT_SIZE];
+    SpotLight spotLights[MAX_SPOT_LIGHT_SIZE];
 };
 
 struct RHIIndexedIndirectCommand 
@@ -118,25 +118,15 @@ struct GizmoBillboardInfo
     vec4 color;
 };
 
-struct MeshInfo 
+struct MeshInstanceInfo 
 {
     mat4 model;
-    // mat4 prevModel;
-    //mat4 invModel;
-
-    uint animationID;           //����buffer����
-    uint materialID;            //����buffer����
+    uint animationID;  
+    uint MaterialInfoID;
     uint vertexID;
     uint indexID;  
-    //uint meshCardID;            //card������ʼֵ
-    //uint _padding[3];           
-
-    // BoundingSphere sphere;  
-   // BoundingBox box;
-
-   // vec4 debugData;
 };
-struct Material 
+struct MaterialInfo 
 {
     vec4 diffuse;
     vec4 emission;
@@ -161,7 +151,7 @@ struct Material
     uint textureSlotsCube[4];
     uint textureSlots3D[4];  
 };
-struct VertexStream
+struct MeshInfo
 {
     uint positionID;
     uint normalID;

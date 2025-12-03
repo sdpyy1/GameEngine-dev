@@ -31,7 +31,7 @@ void main()
     OUT_TANGENT         = worldTangent;
     OUT_ID              = objectID;
 
-    gl_Position = u_CameraData.data.viewProj * model * pos;
+    gl_Position = CAMERAINFO.data.viewProj * model * pos;
 }
 
 #endif
@@ -46,23 +46,23 @@ layout(location = 5) in vec4 IN_TANGENT;
 layout(location = 6) in flat uint IN_ID;
 layout (location = 0) out vec4 o_Position;
 layout (location = 1) out vec4 o_Normal;
-layout (location = 2) out vec4 o_Material;
+layout (location = 2) out vec4 o_MaterialInfo;
 layout (location = 3) out vec4 o_Albedo;
 void main()
 {
-    Material material   = GetMaterial(IN_ID);
+    MaterialInfo MaterialInfo   = GetMaterialInfo(IN_ID);
     vec4 color          = vec4(IN_COLOR, 1.0f);
-    vec4 diffuse        = GetDiffuse(material, IN_TEXCOORD);
+    vec4 diffuse        = GetDiffuse(MaterialInfo, IN_TEXCOORD);
     diffuse.a           = 1.0f;
-    vec4 emission       = GetEmission(material,IN_TEXCOORD);
-    vec3 normal         = GetNormal(material, IN_TEXCOORD, IN_NORMAL, IN_TANGENT);
-    float roughness     = GetRoughness(material, IN_TEXCOORD);
-    float metallic      = GetMetallic(material, IN_TEXCOORD);
+    vec4 emission       = GetEmission(MaterialInfo,IN_TEXCOORD);
+    vec3 normal         = GetNormal(MaterialInfo, IN_TEXCOORD, IN_NORMAL, IN_TANGENT);
+    float roughness     = GetRoughness(MaterialInfo, IN_TEXCOORD);
+    float metallic      = GetMetallic(MaterialInfo, IN_TEXCOORD);
 
 
     o_Position    = vec4(IN_POSITION);
     o_Normal    = vec4(normal,1);
-    o_Material    = vec4(roughness,metallic,1,1); 
+    o_MaterialInfo    = vec4(roughness,metallic,1,1); 
     o_Albedo    = vec4(diffuse + emission);
 }
 #endif

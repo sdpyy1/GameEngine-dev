@@ -42,9 +42,9 @@ namespace GameEngine {
 
 
 		// 下面这些需要手动去绑定buffer和preFrame资源描述符
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MESHINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MESHINSTANCEINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MATERIALINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_VERTEXINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MESHINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_SETTING, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
@@ -57,8 +57,8 @@ namespace GameEngine {
 
 		// 挂载默认全局资源
 		for (auto& resource : m_PerFrameGlobalResources) {
+			// camera
 			{
-				// camera
 				RHIDescriptorUpdateInfo cameraUpdateInfo = {};
 				cameraUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				cameraUpdateInfo.buffer = resource.cameraDataBuffer.GetRHIBuffer();
@@ -67,9 +67,8 @@ namespace GameEngine {
 				resource.descriptorSet->UpdateDescriptor(cameraUpdateInfo);
 			}
 			
-			
+			// Setting
 			{
-				// Setting
                 RHIDescriptorUpdateInfo settingUpdateInfo = {};
                 settingUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
                 settingUpdateInfo.buffer = m_MultiFrameGlobalResources.globalSettingInfoBuffer.GetRHIBuffer();
@@ -84,7 +83,7 @@ namespace GameEngine {
 				meshInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				meshInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.meshInfoBuffer.GetRHIBuffer();
 				meshInfoUpdateInfo.index = 0;
-				meshInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_MESHINFO;
+				meshInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_MESHINSTANCEINFO;
 				resource.descriptorSet->UpdateDescriptor(meshInfoUpdateInfo);
 			}
 
@@ -104,7 +103,7 @@ namespace GameEngine {
 				vertexInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				vertexInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.vertexBuffer.GetRHIBuffer();
 				vertexInfoUpdateInfo.index = 0;
-				vertexInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_VERTEXINFO;
+				vertexInfoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_MESHINFO;
 				resource.descriptorSet->UpdateDescriptor(vertexInfoUpdateInfo);
 			}
 

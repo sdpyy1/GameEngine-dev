@@ -14,7 +14,7 @@ void main(){
 	vec4 position = vec4(NDC[gl_VertexIndex], 1.0, 1.0);
 	gl_Position = position;
     out_texCoord = (NDC[gl_VertexIndex] + 1.0) * 0.5;
-	worldPosition = (u_CameraData.data.InverseViewProj * position).xyz;
+	worldPosition = (CAMERAINFO.data.InverseViewProj * position).xyz;
 }
 #endif
 
@@ -58,8 +58,8 @@ void main(){
 		out_color = texture(samplerCube(SkyTexture,u_Sampler[0]),v_dir);
 	}else{
 		AtmosphereParameter Atmosphere = BuildAtmosphereParameter();
-		vec3 lightDir = normalize(-u_LightInfo.data.dirLights.direction);
-		float h = u_CameraData.data.CameraPosition.y - Atmosphere.SeaLevel + Atmosphere.PlanetRadius;
+		vec3 lightDir = normalize(-LIGHTINFO.data.dirLights.direction);
+		float h = CAMERAINFO.data.CameraPosition.y - Atmosphere.SeaLevel + Atmosphere.PlanetRadius;
 		vec3 eyePos = vec3(0, h, 0);
 		color.rgb += texture(sampler2D(u_SkyViewLut,u_Sampler[0]), ViewDirToUV(v_dir)).rgb;
 		color.rgb += GetSunDisk(Atmosphere, eyePos, v_dir, lightDir);

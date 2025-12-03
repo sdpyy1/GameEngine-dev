@@ -47,8 +47,8 @@ void main()
 
 	float shadowScale = 1.0;
 	uint cascadeIndex = 0;
-	DirLightInfo dirLight = GetDirLightInfo();
-	Camera u_CameraData = GetCamera();
+	DirectionLight dirLight = GetDirectionLight();
+	Camera CAMERAINFO = GetCamera();
 	
 	if(dirLight.radiance != vec3(0.0)){
 		vec3 CameraPosition = GetCamera().CameraPosition;
@@ -75,7 +75,7 @@ void main()
 	m_Params.Metalness = GetGBufferMetalness(TexCoord);
     m_Params.Roughness = GetGBufferRoughness(TexCoord);
     m_Params.Normal = GetGBufferNormal(TexCoord);
-	m_Params.View = normalize(u_CameraData.CameraPosition - WorldPosition); 
+	m_Params.View = normalize(CAMERAINFO.CameraPosition - WorldPosition); 
 	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
 	const vec3 Fdielectric = vec3(0.04);
