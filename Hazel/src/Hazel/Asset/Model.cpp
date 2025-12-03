@@ -3,11 +3,12 @@
 #include "Hazel/Renderer/RenderResource/Material.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 namespace GameEngine {
-	Model::Model(std::string path, ModelProcessSetting processSetting) : path(path), processSetting(processSetting) {}
+	Model::Model(std::string path, ModelProcessSetting processSetting) : path(path), processSetting(processSetting) {
+        LoadFromFile(path);
+    }
 
 	void Model::OnLoadAsset()
 	{
-        LoadFromFile(path);
 
 	}
 

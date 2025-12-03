@@ -61,6 +61,7 @@ namespace GameEngine {
 				.ArrayLayers(6)  // ´æ´¢Áù¸öÃæ
 				.MipLevels(1)
 				.AllowRenderTarget()
+				.CubeMap()
 				.Finish();
 
 

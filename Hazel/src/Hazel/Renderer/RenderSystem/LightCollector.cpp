@@ -40,6 +40,9 @@ namespace GameEngine {
 				}
 				break; // only one directional light
 			}
+			if (lightInfo.directionLightCount == 0) {
+				lightInfo.dirLights.radiance = { 0.0f, 0.0f, 0.0f }; // 防止切换场景时Buffer还是上个场景的数据
+			}
 		}
 
 		{
@@ -81,6 +84,9 @@ namespace GameEngine {
 				pointLightCount++;
 			}
 			lightInfo.pointLightCount = pointLightCount;
+			if (pointLightCount == 0) {
+				lightInfo.pointLights[0].radiance = { 0.0f, 0.0f, 0.0f }; // 防止切换场景时Buffer还是上个场景的数据
+			}
 		}
 
 		{
@@ -98,6 +104,9 @@ namespace GameEngine {
 				spotLightCount++;
 			}
 			lightInfo.spotLightCount = spotLightCount;
+			if (spotLightCount == 0) {
+				lightInfo.spotLights[0].radiance = { 0.0f, 0.0f, 0.0f }; // 防止切换场景时Buffer还是上个场景的数据
+			}
 		}
 		s_LightInfo = lightInfo;
 		RENDER_RESOURCEMANAGER->SetLightInfo(lightInfo);

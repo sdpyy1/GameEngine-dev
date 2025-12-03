@@ -55,7 +55,7 @@ namespace GameEngine {
 
 		auto& builde = builder.CreateRenderPass(GetName())
 			.RootSignature(m_RootSignature)
-			.Color(0, ViewPort, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE)
+			.Color(0, ViewPort, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE)
 			.Read(2, GBUFFER_POSITION_BINDING, 0, position)
 			.Read(2, GBUFFER_NORMAL_BINDING, 0, normal)
 			.Read(2, GBUFFER_MATERIAL_BINDING, 0, material)

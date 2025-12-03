@@ -14,7 +14,7 @@ namespace GameEngine {
 		bool srgb = true;   // 需要手动指定传入的图片是不是SRGB
 		uint32_t mipLevels = 1;
 		uint32_t arrayLayers = 1;
-		bool generateMipmap = false;
+		bool generateMipmap = true;   // 妈的找了半天BUG，发现不生成Mipmap效果才差的
 		bool yFlip = false;
 		bool bindless = true;
 

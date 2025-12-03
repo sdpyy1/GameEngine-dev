@@ -49,8 +49,13 @@ namespace GameEngine {
         }
 
         LOG_TRACE("RHITexture not found in cache, creating new.");
-        ret.texture = APP_DYNAMICRHI->CreateTexture(tempInfo),   // 在释放资源时才会把texture放入池中
+
+        ret.texture = APP_DYNAMICRHI->CreateTexture(tempInfo);   // 在释放资源时才会把texture放入池中
+
         ret.state = RESOURCE_STATE_UNDEFINED; // RHI接口创建的texture的state是UNDEFINED
+
+
+
         allocatedSize++;
 
         return ret;

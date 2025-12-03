@@ -5,9 +5,12 @@ namespace GameEngine {
 	class AssetManager {
 	public:
 		static ModelRef LoadModel(std::string path) {
+            if (ModelCache.find(path) != ModelCache.end())
+                return ModelCache[path];
 			ModelProcessSetting processSetting;
 			auto& model = std::make_shared<Model>(path, processSetting);
 			AssetsMap[model->GetUUID()] = model;
+			ModelCache[path] = model;
             return model;
 		}
 
@@ -20,7 +23,7 @@ namespace GameEngine {
 		}
 
 	private:
-
 		static std::unordered_map<UUID, std::shared_ptr<Asset>> AssetsMap;
+		static std::unordered_map<std::string, std::shared_ptr<Model>> ModelCache;
 	};
 }
