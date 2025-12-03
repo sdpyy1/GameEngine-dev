@@ -138,7 +138,7 @@ namespace GameEngine
 			meshDrawInfos.push_back(meshDrawInfo);
 
 			RHIIndirectCommand meshDrawCommand;
-			meshDrawCommand.vertexCount = geometry.indexCount;
+			meshDrawCommand.vertexCount = geometry.indexCount;   // 顶点数设置的索引数，在Shader中用gl_VertexIndex来获取对应的索引值，所有这里虽然调用的是DrawIndirect，其实本质是DrawIndexedIndirect
 			meshDrawCommand.instanceCount = 1;                     // TODO 使用同一个顶点和索引缓冲的还能进一步合并？
 			meshDrawCommand.firstVertex = 0;                       // 间接绘制里这样的多个indirect command 有多大的开销？
 			meshDrawCommand.firstInstance = geometry.objectID;   // 渲染时，通过实例索引来拿到对应的MeshInfo

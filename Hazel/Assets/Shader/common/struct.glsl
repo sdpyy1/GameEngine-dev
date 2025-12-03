@@ -122,7 +122,7 @@ struct MeshInstanceInfo
 {
     mat4 model;
     uint animationID;  
-    uint MaterialInfoID;
+    uint materialInfoID;
     uint vertexID;
     uint indexID;  
 };

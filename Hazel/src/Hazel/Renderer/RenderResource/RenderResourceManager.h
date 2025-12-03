@@ -82,14 +82,14 @@ namespace GameEngine {
             void SetMaterialInfo(const MaterialInfo& materialInfo, uint32_t materialID) {m_MultiFrameGlobalResources.materialBuffer.SetData(materialInfo, materialID);};
 
             // ¶¥µãInfo
-            uint32_t AllocateVertexID() { return m_MultiFrameGlobalResources.vertexBuffer.Allocate(); }
-            void ReleaseVertexID(uint32_t id) { m_MultiFrameGlobalResources.vertexBuffer.Release(id); }
-            void SetVertexInfo(const MeshInfo& vertexInfo, uint32_t vertexID) {m_MultiFrameGlobalResources.vertexBuffer.SetData(vertexInfo, vertexID);};
+            uint32_t AllocateMeshInfoID() { return m_MultiFrameGlobalResources.vertexBuffer.Allocate(); }
+            void ReleaseMeshInfoID(uint32_t id) { m_MultiFrameGlobalResources.vertexBuffer.Release(id); }
+            void SetMeshInfo(const MeshInfo& vertexInfo, uint32_t vertexID) {m_MultiFrameGlobalResources.vertexBuffer.SetData(vertexInfo, vertexID);};
 
-            // MeshInstanceInfo
-            uint32_t AllocateMeshInfoID() { return m_MultiFrameGlobalResources.meshInfoBuffer.Allocate(); }
-            void ReleaseMeshInfoID(uint32_t id) { m_MultiFrameGlobalResources.meshInfoBuffer.Release(id); }
-            void SetMeshInfo(const MeshInstanceInfo& meshInfo, uint32_t meshID) {m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfo, meshID);};
+            // ÊµÀýInfo
+            uint32_t AllocateMeshInstanceInfoID() { return m_MultiFrameGlobalResources.meshInfoBuffer.Allocate(); }
+            void ReleaseMesInstancehInfoID(uint32_t id) { m_MultiFrameGlobalResources.meshInfoBuffer.Release(id); }
+            void SetMeshInstanceInfo(const MeshInstanceInfo& meshInfo, uint32_t meshID) {m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfo, meshID);};
 
             // LightInfo
             void SetLightInfo(const LightInfo& lightInfo) {m_PerFrameGlobalResources[APP_FRAMEINDEX].lightInfoBuffer.SetData(lightInfo);};

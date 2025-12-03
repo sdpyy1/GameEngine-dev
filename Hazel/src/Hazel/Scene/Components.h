@@ -80,7 +80,7 @@ namespace GameEngine {
 
 		SubmeshComponent() = default;
 		void updateMeshInfo() {
-			RENDER_RESOURCEMANAGER->SetMeshInfo(meshInfo, meshInfoID);
+			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshInfo, meshInfoID);
 		}
 		SubmeshComponent(UUID mesh, uint32_t submeshIndex = 0)
 			: Mesh(mesh), SubmeshIndex(submeshIndex)
@@ -88,13 +88,13 @@ namespace GameEngine {
             model = AssetManager::GetAssetByAssetHandle<Model>(mesh);
             material = model->GetMaterials()[SubmeshIndex];
 			castShadow = material->castShadow;
-			meshInfoID = RENDER_RESOURCEMANAGER->AllocateMeshInfoID();
+			meshInfoID = RENDER_RESOURCEMANAGER->AllocateMeshInstanceInfoID();
 			meshInfo.animationID = 0;
 			meshInfo.indexID = model->GetSubmeshes()[SubmeshIndex].indexBuffer->indexID;
 			meshInfo.vertexID = model->GetSubmeshes()[SubmeshIndex].vertexBuffer->vertexID;
 			meshInfo.materialID = model->GetMaterials()[SubmeshIndex] ? model->GetMaterials()[SubmeshIndex]->GetMaterialID() : 0;
 
-			RENDER_RESOURCEMANAGER->SetMeshInfo(meshInfo, meshInfoID);
+			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshInfo, meshInfoID);
 		}
 
 		MeshRef GetMesh() {

@@ -7,7 +7,7 @@ namespace GameEngine {
 
     VertexBuffer::VertexBuffer()
     {
-        vertexID = RENDER_RESOURCEMANAGER->AllocateVertexID();
+        vertexID = RENDER_RESOURCEMANAGER->AllocateMeshInfoID();
     }
 
     void VertexBuffer::SetPosition(const std::vector<glm::vec3>& position)
@@ -105,7 +105,7 @@ namespace GameEngine {
 
         memcpy(buffer->Map(), data, size);
 
-        RENDER_RESOURCEMANAGER->SetVertexInfo(vertexInfo, vertexID);
+        RENDER_RESOURCEMANAGER->SetMeshInfo(vertexInfo, vertexID);
     }
 
     VertexBuffer::~VertexBuffer()
@@ -118,7 +118,7 @@ namespace GameEngine {
         if (vertexInfo.boneIndexID != 0)    RENDER_RESOURCEMANAGER->ReleaseBindlessID(vertexInfo.boneIndexID, BINDLESS_SLOT_BONE_INDEX);
         if (vertexInfo.boneWeightID != 0)   RENDER_RESOURCEMANAGER->ReleaseBindlessID(vertexInfo.boneWeightID, BINDLESS_SLOT_BONE_WEIGHT);
 
-        if (vertexID != 0)       RENDER_RESOURCEMANAGER->ReleaseVertexID(vertexID);*/
+        if (vertexID != 0)       RENDER_RESOURCEMANAGER->ReleaseMeshInfoID(vertexID);*/
     }
 
     void IndexBuffer::SetIndex(const std::vector<uint32_t>& index)

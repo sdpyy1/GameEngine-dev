@@ -45,7 +45,7 @@ layout(set = 2, binding = 1) uniform texture2D BloomRes;
 layout(set = 1, binding = 0) uniform sampler SAMPLER[];
 void main(){
 
-	float BloomScale = GetPostprocessSetting().bloomScale;   // û�к������ʱ��BloomScaleΪ0
+	float BloomScale = GetPostprocessSetting().bloomScale;
 
 	vec3 finalColor = texture(sampler2D(lightRes,SAMPLER[0]), in_texCoord).rgb;
 	finalColor += texture(sampler2D(BloomRes,SAMPLER[0]), in_texCoord).rgb * BloomScale;

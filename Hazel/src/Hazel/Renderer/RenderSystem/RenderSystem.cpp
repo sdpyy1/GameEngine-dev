@@ -26,7 +26,7 @@ namespace GameEngine {
 	{
 		RHIConfig config;
         config.debug = true;
-        config.enableRayTracing = true;
+        config.enableRayTracing = false;
 		config.api = API_Vulkan;
 
 		m_DynamicRHI = DynamicRHI::Init(config);

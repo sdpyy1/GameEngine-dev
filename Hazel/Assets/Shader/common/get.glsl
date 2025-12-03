@@ -1,5 +1,6 @@
 #ifndef GET_GLSL
 #define GET_GLSL
+// 取数据函数
 vec4 GetVertexPos(in uint vertexID, in uint index)
 {
     if(vertexID == 0) return vec4(0.0f);
@@ -86,7 +87,7 @@ vec4 GetVertexBoneWeight(in uint vertexID, in uint index)
                 BONEWEIGHTS[boneWeightID].boneWeight[4 * index + 2],
                 BONEWEIGHTS[boneWeightID].boneWeight[4 * index + 3]);   
 }
-mat4 GetModel(in uint objectID)
+mat4 GetModelMatrix(in uint objectID)
 {
     return MESHINSTANCEINFO.slot[objectID].model;
 }
@@ -98,7 +99,7 @@ uint GetIndex(in uint objectID, in uint offset)
 
     return index;
 }
-vec4 GetPos(in uint objectID, in uint index)
+vec4 GetPosition(in uint objectID, in uint index)
 {
     uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
     return GetVertexPos(vertexID, index);
@@ -145,84 +146,82 @@ vec4 GetBoneWeight(in uint objectID, in uint index)
     uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
     return GetVertexBoneWeight(vertexID, index); 
 }
-vec4 GetBaseColor(in MaterialInfo MaterialInfo){
-    return MaterialInfo.diffuse;  
+vec4 GetBaseColor(in MaterialInfo material){
+    return material.diffuse;  
 }
 vec4 GetTex2D(in uint slot, in vec2 coord) {
-	return texture(sampler2D(TEXTURES_2D[slot], SAMPLER[0]), coord);   
+	return texture(sampler2D(TEXTURES_2D[slot], SAMPLER[1]), coord);   
 }
 
 vec4 GetTex2D(in uint slot, in vec2 coord, in float lod) {
-	return textureLod(sampler2D(TEXTURES_2D[slot], SAMPLER[0]), coord, lod);   
+	return textureLod(sampler2D(TEXTURES_2D[slot], SAMPLER[1]), coord, lod);   
 }
 
 vec4 GetTexCube(in uint slot, in vec3 vector) {
-	return texture(samplerCube(TEXTURES_CUBE[slot], SAMPLER[0]), vector);   
+	return texture(samplerCube(TEXTURES_CUBE[slot], SAMPLER[1]), vector);   
 }
 
 vec4 GetTexCube(in uint slot, in vec3 vector, in float lod) {
-	return textureLod(samplerCube(TEXTURES_CUBE[slot], SAMPLER[0]), vector, lod);   
+	return textureLod(samplerCube(TEXTURES_CUBE[slot], SAMPLER[1]), vector, lod);   
 }
 
 vec4 GetTex3D(in uint slot, in vec3 vector) {
-	return texture(sampler3D(TEXTURES_3D[slot], SAMPLER[0]), vector);   
+	return texture(sampler3D(TEXTURES_3D[slot], SAMPLER[1]), vector);   
 }
 
 vec4 GetTex3D(in uint slot, in vec3 vector, in float lod) {
-	return textureLod(sampler3D(TEXTURES_3D[slot], SAMPLER[0]), vector, lod);   
+	return textureLod(sampler3D(TEXTURES_3D[slot], SAMPLER[1]), vector, lod);   
 }
 
-MaterialInfo GetMaterialInfo(in uint objectID) {
-	return MATERIALINFO.slot[MESHINSTANCEINFO.slot[objectID].MaterialInfoID]; 
+MaterialInfo GetMaterial(in uint objectID) {
+	return MATERIALINFO.slot[MESHINSTANCEINFO.slot[objectID].materialInfoID]; 
 }
 
-vec4 GetDiffuse(in MaterialInfo MaterialInfo, in vec2 coord) {
-    if(MaterialInfo.textureDiffuse > 0)    
+vec4 GetDiffuse(in MaterialInfo material, in vec2 coord) {
+    if(material.textureDiffuse > 0)    
     {
-        vec4 diffuse = GetTex2D(MaterialInfo.textureDiffuse, coord);
-        diffuse = pow(diffuse, vec4(1.0/2.2)); 
-        diffuse = GetBaseColor(MaterialInfo) * diffuse;         
+        vec4 diffuse = GetTex2D(material.textureDiffuse, coord);
+        diffuse = pow(diffuse, vec4(1.0/2.2));          //gamma矫正  // TODO：设置的图片格式就是SRGB，这里应该不需要手动伽马了
+        diffuse = GetBaseColor(material) * diffuse;         
 
         return diffuse;
     }
-    else return GetBaseColor(MaterialInfo);
+    else return GetBaseColor(material);
 }
-vec4 GetBaseEmission(in MaterialInfo MaterialInfo){
-    return MaterialInfo.emission;
+vec4 GetBaseEmission(in MaterialInfo material){
+    return material.emission;
 }
-vec4 GetEmission(in MaterialInfo MaterialInfo, in vec2 coord){
-    if(MaterialInfo.textureEmission > 0.0){
-        vec4 emission = GetTex2D(MaterialInfo.textureEmission, coord);
-        emission = pow(emission, vec4(1.0/2.2));     
-        emission = GetBaseEmission(MaterialInfo) * emission;      
-        emission.w = 0;   
-        return emission;
+vec4 GetEmission(in MaterialInfo material, in vec2 coord){
+    if(material.textureEmission.x > 0.0){
+     vec4 emission = GetTex2D(material.textureEmission, coord);
+     emission = pow(emission, vec4(1.0/2.2));          //gamma矫正  // TODO：设置的图片格式就是SRGB，这里应该不需要手动伽马了
+     emission = GetBaseEmission(material) * emission;         
+     return emission;
     }
-     return vec4(0,0,0,0);
+     return vec4(0);
 }
 
-float GetRoughness(in MaterialInfo MaterialInfo, in vec2 coord){
-    if(MaterialInfo.textureRoughness > 0)        
+float GetRoughness(in MaterialInfo material, in vec2 coord){
+    if(material.textureRoughness > 0)        
     {
-        vec3 arm = GetTex2D(MaterialInfo.textureRoughness, coord).xyz;
-        arm = pow(arm, vec3(1.0/2.2));   
+        vec3 arm = GetTex2D(material.textureRoughness, coord).xyz;
+        arm = pow(arm, vec3(1.0/2.2));          //gamma矫正  // TODO：设置的图片格式就是SRGB，这里应该不需要手动伽马了
         return arm.y;
     }
-    else return clamp(MaterialInfo.roughness, 0.00001, 0.99999); 
+    else return clamp(material.roughness, 0.00001, 0.99999); 
 }
-float GetMetallic(in MaterialInfo MaterialInfo, in vec2 coord){
-    if(MaterialInfo.textureMetallic > 0)        
+float GetMetallic(in MaterialInfo material, in vec2 coord){
+    if(material.textureMetallic > 0)        
     {
-        vec3 arm = GetTex2D(MaterialInfo.textureMetallic, coord).xyz;
-        arm = pow(arm, vec3(1.0/2.2));
+        vec3 arm = GetTex2D(material.textureMetallic, coord).xyz;
+        arm = pow(arm, vec3(1.0/2.2));          //gamma矫正
 
         return arm.z;
     }
-    else return clamp(MaterialInfo.metallic, 0.00001, 0.99999);   
+    else return clamp(material.metallic, 0.00001, 0.99999);   
 }
-vec3 GetNormal(in MaterialInfo MaterialInfo, in vec2 coord, in vec3 normal, in vec4 tangent)
-{
-    if (MaterialInfo.textureNormal > 0)
+vec3 GetNormal(in MaterialInfo material, in vec2 coord, in vec3 normal, in vec4 tangent) {
+	if (material.textureNormal > 0)
     {
         vec3 N = normalize(normal);
         vec3 T = normalize(tangent.xyz);
@@ -230,9 +229,9 @@ vec3 GetNormal(in MaterialInfo MaterialInfo, in vec2 coord, in vec3 normal, in v
 
         mat3 TBN = mat3(T, B, N);
 
-        vec3 texNormal = GetTex2D(MaterialInfo.textureNormal, coord).xyz;
+        vec3 texNormal = GetTex2D(material.textureNormal, coord).xyz;
         vec3 mapped = normalize(texNormal * 2.0 - 1.0);
-    
+
         return normalize(TBN * mapped);
     }
     else
@@ -261,6 +260,10 @@ SpotLight GetSpotLight(uint index)
 {
     return LIGHTINFO.data.spotLights[index];
 }
+Camera GetCamera()
+{
+    return CAMERAINFO.data;
+}
 uint GetPointLightCount()
 {
     return LIGHTINFO.data.pointLightCount;
@@ -269,13 +272,4 @@ uint GetSpotLightCount()
 {
     return LIGHTINFO.data.spotLightCount;
 }
-Camera GetCamera()
-{
-    return CAMERAINFO.data;
-}
-
-
-
-
-
 #endif // GET_GLSL

@@ -8,9 +8,9 @@ void main()
 	uint objectID       = gl_InstanceIndex;
     uint indexOffset    = gl_VertexIndex;
 
-    mat4 model          = GetModel(objectID);
+    mat4 model          = GetModelMatrix(objectID);
     uint index          = GetIndex(objectID, indexOffset);
-    vec4 pos            = GetPos(objectID, index);
+    vec4 pos            = GetPosition(objectID, index);
     gl_Position = CAMERAINFO.data.viewProj * model * pos;
 
 }
