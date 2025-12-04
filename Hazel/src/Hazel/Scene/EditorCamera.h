@@ -3,7 +3,7 @@
 #include "Hazel/Core/Events/KeyEvent.h"
 #include "Hazel/Core/Events/MouseEvent.h"
 #define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_FE   // 把深度值范围设置为[0, 1]，而不是OpenGL的[-1, 1]
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE   // 把深度值范围设置为[0, 1]，而不是OpenGL的[-1, 1]
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 namespace GameEngine {

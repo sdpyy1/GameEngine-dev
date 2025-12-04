@@ -131,7 +131,6 @@ namespace GameEngine
             info.memoryUsage = MEMORY_USAGE_GPU_ONLY;
             info.type = RESOURCE_TYPE_TEXTURE | RESOURCE_TYPE_RENDER_TARGET;
             info.creationFlag = TEXTURE_CREATION_NONE;
-
             RHITextureRef texture = std::make_shared<VulkanRHITexture>(info, images[i]);
             textures.push_back(texture);
 
@@ -436,7 +435,7 @@ namespace GameEngine
         imageInfo.usage = usage;
         imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;   // 逻辑状态 / 访问规则的标记 不影响数据本身，但是会影响Vulkan如何使用它（只能undefined，直接指定shaderread就报错了）
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE; // 某个队列族独占
-        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT; // MSAA
         imageInfo.flags = flag; // Optional
 
         VmaAllocationCreateInfo allocationCreateInfo = {};
@@ -1461,7 +1460,7 @@ namespace GameEngine
 
 	VulkanRHIRenderPass::VulkanRHIRenderPass(const RHIRenderPassInfo& info) : RHIRenderPass(info)
 	{
-        // 创建renderpass 每个附件需要有ImageView
+        // 创建FrameBuffer 每个附件需要有ImageView
         std::vector<VkImageView> imageViews;
         VulkanUtil::VulkanRenderPassAttachments renderPassAttachments = {};
         for (uint32_t i = 0; i < info.colorAttachments.size(); i++)

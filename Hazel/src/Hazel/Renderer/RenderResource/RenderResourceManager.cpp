@@ -194,11 +194,8 @@ namespace GameEngine {
 		tmpdata.proj = camera.GetProjectionMatrix();
 		tmpdata.invProj = glm::inverse(tmpdata.proj);
         tmpdata.invView = glm::inverse(tmpdata.view);
-		//tmpdata.proj[1][1] *= -1;  // TODO：Y轴反转
 		tmpdata.viewproj = camera.GetViewProjection();
         tmpdata.invPV = glm::inverse(tmpdata.viewproj);
-		//tmpdata.Width = camera.GetViewportWidth();
-		//tmpdata.Height = camera.GetViewportWidth();
 		// 目前统一用窗口的宽高
 		tmpdata.Width = APP_WINDOWSIZE.first;
 		tmpdata.Height = APP_WINDOWSIZE.second;
