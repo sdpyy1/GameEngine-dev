@@ -34,7 +34,7 @@ namespace GameEngine {
 
 	void RayTracingPass::Build(RDGBuilder& builder)
 	{
-		auto &[w,h] = APP_WINDOWSIZE;
+		auto& [w, h] = APP_WINDOWSIZE;
 		RDGTextureHandle rayTexture = builder.CreateTexture("RayColor")
 			.Exetent({ w, h ,1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
@@ -48,16 +48,16 @@ namespace GameEngine {
 		builder.CreateRayTracingPass(GetName())
 			.RootSignature(m_RootSignature)
 			.ReadWrite(1, 0, 0, rayTexture)
-			.Read(1, 1, 0, skyBox, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR ,0,1,0,6})
+			.Read(1, 1, 0, skyBox, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR ,0,1,0,6 })
 			.Execute([&](RDGPassContext context) {
-			auto&[w, h] = APP_WINDOWSIZE;
-				RHICommandListRef command = context.command;
-				command->SetRayTracingPipeline(m_Pipeline);
-				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
-				command->BindDescriptorSet(context.descriptors[1], 1);
-				// command->PushConstants(&setting, sizeof(RayTracingBaseSetting), SHADER_FREQUENCY_RAY_TRACING);
-				command->TraceRays(w,h,1);  // 其实和dispatch道理一样
-			})
+			auto& [w, h] = APP_WINDOWSIZE;
+			RHICommandListRef command = context.command;
+			command->SetRayTracingPipeline(m_Pipeline);
+			command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
+			command->BindDescriptorSet(context.descriptors[1], 1);
+			// command->PushConstants(&setting, sizeof(RayTracingBaseSetting), SHADER_FREQUENCY_RAY_TRACING);
+			command->TraceRays(w, h, 1);  // 其实和dispatch道理一样
+				})
 			.Finish();
 
 

@@ -46,7 +46,6 @@ namespace GameEngine {
 		std::vector<glm::vec4> boneWeight;
 		std::vector<uint32_t> index;
 		std::vector<BoneInfo> bone;
-
 		inline uint32_t TriangleNum() { return index.size() / 3; }
 
 

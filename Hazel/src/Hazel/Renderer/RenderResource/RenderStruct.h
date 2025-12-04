@@ -152,6 +152,7 @@ namespace GameEngine {
     // Mesh的实例信息
     typedef struct MeshInstanceInfo {
         glm::mat4 modelMatrix;
+        glm::mat4 prevModelMatrix;
         uint32_t animationID;           //TODO:动画索引
         uint32_t materialID;
         uint32_t vertexID;
@@ -201,6 +202,8 @@ namespace GameEngine {
         glm::mat4 invProj;
         glm::mat4 viewproj;
         glm::mat4 invPV;
+        glm::mat4 prevView;
+        glm::mat4 prevProj;
         float Width;
         float Height;
         float Near;

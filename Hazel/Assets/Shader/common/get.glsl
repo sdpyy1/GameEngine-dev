@@ -91,7 +91,10 @@ mat4 GetModelMatrix(in uint objectID)
 {
     return MESHINSTANCEINFO.slot[objectID].model;
 }
-
+mat4 GetPrevModelMatrix(in uint objectID)
+{
+    return MESHINSTANCEINFO.slot[objectID].prevModel;
+}
 uint GetIndex(in uint objectID, in uint offset)
 {
     uint indexID = MESHINSTANCEINFO.slot[objectID].indexID;

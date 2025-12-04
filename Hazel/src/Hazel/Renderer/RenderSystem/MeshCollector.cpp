@@ -13,18 +13,19 @@ namespace GameEngine
 
 		auto& scene = APP_SCENEMANAGER->GetActiveScene();
 		// 收集SkeletalMesh
-		auto allEntityOwnSubmesh = scene->GetAllEntitiesWith<SubmeshComponent>();
+		auto& allEntityOwnSubmesh = scene->GetAllEntitiesWith<SubmeshComponent>();
 		for (auto entity : allEntityOwnSubmesh)
 		{
-			auto meshComponent = allEntityOwnSubmesh.get<SubmeshComponent>(entity);
+			auto &meshComponent = allEntityOwnSubmesh.get<SubmeshComponent>(entity);
 			Entity parent = Entity(entity, scene);
 			if (meshComponent.model == nullptr || !parent.GetParent().GetComponent<ModelComponent>().Visible ||!meshComponent.Visible) continue;
 
 			Entity e = Entity(entity, scene.get());
 			glm::mat4 transform = scene->GetWorldSpaceTransformMatrix(e);
 			meshComponent.meshInfo.modelMatrix = transform;
-			meshComponent.updateMeshInfo();  // 需要更新
-
+			meshComponent.meshInfo.prevModelMatrix = meshComponent.prevModel;
+			meshComponent.updateMeshInfo();  //TODO: 改成批量更新....
+			meshComponent.prevModel = transform;
 			DrawBatch drawBatch;
 			drawBatch.indexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).indexBuffer;
             drawBatch.vertexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).vertexBuffer;

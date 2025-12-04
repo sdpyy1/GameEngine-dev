@@ -46,7 +46,7 @@ namespace GameEngine
 
 	void SceneManager::PackInfo(){
 		m_SceneInfo = {};
-		m_SceneInfo.camera = *m_EditorCamera;
+		m_SceneInfo.camera = m_EditorCamera;
 		PackSettingForRender();
 	};
 

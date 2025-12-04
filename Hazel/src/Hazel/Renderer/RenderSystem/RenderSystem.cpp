@@ -27,7 +27,7 @@ namespace GameEngine {
 	{
 		RHIConfig config;
         config.debug = true;
-        config.enableRayTracing = true;
+        config.enableRayTracing = false;
 		config.api = API_Vulkan;
 		m_RHIConfig = config;
 		m_DynamicRHI = DynamicRHI::Init(config);
@@ -80,7 +80,9 @@ namespace GameEngine {
 		passes[DIR_SHADOW_PASS] = meshPasses[MESH_PASS_DIRSHADOW_PASS];
 		passes[POINT_SHADOW_PASS] = meshPasses[MESH_PASS_POINTSHADOW_PASS];
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
-        passes[RAYTRACING_PASS] = std::make_shared<RayTracingPass>();
+		if (RENDER_ENABLE_RAY_TRACING) {
+			passes[RAYTRACING_PASS] = std::make_shared<RayTracingPass>();
+		}
 		passes[PREDEPTH_PASS] = meshPasses[MESH_PASS_PREDEPTH_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();
 		passes[GIZMO_PASS] = std::make_shared<GizmoPass>();

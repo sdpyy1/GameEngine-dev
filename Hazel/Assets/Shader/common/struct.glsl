@@ -121,6 +121,7 @@ struct GizmoBillboardInfo
 struct MeshInstanceInfo 
 {
     mat4 model;
+    mat4 prevModel;
     uint animationID;  
     uint materialInfoID;
     uint vertexID;
@@ -151,6 +152,7 @@ struct MaterialInfo
     uint textureSlotsCube[4];
     uint textureSlots3D[4];  
 };
+
 struct MeshInfo
 {
     uint positionID;
@@ -162,6 +164,7 @@ struct MeshInfo
     uint boneWeightID;
     uint _padding;
 };
+
 struct Camera{
     mat4 view;
     mat4 proj;
@@ -169,6 +172,8 @@ struct Camera{
     mat4 invProj;
 	mat4 viewProj;
     mat4 InverseViewProj;
+    mat4 prevView;
+    mat4 prevProj;
 	float width;
 	float height;
 	float Near;

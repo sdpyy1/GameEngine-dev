@@ -49,7 +49,9 @@ namespace GameEngine {
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_LIGHTINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_GIZMO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_TLAS, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RAY_TRACING });
+		if (RENDER_ENABLE_RAY_TRACING) {
+			info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_TLAS, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RAY_TRACING });
+		}
 
 
 		m_GlobalResourcePreFrameRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
@@ -189,19 +191,22 @@ namespace GameEngine {
 	void RenderResourceManager::UpdateCameraInfo()
 	{
 		CameraData tmpdata;
-		EditorCamera& camera = APP_SCENEMANAGER->GetSceneInfo().camera;
-		tmpdata.view = camera.GetViewMatrix();
-		tmpdata.proj = camera.GetProjectionMatrix();
+		EditorCameraRef camera = APP_SCENEMANAGER->GetSceneInfo().camera;
+		tmpdata.view = camera->GetViewMatrix();
+		tmpdata.proj = camera->GetProjectionMatrix();
 		tmpdata.invProj = glm::inverse(tmpdata.proj);
         tmpdata.invView = glm::inverse(tmpdata.view);
-		tmpdata.viewproj = camera.GetViewProjection();
+		tmpdata.viewproj = camera->GetViewProjection();
         tmpdata.invPV = glm::inverse(tmpdata.viewproj);
-		// 目前统一用窗口的宽高
+
+		tmpdata.prevView = camera->GetPrevView(tmpdata.view);
+        tmpdata.prevProj = camera->GetPrevProjection(tmpdata.proj);
+	
 		tmpdata.Width = APP_WINDOWSIZE.first;
 		tmpdata.Height = APP_WINDOWSIZE.second;
-		tmpdata.Near = camera.GetNearClip();
-		tmpdata.Far = camera.GetFarClip();
-		tmpdata.Position = camera.GetPosition();
+		tmpdata.Near = camera->GetNearClip();
+		tmpdata.Far = camera->GetFarClip();
+		tmpdata.Position = camera->GetPosition();
 		tmpdata.padding = 1.f;
 		m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer.SetData(tmpdata);
 	}

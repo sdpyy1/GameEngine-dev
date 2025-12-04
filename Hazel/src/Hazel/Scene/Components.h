@@ -77,6 +77,7 @@ namespace GameEngine {
 		bool castShadow = true;
 		MeshInstanceInfo meshInfo;
 		uint32_t meshInfoID = 0;
+		glm::mat4 prevModel = glm::mat4(0);
 
 		SubmeshComponent() = default;
 		void updateMeshInfo() {

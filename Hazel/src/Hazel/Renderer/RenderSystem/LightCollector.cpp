@@ -13,7 +13,7 @@ namespace GameEngine {
 		auto& scene = APP_SCENEMANAGER->GetActiveScene();
 		LightInfo lightInfo;
 		{
-			auto dirLightEntity = scene->GetAllEntitiesWith<DirectionalLightComponent>();
+			auto& dirLightEntity = scene->GetAllEntitiesWith<DirectionalLightComponent>();
 			for (auto entity : dirLightEntity)
 			{
 				lightInfo.directionLightCount = 1;

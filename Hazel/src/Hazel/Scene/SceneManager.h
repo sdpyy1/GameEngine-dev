@@ -14,7 +14,7 @@ namespace GameEngine
 	{
 		GlobalSettingInfo globalSettingInfos;
 		CPURenderSetting cpuRenderSetting;
-		EditorCamera camera;
+		std::shared_ptr<EditorCamera> camera;
 	};
 	class SceneManager
 	{
@@ -22,7 +22,7 @@ namespace GameEngine
 		SceneManager();
 		void Tick(Timestep ts);
 
-		std::shared_ptr<EditorCamera> GetEditorCamera() { return m_EditorCamera; };
+		const std::shared_ptr<EditorCamera> GetEditorCamera() { return m_EditorCamera; };
 		std::pair<unsigned int, unsigned int> GetViewportSize();;
 		std::shared_ptr<Scene> GetActiveScene() { return m_CurrentScene; };
 		SceneInfo GetSceneInfo(){return m_SceneInfo;}

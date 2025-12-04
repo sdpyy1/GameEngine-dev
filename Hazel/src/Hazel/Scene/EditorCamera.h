@@ -89,6 +89,21 @@ namespace GameEngine {
 		glm::vec3 GetUpDirection() const;
 		glm::vec3 GetRightDirection() const;
 		glm::vec3 GetForwardDirection() const;
+		glm::mat4 GetPrevProjection(const glm::mat4 curProj)
+		{
+			glm::mat4 res = m_PrevProj;
+			if (res == glm::mat4(0)) res = curProj;
+			m_PrevProj = curProj;
+			return res;
+		}
+
+		glm::mat4 GetPrevView(const glm::mat4 curView)
+		{
+			glm::mat4 res = m_PrevView;
+			if (res == glm::mat4(0)) res = curView;
+			m_PrevView = curView;
+			return res;
+		}
 
 		const glm::vec3& GetPosition() const { return m_Position; }
 
@@ -146,6 +161,11 @@ namespace GameEngine {
 
 		bool m_IsCapturing = false;
 		bool m_IsMouseInViewport = true;
-	};
 
+
+		glm::mat4 m_PrevProj = glm::mat4(0);
+        glm::mat4 m_PrevView = glm::mat4(0);
+
+	};
+	using EditorCameraRef = std::shared_ptr<EditorCamera>;
 }
