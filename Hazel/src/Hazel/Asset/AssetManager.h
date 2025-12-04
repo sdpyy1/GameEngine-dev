@@ -4,15 +4,7 @@
 namespace GameEngine {
 	class AssetManager {
 	public:
-		static ModelRef LoadModel(std::string path) {
-            if (ModelCache.find(path) != ModelCache.end())
-                return ModelCache[path];
-			ModelProcessSetting processSetting;
-			auto& model = std::make_shared<Model>(path, processSetting);
-			AssetsMap[model->GetUUID()] = model;
-			ModelCache[path] = model;
-            return model;
-		}
+		static ModelRef LoadModel(std::string path);
 
 
 		template<typename T>

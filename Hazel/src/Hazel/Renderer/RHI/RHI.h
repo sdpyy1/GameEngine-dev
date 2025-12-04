@@ -90,7 +90,7 @@ namespace GameEngine {
 		virtual void PushLabel(const std::string& name, Color3 color = { 1.0f, 1.0f, 1.0f }) = 0;
 
 		virtual void PopLabel() = 0;
-		// virtual void SetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline) = 0;
+		virtual void SetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline) = 0;
 
 		virtual void PushConstants(void* data, uint16_t size, ShaderFrequency frequency) = 0;
 

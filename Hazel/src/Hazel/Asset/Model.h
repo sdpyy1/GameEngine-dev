@@ -9,48 +9,33 @@
 #include "Hazel/Renderer/RenderResource/Material.h"
 namespace GameEngine { 
 
-    typedef struct ModelProcessSetting
+    typedef struct ModelSpec
     {
         bool flipUV = false;
         bool loadMaterials = true; 
+        bool genBLAS = false;
 
     private:
         BeginSerailize()
-            SerailizeEntry(smoothNormal)
             SerailizeEntry(flipUV)
             SerailizeEntry(loadMaterials)
-            SerailizeEntry(tangentSpace)
-            SerailizeEntry(generateBVH)
-            SerailizeEntry(generateCluster)
-            SerailizeEntry(generateVirtualMesh)
-            SerailizeEntry(cacheCluster)
+            SerailizeEntry(genBLAS)
         EndSerailize
 
-    }ModelProcessSetting;
+    }ModelSpec;
 
     struct SubmeshData
     {
-        std::shared_ptr<Mesh> mesh;                                 // CPU端的mesh和cluster信息
-        VertexBufferRef vertexBuffer;                               // GPU端的顶点和索引缓冲，既可能存储单个submesh的全部顶点和索引，也可能存储其全部cluster合并后的数据
+        std::shared_ptr<Mesh> mesh;                                
+        VertexBufferRef vertexBuffer;
         IndexBufferRef indexBuffer;
-
-
-
-        //std::vector<MeshClusterRef> clusters;                       // 仅生成cluster时的信息
-        //std::shared_ptr<VirtualMesh> virtualMesh;                   // 生成cluster + cluster group时的信息
-
-
-
-        //IndexRange meshClusterID = { 0, 0 };            // 提交的一组cluster的ID范围
-        //IndexRange meshClusterGroupID = { 0, 0 };       // 提交的一组cluster group的ID范围
-
-        //RHIBottomLevelAccelerationStructureRef blas;
+        RHIBottomLevelAccelerationStructureRef blas;
     };
 
 
 	class Model : public Asset {
     public:
-		Model(std::string path, ModelProcessSetting processSetting);
+		Model(std::string path, ModelSpec m_ModelSpec);
         void LoadFromFile(std::string path);
         virtual std::string GetAssetTypeName() override { return "Model Asset"; }
         virtual AssetType GetAssetType() override { return ASSET_TYPE_MODEL; }
@@ -71,7 +56,7 @@ namespace GameEngine {
         std::shared_ptr<Texture> Model::LoadMaterialTexture(std::string texturePath);
     private:
         std::string path;
-        ModelProcessSetting processSetting;
+        ModelSpec m_ModelSpec;
         uint64_t totalIndex = 0;    // 统计信息
         uint64_t totalVertex = 0;
         uint32_t totalClusterCnt = 0;

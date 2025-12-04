@@ -50,7 +50,7 @@ layout (location = 2) out vec4 o_Material;
 layout (location = 3) out vec4 o_Albedo;
 void main()
 {
-    MaterialInfo material   = GetMaterial(IN_ID);
+    MaterialInfo material   = GetMaterialInfo(IN_ID);
     vec4 diffuse        = GetDiffuse(material, IN_TEXCOORD);
     vec4 emission       = GetEmission(material,IN_TEXCOORD);
     diffuse += emission;

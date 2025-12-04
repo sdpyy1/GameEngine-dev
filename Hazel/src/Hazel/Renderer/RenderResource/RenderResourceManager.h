@@ -7,7 +7,6 @@
 #include "Sampler.h"
 #include "Hazel/Scene/SceneManager.h"
 #include "Texture.h"
-
 namespace GameEngine {
     // 每帧都需要更新的资源，放在这里会自动创建多份
     struct PreFrameGlobalResources
@@ -40,6 +39,8 @@ namespace GameEngine {
         RHIDescriptorSetRef samplerDescriptorSet;
         std::vector<SamplerRef> samplers;
 
+        // 光追
+        RHITopLevelAccelerationStructureRef tlas;
 
         // 一些有用的资源
         TextureRef whiteTexture;
@@ -55,8 +56,6 @@ namespace GameEngine {
         RHIBufferRef buffer;
         RHITextureViewRef textureView;
         RHISamplerRef sampler;
-        //TODO 光追加速结构
-
         uint64_t bufferOffset = 0;	// 仅buffer使用
         uint64_t bufferRange = 0;
     } BindlessResourceInfo;
@@ -109,9 +108,9 @@ namespace GameEngine {
             RHIBufferRef GetGizmoDataBuffer();
 
             // TLAS
-            void SetTLAS(const RHITopLevelAccelerationStructureRef& tlas);
-
-
+            void SetTLAS();
+            RHITopLevelAccelerationStructureRef GetTLAS() { return m_MultiFrameGlobalResources.tlas; };
+            void UpdateTLAS(std::vector<RHIAccelerationStructureInstanceInfo>& instances);
 
 
     public:

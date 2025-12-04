@@ -21,6 +21,7 @@ namespace GameEngine {
 
 
 		RHIRootSignatureRef m_RootSignature;
+		RHIRayTracingPipelineRef m_Pipeline;
 	};
 }
 

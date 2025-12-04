@@ -59,7 +59,7 @@ void main(){
 	}else{
 		AtmosphereParameter Atmosphere = BuildAtmosphereParameter();
 		vec3 lightDir = normalize(-LIGHTINFO.data.dirLights.direction);
-		float h = CAMERAINFO.data.CameraPosition.y - Atmosphere.SeaLevel + Atmosphere.PlanetRadius;
+		float h = CAMERAINFO.data.position.y - Atmosphere.SeaLevel + Atmosphere.PlanetRadius;
 		vec3 eyePos = vec3(0, h, 0);
 		color.rgb += texture(sampler2D(u_SkyViewLut,u_Sampler[0]), ViewDirToUV(v_dir)).rgb;
 		color.rgb += GetSunDisk(Atmosphere, eyePos, v_dir, lightDir);

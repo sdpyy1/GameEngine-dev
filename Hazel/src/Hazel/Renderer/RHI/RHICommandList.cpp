@@ -272,6 +272,13 @@ namespace GameEngine {
 		else ADD_COMMAND(SetGraphicsPipeline, graphicsPipeline);
 	}
 
+	void RHICommandList::SetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline)
+	{
+		COMMANDLIST_DEBUG_OUTPUT();
+		if (info.byPass) info.context->SetRayTracingPipeline(rayTracingPipeline);
+		else ADD_COMMAND(SetRayTracingPipeline, rayTracingPipeline);
+	}
+
 	void RHICommandList::SetComputePipeline(RHIComputePipelineRef computePipeline)
 	{
 		COMMANDLIST_DEBUG_OUTPUT();
@@ -416,6 +423,11 @@ namespace GameEngine {
 	void RHICommandPopLabel::Execute(RHICommandContextRef context)
 	{
 		context->PopLabel();
+	}
+
+	void RHICommandSetRayTracingPipeline::Execute(RHICommandContextRef context)
+	{
+		context->SetRayTracingPipeline(rayTracingPipeline);
 	}
 
 }

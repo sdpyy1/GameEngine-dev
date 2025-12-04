@@ -1209,19 +1209,17 @@ namespace GameEngine {
 	typedef struct RHIShaderBindingTableInfo
 	{
 		void AddRayGenGroup(RHIShaderRef rayGenShader) { rayGenGroups.push_back(rayGenShader); }
-		void AddHitGroup(RHIShaderRef closestHitShader,
-			RHIShaderRef anyHitShader,
-			RHIShaderRef intersectionShader)
-		{
+		void AddHitGroup(RHIShaderRef closestHitShader,RHIShaderRef anyHitShader,RHIShaderRef intersectionShader){
 			hitGroups.push_back({ closestHitShader, anyHitShader, intersectionShader });
 		}
+		void AddHitGroup(RHIShaderRef closestHitShader) { hitGroups.push_back({ closestHitShader, nullptr, nullptr }); }
 		void AddMissGroup(RHIShaderRef rayMissShader) { missGroups.push_back(rayMissShader); }
 
 		struct HitGroup
 		{
-			RHIShaderRef closestHitShader;
-			RHIShaderRef anyHitShader;
-			RHIShaderRef intersectionShader;
+			RHIShaderRef closestHitShader; // 最近命中
+			RHIShaderRef anyHitShader; // 命中
+			RHIShaderRef intersectionShader; // 自定义几何体
 		};
 
 		std::vector<RHIShaderRef> rayGenGroups;

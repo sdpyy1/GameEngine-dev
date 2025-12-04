@@ -9,6 +9,7 @@ namespace GameEngine
 	public:
 		static void CollectMesh();
 
+		static void Collect4TLAS(std::vector<RHIAccelerationStructureInstanceInfo>& instances);
 	};
 
 }

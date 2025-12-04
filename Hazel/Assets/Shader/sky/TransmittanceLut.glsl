@@ -25,12 +25,12 @@ void main()
 	// u����cos��1��-1��v���򣺸߶ȴ�0��1
     UvToTransmittanceLutParams(bottomRadius, topRadius, uv, cos_theta, r);
 	float sin_theta = sqrt(1.0 - cos_theta * cos_theta);
-	vec3 CameraPosition = vec3(0.0, r, 0.0);
+	vec3 position = vec3(0.0, r, 0.0);
 	vec3 viewDir = vec3(sin_theta, cos_theta, 0);
 
-	float dis = RayIntersectSphere(vec3(0,0,0), topRadius, CameraPosition, viewDir);
-	vec3 hitPoint = CameraPosition + viewDir * dis;
-	vec3 color = Transmittance(Atmosphere, CameraPosition, hitPoint);
+	float dis = RayIntersectSphere(vec3(0,0,0), topRadius, position, viewDir);
+	vec3 hitPoint = position + viewDir * dis;
+	vec3 color = Transmittance(Atmosphere, position, hitPoint);
     imageStore(transmittanceLut, texelCoord, vec4(color, 1.0));
 }
 

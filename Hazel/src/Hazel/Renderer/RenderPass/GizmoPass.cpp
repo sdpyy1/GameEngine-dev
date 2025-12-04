@@ -110,8 +110,8 @@ void GameEngine::GizmoPass::Init()
 
 
 	{
-		ModelProcessSetting processSetting;
-		cubeWire = std::make_shared<Model>(APP_MODEL_PATH + "Basic/cube_wire.obj", processSetting);
+		ModelSpec m_ModelSpec;
+		cubeWire = std::make_shared<Model>(APP_MODEL_PATH + "Basic/cube_wire.obj", m_ModelSpec);
 		cubeWire->OnLoadAsset();
 		command[0].indexCount = cubeWire->GetIndexBuffer(0)->IndexNum();
 		command[0].instanceCount = 0;
@@ -119,7 +119,7 @@ void GameEngine::GizmoPass::Init()
 		command[0].vertexOffset = 0;
 		command[0].firstInstance = 0;
 
-		sphereWire = std::make_shared<Model>(APP_MODEL_PATH + "Basic/sphere_wire.obj", processSetting);
+		sphereWire = std::make_shared<Model>(APP_MODEL_PATH + "Basic/sphere_wire.obj", m_ModelSpec);
 		sphereWire->OnLoadAsset();
 		command[1].indexCount = sphereWire->GetIndexBuffer(0)->IndexNum();
 		command[1].instanceCount = 0;

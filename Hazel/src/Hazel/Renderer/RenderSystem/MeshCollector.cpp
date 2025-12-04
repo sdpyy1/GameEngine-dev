@@ -43,6 +43,41 @@ namespace GameEngine
 				processor->Process(batch);
 			}
 		}
+
+
+		if (RENDER_ENABLE_RAY_TRACING && !batch.empty()) {
+			std::vector<RHIAccelerationStructureInstanceInfo> instances;
+			Collect4TLAS(instances);
+			RENDER_RESOURCEMANAGER->UpdateTLAS(instances);
+		}
+
+
 	}
+	void MeshCollector::Collect4TLAS(std::vector<RHIAccelerationStructureInstanceInfo>& instances)
+	{
+		RHIBottomLevelAccelerationStructureRef blas;  // TODO: 其实和光栅无关的结构不应该放这
+		auto& scene = APP_SCENEMANAGER->GetActiveScene();
+		auto allEntityOwnSubmesh = scene->GetAllEntitiesWith<SubmeshComponent>();
+		for (auto entity : allEntityOwnSubmesh)
+		{
+			auto meshComponent = allEntityOwnSubmesh.get<SubmeshComponent>(entity);
+			Entity parent = Entity(entity, scene);
+			if (meshComponent.model == nullptr || !parent.GetParent().GetComponent<ModelComponent>().Visible || !meshComponent.Visible) continue;
+
+			Entity e = Entity(entity, scene.get());
+			glm::mat4 transform = scene->GetWorldSpaceTransformMatrix(e);
+			RHIAccelerationStructureInstanceInfo info = {};
+			info.instanceIndex = meshComponent.meshInfoID;
+			info.mask = 0xFF;
+			info.shaderBindingTableOffset = 0;
+			info.blas = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).blas;
+			Math::ConvertGlmMat4To3x4Transform(transform, &info.transform[0][0]);
+			instances.push_back(info);
+			
+		}
+
+
+	}
+
 }
 

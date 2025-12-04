@@ -51,8 +51,8 @@ void main()
 	Camera CAMERAINFO = GetCamera();
 	
 	if(dirLight.radiance != vec3(0.0)){
-		vec3 CameraPosition = GetCamera().CameraPosition;
-		float dis = length(WorldPosition - CameraPosition);
+		vec3 position = GetCamera().position;
+		float dis = length(WorldPosition - position);
 		for (uint i = 0; i < 4; i++)
 		{
 			if (dis < dirLight.SplitDepth[i])
@@ -75,7 +75,7 @@ void main()
 	m_Params.Metalness = GetGBufferMetalness(TexCoord) ;
     m_Params.Roughness = GetGBufferRoughness(TexCoord);
     m_Params.Normal = GetGBufferNormal(TexCoord);
-	m_Params.View = normalize(CAMERAINFO.CameraPosition - WorldPosition); 
+	m_Params.View = normalize(CAMERAINFO.position - WorldPosition); 
 	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
 	const vec3 Fdielectric = vec3(0.04);

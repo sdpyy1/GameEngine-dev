@@ -461,11 +461,10 @@ namespace GameEngine {
 
         CreateInputBarriers(pass);
 
-        RDGPassContext context = {
-            context.command = command,
-            context.builder = this,
-            context.descriptors = pass->descriptorSets
-        };
+        RDGPassContext context;
+        context.command = command;
+        context.builder = this;
+        context.descriptors = pass->descriptorSets;
         context.passIndex[0] = pass->passIndex[0];
         context.passIndex[1] = pass->passIndex[1];
         context.passIndex[2] = pass->passIndex[2];

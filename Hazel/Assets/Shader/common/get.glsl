@@ -173,7 +173,7 @@ vec4 GetTex3D(in uint slot, in vec3 vector, in float lod) {
 	return textureLod(sampler3D(TEXTURES_3D[slot], SAMPLER[1]), vector, lod);   
 }
 
-MaterialInfo GetMaterial(in uint objectID) {
+MaterialInfo GetMaterialInfo(in uint objectID) {
 	return MATERIALINFO.slot[MESHINSTANCEINFO.slot[objectID].materialInfoID]; 
 }
 

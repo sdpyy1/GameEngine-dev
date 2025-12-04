@@ -432,6 +432,17 @@ namespace GameEngine
 
         virtual void Execute(RHICommandContextRef context) override final;
     };
+    struct RHICommandSetRayTracingPipeline : public RHICommand
+    {
+        RHIRayTracingPipelineRef rayTracingPipeline;
+
+        RHICommandSetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline)
+            : rayTracingPipeline(rayTracingPipeline)
+        {
+        }
+
+        virtual void Execute(RHICommandContextRef context) override final;
+    };
 
     /*RHICommandList是RHICommand的载体，方法通过RHICommandList调用后会根据配置选择是直接执行命令还是缓存命令*/
     class RHICommandList {
@@ -457,6 +468,7 @@ namespace GameEngine
         void SetLineWidth(float width);
 
         void SetGraphicsPipeline(RHIGraphicsPipelineRef graphicsPipeline);
+        void SetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline);
 
         void SetComputePipeline(RHIComputePipelineRef computePipeline);
 

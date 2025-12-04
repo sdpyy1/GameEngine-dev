@@ -1309,7 +1309,7 @@ namespace GameEngine
     {
         this->graphicsPipeline = CAST<VulkanRHIGraphicsPipeline>(graphicsPipeline).get();
         this->computePipeline = nullptr;
-        // this->rayTraycingPipeline = nullptr;
+        this->rayTracingPipeline = nullptr;
 
         this->graphicsPipeline->Bind(handle);
     }
@@ -1318,19 +1318,20 @@ namespace GameEngine
     {
         this->graphicsPipeline = nullptr;
         this->computePipeline = CAST<VulkanRHIComputePipeline>(computePipeline).get();
-        // this->rayTraycingPipeline = nullptr;
+        this->rayTracingPipeline = nullptr;
 
         this->computePipeline->Bind(handle);
     }
 
-   /* void VulkanRHICommandContext::SetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline)
+
+   void VulkanRHICommandContext::SetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline)
     {
         this->graphicsPipeline = nullptr;
         this->computePipeline = nullptr;
-        this->rayTraycingPipeline = ResourceCast(rayTracingPipeline).get();
+        this->rayTracingPipeline = CAST<VulkanRHIRayTracingPipeline>(rayTracingPipeline).get();
 
-        this->rayTraycingPipeline->Bind(handle);
-    }*/
+        this->rayTracingPipeline->Bind(handle);
+    }
 
     void VulkanRHICommandContext::PushConstants(void* data, uint16_t size, ShaderFrequency frequency)
     {
@@ -1343,7 +1344,7 @@ namespace GameEngine
     {
         if (graphicsPipeline != nullptr)    return graphicsPipeline->GetPipelineLayout();
         if (computePipeline != nullptr)     return computePipeline->GetPipelineLayout();
-        // if (rayTraycingPipeline != nullptr) return rayTraycingPipeline->GetPipelineLayout();
+        if (rayTracingPipeline != nullptr) return rayTracingPipeline->GetPipelineLayout();
 
         LOG_ERROR("Havent bind any pipeline!"); return nullptr;
     }
@@ -1352,7 +1353,7 @@ namespace GameEngine
     {
         if (graphicsPipeline != nullptr)        return VK_PIPELINE_BIND_POINT_GRAPHICS;
         if (computePipeline != nullptr)         return VK_PIPELINE_BIND_POINT_COMPUTE;
-        // if (rayTraycingPipeline != nullptr)     return VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR;
+        if (rayTracingPipeline != nullptr)     return VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR;
 
         LOG_ERROR("Havent bind any pipeline!"); return VK_PIPELINE_BIND_POINT_MAX_ENUM;
     }
@@ -1390,19 +1391,19 @@ namespace GameEngine
 
     void VulkanRHICommandContext::TraceRays(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ)
     {
-        //assert(this->rayTraycingPipeline != nullptr);
+        ASSERT(this->rayTracingPipeline != nullptr);
 
-        ////gl_LaunchSizeEXT 对应此处给出的3维尺寸
-        ////gl_LaunchIDEXT 类似于compute shader的gl_GlobalInvocationID，对应调用shader的坐标(ID)
-        //vkCmdTraceRaysKHR(
-        //    handle,
-        //    &this->rayTraycingPipeline->GetRaygenRegion(),
-        //    &this->rayTraycingPipeline->GetRayMissRegion(),
-        //    &this->rayTraycingPipeline->GetHitRegion(),
-        //    &this->rayTraycingPipeline->GetCallableRegion(),
-        //    groupCountX,
-        //    groupCountY,
-        //    groupCountZ);
+        //gl_LaunchSizeEXT 对应此处给出的3维尺寸
+        //gl_LaunchIDEXT 类似于compute shader的gl_GlobalInvocationID，对应调用shader的坐标(ID)
+        vkCmdTraceRaysKHR(
+            handle,
+            &this->rayTracingPipeline->GetRaygenRegion(),
+            &this->rayTracingPipeline->GetRayMissRegion(),
+            &this->rayTracingPipeline->GetHitRegion(),
+            &this->rayTracingPipeline->GetCallableRegion(),
+            groupCountX,
+            groupCountY,
+            groupCountZ);
     }
 
     void VulkanRHICommandContext::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)

@@ -165,13 +165,15 @@ struct MeshInfo
 struct Camera{
     mat4 view;
     mat4 proj;
+    mat4 invView;
+    mat4 invProj;
 	mat4 viewProj;
     mat4 InverseViewProj;
 	float width;
 	float height;
 	float Near;
 	float Far;
-	vec3 CameraPosition;
+	vec3 position;
     float padding;
 };
 

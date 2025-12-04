@@ -27,7 +27,7 @@ float HardShadows_DirectionalLight(texture2DArray shadowMap, uint cascade, vec3 
 float SearchWidth(float uvLightSize, float receiverDistance)
 {
 	const float NEAR = 0.1;
-	return uvLightSize * (receiverDistance - NEAR) / GetCamera().CameraPosition.z;
+	return uvLightSize * (receiverDistance - NEAR) / GetCamera().position.z;
 }
 
 float SearchRegionRadiusUV(float zWorld)

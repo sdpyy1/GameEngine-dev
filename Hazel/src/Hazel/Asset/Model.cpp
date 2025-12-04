@@ -3,7 +3,7 @@
 #include "Hazel/Renderer/RenderResource/Material.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 namespace GameEngine {
-	Model::Model(std::string path, ModelProcessSetting processSetting) : path(path), processSetting(processSetting) {
+	Model::Model(std::string path, ModelSpec m_ModelSpec) : path(path), m_ModelSpec(m_ModelSpec) {
         LoadFromFile(path);
     }
 
@@ -40,7 +40,7 @@ namespace GameEngine {
         std::vector<aiMesh*> processMeshes;
         ProcessNode(scene->mRootNode, scene, processMeshes);
         submeshes.resize(processMeshes.size());
-        if (processSetting.loadMaterials) materials.resize(processMeshes.size());
+        if (m_ModelSpec.loadMaterials) materials.resize(processMeshes.size());
 
         // Submesh
         for (int i = 0; i < processMeshes.size(); i++)
@@ -80,79 +80,83 @@ namespace GameEngine {
 
 	void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene, int index)
 	{
+        // 创建子网格
         std::shared_ptr<Mesh> submesh = std::make_shared<Mesh>();
 
-        // 顶点位置
-        submesh->position = std::vector<glm::vec3>(mesh->mNumVertices);
-        for (uint32_t i = 0; i < mesh->mNumVertices; i++)
+        // 预分配所有顶点属性的内存（提前分配比循环内动态扩容更高效）
+        const uint32_t vertexCount = mesh->mNumVertices;
+        submesh->position.resize(vertexCount);
+        if (mesh->mNormals)        submesh->normal.resize(vertexCount);
+        if (mesh->mColors[0])      submesh->color.resize(vertexCount);
+        if (mesh->mTextureCoords[0]) submesh->texCoord.resize(vertexCount);
+        if (mesh->mTangents)       submesh->tangent.resize(vertexCount);
+
+        for (uint32_t i = 0; i < vertexCount; ++i)
         {
-            submesh->position[i].x = mesh->mVertices[i].x;
-            submesh->position[i].y = mesh->mVertices[i].y;
-            submesh->position[i].z = mesh->mVertices[i].z;
-        }
-        // 顶点法线
-        if (mesh->mNormals)
-        {
-            submesh->normal = std::vector<glm::vec3>(mesh->mNumVertices);
-            for (uint32_t i = 0; i < mesh->mNumVertices; i++)
+            // 顶点位置
+            submesh->position[i] = glm::vec3(
+                mesh->mVertices[i].x,
+                mesh->mVertices[i].y,
+                mesh->mVertices[i].z
+            );
+
+            // 顶点法线
+            if (mesh->mNormals)
             {
-                submesh->normal[i].x = mesh->mNormals[i].x;
-                submesh->normal[i].y = mesh->mNormals[i].y;
-                submesh->normal[i].z = mesh->mNormals[i].z;
+                submesh->normal[i] = glm::vec3(
+                    mesh->mNormals[i].x,
+                    mesh->mNormals[i].y,
+                    mesh->mNormals[i].z
+                );
             }
 
-        }
-        // 顶点颜色
-        if (mesh->mColors[0])
-        {
-            submesh->color = std::vector<glm::vec3>(mesh->mNumVertices);
-            for (uint32_t i = 0; i < mesh->mNumVertices; i++)
+            // 顶点颜色
+            if (mesh->mColors[0])
             {
-                submesh->color[i].x = mesh->mColors[0][i].r;
-                submesh->color[i].y = mesh->mColors[0][i].g;
-                submesh->color[i].z = mesh->mColors[0][i].b;
+                submesh->color[i] = glm::vec3(
+                    mesh->mColors[0][i].r,
+                    mesh->mColors[0][i].g,
+                    mesh->mColors[0][i].b
+                );
+            }
+
+            // 顶点纹理坐标
+            if (mesh->mTextureCoords[0])
+            {
+                submesh->texCoord[i] = glm::vec2(
+                    mesh->mTextureCoords[0][i].x,
+                    mesh->mTextureCoords[0][i].y
+                );
+            }
+
+            // 顶点切线
+            if (mesh->mTangents)
+            {
+                submesh->tangent[i] = glm::vec4(
+                    mesh->mTangents[i].x,
+                    mesh->mTangents[i].y,
+                    mesh->mTangents[i].z,
+                    1.0f
+                );
             }
         }
 
-        // 顶点纹理坐标
-        if (mesh->mTextureCoords[0])
-        {
-            submesh->texCoord = std::vector<glm::vec2>(mesh->mNumVertices);
-            for (uint32_t i = 0; i < mesh->mNumVertices; i++)
-            {
-                submesh->texCoord[i].x = mesh->mTextureCoords[0][i].x;
-                submesh->texCoord[i].y = mesh->mTextureCoords[0][i].y;
-            }
-        }
-        
-
-        submesh->index = std::vector<uint32_t>(mesh->mNumFaces * 3);
-
+        // 索引
+        const uint32_t indexCount = mesh->mNumFaces * 3;
+        submesh->index.resize(indexCount);
         int tempCnt = 0;
-        for (uint32_t i = 0; i < mesh->mNumFaces; i++)
+        for (uint32_t i = 0; i < mesh->mNumFaces; ++i)
         {
-            aiFace face = mesh->mFaces[i];
-            for (uint32_t j = 0; j < face.mNumIndices; j++)
+            const aiFace& face = mesh->mFaces[i];
+            for (uint32_t j = 0; j < face.mNumIndices; ++j)
             {
                 submesh->index[j + tempCnt] = face.mIndices[j];
             }
             tempCnt += face.mNumIndices;
         }
-
-        if (mesh->mTangents)
-        {
-            submesh->tangent = std::vector<glm::vec4>(mesh->mNumVertices);
-            for (uint32_t i = 0; i < mesh->mNumVertices; i++)
-            {
-                submesh->tangent[i].x = mesh->mTangents[i].x;
-                submesh->tangent[i].y = mesh->mTangents[i].y;
-                submesh->tangent[i].z = mesh->mTangents[i].z;
-                submesh->tangent[i].w = 1.0f;
-            }
-        }
         
         // 处理材质
-        if (processSetting.loadMaterials && mesh->mMaterialIndex >= 0)
+        if (m_ModelSpec.loadMaterials && mesh->mMaterialIndex >= 0)
         {
             aiMaterial* aiMaterial = scene->mMaterials[mesh->mMaterialIndex];  // 这就获得了当前SubMesh相关的材质信息
 			auto aiMaterialName = aiMaterial->GetName();
@@ -306,7 +310,31 @@ namespace GameEngine {
         indexBuffer->SetIndex(submeshes[index].mesh->index);
         submeshes[index].indexBuffer = indexBuffer;
         LOG_TRACE("    IndexBufferID: {}", indexBuffer->indexID);
+
+
+
+
+        // RayTracing
+        if (m_ModelSpec.genBLAS) { 
+            RHIBottomLevelAccelerationStructureInfo blasInfo = {};
+            blasInfo.vertexBuffer = submeshes[index].vertexBuffer->positionBuffer;
+            blasInfo.indexBuffer = submeshes[index].indexBuffer->buffer;
+            blasInfo.triangleCount = submeshes[index].mesh->TriangleNum();
+
+            blasInfo.vertexStride = sizeof(glm::vec3);
+            blasInfo.indexOffset = 0;
+            blasInfo.vertexOffset = 0;
+            submeshes[index].blas = APP_DYNAMICRHI->CreateBottomLevelAccelerationStructure(blasInfo);
+        }
+
+
 	}
+
+
+
+
+
+
     void Model::ExtractBoneWeights(Mesh* submesh, aiMesh* mesh, const aiScene* scene)
     {
         LOG_TRACE("Find Bone Info. Extracting bone weights...");

@@ -129,7 +129,7 @@ namespace GameEngine
 		virtual void SetLineWidth(float width) override final;
 		virtual void SetGraphicsPipeline(RHIGraphicsPipelineRef graphicsPipeline) override final;
 		virtual void SetComputePipeline(RHIComputePipelineRef computePipeline) override final;
-		// virtual void SetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline) override final;
+		virtual void SetRayTracingPipeline(RHIRayTracingPipelineRef rayTracingPipeline) override final;
 		virtual void PushConstants(void* data, uint16_t size, ShaderFrequency frequency) override final;
 		virtual void BindDescriptorSet(RHIDescriptorSetRef descriptor, uint32_t set) override final;
 		virtual void BindVertexBuffer(RHIBufferRef vertexBuffer, uint32_t streamIndex, uint32_t offset) override final;
@@ -152,6 +152,7 @@ namespace GameEngine
 		VulkanRHIRenderPass* renderPass;                // 运行时状态，随指令变化
 		VulkanRHIGraphicsPipeline* graphicsPipeline;
 		VulkanRHIComputePipeline* computePipeline;
+		VulkanRHIRayTracingPipeline* rayTracingPipeline;
 		VkQueryPool m_TimestampQueryPool;
 		uint32_t m_TimestampQueryIndex = 0;
 		// 用于在渲染时临时存储标签信息的栈

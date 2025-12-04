@@ -258,4 +258,5 @@ namespace GameEngine::Math {
 
 		return true;
 	}
+
 }

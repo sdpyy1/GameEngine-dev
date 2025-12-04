@@ -49,6 +49,7 @@ namespace GameEngine {
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_LIGHTINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_GIZMO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_TLAS, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RAY_TRACING });
 
 
 		m_GlobalResourcePreFrameRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
@@ -76,8 +77,8 @@ namespace GameEngine {
                 resource.descriptorSet->UpdateDescriptor(settingUpdateInfo);
 			}
 
+			// meshInstanceInfo
 			{
-				// meshInfo
 				RHIDescriptorUpdateInfo meshInfoUpdateInfo = {};
 				meshInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				meshInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.meshInfoBuffer.GetRHIBuffer();
@@ -86,8 +87,8 @@ namespace GameEngine {
 				resource.descriptorSet->UpdateDescriptor(meshInfoUpdateInfo);
 			}
 
+			// materialInfo
 			{
-				// materialInfo
 				RHIDescriptorUpdateInfo materialInfoUpdateInfo = {};
 				materialInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				materialInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.materialBuffer.GetRHIBuffer();
@@ -96,8 +97,8 @@ namespace GameEngine {
 				resource.descriptorSet->UpdateDescriptor(materialInfoUpdateInfo);
 			}
 
+			// MeshInfo
 			{
-				// vertexInfo
 				RHIDescriptorUpdateInfo vertexInfoUpdateInfo = {};
 				vertexInfoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				vertexInfoUpdateInfo.buffer = m_MultiFrameGlobalResources.vertexBuffer.GetRHIBuffer();
@@ -106,8 +107,9 @@ namespace GameEngine {
 				resource.descriptorSet->UpdateDescriptor(vertexInfoUpdateInfo);
 			}
 
+			// sampler
 			{
-				// sampler
+				
                 RHIDescriptorUpdateInfo samplerUpdateInfo = {};
                 samplerUpdateInfo.resourceType = RESOURCE_TYPE_SAMPLER;
                 samplerUpdateInfo.sampler = m_MultiFrameGlobalResources.samplers[0]->sampler;
@@ -127,8 +129,9 @@ namespace GameEngine {
 				samplerUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER;
 				resource.descriptorSet->UpdateDescriptor(samplerUpdateInfo);
 			}
+			
+			// lightInfo
 			{
-				// lightInfo
 				RHIDescriptorUpdateInfo lightUpdateInfo = {};
 				lightUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				lightUpdateInfo.buffer = resource.lightInfoBuffer.GetRHIBuffer();
@@ -136,8 +139,9 @@ namespace GameEngine {
                 lightUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO;
                 resource.descriptorSet->UpdateDescriptor(lightUpdateInfo);
 			}
+			
+			// gizmoDrawData
 			{
-				// gizmo
                 RHIDescriptorUpdateInfo gizmoUpdateInfo = {};
                 gizmoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
                 gizmoUpdateInfo.buffer = resource.gizmoBuffer.GetRHIBuffer();
@@ -188,6 +192,8 @@ namespace GameEngine {
 		EditorCamera& camera = APP_SCENEMANAGER->GetSceneInfo().camera;
 		tmpdata.view = camera.GetViewMatrix();
 		tmpdata.proj = camera.GetProjectionMatrix();
+		tmpdata.invProj = glm::inverse(tmpdata.proj);
+        tmpdata.invView = glm::inverse(tmpdata.view);
 		//tmpdata.proj[1][1] *= -1;  // TODO：Y轴反转
 		tmpdata.viewproj = camera.GetViewProjection();
         tmpdata.invPV = glm::inverse(tmpdata.viewproj);
@@ -340,13 +346,13 @@ namespace GameEngine {
 		m_MultiFrameGlobalResources.blackTexture = LoadTextureFromFile(APP_TEXTURE_PATH + "black.jpg");
 	}
 
-	void RenderResourceManager::SetTLAS(const RHITopLevelAccelerationStructureRef& tlas)
+	void RenderResourceManager::SetTLAS()
 	{
 		RHIDescriptorUpdateInfo updateInfo = {};
 		updateInfo.binding = GLORBAL_RESOURCE_BINDING_TLAS;
 		updateInfo.index = 0;
 		updateInfo.resourceType = RESOURCE_TYPE_RAY_TRACING;
-		updateInfo.tlas = tlas;
+		updateInfo.tlas = m_MultiFrameGlobalResources.tlas;
 
 		for (size_t i = 0; i < m_PerFrameGlobalResources.size(); ++i) {
 			auto& resource = m_PerFrameGlobalResources[i];
@@ -357,6 +363,21 @@ namespace GameEngine {
 			else {
 				resource.descriptorSet->UpdateDescriptor(updateInfo);
 			}
+		}
+	}
+
+	void RenderResourceManager::UpdateTLAS(std::vector<RHIAccelerationStructureInstanceInfo>& instances)
+	{
+		// 先做成一份TLAS的
+		if (!m_MultiFrameGlobalResources.tlas) {
+			RHITopLevelAccelerationStructureInfo tlasInfo;
+            tlasInfo.instanceInfos = instances;
+			tlasInfo.maxInstance = MAX_PER_FRAME_OBJECT_SIZE;
+            m_MultiFrameGlobalResources.tlas = APP_DYNAMICRHI->CreateTopLevelAccelerationStructure(tlasInfo);
+			SetTLAS();
+		}
+		else {
+            m_MultiFrameGlobalResources.tlas->Update(instances);
 		}
 	}
 

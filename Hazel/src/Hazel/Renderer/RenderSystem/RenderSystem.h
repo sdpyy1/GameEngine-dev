@@ -8,6 +8,7 @@
 // #define RDG_DEBUG 
 #define RENDER_RESOURCEMANAGER APP_RENDERSYSTEM->GetRenderResourceManager()
 #define RENDER_GPU_TIME_INFO APP_RENDERSYSTEM->GetGPUTimeInfos()
+#define RENDER_ENABLE_RAY_TRACING APP_RENDERSYSTEM->IsEnableRayTracing()
 namespace GameEngine
 {
 	class MeshPass;
@@ -28,6 +29,7 @@ namespace GameEngine
 		const std::array<std::shared_ptr<MeshPass>, MESH_PASS_TYPE_MAX_CNT>& GetMeshPasses() { return meshPasses; }
 		bool OnEvent(Event& e);
 
+		bool IsEnableRayTracing(){return m_RHIConfig.enableRayTracing;}
 	private:
 		// ´¦ÀíÆ÷
 		std::shared_ptr<RenderResourceManager> m_RenderResourceManager;
@@ -52,7 +54,7 @@ namespace GameEngine
 
 		DependencyGraphRef rdgDependencyGraph;
 
-
+		RHIConfig m_RHIConfig;
 	};
 
 

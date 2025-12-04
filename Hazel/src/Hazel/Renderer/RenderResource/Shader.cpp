@@ -10,14 +10,14 @@ namespace GameEngine{
 	{
 		switch (freq)
 		{
-		case SHADER_FREQUENCY_COMPUTE:       return "Comp";
-		case SHADER_FREQUENCY_VERTEX:        return "Vert";
-		case SHADER_FREQUENCY_FRAGMENT:      return "Frag";
-		case SHADER_FREQUENCY_GEOMETRY:      return "Geom";
-		case SHADER_FREQUENCY_RAY_GEN:       return "Rgen";
-		case SHADER_FREQUENCY_CLOSEST_HIT:   return "Chit";
-		case SHADER_FREQUENCY_RAY_MISS:      return "Rmiss";
-		default: return "Unknown";
+			case SHADER_FREQUENCY_COMPUTE:       return "Comp";
+			case SHADER_FREQUENCY_VERTEX:        return "Vert";
+			case SHADER_FREQUENCY_FRAGMENT:      return "Frag";
+			case SHADER_FREQUENCY_GEOMETRY:      return "Geom";
+			case SHADER_FREQUENCY_RAY_GEN:       return "Rgen";
+			case SHADER_FREQUENCY_CLOSEST_HIT:   return "Rhit";
+			case SHADER_FREQUENCY_RAY_MISS:      return "Rmiss";
+			default: return "Unknown";
 		}
 	}
 

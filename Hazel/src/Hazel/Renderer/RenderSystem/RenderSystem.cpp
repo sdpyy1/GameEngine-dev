@@ -27,9 +27,9 @@ namespace GameEngine {
 	{
 		RHIConfig config;
         config.debug = true;
-        config.enableRayTracing = false;
+        config.enableRayTracing = true;
 		config.api = API_Vulkan;
-
+		m_RHIConfig = config;
 		m_DynamicRHI = DynamicRHI::Init(config);
 		m_Surface = m_DynamicRHI->CreateSurface(APP_GLFWWINDOW);
 		m_GraphicsQueue = m_DynamicRHI->GetQueue({ QUEUE_TYPE_GRAPHICS, 0 });

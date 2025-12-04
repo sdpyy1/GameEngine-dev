@@ -770,9 +770,9 @@ namespace GameEngine
     {
         VkPipelineShaderStageCreateInfo shaderStage = {};
         shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-        shaderStage.stage = VulkanUtil::ShaderFrequencyToVkStageFlagBits(info.frequency);
-        shaderStage.module = handle;
-        shaderStage.pName = info.entry.c_str();
+        shaderStage.stage = VulkanUtil::ShaderFrequencyToVkStageFlagBits(info.frequency); // 就是Shader类型给一个标志位
+        shaderStage.module = handle; // shaderModule
+        shaderStage.pName = info.entry.c_str(); // 入口 一般都是main
 
         return shaderStage;
     }
@@ -784,7 +784,8 @@ namespace GameEngine
 
 	VulkanRHIBuffer::VulkanRHIBuffer(const RHIBufferInfo& info) : RHIBuffer(info)
 	{
-        VkBufferUsageFlags usage = VulkanUtil::ResourceTypeToBufferUsage(info.type);
+
+        VkBufferUsageFlags usage = VulkanUtil::ResourceTypeToBufferUsage(info.type, VULKAN_RHI->GetConfig().enableRayTracing);
         if (info.memoryUsage == MEMORY_USAGE_GPU_ONLY || info.memoryUsage == MEMORY_USAGE_GPU_TO_CPU)   usage |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
         VkBufferCreateInfo bufferInfo = {};
@@ -1166,6 +1167,11 @@ namespace GameEngine
             (uint32_t)dynamicAttributeDescriptions.size(),
             dynamicAttributeDescriptions.data());
 	}
+
+    void VulkanRHIRayTracingPipeline::Bind(VkCommandBuffer commandBuffer)
+    {
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR, handle);
+    }
 
     void VulkanRHIRayTracingPipeline::Destroy()
     {

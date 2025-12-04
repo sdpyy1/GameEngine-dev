@@ -20,7 +20,6 @@ namespace GameEngine {
 		VertexBufferRef vertexBuffer;                             
 		IndexBufferRef indexBuffer;
 
-
 		MaterialRef material;                                       // 包含了材质数据的内存块，也包含了着色器信息
 
 	};

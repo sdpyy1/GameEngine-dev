@@ -7,7 +7,7 @@ namespace GameEngine {
 	ImGuiLogPanel::ImGuiLogPanel()
 		: m_ShowTrace(false)
 		, m_ShowInfo(false)
-		, m_ShowWarn(true)
+		, m_ShowWarn(false)
 		, m_ShowError(true)
 		, m_ScrollToBottom(true)
 	{
