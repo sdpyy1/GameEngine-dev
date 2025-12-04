@@ -16,9 +16,9 @@ namespace GameEngine
 		auto& allEntityOwnSubmesh = scene->GetAllEntitiesWith<SubmeshComponent>();
 		for (auto entity : allEntityOwnSubmesh)
 		{
-			auto &meshComponent = allEntityOwnSubmesh.get<SubmeshComponent>(entity);
+			auto& meshComponent = allEntityOwnSubmesh.get<SubmeshComponent>(entity);
 			Entity parent = Entity(entity, scene);
-			if (meshComponent.model == nullptr || !parent.GetParent().GetComponent<ModelComponent>().Visible ||!meshComponent.Visible) continue;
+			if (meshComponent.model == nullptr || !parent.GetParent().GetComponent<ModelComponent>().Visible || !meshComponent.Visible) continue;
 
 			Entity e = Entity(entity, scene.get());
 			glm::mat4 transform = scene->GetWorldSpaceTransformMatrix(e);
@@ -28,15 +28,13 @@ namespace GameEngine
 			meshComponent.prevModel = transform;
 			DrawBatch drawBatch;
 			drawBatch.indexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).indexBuffer;
-            drawBatch.vertexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).vertexBuffer;
+			drawBatch.vertexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).vertexBuffer;
 			drawBatch.objectID = meshComponent.meshInfoID;
-            drawBatch.material = meshComponent.material;
+			drawBatch.material = meshComponent.material;
 			batch.push_back(drawBatch);
 		}
 
-
 		for (auto& meshPass : APP_RENDERSYSTEM->GetMeshPasses()) {
-
 			if (!meshPass) continue;
 
 			for (auto& processor : meshPass->GetMeshPassProcessors())
@@ -45,14 +43,11 @@ namespace GameEngine
 			}
 		}
 
-
 		if (RENDER_ENABLE_RAY_TRACING && !batch.empty()) {
 			std::vector<RHIAccelerationStructureInstanceInfo> instances;
 			Collect4TLAS(instances);
 			RENDER_RESOURCEMANAGER->UpdateTLAS(instances);
 		}
-
-
 	}
 	void MeshCollector::Collect4TLAS(std::vector<RHIAccelerationStructureInstanceInfo>& instances)
 	{
@@ -74,11 +69,6 @@ namespace GameEngine
 			info.blas = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).blas;
 			Math::ConvertGlmMat4To3x4Transform(transform, &info.transform[0][0]);
 			instances.push_back(info);
-			
 		}
-
-
 	}
-
 }
-

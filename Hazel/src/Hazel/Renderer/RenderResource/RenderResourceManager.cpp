@@ -14,7 +14,6 @@ namespace GameEngine {
 		InitPerFrameGlobalResources();
 		LoadDefaultTexture();
 	}
-	
 
 	void RenderResourceManager::InitPerFrameGlobalResources()
 	{
@@ -39,7 +38,6 @@ namespace GameEngine {
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE }); // 就是得设置Texture，设置Cube不对
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_3D, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
 
-
 		// 下面这些需要手动去绑定buffer和preFrame资源描述符
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MESHINSTANCEINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MATERIALINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
@@ -52,7 +50,6 @@ namespace GameEngine {
 		if (RENDER_ENABLE_RAY_TRACING) {
 			info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_TLAS, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RAY_TRACING });
 		}
-
 
 		m_GlobalResourcePreFrameRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
 		for (auto& resource : m_PerFrameGlobalResources) resource.descriptorSet = m_GlobalResourcePreFrameRootSignature->CreateDescriptorSet(0);
@@ -68,15 +65,15 @@ namespace GameEngine {
 				cameraUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_CAMERA;
 				resource.descriptorSet->UpdateDescriptor(cameraUpdateInfo);
 			}
-			
+
 			// Setting
 			{
-                RHIDescriptorUpdateInfo settingUpdateInfo = {};
-                settingUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
-                settingUpdateInfo.buffer = m_MultiFrameGlobalResources.globalSettingInfoBuffer.GetRHIBuffer();
-                settingUpdateInfo.index = 0;
-                settingUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_SETTING;
-                resource.descriptorSet->UpdateDescriptor(settingUpdateInfo);
+				RHIDescriptorUpdateInfo settingUpdateInfo = {};
+				settingUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+				settingUpdateInfo.buffer = m_MultiFrameGlobalResources.globalSettingInfoBuffer.GetRHIBuffer();
+				settingUpdateInfo.index = 0;
+				settingUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_SETTING;
+				resource.descriptorSet->UpdateDescriptor(settingUpdateInfo);
 			}
 
 			// meshInstanceInfo
@@ -111,13 +108,12 @@ namespace GameEngine {
 
 			// sampler
 			{
-				
-                RHIDescriptorUpdateInfo samplerUpdateInfo = {};
-                samplerUpdateInfo.resourceType = RESOURCE_TYPE_SAMPLER;
-                samplerUpdateInfo.sampler = m_MultiFrameGlobalResources.samplers[0]->sampler;
-                samplerUpdateInfo.index = 0;
-                samplerUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER;
-                resource.descriptorSet->UpdateDescriptor(samplerUpdateInfo);
+				RHIDescriptorUpdateInfo samplerUpdateInfo = {};
+				samplerUpdateInfo.resourceType = RESOURCE_TYPE_SAMPLER;
+				samplerUpdateInfo.sampler = m_MultiFrameGlobalResources.samplers[0]->sampler;
+				samplerUpdateInfo.index = 0;
+				samplerUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER;
+				resource.descriptorSet->UpdateDescriptor(samplerUpdateInfo);
 				samplerUpdateInfo.sampler = m_MultiFrameGlobalResources.samplers[1]->sampler;
 				samplerUpdateInfo.index = 1;
 				samplerUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER;
@@ -131,29 +127,27 @@ namespace GameEngine {
 				samplerUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER;
 				resource.descriptorSet->UpdateDescriptor(samplerUpdateInfo);
 			}
-			
+
 			// lightInfo
 			{
 				RHIDescriptorUpdateInfo lightUpdateInfo = {};
 				lightUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				lightUpdateInfo.buffer = resource.lightInfoBuffer.GetRHIBuffer();
-                lightUpdateInfo.index = 0;
-                lightUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO;
-                resource.descriptorSet->UpdateDescriptor(lightUpdateInfo);
+				lightUpdateInfo.index = 0;
+				lightUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO;
+				resource.descriptorSet->UpdateDescriptor(lightUpdateInfo);
 			}
-			
+
 			// gizmoDrawData
 			{
-                RHIDescriptorUpdateInfo gizmoUpdateInfo = {};
-                gizmoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
-                gizmoUpdateInfo.buffer = resource.gizmoBuffer.GetRHIBuffer();
-                gizmoUpdateInfo.index = 0;
-                gizmoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_GIZMO;
-                resource.descriptorSet->UpdateDescriptor(gizmoUpdateInfo);
+				RHIDescriptorUpdateInfo gizmoUpdateInfo = {};
+				gizmoUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
+				gizmoUpdateInfo.buffer = resource.gizmoBuffer.GetRHIBuffer();
+				gizmoUpdateInfo.index = 0;
+				gizmoUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_GIZMO;
+				resource.descriptorSet->UpdateDescriptor(gizmoUpdateInfo);
 			}
 		}
-		
-
 	}
 	void RenderResourceManager::ReleaseBindlessID(uint32_t id, BindlessSlot slot)
 	{
@@ -179,8 +173,8 @@ namespace GameEngine {
 
 		auto setting = APP_SCENEMANAGER->GetSceneInfo().globalSettingInfos;
 		setting.iconTextures.dirLightID = m_GlobalSettingInfo.iconTextures.dirLightID;
-        setting.iconTextures.pointLightID = m_GlobalSettingInfo.iconTextures.pointLightID;
-        setting.iconTextures.spotLightID = m_GlobalSettingInfo.iconTextures.spotLightID;
+		setting.iconTextures.pointLightID = m_GlobalSettingInfo.iconTextures.pointLightID;
+		setting.iconTextures.spotLightID = m_GlobalSettingInfo.iconTextures.spotLightID;
 		SetGlobalSettingInfo(setting);
 
 		cpuRenderSetting = APP_SCENEMANAGER->GetSceneInfo().cpuRenderSetting;
@@ -195,13 +189,13 @@ namespace GameEngine {
 		tmpdata.view = camera->GetViewMatrix();
 		tmpdata.proj = camera->GetProjectionMatrix();
 		tmpdata.invProj = glm::inverse(tmpdata.proj);
-        tmpdata.invView = glm::inverse(tmpdata.view);
+		tmpdata.invView = glm::inverse(tmpdata.view);
 		tmpdata.viewproj = camera->GetViewProjection();
-        tmpdata.invPV = glm::inverse(tmpdata.viewproj);
+		tmpdata.invPV = glm::inverse(tmpdata.viewproj);
 
 		tmpdata.prevView = camera->GetPrevView(tmpdata.view);
-        tmpdata.prevProj = camera->GetPrevProjection(tmpdata.proj);
-	
+		tmpdata.prevProj = camera->GetPrevProjection(tmpdata.proj);
+
 		tmpdata.Width = APP_WINDOWSIZE.first;
 		tmpdata.Height = APP_WINDOWSIZE.second;
 		tmpdata.Near = camera->GetNearClip();
@@ -237,12 +231,10 @@ namespace GameEngine {
 			else {
 				m_PerFrameGlobalResources[i].descriptorSet->UpdateDescriptor(updateInfo);
 			}
-			
 		}
 
 		return index;
 	}
-
 
 	void RenderResourceManager::InitMultiFrameGlobalResources()
 	{
@@ -282,9 +274,9 @@ namespace GameEngine {
 			{
 				RHIDescriptorUpdateInfo updateInfo = {};
 				updateInfo.binding = 0;
-                updateInfo.index = i;
-                updateInfo.resourceType = RESOURCE_TYPE_SAMPLER;
-                updateInfo.sampler = m_MultiFrameGlobalResources.samplers[i]->sampler;
+				updateInfo.index = i;
+				updateInfo.resourceType = RESOURCE_TYPE_SAMPLER;
+				updateInfo.sampler = m_MultiFrameGlobalResources.samplers[i]->sampler;
 				m_MultiFrameGlobalResources.samplerDescriptorSet->UpdateDescriptor(updateInfo);
 			}
 		}
@@ -303,8 +295,6 @@ namespace GameEngine {
 		return m_PerFrameGlobalResources[APP_FRAMEINDEX].gizmoBuffer.GetRHIBuffer();
 	}
 
-
-
 	uint32_t RenderResourceManager::LoadIconFromFile(std::string filePath) {
 		TextureSpec spec;
 		spec.srgb = false;
@@ -321,7 +311,7 @@ namespace GameEngine {
 	{
 		TextureSpec spec;
 		spec.path = filePath;
-        spec.bindless = false;
+		spec.bindless = false;
 		spec.srgb = false;
 		TextureRef texture = std::make_shared<Texture>(spec);
 		BindlessResourceInfo bindlessResourceInfo;
@@ -341,9 +331,6 @@ namespace GameEngine {
 		m_GlobalSettingInfo.iconTextures.dirLightID = directionlightIcon;
 		SetGlobalSettingInfo();
 
-
-
-
 		m_MultiFrameGlobalResources.whiteTexture = LoadTextureFromFile(APP_TEXTURE_PATH + "white.jpg");
 		m_MultiFrameGlobalResources.blackTexture = LoadTextureFromFile(APP_TEXTURE_PATH + "black.jpg");
 	}
@@ -354,35 +341,31 @@ namespace GameEngine {
 		updateInfo.binding = GLORBAL_RESOURCE_BINDING_TLAS;
 		updateInfo.index = 0;
 		updateInfo.resourceType = RESOURCE_TYPE_RAY_TRACING;
-		updateInfo.tlas = m_MultiFrameGlobalResources.tlas;
+		updateInfo.tlas = m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas;
 
 		for (size_t i = 0; i < m_PerFrameGlobalResources.size(); ++i) {
 			auto& resource = m_PerFrameGlobalResources[i];
 			if (i == APP_FRAMEINDEX) {
 				resource.isNeedUpdate = true;
 				resource.updateInfos.push_back(updateInfo);
-			}
+			}/*
 			else {
 				resource.descriptorSet->UpdateDescriptor(updateInfo);
-			}
+			}*/
 		}
 	}
 
 	void RenderResourceManager::UpdateTLAS(std::vector<RHIAccelerationStructureInstanceInfo>& instances)
 	{
-		// 先做成一份TLAS的
-		if (!m_MultiFrameGlobalResources.tlas) {
+		if (!m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas) {
 			RHITopLevelAccelerationStructureInfo tlasInfo;
-            tlasInfo.instanceInfos = instances;
+			tlasInfo.instanceInfos = instances;
 			tlasInfo.maxInstance = MAX_PER_FRAME_OBJECT_SIZE;
-            m_MultiFrameGlobalResources.tlas = APP_DYNAMICRHI->CreateTopLevelAccelerationStructure(tlasInfo);
+			m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas = APP_DYNAMICRHI->CreateTopLevelAccelerationStructure(tlasInfo);
 			SetTLAS();
 		}
 		else {
-            m_MultiFrameGlobalResources.tlas->Update(instances);
+			m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas->Update(instances);
 		}
 	}
-
-
-
 }

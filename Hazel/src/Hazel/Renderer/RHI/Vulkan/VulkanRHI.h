@@ -106,7 +106,6 @@ namespace GameEngine
 		VkFramebufferCache frameBufferPool;
 	};
 
-
 	class VulkanRHICommandContext : public RHICommandContext {
 	public:
 		VulkanRHICommandContext(RHICommandPoolRef pool);
@@ -164,8 +163,6 @@ namespace GameEngine
 		void ResetQueryState();
 	};
 
-
-
 	class VulkanRHICommandContextImmediate : public RHICommandContextImmediate
 	{
 	public:
@@ -179,14 +176,13 @@ namespace GameEngine
 		virtual void TextureBarrier(const RHITextureBarrier& barrier) override final;
 		VkCommandBuffer GetHandle() { return handle; }
 
-
 	private:
 		void BeginSingleTimeCommand();
 		void EndSingleTimeCommand();
 		RHIFenceRef fence;
 		RHIQueueRef queue;
 		RHICommandPoolRef commandPool;
-		VkCommandBuffer oldHandle = VK_NULL_HANDLE;
+		VkCommandBuffer oldHandle = VK_NULL_HANDLE;  // Ë«»º³å
 
 		VkCommandBuffer handle;
 		friend class VulkanDynamicRHI;

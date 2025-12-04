@@ -5,45 +5,45 @@
 #include "Panels/LogPanel.h"
 #include <Hazel/Renderer/RDG/RDGHandle.h>
 #include "Panels/RDGPanel.h"
+#include "Hazel/Core/Definations.h"
 namespace GameEngine {
 	class SubMesh;
 	class PanelManager
 	{
 	public:
 		PanelManager();
-		virtual void Begin() {};
-		virtual void End() {};
-		void Tick(float deltaTime);
-		bool ImGuiCommand(RHIDescriptorSetRef viewportTexture, RHIDescriptorSetRef debugTexture);
+		void ImGuiCommand(RHIDescriptorSetRef viewportTexture, RHIDescriptorSetRef debugTexture);
+		void SetGPUTimeInfo(std::vector<RHIGPUTimeInfo>& timeInfo);
 		bool OnEvent(Event& e);
-		// 各种窗口创建
+		std::pair<float, float> GetMouseViewportSpace();
+
+	private:
 		void ViewportGUI(RHIDescriptorSetRef viewportTexture);
+		void DispatchViewPortSize();
+		void RenderViewPortTools();
+		void RenderFPS();
 		void DrawGizmo();
 		void SettingGUI();
+		void DebugTexture();
 		void DebugTexture(RHIDescriptorSetRef debugTexture);
-		void GPUTime();
 		void DrawGPUProfiler();
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
-		std::pair<float, float> GetMouseViewportSpace(); // NDC坐标
-		std::pair<glm::vec3, glm::vec3> CastRay(EditorCamera& camera, float mx, float my);
-		void SetScene(std::shared_ptr<Scene> activeScene);
-		void SetGPUTimeInfo(std::vector<RHIGPUTimeInfo>& timeInfo);
 		void GlobalWindow();
-	private:
 
+	private:
 		// Gizmo's
 		int m_GizmoType = -1;
 		// 面板
 		AssetManagerPanel m_AssetManagerPanel;
-		FolderPreviewPanel m_FolderPreviewPanel{ "assets" };
+		FolderPreviewPanel m_FolderPreviewPanel{ APP_ASSET_PATH };
 		ImGuiLogPanel m_LogPanel;
-        RDGPanel m_RDGPanel;
+		RDGPanel m_RDGPanel;
+
 		//状态
 		ImVec2 m_ViewportBounds[2] = { {0,0},{1216,849} };
 		bool isMouseInViewport = false;
-		bool firstRenderGUI = true;
 
-		bool isSubMeshModelClickModel = false; // false 表示选择整个模型，true 表示选择Submesh
+		bool isSubMeshModelClickMode = false;
 		struct SelectionData
 		{
 			Entity Model;
@@ -53,5 +53,4 @@ namespace GameEngine {
 		// 数据
 		std::vector<RHIGPUTimeInfo> m_GPUTimeInfo;
 	};
-
 }
