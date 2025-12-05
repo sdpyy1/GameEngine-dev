@@ -3,7 +3,6 @@
 #include "Hazel/Utils/Serializable.h"
 
 namespace GameEngine {
-
 	enum AssetType
 	{
 		ASSET_TYPE_UNKNOWN = 0,
@@ -30,9 +29,8 @@ namespace GameEngine {
 		UUID uid = {};
 
 	private:
-		BeginSerailize()
+		BeginSerailize
 			SerailizeEntry(uid)
-			EndSerailize
+		EndSerailize
 	};
-
 }

@@ -3,7 +3,7 @@
 #include "Hazel/Core/UUID.h"
 #include "Scene.h"
 #include "Components.h"
-
+#include "Hazel/Utils/Serializable.h"
 #include "entt.hpp"
 
 namespace GameEngine {
@@ -23,7 +23,6 @@ namespace GameEngine {
 			return GetComponent<RelationshipComponent>().Children; 
 		}
 		TransformComponent& Transform() { return GetComponent<TransformComponent>(); }
-
 		Entity Entity::GetParent()
 		{
 			return m_Scene->GetEntityByUUID(GetParentUUID());
@@ -47,14 +46,9 @@ namespace GameEngine {
 			Entity currentParent = GetParent();
 			if (currentParent == parent)
 				return;
-
-			// If changing parent, remove child from existing parent
 			if (currentParent)
 				currentParent.RemoveChild(*this);
-
-			// Setting to null is okay
 			SetParentUUID(parent.GetUUID());
-
 			if (parent)
 			{
 				auto& parentChildren = parent.Children();
@@ -99,7 +93,6 @@ namespace GameEngine {
 			ASSERT(HasComponent<T>(), "Entity does not have component!");
 			m_Scene->m_Registry.remove<T>(m_EntityHandle);
 		}
-
 		operator bool() const { return m_EntityHandle != entt::null; }
 		operator entt::entity() const { return m_EntityHandle; }
 		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
@@ -116,6 +109,7 @@ namespace GameEngine {
 		{
 			return !(*this == other);
 		}
+
 	private:
 		entt::entity m_EntityHandle{ entt::null };
 		Scene* m_Scene = nullptr;

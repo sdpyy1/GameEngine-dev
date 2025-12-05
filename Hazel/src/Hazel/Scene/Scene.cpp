@@ -101,8 +101,6 @@ namespace GameEngine {
 
 		m_EntityIDMap[idComponent.ID] = entity;
 
-		SortEntities();
-
 		return entity;
 	}
 	void Scene::SortEntities()
@@ -168,25 +166,16 @@ namespace GameEngine {
 		return Entity{};
 	}
 
-	
-	Entity Scene::TryGetDescendantEntityWithTag(Entity entity, const std::string& tag)
-	{
-		//HZ_PROFILE_FUNC();
-		if (entity)
-		{
-			if (entity.GetComponent<TagComponent>().Tag == tag)
-				return entity;
 
-			for (const auto childId : entity.Children())
-			{
-				Entity descendant = TryGetDescendantEntityWithTag(GetEntityByUUID(childId), tag);
-				if (descendant)
-					return descendant;
-			}
-		}
-		return {};
-	}
 	Scene::~Scene()
+	{
+	}
+
+	void Scene::OnLoadAsset()
+	{
+	}
+
+	void Scene::OnSaveAsset()
 	{
 	}
 
@@ -203,40 +192,18 @@ namespace GameEngine {
 	void Scene::OnComponentAdded<IDComponent>(Entity entity, IDComponent& component)
 	{
 	}
-	template<>
-	void Scene::OnComponentAdded<AnimationComponent>(Entity entity, AnimationComponent& component)
-	{
-	}
+
 	template<>
 	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
 	{
 	}
 
-	template<>
-	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
-	{
-		if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
-			component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
-	}
 
-	template<>
-	void Scene::OnComponentAdded<ScriptComponent>(Entity entity, ScriptComponent& component)
-	{
-	}
-	template<>
-	void Scene::OnComponentAdded<DynamicModelComponent>(Entity entity, DynamicModelComponent& component)
-	{
-	}
 	template<>
 	void Scene::OnComponentAdded<SubmeshComponent>(Entity entity, SubmeshComponent& component)
 	{
 	}
 
-
-	template<>
-	void Scene::OnComponentAdded<CircleRendererComponent>(Entity entity, CircleRendererComponent& component)
-	{
-	}
 
 	template<>
 	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
@@ -246,25 +213,8 @@ namespace GameEngine {
 	void Scene::OnComponentAdded<RelationshipComponent>(Entity entity, RelationshipComponent& component)
 	{
 	}
-	template<>
-	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
-	{
-	}
-
-	template<>
-	void Scene::OnComponentAdded<Rigidbody2DComponent>(Entity entity, Rigidbody2DComponent& component)
-	{
-	}
-
-	template<>
-	void Scene::OnComponentAdded<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component)
-	{
-	}
-
-	template<>
-	void Scene::OnComponentAdded<CircleCollider2DComponent>(Entity entity, CircleCollider2DComponent& component)
-	{
-	}
+	
+	
 
 	template<>
 	void Scene::OnComponentAdded<DirectionalLightComponent>(Entity entity, DirectionalLightComponent& component)
@@ -323,7 +273,7 @@ namespace GameEngine {
 		}
 	}
 
-	GameEngine::Entity Scene::GetSelectedEntity()
+	Entity Scene::GetSelectedEntity()
 	{
 		if (m_SelectedEntity) {
 			return *m_SelectedEntity;

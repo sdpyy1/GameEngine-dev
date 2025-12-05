@@ -16,7 +16,7 @@ namespace GameEngine {
         bool genBLAS = false;
 
     private:
-        BeginSerailize()
+        BeginSerailize
             SerailizeEntry(flipUV)
             SerailizeEntry(loadMaterials)
             SerailizeEntry(genBLAS)
@@ -37,7 +37,7 @@ namespace GameEngine {
     public:
 		Model(std::string path, ModelSpec m_ModelSpec);
         void LoadFromFile(std::string path);
-        virtual std::string GetAssetTypeName() override { return "Model Asset"; }
+        virtual std::string GetAssetTypeName() override { return "Asset_Model"; }
         virtual AssetType GetAssetType() override { return ASSET_TYPE_MODEL; }
         virtual void OnLoadAsset() override;
         virtual void OnSaveAsset() override;
@@ -57,15 +57,21 @@ namespace GameEngine {
     private:
         std::string path;
         ModelSpec m_ModelSpec;
-        uint64_t totalIndex = 0;    // 统计信息
+        uint64_t totalIndex = 0; 
         uint64_t totalVertex = 0;
         uint32_t totalClusterCnt = 0;
         uint32_t totalClusterMaxMip = 0;
         std::vector<SubmeshData> submeshes;
         std::vector<MaterialRef> materials;
-        std::unordered_map<std::string, TextureRef> textureMap; // Cache
+        std::unordered_map<std::string, TextureRef> textureMap;
 
         bool findBone = false;
+    private:
+        BeginSerailize
+            SerailizeBaseClass(Asset)
+            SerailizeEntry(path)
+            SerailizeEntry(m_ModelSpec)
+        EndSerailize
     };
 
     using ModelRef = std::shared_ptr<Model>;

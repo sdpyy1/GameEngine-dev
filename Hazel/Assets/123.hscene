@@ -1,0 +1,135 @@
+{
+    "Scene": {
+        "polymorphic_id": 1073741824,
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "entityCount": 4,
+                "ID": {
+                    "m_UUID": 15862342629882650932
+                },
+                "Name": "Spot Light",
+                "Parent": {
+                    "m_UUID": 0
+                },
+                "HasTransform": true,
+                "TransformComponent": {
+                    "Translation": {
+                        "x": -1.1003127098083497,
+                        "y": 2.0723876953125,
+                        "z": 4.0402679443359379
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "RotationEuler": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                },
+                "ID": {
+                    "m_UUID": 9700690550342831252
+                },
+                "Name": "Directional Light",
+                "Parent": {
+                    "m_UUID": 0
+                },
+                "HasTransform": true,
+                "TransformComponent": {
+                    "Translation": {
+                        "x": 3.2527084350585939,
+                        "y": 2.083698272705078,
+                        "z": -0.6248173713684082
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "RotationEuler": {
+                        "x": 0.0,
+                        "y": -1.3041778802871705,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": -0.6068480610847473,
+                        "z": 0.0,
+                        "w": 0.7948178648948669
+                    }
+                },
+                "ID": {
+                    "m_UUID": 8851750413183508691
+                },
+                "Name": "Point Light",
+                "Parent": {
+                    "m_UUID": 0
+                },
+                "HasTransform": true,
+                "TransformComponent": {
+                    "Translation": {
+                        "x": 7.785070419311523,
+                        "y": 3.6717729568481447,
+                        "z": -3.308907985687256
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "RotationEuler": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                },
+                "ID": {
+                    "m_UUID": 14110647668270971013
+                },
+                "Name": "Sky Light",
+                "Parent": {
+                    "m_UUID": 0
+                },
+                "HasTransform": true,
+                "TransformComponent": {
+                    "Translation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "RotationEuler": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                }
+            }
+        }
+    }
+}

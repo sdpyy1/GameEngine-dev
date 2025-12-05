@@ -27,11 +27,6 @@ namespace GameEngine {
 		m_PostprocesstIcon.LoadIconData("Assets/Icon/post.png", false);
 	}
 
-	void AssetManagerPanel::SetContext(std::shared_ptr<Scene>& context)
-	{
-		m_Context = context;
-	}
-
 	void AssetManagerPanel::DrawComponents(Entity entity)
 	{
 		if (entity.HasComponent<TagComponent>())
@@ -189,15 +184,13 @@ namespace GameEngine {
 				// IBLScale
 				ImGui::SliderFloat("IBL Scale", &component.IBLScale, 0.0f, 1.0f);
 			});
-		DrawComponent<AnimationComponent>("Animation", entity, [](auto& component)
-			{
-			});
+
 	}
 
 	void AssetManagerPanel::OnImGuiRender()
 	{
 		ImGui::Begin("Scene Manager");
-
+		std::shared_ptr<Scene> m_Context = Application::GetSceneManager()->GetActiveScene();
 		if (m_Context)
 		{
 			// 只绘制根实体（没有父节点的实体）
@@ -301,7 +294,7 @@ namespace GameEngine {
 			ImGui::TreePush((void*)(uint64_t)(uint32_t)entity);
 			for (const UUID& childId : relationship.Children)
 			{
-				Entity child = m_Context->GetEntityByUUID(childId);
+				Entity child = Application::GetSceneManager()->GetActiveScene()->GetEntityByUUID(childId);
 				if (child)
 					DrawEntityNode(child);
 			}
@@ -310,7 +303,7 @@ namespace GameEngine {
 
 		if (entityDeleted)
 		{
-			m_Context->DestroyEntity(entity);
+			Application::GetSceneManager()->GetActiveScene()->DestroyEntity(entity);
 			if (Application::GetSceneManager()->GetActiveScene()->GetSelectedEntity() == entity)
 				Application::GetSceneManager()->GetActiveScene()->SetSelectedEntity({});
 		}

@@ -78,7 +78,7 @@ namespace GameEngine
 			return false;
 		}
 
-		if (m_CurrentScene) {
+		/*if (m_CurrentScene) {
 			m_CurrentScene->ClearEntities();
 		}
 		m_CurrentScene->SetSelectedEntity({});
@@ -86,6 +86,15 @@ namespace GameEngine
 		serializer.Deserialize(filepath.string());
 		m_CurrentSceneFilePath = filepath.string();
 		std::replace(m_CurrentSceneFilePath.begin(), m_CurrentSceneFilePath.end(), '\\', '/');
+		*/
+
+		SceneSerializer serializer(nullptr);
+        serializer.Deserialize(filepath.string());
+        m_CurrentScene = serializer.GetScene();
+		std::filesystem::path path = filepath;
+		m_CurrentSceneFilePath = filepath.string();
+		std::replace(m_CurrentSceneFilePath.begin(), m_CurrentSceneFilePath.end(), '\\', '/');
+
 		return true;
 	}
 

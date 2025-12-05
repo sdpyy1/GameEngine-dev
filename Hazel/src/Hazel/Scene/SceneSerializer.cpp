@@ -8,6 +8,7 @@
 #include <fstream>
 #include "Hazel/Asset/AssetManager.h"
 #include <yaml-cpp/yaml.h>
+#include "Hazel/Utils/Serializable.h"
 namespace YAML {
 	template<>
 	struct convert<glm::vec2>
@@ -137,28 +138,8 @@ namespace GameEngine {
 		return out;
 	}
 
-	static std::string RigidBody2DBodyTypeToString(Rigidbody2DComponent::BodyType bodyType)
-	{
-		switch (bodyType)
-		{
-		case Rigidbody2DComponent::BodyType::Static:    return "Static";
-		case Rigidbody2DComponent::BodyType::Dynamic:   return "Dynamic";
-		case Rigidbody2DComponent::BodyType::Kinematic: return "Kinematic";
-		}
+	
 
-		ASSERT(false, "Unknown body type");
-		return {};
-	}
-
-	static Rigidbody2DComponent::BodyType RigidBody2DBodyTypeFromString(const std::string& bodyTypeString)
-	{
-		if (bodyTypeString == "Static")    return Rigidbody2DComponent::BodyType::Static;
-		if (bodyTypeString == "Dynamic")   return Rigidbody2DComponent::BodyType::Dynamic;
-		if (bodyTypeString == "Kinematic") return Rigidbody2DComponent::BodyType::Kinematic;
-
-		ASSERT(false, "Unknown body type");
-		return Rigidbody2DComponent::BodyType::Static;
-	}
 
 	SceneSerializer::SceneSerializer(const std::shared_ptr<Scene> scene)
 		: m_Scene(scene)
@@ -276,6 +257,14 @@ namespace GameEngine {
 
 	void SceneSerializer::Serialize(const std::string& filepath)
 	{
+		std::ofstream os(filepath);
+		if (!os.is_open()){LOG_ERROR("Failed to open file for scene serialization");}
+		cereal::JSONOutputArchive archive(os);
+		archive(cereal::make_nvp("Scene", m_Scene));
+		
+		
+	/*	////////////////////
+
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "Scene" << YAML::Value << "Untitled";
@@ -298,10 +287,24 @@ namespace GameEngine {
 
 		std::ofstream fout(filepath);
 		fout << out.c_str();
+
+	*/
 	}
 
 	bool SceneSerializer::Deserialize(const std::string& filepath)
 	{
+		std::ifstream is(filepath);
+		if (!is.is_open())
+		{
+			LOG_ERROR("Failed to open file for scene deserialization");
+		}
+		m_Scene = std::make_shared<Scene>();
+		cereal::JSONInputArchive archive(is);
+		archive(cereal::make_nvp("Scene", m_Scene));
+
+		
+
+		/*
 		YAML::Node data;
 		try
 		{
@@ -414,7 +417,7 @@ namespace GameEngine {
 				}
 			}
 		}
-
+		*/
 		return true;
 	}
 }

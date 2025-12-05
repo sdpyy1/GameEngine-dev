@@ -11,76 +11,34 @@
 #include <cereal/archives/json.hpp>
 #include <cereal/archives/binary.hpp>
 #include <Hazel/Renderer/RHI/RHIBase.h>
-namespace GameEngine {
-
-	template<class Archive> void serialize(Archive& ar, Extent2D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height)); }
-	template<class Archive> void serialize(Archive& ar, Extent3D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height), cereal::make_nvp("depth", e.depth)); }
+namespace cereal {
+	// 指定各种类型的序列化规则
+	template<class Archive> void serialize(Archive& ar, GameEngine::Extent2D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height)); }
+	template<class Archive> void serialize(Archive& ar, GameEngine::Extent3D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height), cereal::make_nvp("depth", e.depth)); }
 	template<class Archive> void serialize(Archive& ar, glm::vec3& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z)); }
+	template<class Archive> void serialize(Archive& ar, glm::quat& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z), cereal::make_nvp("w", e.w)); }
 
-
-
-
-
-
-
-
-
-#define BeginSerailize()                	\
+#define BeginSerailize               	\
 friend class cereal::access;            	\
 template<class Archive>                 	\
 void serialize(Archive& ar)             	\
-{                               
-
+{
 #define SerailizeBaseClass(className)   	\
 ar(cereal::make_nvp(#className, cereal::base_class<className>(this)));
 
 #define SerailizeEntry(entry)           	\
 ar(cereal::make_nvp(#entry, entry));
 
+#define SerializeComponent(ComponentType)                   \
+    if (HasComponent<ComponentType>()) {            \
+        ar(cereal::make_nvp(#ComponentType,                \
+            GetComponent<ComponentType>()));        \
+    }
+
 #define SerailizeAssetEntry(entry)          \
 ar(cereal::make_nvp(#entry, entry));		\
 if(entry) entry->OnLoadAsset();
 
-#define SerailizeAssetArrayEntry(entry)     \
-ar(cereal::make_nvp(#entry, entry));		\
-for(auto& asset : entry) { if(asset) asset->OnLoadAsset(); }
-
-#define SerailizeFilePath(entry, path)  	\
-if(entry) { path = entry->GetFilePath(); }	\
-ar(cereal::make_nvp(#path, path));
-
-#define IfSerailizeInput()					\
-{											\
-	cereal::JSONInputArchive* jsonPtr = dynamic_cast<cereal::JSONInputArchive*>(&ar);			\
-	cereal::BinaryInputArchive* binaryPtr = dynamic_cast<cereal::BinaryInputArchive*>(&ar);		\
-    if(jsonPtr || binaryPtr) { 
-
-#define IfSerailizeOutput()					\
-{											\
-	cereal::JSONOutputArchive* jsonPtr = dynamic_cast<cereal::JSONOutputArchive*>(&ar);			\
-	cereal::BinaryOutputArchive* binaryPtr = dynamic_cast<cereal::BinaryOutputArchive*>(&ar);	\
-    if(jsonPtr || binaryPtr) { 
-
-#define EndIfSerailize 						\
-	}										\
-}
 
 #define EndSerailize }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
+	}

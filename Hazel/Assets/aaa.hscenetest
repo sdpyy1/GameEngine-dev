@@ -1,0 +1,150 @@
+{
+    "Scene": {
+        "polymorphic_id": 1073741824,
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 1364712207658531538
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 17564318648649037294
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 15284884892558347814
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 16475991300312371422
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 14725514406781597207
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 6981084235819658408
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 17801530731366901749
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 8929057213605160385
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 6195567308886026433
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 2492274584928068034
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 16472490003064719709
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 10503538378977838094
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 6920968654543237977
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "obj1"
+                    }
+                },
+                "entity": {
+                    "IDComponent": {
+                        "ID": {
+                            "m_UUID": 16255172081860627301
+                        }
+                    },
+                    "TagComponent": {
+                        "Tag": "Sky Light"
+                    }
+                }
+            }
+        }
+    }
+}

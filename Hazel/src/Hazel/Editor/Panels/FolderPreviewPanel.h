@@ -17,7 +17,6 @@ namespace GameEngine {
 		FolderPreviewPanel(const std::filesystem::path& assetsDir);
 
 		void OnImGuiRender() override;
-		void SetContext(std::shared_ptr<Scene>& context);
 		bool createModel = false;
 
 	private:
@@ -40,7 +39,6 @@ namespace GameEngine {
 		BrowserMode m_Mode = BrowserMode::Category;
 		std::filesystem::path m_AssetsDir;
 		std::filesystem::path m_CurrentDir;
-		std::shared_ptr<Scene> m_Context;
 		std::unordered_set<std::string> m_ExpandedFolders;
 
 		IconData m_DirectoryIcon;

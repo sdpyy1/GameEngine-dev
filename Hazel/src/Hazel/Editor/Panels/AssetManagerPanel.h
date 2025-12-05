@@ -8,7 +8,6 @@ namespace GameEngine {
 	public:
 		AssetManagerPanel();
 
-		void SetContext(std::shared_ptr<Scene>& context);
 		void ClearState() { m_RenameEntity = {}; }
 		void OnImGuiRender() override;
 		void SetSelectedEntity(Entity entity);
@@ -18,10 +17,6 @@ namespace GameEngine {
 		void DrawComponents(Entity entity);
 
 	private:
-		static void DrawMaterial(UUID meshSourceHandle);
-
-	private:
-		std::shared_ptr<Scene> m_Context;
 		Entity m_RenameEntity;
 		char m_RenameBuffer[256]{};
 		IconData m_EntityIcon;

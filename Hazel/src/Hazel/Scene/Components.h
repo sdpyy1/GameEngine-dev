@@ -7,7 +7,7 @@
 #include <Hazel/Math/Math.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
-
+#include "Hazel/Utils/Serializable.h"
 #include "Hazel/Asset/AssetManager.h"
 #include "Hazel/Renderer/RenderResource/RenderStruct.h"
 #include "Hazel/Core/Application.h"
@@ -21,7 +21,12 @@ namespace GameEngine {
 		UUID ID;
 
 		IDComponent() = default;
+		IDComponent(UUID id) :ID(id){};
 		IDComponent(const IDComponent&) = default;
+
+		BeginSerailize
+			SerailizeEntry(ID)
+        EndSerailize
 	};
 
 	struct TagComponent
@@ -33,6 +38,9 @@ namespace GameEngine {
 		TagComponent(const std::string& tag)
 			: Tag(tag) {
 		}
+		BeginSerailize
+			SerailizeEntry(Tag)
+		EndSerailize
 	};
 
 	// TODO:学 CLUSTER 和 VIRTUAL_MESH
@@ -101,17 +109,7 @@ namespace GameEngine {
 		}
 	};
 
-	struct DynamicModelComponent
-	{
-		UUID meshSource = 0;
-		std::filesystem::path path = "";
-		bool Visible = true;
 
-		DynamicModelComponent() = default;
-		DynamicModelComponent(UUID handle, std::filesystem::path filePath) {
-			path = filePath;
-		}
-	};
 
 	struct RelationshipComponent
 	{
@@ -124,21 +122,7 @@ namespace GameEngine {
 			: ParentHandle(parent) {
 		}
 	};
-	struct AnimationComponent
-	{
-		UUID meshSource = 0;
-		std::filesystem::path path;
-		// const Animation* CurrentAnimation = nullptr;
-		float CurrentTime = 0.0f;
-		bool IsLooping = true;
-		// Pose CurrentPose;
-		int SelectedAnimIndex = 0;
-		std::vector<UUID> BoneEntityIds;
-		AnimationComponent() = default;
-		AnimationComponent(UUID mesh, std::filesystem::path filePath) :meshSource(mesh), path(filePath)
-		{
-		}
-	};
+
 	struct TransformComponent
 	{
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
@@ -146,7 +130,15 @@ namespace GameEngine {
 	private:
 		glm::vec3 RotationEuler = { 0.0f, 0.0f, 0.0f };
 		glm::quat Rotation = { 1.0f, 0.0f, 0.0f, 0.0f };
+		template<class Archive> void serialize(Archive& ar, glm::vec3& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z)); }
+		template<class Archive> void serialize(Archive& ar, glm::quat& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z), cereal::make_nvp("w", e.w)); }
 
+        BeginSerailize
+			SerailizeEntry(Translation)
+			SerailizeEntry(Scale)
+			SerailizeEntry(RotationEuler)
+			SerailizeEntry(Rotation)
+		EndSerailize
 	public:
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent& other) = default;
@@ -285,117 +277,35 @@ namespace GameEngine {
 		float IBLScale = 1.0f;
 	};
 
-	struct SpriteRendererComponent
-	{
-	};
+	// ---------------- 前置声明组件 ----------------
+	struct IDComponent;
+	struct TagComponent;
+	struct ModelComponent;
+	struct TransformComponent;
+	struct PointLightComponent;
+	struct SpotLightComponent;
+	struct SkyComponent;
+	struct RelationshipComponent;
+	struct DirectionalLightComponent;
+	struct SubmeshComponent;
+	struct PostProcessingComponent;
 
-	struct CircleRendererComponent
-	{
-		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
-		float Thickness = 1.0f;
-		float Fade = 0.005f;
+	// ---------------- ComponentGroup 模板 ----------------
+	template<typename... Components>
+	struct ComponentGroup {};
 
-		CircleRendererComponent() = default;
-		CircleRendererComponent(const CircleRendererComponent&) = default;
-	};
-
-	struct CameraComponent
-	{
-		EditorCamera Camera;
-		bool Primary = true;
-
-		CameraComponent() = default;
-		CameraComponent(const CameraComponent&) = default;
-	};
-	struct ScriptComponent
-	{
-		std::string ClassName;
-
-		ScriptComponent() = default;
-		ScriptComponent(const ScriptComponent&) = default;
-	};
-
-	// Forward declaration
-	class ScriptableEntity;
-
-	struct NativeScriptComponent
-	{
-		ScriptableEntity* Instance = nullptr;
-
-		ScriptableEntity* (*InstantiateScript)();
-		void (*DestroyScript)(NativeScriptComponent*);
-
-		template<typename T>
-		void Bind()
-		{
-			InstantiateScript = []() { return static_cast<ScriptableEntity*>(new T()); };
-			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
-		}
-	};
-
-	// Physics
-
-	struct Rigidbody2DComponent
-	{
-		enum class BodyType { Static = 0, Dynamic, Kinematic };
-		BodyType Type = BodyType::Static;
-		bool FixedRotation = false;
-
-		// Storage for runtime
-		void* RuntimeBody = nullptr;
-
-		Rigidbody2DComponent() = default;
-		Rigidbody2DComponent(const Rigidbody2DComponent&) = default;
-	};
-
-	struct BoxCollider2DComponent
-	{
-		glm::vec2 Offset = { 0.0f, 0.0f };
-		glm::vec2 Size = { 0.5f, 0.5f };
-
-		// TODO(Yan): move into physics material in the future maybe
-		float Density = 1.0f;
-		float Friction = 0.5f;
-		float Restitution = 0.0f;
-		float RestitutionThreshold = 0.5f;
-
-		// Storage for runtime
-		void* RuntimeFixture = nullptr;
-
-		BoxCollider2DComponent() = default;
-		BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
-	};
-
-	struct CircleCollider2DComponent
-	{
-		glm::vec2 Offset = { 0.0f, 0.0f };
-		float Radius = 0.5f;
-
-		// TODO(Yan): move into physics material in the future maybe
-		float Density = 1.0f;
-		float Friction = 0.5f;
-		float Restitution = 0.0f;
-		float RestitutionThreshold = 0.5f;
-
-		// Storage for runtime
-		void* RuntimeFixture = nullptr;
-
-		CircleCollider2DComponent() = default;
-		CircleCollider2DComponent(const CircleCollider2DComponent&) = default;
-	};
-
-	struct TextComponent
-	{
-	};
-
-	template<typename... Component>
-	struct ComponentGroup
-	{
-	};
-
-	using AllComponents =
-		ComponentGroup<ModelComponent, TransformComponent, PointLightComponent,
-		CircleRendererComponent, CameraComponent, ScriptComponent, SpotLightComponent,
-		NativeScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent, SkyComponent,
-		CircleCollider2DComponent, RelationshipComponent, DirectionalLightComponent, SubmeshComponent, DynamicModelComponent, AnimationComponent, PostProcessingComponent>;
+	// ---------------- 所有组件列表 ----------------
+	using AllComponents = ComponentGroup<
+		IDComponent,
+		TagComponent,
+		ModelComponent,
+		TransformComponent,
+		PointLightComponent,
+		SpotLightComponent,
+		SkyComponent,
+		RelationshipComponent,
+		DirectionalLightComponent,
+		SubmeshComponent,
+		PostProcessingComponent
+	>;
 }

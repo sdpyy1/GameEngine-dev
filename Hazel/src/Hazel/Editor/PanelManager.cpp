@@ -195,8 +195,6 @@ namespace GameEngine {
 
 	PanelManager::PanelManager()
 	{
-		m_AssetManagerPanel.SetContext(Application::GetSceneManager()->GetActiveScene());
-		m_FolderPreviewPanel.SetContext(Application::GetSceneManager()->GetActiveScene());
 		m_GizmoType = -1;
 	}
 
@@ -361,17 +359,13 @@ namespace GameEngine {
 			{
 				if (ImGui::MenuItem("New Scene", "Ctrl+N"))
 				{
-					Application::GetSceneManager()->GetActiveScene() = std::make_shared<Scene>();
-					m_AssetManagerPanel.SetContext(Application::GetSceneManager()->GetActiveScene());
-					m_FolderPreviewPanel.SetContext(Application::GetSceneManager()->GetActiveScene());
+					Application::GetSceneManager()->SetActiveScene(std::make_shared<Scene>());
 				}
 
 				if (ImGui::MenuItem("Open Scene...", "Ctrl+O"))
 				{
 					Application::GetSceneManager()->OpenScene();
 					m_AssetManagerPanel.ClearState();
-					m_AssetManagerPanel.SetContext(Application::GetSceneManager()->GetActiveScene());
-					m_FolderPreviewPanel.SetContext(Application::GetSceneManager()->GetActiveScene());
 				}
 
 				if (ImGui::MenuItem("Save Scene", "Ctrl+S"))

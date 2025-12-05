@@ -25,10 +25,6 @@ namespace GameEngine {
 		m_SelectedFile.clear();
 	}
 
-	void FolderPreviewPanel::SetContext(std::shared_ptr<Scene>& context)
-	{
-		m_Context = context;
-	}
 
 	void FolderPreviewPanel::OnFileOpen(const std::filesystem::path& path)
 	{
@@ -41,7 +37,7 @@ namespace GameEngine {
 		}
 		else if (ext == ".fbx" || ext == ".gltf" || ext == ".obj")
 		{
-			m_Context->LoadModel(path.string());
+			Application::GetSceneManager()->GetActiveScene()->LoadModel(path.string());
 			
 		}
 		else if (ext == ".png" || ext == ".jpg" || ext == ".jpeg")

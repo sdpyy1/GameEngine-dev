@@ -12,6 +12,7 @@ namespace GameEngine {
 		void Serialize(const std::string& filepath);
 
 		bool Deserialize(const std::string& filepath);
+		std::shared_ptr<Scene> GetScene() { return m_Scene; }
 		inline static std::string_view DefaultExtension = ".hscene";
 
 	private:

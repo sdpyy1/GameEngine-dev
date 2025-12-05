@@ -1,326 +1,182 @@
-Scene: Untitled
-Entities:
-  - Entity: 47284490785604671
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 1024689466396598871
-    TagComponent:
-      Tag: assets\Model\Klee\klee.obj
-    Parent: 0
-    Children:
-      - Handle: 10388282919500158794
-      - Handle: 10662241660032124081
-      - Handle: 9494669454401693173
-      - Handle: 18306725283486085749
-      - Handle: 13902434144512992958
-      - Handle: 3431352290775628646
-      - Handle: 9994064890014246442
-      - Handle: 3376632909019141827
-      - Handle: 9597361194537598953
-      - Handle: 15806802085664355322
-      - Handle: 5998262852047974494
-      - Handle: 1265925553737769896
-      - Handle: 2615892045330440810
-      - Handle: 14292627176466214011
-      - Handle: 17413803187780626719
-      - Handle: 10864841146176388918
-      - Handle: 2625570840913163720
-      - Handle: 15644558469386604245
-      - Handle: 7800118853778888194
-      - Handle: 15451078307541304582
-      - Handle: 1176993005408389208
-      - Handle: 6186543635146410357
-      - Handle: 1516294892372918195
-      - Handle: 13739637057818179652
-    TransformComponent:
-      Translation: [0, 4.28138828, 0]
-      Rotation: [0, 0, 0]
-      Scale: [0.290000021, 0.290000021, 0.290000021]
-    ModelComponent:
-      MeshSourcePath: assets\Model\Klee\klee.obj
-      Visible: true
-  - Entity: 1176993005408389208
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 1516294892372918195
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 2615892045330440810
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 2625570840913163720
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 3238014931888349834
-    TagComponent:
-      Tag: Sky Light
-    Parent: 0
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SkyComponent:
-      DynamicSky: false
-      selectedIBL: 0
-      IBLScale: 1
-  - Entity: 3512227179803993968
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 3673922138200578554
-    TagComponent:
-      Tag: assets\Model\Basic\cube.obj
-    Parent: 0
-    Children:
-      - Handle: 4555034453525188476
-      - Handle: 7804669766952856328
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [2.91647983, 2.91647983, 2.91647983]
-    ModelComponent:
-      MeshSourcePath: assets\Model\Basic\cube.obj
-      Visible: true
-  - Entity: 3678123395405351172
-    TagComponent:
-      Tag: Cube
-    Parent: 17105024357495783497
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 6186543635146410357
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 7800118853778888194
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 7804669766952856328
-    TagComponent:
-      Tag: Cube
-    Parent: 3673922138200578554
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 8141721403613649706
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 10864841146176388918
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 11546509173368675740
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 13739637057818179652
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 13755378289456288522
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 14180204877359878600
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 14292627176466214011
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 14481028937213945443
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 15280630959053424045
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 15451078307541304582
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 15566015487215130447
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 15644558469386604245
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 17204323786978629375
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 17413803187780626719
-    TagComponent:
-      Tag: obj1
-    Parent: 1024689466396598871
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 18424929949843523249
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-  - Entity: 18434270329229616933
-    TagComponent:
-      Tag: obj1
-    Parent: 11522546470381552286
-    Children:
-      []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+{
+    "Scene": {
+        "polymorphic_id": 1073741824,
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "entities": [
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 2771752136264740388
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 10896845422733297412
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "Directional Light"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 3530120613820464708
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "Empty Entity"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 9495265083268051725
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "Spot Light"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 2510367775627204352
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 9076296704012717512
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 6219520606223406856
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 6097730489294180438
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 10756482429500489355
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 14799290371814017940
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 10144439383891906682
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 12803987651594150305
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 5697259181073197672
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 9321385317109200944
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 3137668559630156917
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 11137425708265158494
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "obj1"
+                        }
+                    },
+                    {
+                        "IDComponent": {
+                            "ID": {
+                                "m_UUID": 10092958389317742560
+                            }
+                        },
+                        "TagComponent": {
+                            "Tag": "Sky Light"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
