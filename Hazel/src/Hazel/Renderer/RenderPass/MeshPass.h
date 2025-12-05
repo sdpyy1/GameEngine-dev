@@ -4,24 +4,19 @@
 #include "Hazel/Utils/IndexAllocator.h"
 #include <Hazel/Renderer/RenderResource/RenderBuffer.h>
 /*
-UE的MeshPass: 
+UE的MeshPass:
 PrimitiveSceneProxy(场景数据)->FMeshBatch(收集的Mesh数据)->FMeshPassProcessor(每个MeshPass都有一个Processor来按照自己的规则处理MeshBatch)->每个Pass生成自己的FMeshDrawCommand->RHI
-
-
-
 
 */
 namespace GameEngine {
-
 	struct DrawBatch
 	{
 		uint32_t objectID;                                          // 物体唯一索引
 
-		VertexBufferRef vertexBuffer;                             
+		VertexBufferRef vertexBuffer;
 		IndexBufferRef indexBuffer;
 
 		MaterialRef material;                                       // 包含了材质数据的内存块，也包含了着色器信息
-
 	};
 
 	// 渲染模型的材质才是决定Pipeline创建的依据
@@ -41,7 +36,6 @@ namespace GameEngine {
 
 		bool meshRender;
 		bool clusterRender;
-
 
 		friend bool operator== (const DrawPipelineState& a, const DrawPipelineState& b)
 		{
@@ -72,7 +66,6 @@ namespace GameEngine {
 				(geometryShader.get() != other.geometryShader.get()) ? (geometryShader.get() < other.geometryShader.get()) :
 				(fragmentShader.get() != other.fragmentShader.get()) ? (fragmentShader.get() < other.fragmentShader.get()) : false;
 		}
-
 	};
 	typedef struct DrawGeometryInfo
 	{
@@ -82,7 +75,6 @@ namespace GameEngine {
 		uint32_t indexCount; // 索引数量
 		// IndexRange clusterID = { 0, 0 };
 		// IndexRange clusterGroupID = { 0, 0 };
-
 	} DrawGeometryInfo;
 	typedef struct MeshPassIndirectBuffers
 	{
@@ -91,7 +83,6 @@ namespace GameEngine {
 
 		// 存储间接渲染需要的指令buffer的信息
 		RenderBuffer<IndirectMeshDrawCommands> meshDrawCommandBuffer = RenderBuffer<IndirectMeshDrawCommands>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
-
 	} MeshPassIndirectBuffers;
 
 	struct DrawCommand  // 最终定义一次DrawCall的信息
@@ -102,7 +93,6 @@ namespace GameEngine {
 		RHIBufferRef indirectMeshCommandBuffer;
 	};
 
-
 	// 每个MeshPass都有自己的Processor，用于按自己的方式处理MeshBatch
 	class MeshPassProcessor {
 	public:
@@ -111,20 +101,16 @@ namespace GameEngine {
 		void Draw(RHICommandListRef command);
 		void AddBatch(const DrawBatch& batch) { m_Batches.push_back(batch); }
 		void AddDrawCommand(const DrawCommand& drawCommand) { drawCommands.push_back(drawCommand); }
-
-
-
-
+		uint32_t GetDrawCommandCount() { return m_Batches.size(); }
 	protected:
 		virtual void MeshPassProcessor::OnCollectBatch(const DrawBatch& batch) = 0;   // 需要具体的Pass说明这个batch自己需不需要
 		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& first) = 0;  // 因为创建pipelien需要Shader信息也需要vkRenderPass也就是附件信息，这些需要具体的Pass提供（Shader也可以来自材质）
-
 
 	private:
 		std::vector<DrawBatch> m_Batches;   // 从场景中收集并处理过的每个SubMesh数据
 		std::vector<DrawCommand> drawCommands;
 		std::map<DrawPipelineState, std::vector<DrawGeometryInfo>> m_DrawGeometries; // 把渲染Batch按照PipelineState进行分类
-		std::array<std::shared_ptr<MeshPassIndirectBuffers>, FRAMES_IN_FLIGHT> indirectBuffers;     // 每帧都完全重构的buffer，因此需要每帧一份   
+		std::array<std::shared_ptr<MeshPassIndirectBuffers>, FRAMES_IN_FLIGHT> indirectBuffers;     // 每帧都完全重构的buffer，因此需要每帧一份
 		std::vector<RHIIndirectCommand> meshDrawCommands;
 		std::vector<IndirectMeshDrawInfo> meshDrawInfos;
 
@@ -135,9 +121,6 @@ namespace GameEngine {
 	};
 	using MeshPassProcessorRef = std::shared_ptr<MeshPassProcessor>;
 
-
-
-
 	class MeshPass : public RenderPassNew
 	{
 	public:
@@ -146,6 +129,5 @@ namespace GameEngine {
 
 	protected:
 		MeshPassProcessorRef meshPassProcessor = nullptr;
-
 	};
 }

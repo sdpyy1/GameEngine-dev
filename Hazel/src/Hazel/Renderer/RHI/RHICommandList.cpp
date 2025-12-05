@@ -172,7 +172,6 @@ namespace GameEngine {
 		context->SetLineWidth(width);
 	}
 
-
 	void RHICommandSetGraphicsPipeline::Execute(RHICommandContextRef context)
 	{
 		context->SetGraphicsPipeline(graphicsPipeline);
@@ -344,6 +343,7 @@ namespace GameEngine {
 
 	void RHICommandList::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
 	{
+		drawCallCount++;
 		COMMANDLIST_DEBUG_OUTPUT();
 		if (info.byPass) info.context->Draw(vertexCount, instanceCount, firstVertex, firstInstance);
 		else ADD_COMMAND(Draw, vertexCount, instanceCount, firstVertex, firstInstance);
@@ -351,6 +351,7 @@ namespace GameEngine {
 
 	void RHICommandList::DrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t vertexOffset, uint32_t firstInstance)
 	{
+		drawCallCount++;
 		COMMANDLIST_DEBUG_OUTPUT();
 		if (info.byPass) info.context->DrawIndexed(indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 		else ADD_COMMAND(DrawIndexed, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
@@ -358,6 +359,7 @@ namespace GameEngine {
 
 	void RHICommandList::DrawIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount)
 	{
+		drawCallCount++;
 		COMMANDLIST_DEBUG_OUTPUT();
 		if (info.byPass) info.context->DrawIndirect(argumentBuffer, offset, drawCount);
 		else ADD_COMMAND(DrawIndirect, argumentBuffer, offset, drawCount);
@@ -365,6 +367,7 @@ namespace GameEngine {
 
 	void RHICommandList::DrawIndexedIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount)
 	{
+		drawCallCount++;
 		COMMANDLIST_DEBUG_OUTPUT();
 		if (info.byPass) info.context->DrawIndexedIndirect(argumentBuffer, offset, drawCount);
 		else ADD_COMMAND(DrawIndexedIndirect, argumentBuffer, offset, drawCount);
@@ -404,7 +407,6 @@ namespace GameEngine {
 		context->ImGuiUploadFonts();
 	}
 
-
 	void RHICommandListImmediate::CopyBufferToTexture(RHIBufferRef src, uint64_t srcOffset, RHITextureRef dst, TextureSubresourceLayers dstSubresource)
 	{
 		ADD_COMMAND_IMMEDIATE(CopyBufferToTexture, src, srcOffset, dst, dstSubresource);
@@ -429,5 +431,4 @@ namespace GameEngine {
 	{
 		context->SetRayTracingPipeline(rayTracingPipeline);
 	}
-
 }

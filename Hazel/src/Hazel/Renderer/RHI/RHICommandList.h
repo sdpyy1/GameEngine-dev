@@ -490,16 +490,17 @@ namespace GameEngine
 
 		void DrawIndexedIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount);
 		void ImGuiRenderDrawData();
+
+	public:
 		std::vector<RHIGPUTimeInfo> GetGPUTime();
+		uint32_t GetDrawCallCount() { return drawCallCount; }
+		void ClearDrawCallCount() { drawCallCount = 0; }
 	protected:
 		inline void AddCommand(RHICommand* command) { commands.push_back(command); }
-
 	private:
 		std::vector<RHICommand*> commands;
 		CommandListInfo info;
-#if ENABLE_DEBUG_MODE
-		int currentCommandIndex = 0;
-#endif
+		uint32_t drawCallCount = 0;
 	};
 
 	struct RHICommandImmediateUploadImGuiFonts : public RHICommandImmediate

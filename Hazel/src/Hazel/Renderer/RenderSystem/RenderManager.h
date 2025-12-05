@@ -5,7 +5,7 @@
 #include <Hazel/Renderer/RDG/DependencyGraph.h>
 #include <Hazel/Renderer/RenderPass/RenderPass.h>
 #include "Hazel/Core/Events/Event.h"
-// #define RDG_DEBUG 
+// #define RDG_DEBUG
 #define RENDER_RESOURCEMANAGER APP_RENDERSYSTEM->GetRenderResourceManager()
 #define RENDER_GPU_TIME_INFO APP_RENDERSYSTEM->GetGPUTimeInfos()
 #define RENDER_ENABLE_RAY_TRACING APP_RENDERSYSTEM->IsEnableRayTracing()
@@ -28,8 +28,10 @@ namespace GameEngine
 		DependencyGraphRef GetRDGDependenctyGraph() { return rdgDependencyGraph; }
 		const std::array<std::shared_ptr<MeshPass>, MESH_PASS_TYPE_MAX_CNT>& GetMeshPasses() { return meshPasses; }
 		bool OnEvent(Event& e);
-
-		bool IsEnableRayTracing(){return m_RHIConfig.enableRayTracing;}
+		uint32_t GetDrawCallCount() { return m_DrawCallCount; }
+		bool IsEnableRayTracing() { return m_RHIConfig.enableRayTracing; }
+		void SetDrawMeshCount(uint32_t count) { m_DrawMeshCount = count; }
+		uint32_t GetDrawMeshCount() { return m_DrawMeshCount; }
 	private:
 		// ´¦ÀíÆ÷
 		std::shared_ptr<RenderResourceManager> m_RenderResourceManager;
@@ -53,12 +55,8 @@ namespace GameEngine
 		std::array<std::shared_ptr<MeshPass>, MESH_PASS_TYPE_MAX_CNT> meshPasses;
 
 		DependencyGraphRef rdgDependencyGraph;
-
+		uint32_t m_DrawCallCount = 0;
+		uint32_t m_DrawMeshCount = 0;
 		RHIConfig m_RHIConfig;
 	};
-
-
-
-
 }
-

@@ -16,6 +16,7 @@ namespace GameEngine {
 		SettingGUI();
 		DebugTexture(debugTexture);
 		DrawGPUProfiler();
+		DrawStatistics();
 		m_FolderPreviewPanel.OnImGuiRender();
 		m_AssetManagerPanel.OnImGuiRender();
 		m_LogPanel.OnImGuiRender();
@@ -44,7 +45,15 @@ namespace GameEngine {
 
 		ImGui::End();
 	}
+	void PanelManager::DrawStatistics()
+	{
+		ImGui::Begin("Statistics");
+		ImGui::Text("CPU DrawCall: %u", APP_RENDERSYSTEM->GetDrawCallCount());
+		ImGui::Text("Mesh DrawCall: %u", APP_RENDERSYSTEM->GetDrawMeshCount());
+		// ImGui::Text("GPU DrawCall: %u", APP_RENDERSYSTEM->GetGPUDrawCallCount());
 
+		ImGui::End();
+	}
 	void PanelManager::DrawGizmo()
 	{
 		auto& m_SelectedEntity = Application::GetSceneManager()->GetActiveScene()->GetSelectedEntity();
@@ -405,6 +414,7 @@ namespace GameEngine {
 		ImGui::End(); // Main Window
 		ImGui::PopStyleVar(2);
 	}
+
 	void PanelManager::DebugTexture()
 	{
 		if (ImGui::CollapsingHeader("DebugTexture", ImGuiTreeNodeFlags_DefaultOpen))

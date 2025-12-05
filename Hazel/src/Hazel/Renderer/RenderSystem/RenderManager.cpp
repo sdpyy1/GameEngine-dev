@@ -54,13 +54,14 @@ namespace GameEngine {
 		RHITextureRef CurSwapchainTexture = m_SwapChain->GetNewFrame(nullptr, CurResource.startSemaphore);
 		RHICommandListRef CurCommandList = CurResource.commandList;
 		CurCommandList->BeginCommand();
-
+		CurCommandList->ClearDrawCallCount();
 		RDGBuilder rdgBuilder = RDGBuilder(CurCommandList);
 		// 构建图结构
 		for (auto& pass : passes) { if (pass) pass->Build(rdgBuilder); }
 		// 执行RDG
 		rdgBuilder.Execute();
 		rdgDependencyGraph = rdgBuilder.GetGraph();
+		m_DrawCallCount = CurCommandList->GetDrawCallCount();
 		CurCommandList->EndCommand();
 		CurCommandList->Execute(CurResource.fence, CurResource.startSemaphore, CurResource.finishSemaphore);
 		m_GPUTimeInfos = CurCommandList->GetGPUTime();

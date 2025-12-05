@@ -61,12 +61,11 @@ namespace GameEngine
 		meshDrawSetting.drawSize = 0;
 		meshDrawSetting.frustumCull = 0;
 		meshDrawSetting.occlusionCull = 0;
-		
+
 		auto buffers = GetIndirectBuffers();
 		buffers->meshDrawDataBuffer.SetData(&meshDrawSetting, sizeof(IndirectSetting), 0);
 		buffers->meshDrawDataBuffer.SetData(meshDrawInfos.data(), meshDrawInfos.size() * sizeof(IndirectMeshDrawInfo), sizeof(IndirectSetting));
 		buffers->meshDrawCommandBuffer.SetData(meshDrawCommands.data(), meshDrawCommands.size() * sizeof(RHIIndirectCommand), 0);
-
 	}
 	void MeshPassProcessor::Draw(RHICommandListRef command) {
 		for (auto& drawCommand : drawCommands)
@@ -124,9 +123,8 @@ namespace GameEngine
 
 		DrawCommand drawCommand;
 		drawCommand.pipeline = pipeline;
-		drawCommand.meshCommandRange = { (uint32_t)meshDrawCommands.size(), 0 };   
+		drawCommand.meshCommandRange = { (uint32_t)meshDrawCommands.size(), 0 };
 		drawCommand.indirectMeshCommandBuffer = buffers->meshDrawCommandBuffer.GetRHIBuffer();
-
 
 		// 遍历当前pipeline下所有需要绘制的SubMesh信息（DrawGeometryInfo）
 		uint32_t meshCount = 0;
@@ -147,12 +145,10 @@ namespace GameEngine
 		}
 		drawCommand.meshCommandRange.size = meshCount;
 		AddDrawCommand(drawCommand);
-
 	}
 
 	std::shared_ptr<MeshPassIndirectBuffers> MeshPassProcessor::GetIndirectBuffers()
 	{
 		return indirectBuffers[APP_FRAMEINDEX];
 	}
-
 }

@@ -29,6 +29,7 @@ namespace GameEngine {
 		void DrawGPUProfiler();
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
 		void GlobalWindow();
+		void DrawStatistics();
 
 	private:
 		// Gizmo's

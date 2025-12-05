@@ -146,6 +146,7 @@ namespace GameEngine
 				command->SetScissor({ 0, 0 }, { w,h });
 				command->SetDepthBias(0.0f, 0.0f, 0.0f);
 				command->BindDescriptorSet(Application::GetRenderSystem()->GetRenderResourceManager()->GetGlobalResourcePerFrameDescriptorSet(), 0);
+				APP_RENDERSYSTEM->SetDrawMeshCount(meshPassProcessor->GetDrawCommandCount());
 				meshPassProcessor->Draw(command);
 					})
 				.Finish();
