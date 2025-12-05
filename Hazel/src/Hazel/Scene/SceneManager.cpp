@@ -4,17 +4,17 @@
 #include "SceneSerializer.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/Entity.h"
+#include "Hazel/Math/Halton.h"
 namespace GameEngine
 {
 	SceneManager::SceneManager()
 	{
 		m_CurrentScene = std::make_shared<Scene>();
-		
+
 		m_EditorCamera = std::make_shared<EditorCamera>(45.0f, Application::Get().GetWindowManager()->GetWindowSize().first, Application::Get().GetWindowManager()->GetWindowSize().second, 0.1f, 1000.0f);
 	}
 
 	void SceneManager::PackSettingForRender() {
-
 		// 灯光设置
 		auto dirLight = m_CurrentScene->GetFirstEntityWith<DirectionalLightComponent>();
 		Entity dirLightEntity = Entity{ dirLight ,m_CurrentScene };
@@ -27,32 +27,30 @@ namespace GameEngine
 		// 后处理设置
 		auto postprocess = m_CurrentScene->GetFirstEntityWith<PostProcessingComponent>();
 		Entity postProcessEntity = Entity{ postprocess ,m_CurrentScene };
-        if (postProcessEntity) {
+		if (postProcessEntity) {
 			auto& component = postProcessEntity.GetComponent<PostProcessingComponent>();
 			m_SceneInfo.globalSettingInfos.postprocess.bloomScale = component.bloomScale;
+			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.enable = component.enableTAA;
+			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.shaper = component.taaSharpen;
+			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.shaperStrength = component.taaSharpness;
+			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.UVjetter = Halton::GetTAAJetter(APP_TICK);
 		}
-
 		// 天空设置
 		auto skyLight = m_CurrentScene->GetFirstEntityWith<SkyComponent>();
 		Entity skyLightEntity = Entity{ skyLight ,m_CurrentScene };
-        if (skyLightEntity) {
+		if (skyLightEntity) {
 			auto& component = skyLightEntity.GetComponent<SkyComponent>();
-			m_SceneInfo.globalSettingInfos.skySetting.isDynamicSky = component.DynamicSky?1:0;
+			m_SceneInfo.globalSettingInfos.skySetting.isDynamicSky = component.DynamicSky ? 1 : 0;
 			m_SceneInfo.globalSettingInfos.skySetting.IbLScale = component.IBLScale;
 			m_SceneInfo.cpuRenderSetting.IBLPath = component.iblPath[component.selectedIBL].string();
 		}
 	}
 
-
-	void SceneManager::PackInfo(){
+	void SceneManager::PackInfo() {
 		m_SceneInfo = {};
 		m_SceneInfo.camera = m_EditorCamera;
 		PackSettingForRender();
 	};
-
-
-
-
 
 	void SceneManager::Tick(Timestep ts)
 	{
@@ -131,5 +129,4 @@ namespace GameEngine
 	{
 		return { m_EditorCamera->GetViewportWidth(),m_EditorCamera->GetViewportHeight() };
 	}
-
 }

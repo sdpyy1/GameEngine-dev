@@ -29,26 +29,34 @@ namespace GameEngine {
 
 	void TAAPass::Build(RDGBuilder& builder)
 	{
+		auto& [w, h] = APP_WINDOWSIZE;
 		RDGTextureHandle Viewport = builder.GetTexture("ViewPort");
 		RDGTextureHandle velocity = builder.GetTexture("GBufferVelocity");
+		RDGTextureHandle depth = builder.GetTexture("Depth");
 		RDGTextureHandle history = builder.CreateTexture("TAA History")
 			.Import(historyTexture, RESOURCE_STATE_UNDEFINED)
+			.Finish();
+		RDGTextureHandle TaaRes = builder.CreateTexture("TAA Res")
+			.Exetent({ w,h,1 })
+			.AllowReadWrite()
+			.Format(FORMAT_R32G32B32A32_SFLOAT)
 			.Finish();
 
 		builder.CreateComputePass("TAA")
 			.RootSignature(m_RootSignature)
-			.ReadWrite(1, 0, 0, Viewport)
+			.ReadWrite(1, 0, 0, TaaRes)
 			.Read(1, 1, 0, velocity)
 			.Read(1, 2, 0, history)
 			.Read(1, 3, 0, Viewport)
+			.Read(1, 4, 0, depth)
 			.Execute([&](RDGPassContext context) {
 			auto cmd = context.command;
 			cmd->SetComputePipeline(m_Pipeline);
 			cmd->BindDescriptorSet(context.descriptors[1], 1);
 			cmd->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
 			auto& [w, h] = APP_WINDOWSIZE;
-			uint32_t groupSizeX = 8;
-			uint32_t groupSizeY = 8;
+			uint32_t groupSizeX = 16;
+			uint32_t groupSizeY = 16;
 			uint32_t numGroupsX = (w + groupSizeX - 1) / groupSizeX;
 			uint32_t numGroupsY = (h + groupSizeY - 1) / groupSizeY;
 			cmd->Dispatch(numGroupsX, numGroupsY, 1);
@@ -57,8 +65,14 @@ namespace GameEngine {
 
 		// 采样结果cpoy到历史纹理
 		builder.CreateCopyPass("TAA History Copy")
-			.From(Viewport)
+			.From(TaaRes)
 			.To(history)
+			.Finish();
+
+		// 渲染结果写到Viewport
+		builder.CreateCopyPass("TAA Copy")
+			.From(TaaRes)
+			.To(Viewport)
 			.Finish();
 	}
 }

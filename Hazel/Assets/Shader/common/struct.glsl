@@ -197,9 +197,23 @@ struct ShadowSetting
     uint DebugCSM;
     uint ShadowType;
 };
-struct PostprocessInfo {
+struct TAASetting
+{
+    uint enable;
+    uint shaper;
+    float shaperStrength;
+    uint _padding;
+
+    vec2 UVjetter;
+	float _padding1[2];
+};
+
+
+struct PostprocessSetting {
     float bloomScale;
     float pading[3];
+
+    TAASetting TaaSetting;
 };
 struct SkySetting {
     uint isDynamicSky;
@@ -209,7 +223,7 @@ struct SkySetting {
 struct GlobalSettingInfo
 { 
     SkySetting skySetting;
-    PostprocessInfo postprocessSetting;
+    PostprocessSetting postprocessSetting;
     ShadowSetting shadowSetting;
     IconTextureInfo iconTextures;
 };

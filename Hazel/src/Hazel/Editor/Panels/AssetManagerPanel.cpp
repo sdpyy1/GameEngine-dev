@@ -19,7 +19,7 @@
 namespace GameEngine {
 	AssetManagerPanel::AssetManagerPanel()
 	{
-		m_EntityIcon.LoadIconData("Assets/Icon/Entity.png",false);
+		m_EntityIcon.LoadIconData("Assets/Icon/Entity.png", false);
 		m_DirLightIcon.LoadIconData("Assets/Icon/Sun.png", false);
 		m_SpotLightIcon.LoadIconData("Assets/Icon/Spotlight.png", false);
 		m_PointLightIcon.LoadIconData("Assets/Icon/pointLight.png", false);
@@ -76,7 +76,7 @@ namespace GameEngine {
 
 				// static bool lockScale = true;
 				// ImGui::Checkbox("Lock Scale", &lockScale);  // TODO：锁定缩放有Bug，会让缩放突然变化
-				DrawVec3Control("Scale", component.Scale, 1.0f); 
+				DrawVec3Control("Scale", component.Scale, 1.0f);
 			});
 
 		DrawComponent<SubmeshComponent>("Submesh", entity, [](auto& component)
@@ -90,19 +90,17 @@ namespace GameEngine {
 				DrawMaterialFloat("Roughness", material->roughness, [&](float val) { material->SetRoughness(val); });
 				DrawMaterialFloat("Metallic", material->metallic, [&](float val) { material->SetMetallic(val); });
 
-				DrawTextureSlot("Diffuse", material->textureDiffuse,[&](TextureRef tex) {material->SetDiffuse(tex);});
-				DrawTextureSlot("Normal", material->textureNormal,[&](TextureRef tex) {material->SetNormal(tex);});
-				DrawTextureSlot("Roughness", material->textureRoughness,[&](TextureRef tex) {material->SetRoughness(tex);});
-				DrawTextureSlot("Metallic", material->textureMetallic,[&](TextureRef tex) {material->SetMetallic(tex);});
-				DrawTextureSlot("Emission", material->textureEmission,[&](TextureRef tex) {material->SetEmission(tex);});
-
+				DrawTextureSlot("Diffuse", material->textureDiffuse, [&](TextureRef tex) {material->SetDiffuse(tex); });
+				DrawTextureSlot("Normal", material->textureNormal, [&](TextureRef tex) {material->SetNormal(tex); });
+				DrawTextureSlot("Roughness", material->textureRoughness, [&](TextureRef tex) {material->SetRoughness(tex); });
+				DrawTextureSlot("Metallic", material->textureMetallic, [&](TextureRef tex) {material->SetMetallic(tex); });
+				DrawTextureSlot("Emission", material->textureEmission, [&](TextureRef tex) {material->SetEmission(tex); });
 			});
 
 		DrawComponent<ModelComponent>("Model", entity, [](auto& component)
 			{
 				ImGui::Checkbox("Visible", &component.Visible);
 				ImGui::Checkbox("Cast Shadow", &component.castShadow);
-
 			});
 
 		DrawComponent<DirectionalLightComponent>("DirectionalLight", entity, [](auto& component)
@@ -141,9 +139,24 @@ namespace GameEngine {
 			});
 		DrawComponent<PostProcessingComponent>("PostProcess", entity, [](auto& component)
 			{
-				ImGui::SliderFloat("Bloom Scale", &component.bloomScale, 0.0f, 2.0f);
+				if (ImGui::CollapsingHeader("Bloom Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+					ImGui::SliderFloat("Bloom Scale", &component.bloomScale, 0.0f, 2.0f);
+				}
+				if (ImGui::CollapsingHeader("TAA Settings", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Checkbox("Enable TAA", &component.enableTAA);
+					ImGui::BeginDisabled(!component.enableTAA);
+					{
+						ImGui::Checkbox("Enable TAA Sharpen", &component.taaSharpen);
+						ImGui::BeginDisabled(!component.taaSharpen);
+						{
+							ImGui::SliderFloat("TAA Sharpen Strength", &component.taaSharpness, 0.0f, 2.0f, "%.2f");
+						}
+						ImGui::EndDisabled();
+					}
+					ImGui::EndDisabled();
+				}
 			});
-
 
 		DrawComponent<SkyComponent>("Sky Light", entity, [](auto& component)
 			{
@@ -174,11 +187,10 @@ namespace GameEngine {
 					component.selectedIBL = -1;
 				}
 				// IBLScale
-                ImGui::SliderFloat("IBL Scale", &component.IBLScale, 0.0f, 1.0f);
+				ImGui::SliderFloat("IBL Scale", &component.IBLScale, 0.0f, 1.0f);
 			});
 		DrawComponent<AnimationComponent>("Animation", entity, [](auto& component)
 			{
-
 			});
 	}
 
@@ -191,7 +203,7 @@ namespace GameEngine {
 			// 只绘制根实体（没有父节点的实体）
 			m_Context->GetRegistry().each([&](auto entityID)
 				{
-					Entity entity{ entityID , m_Context.get()};
+					Entity entity{ entityID , m_Context.get() };
 					// 检查是否是根实体（ParentHandle为0）
 					if (!entity.HasComponent<RelationshipComponent>() ||
 						entity.GetComponent<RelationshipComponent>().ParentHandle == 0)
@@ -211,12 +223,12 @@ namespace GameEngine {
 					m_Context->CreateEntity("Directional Light").AddComponent<DirectionalLightComponent>();
 				if (ImGui::MenuItem("Create Spot Light"))
 					m_Context->CreateEntity("Spot Light").AddComponent<SpotLightComponent>();
-                if (ImGui::MenuItem("Create Point Light"))
+				if (ImGui::MenuItem("Create Point Light"))
 					m_Context->CreateEntity("Point Light").AddComponent<PointLightComponent>();
 				if (ImGui::MenuItem("Create Sky Light"))
 					m_Context->CreateEntity("Sky Light").AddComponent<SkyComponent>();
 				if (ImGui::MenuItem("Create PostProcess"))
-                    m_Context->CreateEntity("PostProcess").AddComponent<PostProcessingComponent>();
+					m_Context->CreateEntity("PostProcess").AddComponent<PostProcessingComponent>();
 				ImGui::EndPopup();
 			}
 		}
@@ -265,12 +277,11 @@ namespace GameEngine {
 			icon = m_SpotLightIcon;
 		if (entity.HasComponent<SkyComponent>())
 			icon = m_SkyLightIcon;
-        if (entity.HasComponent<PointLightComponent>())
+		if (entity.HasComponent<PointLightComponent>())
 			icon = m_PointLightIcon;
-        if (entity.HasComponent<PostProcessingComponent>())
+		if (entity.HasComponent<PostProcessingComponent>())
 			icon = m_PostprocesstIcon;
 		ImGui::Image(icon.textureID->RawHandle(), { iconSize, iconSize });
-
 
 		ImGui::SameLine(0.0f, iconSpacing);
 
@@ -307,7 +318,7 @@ namespace GameEngine {
 		ImGui::PopID();
 	}
 
-	static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f,bool lock = false, float columnWidth = 100.0f)
+	static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, bool lock = false, float columnWidth = 100.0f)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		auto boldFont = io.Fonts->Fonts[0];
@@ -379,7 +390,6 @@ namespace GameEngine {
 			values.y = values.x;
 			values.z = values.x;
 		}
-
 	}
 
 	template<typename T, typename UIFunction>
@@ -448,7 +458,6 @@ namespace GameEngine {
 		return ext == "png" || ext == "jpg" || ext == "jpeg" ||
 			ext == "tga" || ext == "bmp" || ext == "hdr";
 	}
-
 
 	static void DrawMaterialFloat(const char* label, float& value, std::function<void(float)> onChange)
 	{
@@ -528,7 +537,4 @@ namespace GameEngine {
 
 		ImGui::PopID();
 	}
-
-
-
 } // namespace GameEngine

@@ -273,6 +273,9 @@ namespace GameEngine {
 	struct PostProcessingComponent
 	{
 		float bloomScale = 0.3f;
+		bool enableTAA = true;
+		bool taaSharpen = false;
+		float taaSharpness = 1.0f;
 	};
 
 	struct SkyComponent {

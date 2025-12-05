@@ -241,7 +241,7 @@ vec3 GetNormal(in MaterialInfo material, in vec2 coord, in vec3 normal, in vec4 
 ShadowSetting GetShadowSetting(){
     return GLOBAL_SETTING.data.shadowSetting;
 }
-PostprocessInfo GetPostprocessSetting()
+PostprocessSetting GetPostprocessSetting()
 {
     return GLOBAL_SETTING.data.postprocessSetting;
 }
@@ -273,4 +273,6 @@ uint GetSpotLightCount()
 {
     return LIGHTINFO.data.spotLightCount;
 }
+
+
 #endif // GET_GLSL
