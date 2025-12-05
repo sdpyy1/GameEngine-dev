@@ -1,7 +1,7 @@
 #include "hzpch.h"
 #include "GizmoPass.h"
 #include "Hazel/Renderer/RenderResource/Shader.h"
-#include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderSystem/RenderManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
 #include "Hazel/Scene/SceneManager.h"

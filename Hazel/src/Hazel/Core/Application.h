@@ -10,7 +10,7 @@ namespace GameEngine
     class WindowMinimizeEvent;
     class WindowCloseEvent;
     class WindowResizeEvent;
-    class RenderSystem;
+    class RenderManager;
     struct ApplicationCommandLineArgs
     {
         int Count = 0;
@@ -75,11 +75,11 @@ namespace GameEngine
     // New
     public:
         static std::shared_ptr<WindowManager> GetWindowManager() { return Get().m_WindowManager; }
-        static std::shared_ptr<RenderSystem> GetRenderSystem();
+        static std::shared_ptr<RenderManager> GetRenderSystem();
         static uint32_t GetFrameIndex() { return Get().m_CurrentFrameIndex; }
     private:
         std::shared_ptr<WindowManager> m_WindowManager;
-        std::shared_ptr<RenderSystem> m_RenderSystem;
+        std::shared_ptr<RenderManager> m_RenderSystem;
 
 
     };

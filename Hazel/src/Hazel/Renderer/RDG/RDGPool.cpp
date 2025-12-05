@@ -1,7 +1,7 @@
 #include "hzpch.h"
 #include "RDGPool.h"
 #include "Hazel/Core/Application.h"
-#include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderSystem/RenderManager.h"
 
 namespace GameEngine {
     RDGBufferPool::PooledBuffer RDGBufferPool::Allocate(const RHIBufferInfo& info)

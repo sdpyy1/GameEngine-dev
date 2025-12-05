@@ -1,5 +1,5 @@
 #include "hzpch.h"
-#include "RenderSystem.h"
+#include "RenderManager.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Editor/PanelManager.h"
 #include "Hazel/Renderer/RenderPass/GridPass.h"
@@ -20,14 +20,14 @@
 #include <Hazel/Renderer/RenderPass/GizmoPass.h>
 #include <Hazel/Renderer/RenderPass/PointShadowPass.h>
 #include <Hazel/Renderer/RenderPass/RayTracingPass.h>
+#include <Hazel/Renderer/RenderPass/TAAPass.h>
 
 namespace GameEngine {
-
-	RenderSystem::RenderSystem()
+	RenderManager::RenderManager()
 	{
 		RHIConfig config;
-        config.debug = true;
-        config.enableRayTracing = true;
+		config.debug = true;
+		config.enableRayTracing = false;
 		config.api = API_Vulkan;
 		m_RHIConfig = config;
 		m_DynamicRHI = DynamicRHI::Init(config);
@@ -41,16 +41,15 @@ namespace GameEngine {
 			m_PerFrameBaseResources[i].finishSemaphore = m_DynamicRHI->CreateSemaphore();
 			m_PerFrameBaseResources[i].fence = m_DynamicRHI->CreateFence(true);
 		}
-
 	}
 
-	void RenderSystem::Tick(float timestep)
+	void RenderManager::Tick(float timestep)
 	{
 		LightCollector::CollectLight();
 		MeshCollector::CollectMesh();
 		m_RenderResourceManager->Tick();
 		auto& CurResource = m_PerFrameBaseResources[APP_FRAMEINDEX];
-		/// LOG_INFO("RenderSystem::Tick");
+		/// LOG_INFO("RenderManager::Tick");
 		CurResource.fence->Wait();
 		RHITextureRef CurSwapchainTexture = m_SwapChain->GetNewFrame(nullptr, CurResource.startSemaphore);
 		RHICommandListRef CurCommandList = CurResource.commandList;
@@ -68,7 +67,7 @@ namespace GameEngine {
 		m_SwapChain->Present(CurResource.finishSemaphore);
 	}
 
-	void RenderSystem::InitPasses()
+	void RenderManager::InitPasses()
 	{
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
 
@@ -88,11 +87,11 @@ namespace GameEngine {
 		passes[GIZMO_PASS] = std::make_shared<GizmoPass>();
 		passes[SKY_PASS] = std::make_shared<SkyPass>();
 		passes[LIGHT_PASS] = std::make_shared<LightPass>();
-        passes[BLOOM_PASS] = std::make_shared<BloomPass>();
-        passes[POST_PROCESS_PASS] = std::make_shared<PostProcessPass>();
+		passes[TAA_PASS] = std::make_shared<TAAPass>();
+		passes[BLOOM_PASS] = std::make_shared<BloomPass>();
+		passes[POST_PROCESS_PASS] = std::make_shared<PostProcessPass>();
 		passes[IMGUI_PASS] = std::make_shared<ImGuiPass>();
-        passes[PRESENT_PASS] = std::make_shared<PresentPass>();
-
+		passes[PRESENT_PASS] = std::make_shared<PresentPass>();
 
 		for (auto& pass : passes) {
 			if (pass) {
@@ -101,17 +100,16 @@ namespace GameEngine {
 		}
 	}
 
-	void RenderSystem::SetPanelManager(std::shared_ptr<PanelManager> panelManager)
+	void RenderManager::SetPanelManager(std::shared_ptr<PanelManager> panelManager)
 	{
 		m_PanelManager = panelManager;
 	}
 
-	bool RenderSystem::OnEvent(Event& e)
+	bool RenderManager::OnEvent(Event& e)
 	{
 		if (m_PanelManager) {
 			m_PanelManager->OnEvent(e);
 		}
 		return false;
 	}
-
 }

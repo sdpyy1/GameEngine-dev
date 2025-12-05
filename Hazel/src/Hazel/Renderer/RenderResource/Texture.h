@@ -30,6 +30,7 @@ namespace GameEngine {
 	public:
 		Texture(TextureSpec& spec);   // 从这里创建的Textue，出去的布局是RESOURCE_STATE_SHADER_RESOURCE
 		void LoadFromFile();
+		void CreateRHITexture();
 		RHIDescriptorSetRef GetImGuiID();
 		uint32_t GetWidth() { return m_Spec.extent.width; }
 		uint32_t GetHeight() { return m_Spec.extent.height; }
@@ -40,9 +41,7 @@ namespace GameEngine {
 		RHITextureViewRef GetRHITextureView() { return m_Spec.textureView; }
 	private:
 		TextureSpec m_Spec;
-        RHIDescriptorSetRef m_ImGuiIDCache;
+		RHIDescriptorSetRef m_ImGuiIDCache;
 	};
 	typedef std::shared_ptr<Texture> TextureRef;
-
 }
-

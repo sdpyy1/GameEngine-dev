@@ -6,7 +6,7 @@
 #include "Hazel/Core/Events/Event.h"
 #include "Hazel/Core/Events/ApplicationEvent.h"
 #include "Hazel/Scene/SceneManager.h"
-#include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderSystem/RenderManager.h"
 
 namespace GameEngine {
 	Application* Application::s_Instance = nullptr;
@@ -25,7 +25,7 @@ namespace GameEngine {
 
 		m_SceneManager = std::make_shared<SceneManager>();
 
-		m_RenderSystem = std::make_shared<RenderSystem>();
+		m_RenderSystem = std::make_shared<RenderManager>();
 		m_RenderSystem->InitPasses();
 	}
 
@@ -60,12 +60,10 @@ namespace GameEngine {
 		return timestep;
 	}
 
-
 	void Application::Close()
 	{
 		m_Running = false;
 	}
-
 
 	void Application::OnEvent(Event& e)
 	{
@@ -108,15 +106,13 @@ namespace GameEngine {
 		return false;
 	}
 
-
 	std::shared_ptr<GameEngine::RendererManager> Application::GetRendererManager()
 	{
 		return Get().m_RendererManager;
 	}
 
-	std::shared_ptr<GameEngine::RenderSystem> Application::GetRenderSystem()
+	std::shared_ptr<GameEngine::RenderManager> Application::GetRenderSystem()
 	{
 		return Get().m_RenderSystem;
 	}
-
 }

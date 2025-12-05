@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "Hazel/Utils/FileSystem.h"
 #include "Hazel/Core/Application.h"
-#include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderSystem/RenderManager.h"
 #include "Hazel/Core/Application.h"
 namespace GameEngine{
 

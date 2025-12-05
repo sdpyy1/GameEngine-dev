@@ -14,10 +14,10 @@ namespace GameEngine
 	class MeshPass;
 	class RenderResourceManager;
 	class PanelManager;
-	class RenderSystem
+	class RenderManager
 	{
 	public:
-		RenderSystem();
+		RenderManager();
 		void InitPasses();
 		void Tick(float timestep);
 		RHISwapchainRef GetSwapChain() { return m_SwapChain; }

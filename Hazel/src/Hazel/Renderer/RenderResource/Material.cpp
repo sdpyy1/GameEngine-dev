@@ -1,7 +1,7 @@
 #include "hzpch.h"
 #include "Material.h"
 #include "Hazel/Core/Application.h"
-#include <Hazel/Renderer/RenderSystem/RenderSystem.h>
+#include <Hazel/Renderer/RenderSystem/RenderManager.h>
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 
 namespace GameEngine

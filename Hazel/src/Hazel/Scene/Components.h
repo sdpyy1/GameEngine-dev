@@ -2,7 +2,6 @@
 
 #include "Hazel/Core/UUID.h"
 
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <Hazel/Math/Math.h>
@@ -12,12 +11,11 @@
 #include "Hazel/Asset/AssetManager.h"
 #include "Hazel/Renderer/RenderResource/RenderStruct.h"
 #include "Hazel/Core/Application.h"
-#include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderSystem/RenderManager.h"
 #include "Hazel/Renderer/RenderResource/RenderBuffer.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 
 namespace GameEngine {
-
 	struct IDComponent
 	{
 		UUID ID;
@@ -33,9 +31,9 @@ namespace GameEngine {
 		TagComponent() = default;
 		TagComponent(const TagComponent&) = default;
 		TagComponent(const std::string& tag)
-			: Tag(tag) {}
+			: Tag(tag) {
+		}
 	};
-
 
 	// TODO:学 CLUSTER 和 VIRTUAL_MESH
 	enum MeshRendererMode
@@ -59,7 +57,7 @@ namespace GameEngine {
 		bool castShadow = true;
 		ModelComponent() = default;
 		ModelComponent(UUID staticMesh, std::filesystem::path filePath)
-			: ModelID(staticMesh),path(filePath){
+			: ModelID(staticMesh), path(filePath) {
 			model = AssetManager::GetAssetByAssetHandle<Model>(staticMesh);
 			isDynamic = model->hasBone();
 			materials = model->GetMaterials();   // TODO:注意这个可能导致所有实例都引用同一个材质
@@ -73,7 +71,7 @@ namespace GameEngine {
 		bool Visible = true;
 		std::vector<UUID> BoneEntityIds;
 		ModelRef model;
-        MaterialRef material;
+		MaterialRef material;
 		bool castShadow = true;
 		MeshInstanceInfo meshInfo;
 		uint32_t meshInfoID = 0;
@@ -86,8 +84,8 @@ namespace GameEngine {
 		SubmeshComponent(UUID mesh, uint32_t submeshIndex = 0)
 			: Mesh(mesh), SubmeshIndex(submeshIndex)
 		{
-            model = AssetManager::GetAssetByAssetHandle<Model>(mesh);
-            material = model->GetMaterials()[SubmeshIndex];
+			model = AssetManager::GetAssetByAssetHandle<Model>(mesh);
+			material = model->GetMaterials()[SubmeshIndex];
 			castShadow = material->castShadow;
 			meshInfoID = RENDER_RESOURCEMANAGER->AllocateMeshInstanceInfoID();
 			meshInfo.animationID = 0;
@@ -103,7 +101,6 @@ namespace GameEngine {
 		}
 	};
 
-
 	struct DynamicModelComponent
 	{
 		UUID meshSource = 0;
@@ -115,8 +112,6 @@ namespace GameEngine {
 			path = filePath;
 		}
 	};
-
-
 
 	struct RelationshipComponent
 	{
@@ -133,12 +128,12 @@ namespace GameEngine {
 	{
 		UUID meshSource = 0;
 		std::filesystem::path path;
-		// const Animation* CurrentAnimation = nullptr; 
+		// const Animation* CurrentAnimation = nullptr;
 		float CurrentTime = 0.0f;
-		bool IsLooping = true; 
-		// Pose CurrentPose;      
+		bool IsLooping = true;
+		// Pose CurrentPose;
 		int SelectedAnimIndex = 0;
-		std::vector<UUID> BoneEntityIds; 
+		std::vector<UUID> BoneEntityIds;
 		AnimationComponent() = default;
 		AnimationComponent(UUID mesh, std::filesystem::path filePath) :meshSource(mesh), path(filePath)
 		{
@@ -250,9 +245,6 @@ namespace GameEngine {
 		friend class SceneSerializer;
 	};
 
-
-
-
 	struct DirectionalLightComponent
 	{
 		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
@@ -261,7 +253,6 @@ namespace GameEngine {
 		bool showDirection = false;
 		bool showCSM = false;
 	};
-
 
 	struct PointLightComponent
 	{
@@ -272,9 +263,9 @@ namespace GameEngine {
 	};
 
 	struct SpotLightComponent
-	{ 
-        glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
-        float Intensity = 1.0f;
+	{
+		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
+		float Intensity = 1.0f;
 		float range = 1.0f;
 		bool showRadius = false;
 	};
@@ -293,7 +284,6 @@ namespace GameEngine {
 
 	struct SpriteRendererComponent
 	{
-		
 	};
 
 	struct CircleRendererComponent
@@ -309,7 +299,7 @@ namespace GameEngine {
 	struct CameraComponent
 	{
 		EditorCamera Camera;
-		bool Primary = true; 
+		bool Primary = true;
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
@@ -329,7 +319,7 @@ namespace GameEngine {
 	{
 		ScriptableEntity* Instance = nullptr;
 
-		ScriptableEntity*(*InstantiateScript)();
+		ScriptableEntity* (*InstantiateScript)();
 		void (*DestroyScript)(NativeScriptComponent*);
 
 		template<typename T>
@@ -393,7 +383,6 @@ namespace GameEngine {
 
 	struct TextComponent
 	{
-		
 	};
 
 	template<typename... Component>
@@ -401,10 +390,9 @@ namespace GameEngine {
 	{
 	};
 
-	using AllComponents = 
-		ComponentGroup<ModelComponent,TransformComponent,PointLightComponent,
-			CircleRendererComponent, CameraComponent, ScriptComponent, SpotLightComponent,
-			NativeScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent, SkyComponent,
-			CircleCollider2DComponent, RelationshipComponent, DirectionalLightComponent, SubmeshComponent,DynamicModelComponent, AnimationComponent, PostProcessingComponent>;
-
+	using AllComponents =
+		ComponentGroup<ModelComponent, TransformComponent, PointLightComponent,
+		CircleRendererComponent, CameraComponent, ScriptComponent, SpotLightComponent,
+		NativeScriptComponent, Rigidbody2DComponent, BoxCollider2DComponent, SkyComponent,
+		CircleCollider2DComponent, RelationshipComponent, DirectionalLightComponent, SubmeshComponent, DynamicModelComponent, AnimationComponent, PostProcessingComponent>;
 }

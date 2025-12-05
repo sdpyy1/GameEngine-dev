@@ -1,7 +1,7 @@
 #include "hzpch.h"
 #include "IBLPass.h"
 #include "Hazel/Core/Application.h"
-#include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderSystem/RenderManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Scene/SceneManager.h"
 
@@ -25,31 +25,30 @@ namespace GameEngine
 			RHIRootSignatureInfo rootSignatureInfo = {};
 			rootSignatureInfo.AddEntryFromReflect(environmentIrradianceCompShader->GetRHIShader())
 				.AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo())
-				.AddPushConstant({4 ,SHADER_FREQUENCY_COMPUTE });
+				.AddPushConstant({ 4 ,SHADER_FREQUENCY_COMPUTE });
 			environmentIrradianceCompRootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
-            RHIComputePipelineInfo pipelineInfo = {};
-            pipelineInfo.rootSignature = environmentIrradianceCompRootSignature;
-            pipelineInfo.computeShader = environmentIrradianceCompShader->GetRHIShader();
-            environmentIrradianceCompPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
+			RHIComputePipelineInfo pipelineInfo = {};
+			pipelineInfo.rootSignature = environmentIrradianceCompRootSignature;
+			pipelineInfo.computeShader = environmentIrradianceCompShader->GetRHIShader();
+			environmentIrradianceCompPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
 		}
 
 		{
-            environmentMipFilterCompShader = std::make_shared<Shader>("IBL/EnvironmentMipFilter", SHADER_FREQUENCY_COMPUTE);
-            RHIRootSignatureInfo rootSignatureInfo = {};
-            rootSignatureInfo.AddEntryFromReflect(environmentMipFilterCompShader->GetRHIShader())
-                .AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo())
-                .AddPushConstant({ 4, SHADER_FREQUENCY_COMPUTE });
-            environmentMipFilterCompRootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
-            RHIComputePipelineInfo pipelineInfo = {};
-            pipelineInfo.rootSignature = environmentMipFilterCompRootSignature;
-            pipelineInfo.computeShader = environmentMipFilterCompShader->GetRHIShader();
-            environmentMipFilterCompPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
+			environmentMipFilterCompShader = std::make_shared<Shader>("IBL/EnvironmentMipFilter", SHADER_FREQUENCY_COMPUTE);
+			RHIRootSignatureInfo rootSignatureInfo = {};
+			rootSignatureInfo.AddEntryFromReflect(environmentMipFilterCompShader->GetRHIShader())
+				.AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo())
+				.AddPushConstant({ 4, SHADER_FREQUENCY_COMPUTE });
+			environmentMipFilterCompRootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
+			RHIComputePipelineInfo pipelineInfo = {};
+			pipelineInfo.rootSignature = environmentMipFilterCompRootSignature;
+			pipelineInfo.computeShader = environmentMipFilterCompShader->GetRHIShader();
+			environmentMipFilterCompPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
 		}
 
 		// 默认的IBL
-		LoadEnv(APP_HDR_PATH + "black.jpg","Default");
+		LoadEnv(APP_HDR_PATH + "black.jpg", "Default");
 	}
-	
 
 	void IBLPass::Build(RDGBuilder& builder)
 	{
@@ -63,8 +62,8 @@ namespace GameEngine
 			LoadEnv(iblPath);
 		}
 
-		auto& [hasPreCompute ,HDRTexture, LutTexture, IrradianceMap, PreFilterMap, CubeMap] = environmentMaps[iblPath];
-		
+		auto& [hasPreCompute, HDRTexture, LutTexture, IrradianceMap, PreFilterMap, CubeMap] = environmentMaps[iblPath];
+
 		if (IsEnabled()) {
 			auto [w, h] = APP_WINDOWSIZE;
 			if (!hasPreCompute) {
@@ -109,9 +108,8 @@ namespace GameEngine
 					.OutputReadWrite(prefilterMap)
 					.Finish();
 
-
 				builder.CreateComputePass(GetName() + "/IrradianceMap")
-					.Read(0, 1, 0, cubeMap,VIEW_TYPE_CUBE)
+					.Read(0, 1, 0, cubeMap, VIEW_TYPE_CUBE)
 					.ReadWrite(0, 0, 0, irradianceMap, VIEW_TYPE_CUBE)
 					.RootSignature(environmentIrradianceCompRootSignature)
 					.Execute([&](RDGPassContext context)
@@ -125,7 +123,6 @@ namespace GameEngine
 							command->Dispatch(32 / 32, 32 / 32, 6);
 						})
 					.Finish();
-
 
 				uint32_t mipLevels = (uint32_t)(std::floor(std::log2(std::max(1024, 1024)))) + 1;
 				static const float deltaRoughness = 1.0f / glm::max((float)mipLevels - 1.0f, 1.0f);
@@ -150,7 +147,7 @@ namespace GameEngine
 							})
 						.Finish();
 				}
-                hasPreCompute = true;
+				hasPreCompute = true;
 			}
 			else {
 				// 执行过一次后 布局变了
@@ -172,7 +169,6 @@ namespace GameEngine
 			}
 		}
 	}
-
 
 	void IBLPass::LoadEnv(std::string iblPath, std::string customKey) {
 		EnvironmentMap environmentMap;
@@ -214,11 +210,4 @@ namespace GameEngine
 			environmentMaps[customKey] = environmentMap;
 		}
 	}
-
-
-
-
-
-
-
 }

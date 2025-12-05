@@ -2,8 +2,6 @@
 #include "string"
 #include "Hazel/Renderer/RDG/RDGBuilder.h"
 namespace GameEngine {
-
-
 	// °´Ë³Ðò
 	enum PassType
 	{
@@ -15,6 +13,7 @@ namespace GameEngine {
 		RAYTRACING_PASS,
 		LIGHT_PASS,
 		SKY_PASS,
+		TAA_PASS,
 		BLOOM_PASS,
 		POST_PROCESS_PASS,
 		GIZMO_PASS,

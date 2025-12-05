@@ -3,7 +3,7 @@
 #include "Hazel/Core/Application.h"
 #include "Hazel/Utils/IndexAllocator.h"
 #include "RenderStruct.h"
-#include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderSystem/RenderManager.h"
 namespace GameEngine
 {
 	template<typename Type>   // 直接指明Buffer要存储的数据类型

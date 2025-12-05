@@ -4,7 +4,7 @@
 #include <backends/imgui_impl_vulkan.h>
 #include <backends/imgui_impl_glfw.h>
 #include <Hazel/Editor/PanelManager.h>
-#include "Hazel/Renderer/RenderSystem/RenderSystem.h"
+#include "Hazel/Renderer/RenderSystem/RenderManager.h"
 #include "Hazel/Scene/SceneManager.h"
 
 namespace GameEngine

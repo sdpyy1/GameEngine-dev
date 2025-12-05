@@ -1,7 +1,7 @@
 #include "hzpch.h"
 #include "GbufferPass.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
-#include <Hazel/Renderer/RenderSystem/RenderSystem.h>
+#include <Hazel/Renderer/RenderSystem/RenderManager.h>
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Scene/SceneManager.h"
 
@@ -79,7 +79,6 @@ namespace GameEngine
 
 	void GBufferPass::Build(RDGBuilder& builder)
 	{
-
 		auto [w, h] = APP_WINDOWSIZE;
 
 		RDGTextureHandle position = builder.CreateTexture("GBufferPosition")
@@ -119,7 +118,6 @@ namespace GameEngine
 			.AllowRenderTarget()
 			.Finish();
 
-
 		RDGTextureHandle velocity = builder.CreateTexture("GBufferVelocity")
 			.Exetent({ w, h, 1 })
 			.Format(FORMAT_R32G32_SFLOAT)
@@ -130,10 +128,7 @@ namespace GameEngine
 			.AllowRenderTarget()
 			.Finish();
 
-
-
 		RDGTextureHandle depth = builder.GetTexture("Depth");
-
 
 		if (IsEnabled()) {
 			builder.CreateRenderPass(GetName())
@@ -144,21 +139,16 @@ namespace GameEngine
 				.Color(4, velocity, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 1.0f })
 				.DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
 				.Execute([&](RDGPassContext context) {
-					auto [w, h] = APP_WINDOWSIZE;
-					RHICommandListRef command = context.command;
-					command->SetGraphicsPipeline(pipeline);
-					command->SetViewport({ 0, 0 }, { w,h });
-					command->SetScissor({ 0, 0 }, { w,h });
-					command->SetDepthBias(0.0f, 0.0f, 0.0f);
-					command->BindDescriptorSet(Application::GetRenderSystem()->GetRenderResourceManager()->GetGlobalResourcePerFrameDescriptorSet(), 0);
-					meshPassProcessor->Draw(command);
-				})
+				auto [w, h] = APP_WINDOWSIZE;
+				RHICommandListRef command = context.command;
+				command->SetGraphicsPipeline(pipeline);
+				command->SetViewport({ 0, 0 }, { w,h });
+				command->SetScissor({ 0, 0 }, { w,h });
+				command->SetDepthBias(0.0f, 0.0f, 0.0f);
+				command->BindDescriptorSet(Application::GetRenderSystem()->GetRenderResourceManager()->GetGlobalResourcePerFrameDescriptorSet(), 0);
+				meshPassProcessor->Draw(command);
+					})
 				.Finish();
-
 		}
 	}
-
-
-
-
 }
