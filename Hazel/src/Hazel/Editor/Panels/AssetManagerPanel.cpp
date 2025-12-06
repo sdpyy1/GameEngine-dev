@@ -78,7 +78,7 @@ namespace GameEngine {
 			{
 				ImGui::Checkbox("Visible", &component.Visible);
 
-				MaterialRef material = component.material;
+				MaterialRef material = component.GetMaterial();
 
 				DrawMaterialVec4("Diffuse Color", material->diffuse, [&](const glm::vec4& val) { material->SetDiffuse(val); });
 				DrawMaterialVec4("Emission Color", material->emission, [&](const glm::vec4& val) { material->SetEmission(val); });
@@ -194,9 +194,9 @@ namespace GameEngine {
 		if (m_Context)
 		{
 			// 只绘制根实体（没有父节点的实体）
-			m_Context->GetRegistry().each([&](auto entityID)
+			m_Context->ForEachEntity([&](auto& entity)
 				{
-					Entity entity{ entityID , m_Context.get() };
+					//Entity entity{ entityID , m_Context.get() };
 					// 检查是否是根实体（ParentHandle为0）
 					if (!entity.HasComponent<RelationshipComponent>() ||
 						entity.GetComponent<RelationshipComponent>().ParentHandle == 0)

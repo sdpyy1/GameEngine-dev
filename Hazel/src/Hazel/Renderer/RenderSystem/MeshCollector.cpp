@@ -24,13 +24,21 @@ namespace GameEngine
 			glm::mat4 transform = scene->GetWorldSpaceTransformMatrix(e);
 			meshComponent.meshInfo.modelMatrix = transform;
 			meshComponent.meshInfo.prevModelMatrix = meshComponent.prevModel;
-			meshComponent.updateMeshInfo();  //TODO: 改成批量更新....
+			if (meshComponent.meshInfoID == 0) {
+				meshComponent.meshInfoID = RENDER_RESOURCEMANAGER->AllocateMeshInstanceInfoID();
+			}
+			meshComponent.meshInfo.animationID = 0;
+			meshComponent.meshInfo.indexID = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].indexBuffer->indexID;
+			meshComponent.meshInfo.vertexID = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].vertexBuffer->vertexID;
+			meshComponent.meshInfo.materialID = meshComponent.model->GetMaterials()[meshComponent.SubmeshIndex] ? meshComponent.model->GetMaterials()[meshComponent.SubmeshIndex]->GetMaterialID() : 0;
+			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshComponent.meshInfo, meshComponent.meshInfoID);
+
 			meshComponent.prevModel = transform;
 			DrawBatch drawBatch;
 			drawBatch.indexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).indexBuffer;
 			drawBatch.vertexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).vertexBuffer;
 			drawBatch.objectID = meshComponent.meshInfoID;
-			drawBatch.material = meshComponent.material;
+			drawBatch.material = meshComponent.GetMaterial();
 			batch.push_back(drawBatch);
 		}
 

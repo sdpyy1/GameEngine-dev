@@ -11,9 +11,6 @@
 #include <imgui.h>
 
 namespace GameEngine {
-	Scene::Scene()
-	{
-	}
 
 	bool Scene::HasDirLight()
 	{
@@ -167,10 +164,6 @@ namespace GameEngine {
 	}
 
 
-	Scene::~Scene()
-	{
-	}
-
 	void Scene::OnLoadAsset()
 	{
 	}
@@ -214,8 +207,6 @@ namespace GameEngine {
 	{
 	}
 	
-	
-
 	template<>
 	void Scene::OnComponentAdded<DirectionalLightComponent>(Entity entity, DirectionalLightComponent& component)
 	{

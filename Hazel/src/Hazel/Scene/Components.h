@@ -43,73 +43,72 @@ namespace GameEngine {
 		EndSerailize
 	};
 
-	// TODO:学 CLUSTER 和 VIRTUAL_MESH
-	enum MeshRendererMode
-	{
-		RENDER_MODE_DEFAULT = 0,
-		RENDER_MODE_CLUSTER,
-		RENDER_MODE_VIRTUAL_MESH,
-
-		RENDER_MODE_MAX,//
-	};
 	struct ModelComponent
 	{
 		UUID ModelID = 0;
-		ModelRef model;
-		std::filesystem::path path = "";
-
 		bool Visible = true;
-		bool isDynamic = false;
-		MeshRendererMode renderMode = RENDER_MODE_DEFAULT;
-		std::vector<MaterialRef> materials;
+		std::string path = "";
 		bool castShadow = true;
+
+		ModelRef model;
+
 		ModelComponent() = default;
-		ModelComponent(UUID staticMesh, std::filesystem::path filePath)
-			: ModelID(staticMesh), path(filePath) {
-			model = AssetManager::GetAssetByAssetHandle<Model>(staticMesh);
-			isDynamic = model->hasBone();
-			materials = model->GetMaterials();   // TODO:注意这个可能导致所有实例都引用同一个材质
+		ModelComponent(UUID uuid, std::filesystem::path filePath)
+			: ModelID(uuid), path(filePath.string()) {
+			model = AssetManager::GetAsset<Model>(uuid);
 		}
+		BeginSerailize
+			SerailizeEntry(ModelID)
+			SerailizeEntry(path)
+			model = AssetManager::GetAsset<Model>(ModelID);
+			if (!model) {
+				// 还没加载
+				model = AssetManager::LoadModel(path, ModelID);
+			}			
+			SerailizeEntry(Visible)
+			SerailizeEntry(castShadow)
+		EndSerailize
 	};
 
 	struct SubmeshComponent
 	{
-		UUID Mesh;
+		UUID modelID;
 		uint32_t SubmeshIndex = 0;
 		bool Visible = true;
-		std::vector<UUID> BoneEntityIds;
-		ModelRef model;
-		MaterialRef material;
 		bool castShadow = true;
+
 		MeshInstanceInfo meshInfo;
-		uint32_t meshInfoID = 0;
+		ModelRef model;
 		glm::mat4 prevModel = glm::mat4(0);
-
+		uint32_t meshInfoID = 0;
+		std::string path;
 		SubmeshComponent() = default;
-		void updateMeshInfo() {
-			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshInfo, meshInfoID);
-		}
-		SubmeshComponent(UUID mesh, uint32_t submeshIndex = 0)
-			: Mesh(mesh), SubmeshIndex(submeshIndex)
+		SubmeshComponent(UUID modelID, uint32_t submeshIndex = 0)
+			: modelID(modelID), SubmeshIndex(submeshIndex)
 		{
-			model = AssetManager::GetAssetByAssetHandle<Model>(mesh);
-			material = model->GetMaterials()[SubmeshIndex];
-			castShadow = material->castShadow;
-			meshInfoID = RENDER_RESOURCEMANAGER->AllocateMeshInstanceInfoID();
-			meshInfo.animationID = 0;
-			meshInfo.indexID = model->GetSubmeshes()[SubmeshIndex].indexBuffer->indexID;
-			meshInfo.vertexID = model->GetSubmeshes()[SubmeshIndex].vertexBuffer->vertexID;
-			meshInfo.materialID = model->GetMaterials()[SubmeshIndex] ? model->GetMaterials()[SubmeshIndex]->GetMaterialID() : 0;
-
-			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshInfo, meshInfoID);
+			model = AssetManager::GetAsset<Model>(modelID);
+			path = model->GetPath();
 		}
 
 		MeshRef GetMesh() {
 			return model->GetSubMesh(SubmeshIndex);
 		}
+		MaterialRef GetMaterial() {
+			return model->GetMaterial(SubmeshIndex);
+		}
+        BeginSerailize
+			SerailizeEntry(modelID)
+			SerailizeEntry(SubmeshIndex)
+			SerailizeEntry(castShadow)
+			SerailizeEntry(path)
+			SerailizeEntry(Visible)
+			model = AssetManager::GetAsset<Model>(modelID);	
+			if (!model) {
+				// 还没加载
+				model = AssetManager::LoadModel(path, modelID);
+			}
+		EndSerailize
 	};
-
-
 
 	struct RelationshipComponent
 	{
@@ -121,6 +120,10 @@ namespace GameEngine {
 		RelationshipComponent(UUID parent)
 			: ParentHandle(parent) {
 		}
+        BeginSerailize
+			SerailizeEntry(ParentHandle)
+			SerailizeEntry(Children)
+		EndSerailize
 	};
 
 	struct TransformComponent
@@ -244,6 +247,13 @@ namespace GameEngine {
 		ShadowType shadowType = SHADOW_TYPE_PCSS;
 		bool showDirection = false;
 		bool showCSM = false;
+        BeginSerailize
+			SerailizeEntry(Intensity)
+			SerailizeEntry(Radiance)
+			SerailizeEntry(shadowType)
+			SerailizeEntry(showDirection)
+			SerailizeEntry(showCSM)
+		EndSerailize
 	};
 
 	struct PointLightComponent
@@ -252,6 +262,12 @@ namespace GameEngine {
 		float Intensity = 1.0f;
 		float Radius = 1.0f;
 		bool showRadius = false;
+        BeginSerailize
+			SerailizeEntry(Intensity)
+			SerailizeEntry(Radiance)
+			SerailizeEntry(Radius)
+			SerailizeEntry(showRadius)
+		EndSerailize
 	};
 
 	struct SpotLightComponent
@@ -260,6 +276,12 @@ namespace GameEngine {
 		float Intensity = 1.0f;
 		float range = 1.0f;
 		bool showRadius = false;
+        BeginSerailize
+			SerailizeEntry(Intensity)
+			SerailizeEntry(Radiance)
+			SerailizeEntry(range)
+			SerailizeEntry(showRadius)
+		EndSerailize
 	};
 
 	struct PostProcessingComponent
@@ -268,6 +290,12 @@ namespace GameEngine {
 		bool enableTAA = true;
 		bool taaSharpen = false;
 		float taaSharpness = 1.0f;
+        BeginSerailize
+			SerailizeEntry(bloomScale)
+			SerailizeEntry(enableTAA)
+			SerailizeEntry(taaSharpen)
+			SerailizeEntry(taaSharpness)
+		EndSerailize
 	};
 
 	struct SkyComponent {
@@ -275,26 +303,17 @@ namespace GameEngine {
 		std::vector<std::filesystem::path> iblPath;
 		int selectedIBL = 0;
 		float IBLScale = 1.0f;
+        BeginSerailize
+			SerailizeEntry(DynamicSky)
+			SerailizeEntry(selectedIBL)
+			SerailizeEntry(IBLScale)
+		EndSerailize
 	};
 
-	// ---------------- 前置声明组件 ----------------
-	struct IDComponent;
-	struct TagComponent;
-	struct ModelComponent;
-	struct TransformComponent;
-	struct PointLightComponent;
-	struct SpotLightComponent;
-	struct SkyComponent;
-	struct RelationshipComponent;
-	struct DirectionalLightComponent;
-	struct SubmeshComponent;
-	struct PostProcessingComponent;
 
-	// ---------------- ComponentGroup 模板 ----------------
 	template<typename... Components>
 	struct ComponentGroup {};
 
-	// ---------------- 所有组件列表 ----------------
 	using AllComponents = ComponentGroup<
 		IDComponent,
 		TagComponent,

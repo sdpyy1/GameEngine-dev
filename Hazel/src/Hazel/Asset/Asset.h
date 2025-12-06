@@ -25,6 +25,7 @@ namespace GameEngine {
 		virtual void OnLoadAsset() = 0;
 		virtual void OnSaveAsset() = 0;
 		inline const UUID& GetUUID() { return uid; }
+		void SetUUID(const UUID& uid) { this->uid = uid; }
 	protected:
 		UUID uid = {};
 

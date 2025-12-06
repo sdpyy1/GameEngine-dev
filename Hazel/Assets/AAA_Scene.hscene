@@ -1,0 +1,1765 @@
+{
+    "Scene": {
+        "EntityCount": 29,
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 11923465166412705037
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "PostProcess"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": true,
+            "PostProcessingComponent": {
+                "bloomScale": 0.30000001192092898,
+                "enableTAA": true,
+                "taaSharpen": false,
+                "taaSharpness": 1.0
+            },
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 9374786539734910013
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Cube"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 13617716705901853193
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 4998547931224923558
+                },
+                "SubmeshIndex": 0,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\cube.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 11248202327419725117
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\cube.obj"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 4.820062637329102,
+                    "y": 0.40063759684562685,
+                    "z": -4.332165718078613
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": [
+                    {
+                        "m_UUID": 14966589931625458468
+                    }
+                ]
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": true,
+            "ModelComponent": {
+                "ModelID": {
+                    "m_UUID": 4998547931224923558
+                },
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\cube.obj",
+                "Visible": true,
+                "castShadow": true
+            },
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 14966589931625458468
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Cube"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 11248202327419725117
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 4998547931224923558
+                },
+                "SubmeshIndex": 0,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\cube.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 8853231018859374558
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 10,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 6880018630455788894
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 4,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 8446182758836463262
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Point Light"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": true,
+            "PointLightComponent": {
+                "Intensity": 1.0,
+                "Radiance": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "Radius": 1.0,
+                "showRadius": false
+            },
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 2508558444824657422
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Directional Light"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": true,
+            "DirectionalLightComponent": {
+                "Intensity": 1.0,
+                "Radiance": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "shadowType": 3,
+                "showDirection": false,
+                "showCSM": false
+            },
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 16428002924427028665
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Point Light"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": true,
+            "PointLightComponent": {
+                "Intensity": 1.0,
+                "Radiance": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "Radius": 1.0,
+                "showRadius": false
+            },
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 9068013219996238489
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 1,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 16623872958074421913
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Spot Light"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": true,
+            "SpotLightComponent": {
+                "Intensity": 1.0,
+                "Radiance": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "range": 1.0,
+                "showRadius": false
+            },
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 7951252264817031339
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 3,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 7997681588301329387
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Sky Light"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": true,
+            "SkyComponent": {
+                "DynamicSky": false,
+                "selectedIBL": 0,
+                "IBLScale": 1.0
+            },
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 8396065660680259976
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 9.056414604187012,
+                    "y": 2.495744466781616,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": [
+                    {
+                        "m_UUID": 15941321160124324517
+                    },
+                    {
+                        "m_UUID": 9068013219996238489
+                    },
+                    {
+                        "m_UUID": 13299206027385714972
+                    },
+                    {
+                        "m_UUID": 7951252264817031339
+                    },
+                    {
+                        "m_UUID": 6880018630455788894
+                    },
+                    {
+                        "m_UUID": 17780820603881489862
+                    },
+                    {
+                        "m_UUID": 206157083086011402
+                    },
+                    {
+                        "m_UUID": 4454826761346269810
+                    },
+                    {
+                        "m_UUID": 15768387581353059107
+                    },
+                    {
+                        "m_UUID": 13865057683928162482
+                    },
+                    {
+                        "m_UUID": 8853231018859374558
+                    },
+                    {
+                        "m_UUID": 8289901998258260482
+                    }
+                ]
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": true,
+            "ModelComponent": {
+                "ModelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true,
+                "castShadow": true
+            },
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 15941321160124324517
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 0,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 13299206027385714972
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 2,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 17780820603881489862
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 5,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 206157083086011402
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 6,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 4621554760318977266
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Cube"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 2086019359811324231
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 4998547931224923558
+                },
+                "SubmeshIndex": 0,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\cube.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 13865057683928162482
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 9,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 4454826761346269810
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 7,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 15768387581353059107
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 8,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 11559415888416559554
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "D:/AAA_GameEngine/Hazel/Assets/Model\\helmet\\DamagedHelmet.gltf"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": -1.767468810081482,
+                    "y": 4.341701507568359,
+                    "z": 3.4683361053466799
+                },
+                "Scale": {
+                    "x": 4.339999198913574,
+                    "y": 4.340000629425049,
+                    "z": 4.3400068283081059
+                },
+                "RotationEuler": {
+                    "x": -2.90796160697937,
+                    "y": 0.6919534206390381,
+                    "z": 1.9277918338775635
+                },
+                "Rotation": {
+                    "x": -0.5653386116027832,
+                    "y": -0.7449383735656738,
+                    "z": 0.28215134143829348,
+                    "w": -0.2141253650188446
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": [
+                    {
+                        "m_UUID": 2989319367253164659
+                    }
+                ]
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": true,
+            "ModelComponent": {
+                "ModelID": {
+                    "m_UUID": 397980624352427834
+                },
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\helmet\\DamagedHelmet.gltf",
+                "Visible": true,
+                "castShadow": true
+            },
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 8289901998258260482
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "obj1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 8396065660680259976
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 15420136985163586813
+                },
+                "SubmeshIndex": 11,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Klee\\klee.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 2086019359811324231
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\cube.obj"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": -3.4292116165161135,
+                    "y": 0.5951700210571289,
+                    "z": 4.212575912475586
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": [
+                    {
+                        "m_UUID": 4621554760318977266
+                    }
+                ]
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": true,
+            "ModelComponent": {
+                "ModelID": {
+                    "m_UUID": 4998547931224923558
+                },
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\cube.obj",
+                "Visible": true,
+                "castShadow": true
+            },
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 13617716705901853193
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\cube.obj"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": [
+                    {
+                        "m_UUID": 9374786539734910013
+                    }
+                ]
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": true,
+            "ModelComponent": {
+                "ModelID": {
+                    "m_UUID": 4998547931224923558
+                },
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\cube.obj",
+                "Visible": true,
+                "castShadow": true
+            },
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 14184955843562011418
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\sphere.obj"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 2.9134111404418947,
+                    "y": 3.162491798400879,
+                    "z": 0.2455434799194336
+                },
+                "Scale": {
+                    "x": 2.9499995708465578,
+                    "y": 2.9499995708465578,
+                    "z": 2.9499995708465578
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": [
+                    {
+                        "m_UUID": 5668951909500591804
+                    }
+                ]
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": true,
+            "ModelComponent": {
+                "ModelID": {
+                    "m_UUID": 11301275325590853234
+                },
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\sphere.obj",
+                "Visible": true,
+                "castShadow": true
+            },
+            "HasSubmeshComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 5668951909500591804
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "球体"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 14184955843562011418
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 11301275325590853234
+                },
+                "SubmeshIndex": 0,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\Basic\\sphere.obj",
+                "Visible": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 2989319367253164659
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "mesh_helmet_LP_13930damagedHelmet"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 11559415888416559554
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 397980624352427834
+                },
+                "SubmeshIndex": 0,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine/Hazel/Assets/Model\\helmet\\DamagedHelmet.gltf",
+                "Visible": true
+            }
+        }
+    }
+}

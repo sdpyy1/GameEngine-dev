@@ -8,17 +8,22 @@ namespace GameEngine {
 	std::unordered_map<UUID, std::shared_ptr<Asset>> AssetManager::AssetsMap;
 	std::unordered_map<std::string, std::shared_ptr<Model>> AssetManager::ModelCache;
 
-	ModelRef AssetManager::LoadModel(std::string path) {
+	ModelRef AssetManager::LoadModel(std::string path,UUID uuid) {
 		if (ModelCache.find(path) != ModelCache.end())
 			return ModelCache[path];
 		ModelSpec m_ModelSpec;
-
 		if (RENDER_ENABLE_RAY_TRACING) {
 			m_ModelSpec.genBLAS = true;
 		}
 
 		auto& model = std::make_shared<Model>(path, m_ModelSpec);
-		AssetsMap[model->GetUUID()] = model;
+		if (uuid == 0) {
+			AssetsMap[model->GetUUID()] = model;
+		}
+		else {
+			model->SetUUID(uuid);
+            AssetsMap[uuid] = model;
+		}
 		ModelCache[path] = model;
 		return model;
 	}

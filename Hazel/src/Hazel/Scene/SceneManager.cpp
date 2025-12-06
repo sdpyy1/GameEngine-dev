@@ -87,10 +87,9 @@ namespace GameEngine
 		m_CurrentSceneFilePath = filepath.string();
 		std::replace(m_CurrentSceneFilePath.begin(), m_CurrentSceneFilePath.end(), '\\', '/');
 		*/
-
-		SceneSerializer serializer(nullptr);
+		m_CurrentScene = std::make_shared<Scene>(); 
+		SceneSerializer serializer(m_CurrentScene);
         serializer.Deserialize(filepath.string());
-        m_CurrentScene = serializer.GetScene();
 		std::filesystem::path path = filepath;
 		m_CurrentSceneFilePath = filepath.string();
 		std::replace(m_CurrentSceneFilePath.begin(), m_CurrentSceneFilePath.end(), '\\', '/');

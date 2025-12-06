@@ -17,6 +17,7 @@ namespace cereal {
 	template<class Archive> void serialize(Archive& ar, GameEngine::Extent3D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height), cereal::make_nvp("depth", e.depth)); }
 	template<class Archive> void serialize(Archive& ar, glm::vec3& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z)); }
 	template<class Archive> void serialize(Archive& ar, glm::quat& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z), cereal::make_nvp("w", e.w)); }
+	template<class Archive> void serialize(Archive& ar, std::filesystem::path& e) { ar(cereal::make_nvp("path", e.string())); }
 
 #define BeginSerailize               	\
 friend class cereal::access;            	\
@@ -29,11 +30,34 @@ ar(cereal::make_nvp(#className, cereal::base_class<className>(this)));
 #define SerailizeEntry(entry)           	\
 ar(cereal::make_nvp(#entry, entry));
 
-#define SerializeComponent(ComponentType)                   \
-    if (HasComponent<ComponentType>()) {            \
-        ar(cereal::make_nvp(#ComponentType,                \
-            GetComponent<ComponentType>()));        \
-    }
+#define SerailizeComponent(COMPONENT_TYPE) \
+if (HasComponent<COMPONENT_TYPE>()) { \
+    ar(cereal::make_nvp("Has" #COMPONENT_TYPE, true)); \
+    ar(cereal::make_nvp(#COMPONENT_TYPE, GetComponentConst<COMPONENT_TYPE>())); \
+} else { \
+    ar(cereal::make_nvp("Has" #COMPONENT_TYPE, false)); \
+}
+
+#define DeserializeComponent(COMPONENT_TYPE) \
+do { \
+    bool hasComponent_##COMPONENT_TYPE = false; \
+    try { \
+        ar(cereal::make_nvp("Has" #COMPONENT_TYPE, hasComponent_##COMPONENT_TYPE)); \
+    } catch (const cereal::Exception&) { \
+        hasComponent_##COMPONENT_TYPE = false; \
+    } \
+    \
+    if (hasComponent_##COMPONENT_TYPE) { \
+        AddComponent<COMPONENT_TYPE>(); \
+        try { \
+            ar(cereal::make_nvp(#COMPONENT_TYPE, GetComponent<COMPONENT_TYPE>())); \
+        } catch (const cereal::Exception&) { \
+            LOG_INFO("Old file missing data for {} component, using default values", #COMPONENT_TYPE); \
+        } \
+    } \
+} while(0)
+
+
 
 #define SerailizeAssetEntry(entry)          \
 ar(cereal::make_nvp(#entry, entry));		\

@@ -80,9 +80,14 @@ namespace GameEngine {
 			ASSERT(HasComponent<T>(), "Entity does not have component!");
 			return m_Scene->m_Registry.get<T>(m_EntityHandle);
 		}
-
 		template<typename T>
-		bool HasComponent()
+		T& GetComponentConst() const
+		{
+			ASSERT(HasComponent<T>(), "Entity does not have component!");
+			return m_Scene->m_Registry.get<T>(m_EntityHandle);
+		}
+		template<typename T>
+		bool HasComponent() const
 		{
 			return m_Scene->m_Registry.has<T>(m_EntityHandle);
 		}
@@ -113,6 +118,43 @@ namespace GameEngine {
 	private:
 		entt::entity m_EntityHandle{ entt::null };
 		Scene* m_Scene = nullptr;
+
+	private:
+		friend class cereal::access;            	
+		template<class Archive>                 	
+		void save(Archive& ar) const
+		{
+			SerailizeComponent(IDComponent);
+			SerailizeComponent(TagComponent);
+			SerailizeComponent(TransformComponent);
+			SerailizeComponent(RelationshipComponent);
+			SerailizeComponent(DirectionalLightComponent);
+			SerailizeComponent(PointLightComponent);
+			SerailizeComponent(SpotLightComponent);
+			SerailizeComponent(SkyComponent);
+			SerailizeComponent(PostProcessingComponent);
+			SerailizeComponent(ModelComponent);
+			SerailizeComponent(SubmeshComponent);
+		}
+		friend class cereal::access;
+		template<class Archive>
+		void load(Archive& ar)
+		{
+			m_Scene = APP_SCENEMANAGER->GetActiveScene().get();
+			m_EntityHandle = APP_SCENEMANAGER->GetActiveScene()->GetRegistry().create();
+
+			DeserializeComponent(IDComponent);
+			DeserializeComponent(TagComponent);
+			DeserializeComponent(TransformComponent);
+			DeserializeComponent(RelationshipComponent);
+			DeserializeComponent(DirectionalLightComponent);
+			DeserializeComponent(PointLightComponent);
+			DeserializeComponent(SpotLightComponent);
+			DeserializeComponent(SkyComponent);
+			DeserializeComponent(PostProcessingComponent);
+            DeserializeComponent(ModelComponent);
+            DeserializeComponent(SubmeshComponent);
+		}
 	};
 
 }

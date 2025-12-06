@@ -205,7 +205,7 @@ namespace GameEngine {
 			out << YAML::BeginMap; // ModelComponent
 
 			auto& smc = entity.GetComponent<ModelComponent>();
-			out << YAML::Key << "MeshSourcePath" << YAML::Value << smc.path.string();
+			out << YAML::Key << "MeshSourcePath" << YAML::Value << smc.path;
 			out << YAML::Key << "Visible" << YAML::Value << smc.Visible;
 			out << YAML::EndMap; // ModelComponent
 		}
@@ -260,7 +260,7 @@ namespace GameEngine {
 		std::ofstream os(filepath);
 		if (!os.is_open()){LOG_ERROR("Failed to open file for scene serialization");}
 		cereal::JSONOutputArchive archive(os);
-		archive(cereal::make_nvp("Scene", m_Scene));
+		archive(cereal::make_nvp("Scene", *m_Scene));
 		
 		
 	/*	////////////////////
@@ -298,9 +298,8 @@ namespace GameEngine {
 		{
 			LOG_ERROR("Failed to open file for scene deserialization");
 		}
-		m_Scene = std::make_shared<Scene>();
 		cereal::JSONInputArchive archive(is);
-		archive(cereal::make_nvp("Scene", m_Scene));
+		archive(cereal::make_nvp("Scene", *m_Scene));
 
 		
 

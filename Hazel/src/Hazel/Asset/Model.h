@@ -46,6 +46,7 @@ namespace GameEngine {
         SubmeshData& GetSubmeshData(uint32_t index) { return submeshes[index]; }
         MeshRef GetSubMesh(uint32_t index) { return submeshes[index].mesh; }
         std::vector<MaterialRef>& GetMaterials() { return materials; }
+        MaterialRef GetMaterial(uint32_t index) { return materials[index]; }
         std::string GetPath() { return path; }
         VertexBufferRef GetVertexBuffer(int index){return submeshes[index].vertexBuffer;}
         IndexBufferRef GetIndexBuffer(int index){return submeshes[index].indexBuffer;}
