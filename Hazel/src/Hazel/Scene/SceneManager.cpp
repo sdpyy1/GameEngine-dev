@@ -44,6 +44,25 @@ namespace GameEngine
 			m_SceneInfo.globalSettingInfos.skySetting.IbLScale = component.IBLScale;
 			m_SceneInfo.cpuRenderSetting.IBLPath = component.iblPath[component.selectedIBL].string();
 		}
+
+		// Ì½ÕëÉèÖÃ
+        auto probe = m_CurrentScene->GetFirstEntityWith<LightProbeComponent>();
+        Entity probeEntity = Entity{ probe ,m_CurrentScene };
+		if (probeEntity) {
+			auto& transform = probeEntity.GetComponent<TransformComponent>();
+			auto& component = probeEntity.GetComponent<LightProbeComponent>();
+			auto& ddgi = m_SceneInfo.globalSettingInfos.ddgiSetting;
+			ddgi.centerPosition = transform.Translation;
+			ddgi.enable = component.enable ? 1 : 0;
+			ddgi.probeCount = component.probeCount;
+			ddgi.gridStep = component.gridStep;
+			ddgi.raysPerProbe = component.raysPerProbe;
+			ddgi.visulaize = component.visulaize ? 1 : 0;
+			glm::vec3 halfExtent = 0.5f * glm::vec3(component.probeCount) * component.gridStep;
+			ddgi.box.minBound = ddgi.centerPosition - halfExtent;
+			ddgi.box.maxBound = ddgi.centerPosition + halfExtent;
+		}
+
 	}
 
 	void SceneManager::PackInfo() {

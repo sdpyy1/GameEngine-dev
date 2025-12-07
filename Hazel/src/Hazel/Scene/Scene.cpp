@@ -225,6 +225,10 @@ namespace GameEngine {
 	{
 	}
 	template<>
+	void Scene::OnComponentAdded<LightProbeComponent>(Entity entity, LightProbeComponent& component)
+	{
+	}
+	template<>
 	void Scene::OnComponentAdded<SkyComponent>(Entity entity, SkyComponent& component)
 	{
 		component.iblPath.clear(); // ÏÈÇå¿Õ

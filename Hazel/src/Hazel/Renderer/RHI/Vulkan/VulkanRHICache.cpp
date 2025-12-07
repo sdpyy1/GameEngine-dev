@@ -11,9 +11,9 @@ namespace GameEngine {
         {
             return iter->second;
         }
-
+#ifdef RDG_DEBUG
         LOG_WARN("VkRenderPass not found in cache, creating new.");
-
+#endif
         ret.pass = VULKAN_RHI->CreateVkRenderPass(info);
         cachedPasses[info] = ret;
 
@@ -39,8 +39,9 @@ namespace GameEngine {
             // LOG_DEBUG("VkFramebuffer found in cache.");
             return iter->second;
         }
-
+#ifdef RDG_DEBUG
         LOG_WARN("VkFramebuffer not found in cache, creating new.");
+#endif
         ret.frameBuffer = VULKAN_RHI->CreateVkFramebuffer(info);
 
         cachedFramebuffers[info] = ret;

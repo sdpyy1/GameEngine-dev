@@ -93,7 +93,7 @@ namespace GameEngine {
         }
 
     private:
-        BeginSerailize()
+        BeginSerailize
             SerailizeEntry(maxBound)
             SerailizeEntry(minBound)
             EndSerailize

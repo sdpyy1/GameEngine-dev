@@ -1,6 +1,6 @@
 {
     "Scene": {
-        "EntityCount": 13,
+        "EntityCount": 14,
         "Entity": {
             "HasIDComponent": true,
             "IDComponent": {
@@ -16,8 +16,8 @@
             "TransformComponent": {
                 "Translation": {
                     "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
+                    "y": -0.21361422538757325,
+                    "z": -2.932796001434326
                 },
                 "Scale": {
                     "x": 24.63243865966797,
@@ -61,7 +61,8 @@
                 "Visible": true,
                 "castShadow": true
             },
-            "HasSubmeshComponent": false
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -120,7 +121,8 @@
                 "castShadow": true,
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Basic\\cube.obj",
                 "Visible": true
-            }
+            },
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -175,7 +177,8 @@
             },
             "HasPostProcessingComponent": false,
             "HasModelComponent": false,
-            "HasSubmeshComponent": false
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -231,7 +234,8 @@
                 "taaSharpness": 1.0
             },
             "HasModelComponent": false,
-            "HasSubmeshComponent": false
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -290,7 +294,8 @@
                 "castShadow": true,
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\helmet\\DamagedHelmet.gltf",
                 "Visible": true
-            }
+            },
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -351,7 +356,8 @@
             "HasSkyComponent": false,
             "HasPostProcessingComponent": false,
             "HasModelComponent": false,
-            "HasSubmeshComponent": false
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -413,7 +419,8 @@
                 "Visible": true,
                 "castShadow": true
             },
-            "HasSubmeshComponent": false
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -475,7 +482,8 @@
                 "Visible": true,
                 "castShadow": true
             },
-            "HasSubmeshComponent": false
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -534,7 +542,8 @@
                 "castShadow": true,
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Basic\\cube.obj",
                 "Visible": true
-            }
+            },
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -594,7 +603,8 @@
             "HasSkyComponent": false,
             "HasPostProcessingComponent": false,
             "HasModelComponent": false,
-            "HasSubmeshComponent": false
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -654,7 +664,8 @@
             "HasSkyComponent": false,
             "HasPostProcessingComponent": false,
             "HasModelComponent": false,
-            "HasSubmeshComponent": false
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -716,7 +727,8 @@
                 "Visible": true,
                 "castShadow": true
             },
-            "HasSubmeshComponent": false
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
         },
         "Entity": {
             "HasIDComponent": true,
@@ -775,6 +787,73 @@
                 "castShadow": true,
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\WaterBottle\\glTF\\WaterBottle.gltf",
                 "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 13648128020465483458
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Light Probe"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": -6.909651756286621,
+                    "y": 5.238365173339844,
+                    "z": 10.764628410339356
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": true,
+            "LightProbeComponent": {
+                "enable": true,
+                "probeCount": {
+                    "x": 7,
+                    "y": 10,
+                    "z": 10
+                },
+                "gridStep": {
+                    "x": 1.0490000247955323,
+                    "y": 0.9139999747276306,
+                    "z": 1.4559999704360963
+                },
+                "raysPerProbe": 218,
+                "visulaize": true
             }
         }
     }

@@ -6,7 +6,14 @@ struct BoundingSphere
     vec3 center;
     float radius;
 };
+struct BoundingBox
+{
+    vec3 maxBound;
+    float _padding0; 
 
+    vec3 minBound;
+    float _padding1;
+};
 struct DirectionLight
 {
     vec3 position;
@@ -197,6 +204,7 @@ struct ShadowSetting
 {
     uint DebugCSM;
     uint ShadowType;
+    uint _padding[2];
 };
 struct TAASetting
 {
@@ -221,12 +229,29 @@ struct SkySetting {
     float IbLScale;
     float pading[2];
 };
+
+struct DDGISetting {
+    vec3 centerPosition;
+    uint _padding1;
+
+    vec3 probeCount;
+    uint enable;
+
+    vec3 gridStep;
+    uint visulaize;
+
+    uint raysPerProbe;
+    uint _padding[3];
+
+    BoundingBox box;
+};
 struct GlobalSettingInfo
 { 
     SkySetting skySetting;
     PostprocessSetting postprocessSetting;
     ShadowSetting shadowSetting;
     IconTextureInfo iconTextures;
+    DDGISetting ddgiSetting;
 };
 
 

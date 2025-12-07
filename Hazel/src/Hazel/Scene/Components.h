@@ -126,6 +126,30 @@ namespace GameEngine {
 		EndSerailize
 	};
 
+	
+	struct LightProbeComponent
+	{ 
+		bool enable = true;
+		glm::ivec3 probeCount = glm::ivec3(10,10,10);
+		glm::vec3 gridStep = glm::vec3(3.0f, 3.0f, 3.0f);
+		uint32_t raysPerProbe = 256;
+		bool visulaize = false;
+
+        BeginSerailize
+			SerailizeEntry(enable)
+			SerailizeEntry(probeCount)
+			SerailizeEntry(gridStep)
+			SerailizeEntry(raysPerProbe)
+			SerailizeEntry(visulaize)
+        EndSerailize
+	};
+
+
+
+
+
+
+
 	struct TransformComponent
 	{
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
@@ -325,6 +349,7 @@ namespace GameEngine {
 		RelationshipComponent,
 		DirectionalLightComponent,
 		SubmeshComponent,
-		PostProcessingComponent
+		PostProcessingComponent,
+		LightProbeComponent
 	>;
 }

@@ -19,8 +19,9 @@ namespace GameEngine {
                 return ret;
             }
         }
-
+#ifdef RDG_DEBUG
         LOG_TRACE("RHIBuffer not found in cache, creating new.");
+#endif
         ret.buffer = APP_DYNAMICRHI->CreateBuffer(info);
         ret.state = RESOURCE_STATE_UNDEFINED;
         allocatedSize++;
@@ -47,9 +48,9 @@ namespace GameEngine {
             pooledSize--;
             return ret;
         }
-
+#ifdef RDG_DEBUG
         LOG_TRACE("RHITexture not found in cache, creating new.");
-
+#endif
         ret.texture = APP_DYNAMICRHI->CreateTexture(tempInfo);   // 在释放资源时才会把texture放入池中
 
         ret.state = RESOURCE_STATE_UNDEFINED; // RHI接口创建的texture的state是UNDEFINED
@@ -82,8 +83,9 @@ namespace GameEngine {
             pooledSize--;
             return ret;
         }
-
+#ifdef RDG_DEBUG
         LOG_TRACE("RHITextureView not found in cache, creating new.");
+#endif
         ret.textureView = APP_DYNAMICRHI->CreateTextureView(actualInfo);
         allocatedSize++;
 
@@ -109,8 +111,9 @@ namespace GameEngine {
             pooledSize--;
             return ret;
         }
-
+#ifdef RDG_DEBUG
         LOG_TRACE("RHIDescriptorSet not found in cache, creating new.");
+#endif
         ret.descriptor = rootSignature->CreateDescriptorSet(set);
         allocatedSize++;
 

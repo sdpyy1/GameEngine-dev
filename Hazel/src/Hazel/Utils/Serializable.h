@@ -16,6 +16,7 @@ namespace cereal {
 	template<class Archive> void serialize(Archive& ar, GameEngine::Extent2D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height)); }
 	template<class Archive> void serialize(Archive& ar, GameEngine::Extent3D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height), cereal::make_nvp("depth", e.depth)); }
 	template<class Archive> void serialize(Archive& ar, glm::vec3& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z)); }
+	template<class Archive> void serialize(Archive& ar, glm::ivec3& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z)); }
 	template<class Archive> void serialize(Archive& ar, glm::quat& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z), cereal::make_nvp("w", e.w)); }
 	template<class Archive> void serialize(Archive& ar, std::filesystem::path& e) { ar(cereal::make_nvp("path", e.string())); }
 
@@ -24,11 +25,21 @@ friend class cereal::access;            	\
 template<class Archive>                 	\
 void serialize(Archive& ar)             	\
 {
-#define SerailizeBaseClass(className)   	\
-ar(cereal::make_nvp(#className, cereal::base_class<className>(this)));
+#define SerializeBaseClass(className) \
+try { \
+    ar(cereal::make_nvp(#className, cereal::base_class<className>(this))); \
+} catch (const std::exception& e) { \
+    LOG_WARN("{}: failed to serialize base class '{}', reason: {}", __FUNCTION__, #className, e.what()); \
+}
 
-#define SerailizeEntry(entry)           	\
-ar(cereal::make_nvp(#entry, entry));
+
+#define SerailizeEntry(entry) \
+try { \
+    ar(cereal::make_nvp(#entry, entry)); \
+} catch (const std::exception& e) { \
+    LOG_WARN("{}: failed to serialize entry '{}', reason: {}", __FUNCTION__, #entry, e.what()); \
+}
+
 
 #define SerailizeComponent(COMPONENT_TYPE) \
 if (HasComponent<COMPONENT_TYPE>()) { \

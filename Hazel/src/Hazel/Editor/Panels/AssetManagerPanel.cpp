@@ -25,6 +25,7 @@ namespace GameEngine {
 		m_PointLightIcon.LoadIconData("Assets/Icon/pointLight.png", false);
 		m_SkyLightIcon.LoadIconData("Assets/Icon/img.png", false);
 		m_PostprocesstIcon.LoadIconData("Assets/Icon/post.png", false);
+		m_ProbeIcon.LoadIconData("Assets/Icon/probe.png", false);
 	}
 
 	void AssetManagerPanel::DrawComponents(Entity entity)
@@ -55,6 +56,7 @@ namespace GameEngine {
 			DisplayAddComponentEntry<DirectionalLightComponent>("DirctionalLight");
 			DisplayAddComponentEntry<PostProcessingComponent>("PostProcessing");
 			DisplayAddComponentEntry<SpotLightComponent>("SpotLight");
+			DisplayAddComponentEntry<LightProbeComponent>("Light Probe");
 			ImGui::EndPopup();
 		}
 
@@ -152,6 +154,20 @@ namespace GameEngine {
 					ImGui::EndDisabled();
 				}
 			});
+		DrawComponent<LightProbeComponent>("Light Probes", entity, [](auto& component)
+			{
+				ImGui::Checkbox("Enable", &component.enable);
+
+				ImGui::BeginDisabled(!component.enable);
+				{
+					ImGui::SliderInt3("Probe Count", reinterpret_cast<int*>(&component.probeCount), 1, 32);
+					ImGui::SliderFloat3("Grid Step", reinterpret_cast<float*>(&component.gridStep), 0.1f, 10.0f);
+					ImGui::SliderInt("Rays Per Probe", reinterpret_cast<int*>(&component.raysPerProbe), 1, 1024);
+					ImGui::Checkbox("Visualize", &component.visulaize);
+				}
+				ImGui::EndDisabled();
+			});
+
 
 		DrawComponent<SkyComponent>("Sky Light", entity, [](auto& component)
 			{
@@ -194,15 +210,18 @@ namespace GameEngine {
 		if (m_Context)
 		{
 			// 只绘制根实体（没有父节点的实体）
-			m_Context->ForEachEntity([&](auto& entity)
+			m_Context->GetRegistry().each([&](auto entityID)
 				{
-					//Entity entity{ entityID , m_Context.get() };
-					// 检查是否是根实体（ParentHandle为0）
-					if (!entity.HasComponent<RelationshipComponent>() ||
-						entity.GetComponent<RelationshipComponent>().ParentHandle == 0)
-					{
-						DrawEntityNode(entity);
+					Entity entity{ entityID , m_Context.get() };
+					if(entity){
+						// 检查是否是根实体（ParentHandle为0）
+						if (!entity.HasComponent<RelationshipComponent>() ||
+							entity.GetComponent<RelationshipComponent>().ParentHandle == 0)
+						{
+							DrawEntityNode(entity);
+						}
 					}
+
 				});
 
 			/*if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
@@ -222,6 +241,8 @@ namespace GameEngine {
 					m_Context->CreateEntity("Sky Light").AddComponent<SkyComponent>();
 				if (ImGui::MenuItem("Create PostProcess"))
 					m_Context->CreateEntity("PostProcess").AddComponent<PostProcessingComponent>();
+				if (ImGui::MenuItem("Create Light Probe"))
+					m_Context->CreateEntity("Light Probe").AddComponent<LightProbeComponent>();
 				ImGui::EndPopup();
 			}
 		}
@@ -274,6 +295,8 @@ namespace GameEngine {
 			icon = m_PointLightIcon;
 		if (entity.HasComponent<PostProcessingComponent>())
 			icon = m_PostprocesstIcon;
+        if (entity.HasComponent<LightProbeComponent>())
+			icon = m_ProbeIcon;
 		ImGui::Image(icon.textureID->RawHandle(), { iconSize, iconSize });
 
 		ImGui::SameLine(0.0f, iconSpacing);

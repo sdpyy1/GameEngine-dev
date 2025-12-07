@@ -83,7 +83,7 @@ namespace GameEngine {
 			.Finish();
 
 
-		builder.CreateComputePass("TransmittanceLutPass")
+		builder.CreateComputePass("Sky_TransmittanceLutPass")
 			.RootSignature(TransmittanceLutRootSignature)
 			.ReadWrite(0, 0, 0, TransmittanceLutTexture)
 			.Execute([&](RDGPassContext context) {
@@ -102,7 +102,7 @@ namespace GameEngine {
             .Format(FORMAT_R8G8B8A8_UNORM)  // 不能用FORMAT_R32G32B32A32_SFLOAT 会报错
             .Finish();
 
-		builder.CreateComputePass("MultiScatteringLutPass")
+		builder.CreateComputePass("Sky_MultiScatteringLutPass")
 			.RootSignature(MultiScatteringLutRootSignature)
 			.ReadWrite(0, 0, 0, MultiScatteringLutTexture)
 			.Read(0, 1, 0, TransmittanceLutTexture)
@@ -123,7 +123,7 @@ namespace GameEngine {
             .Format(FORMAT_R32G32B32A32_SFLOAT)
             .Finish();
 
-        builder.CreateComputePass("SkyViewLutPass")
+        builder.CreateComputePass("Sky_SkyViewLutPass")
             .RootSignature(SkyViewLutRootSignature)
             .ReadWrite(2, 0, 0, SkyViewLutTexture)
             .Read(2, 1, 0, TransmittanceLutTexture)
@@ -143,7 +143,7 @@ namespace GameEngine {
 		RDGTextureHandle ViewPort = builder.GetTexture("ViewPort");
 		RDGTextureHandle skyBox = builder.GetTexture("CubeMap");
 		RDGTextureHandle depth = builder.GetTexture("Depth");
-		builder.CreateRenderPass("SkyPass")
+		builder.CreateRenderPass("Sky_SkyPass")
 			.RootSignature(m_RootSignature)
 			.Read(2, 0, 0, skyBox, VIEW_TYPE_CUBE)
             .Read(2, 1, 0, SkyViewLutTexture)

@@ -135,6 +135,7 @@ namespace GameEngine {
 			SerailizeComponent(PostProcessingComponent);
 			SerailizeComponent(ModelComponent);
 			SerailizeComponent(SubmeshComponent);
+			SerailizeComponent(LightProbeComponent);
 		}
 		friend class cereal::access;
 		template<class Archive>
@@ -154,6 +155,7 @@ namespace GameEngine {
 			DeserializeComponent(PostProcessingComponent);
             DeserializeComponent(ModelComponent);
             DeserializeComponent(SubmeshComponent);
+            DeserializeComponent(LightProbeComponent);
 		}
 	};
 

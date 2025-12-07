@@ -12,6 +12,7 @@ namespace GameEngine {
 		GBUFFER_PASS,
 		RAYTRACING_PASS,
 		LIGHT_PASS,
+		DDGI_PASS,
 		SKY_PASS,
 		TAA_PASS,
 		BLOOM_PASS,

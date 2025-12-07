@@ -21,6 +21,7 @@
 #include <Hazel/Renderer/RenderPass/PointShadowPass.h>
 #include <Hazel/Renderer/RenderPass/RayTracingPass.h>
 #include <Hazel/Renderer/RenderPass/TAAPass.h>
+#include <Hazel/Renderer/RenderPass/DDGIPass.h>
 
 namespace GameEngine {
 	RenderManager::RenderManager()
@@ -88,6 +89,7 @@ namespace GameEngine {
 		passes[GIZMO_PASS] = std::make_shared<GizmoPass>();
 		passes[SKY_PASS] = std::make_shared<SkyPass>();
 		passes[LIGHT_PASS] = std::make_shared<LightPass>();
+        passes[DDGI_PASS] = std::make_shared<DDGIPass>();
 		passes[TAA_PASS] = std::make_shared<TAAPass>();
 		passes[BLOOM_PASS] = std::make_shared<BloomPass>();
 		passes[POST_PROCESS_PASS] = std::make_shared<PostProcessPass>();

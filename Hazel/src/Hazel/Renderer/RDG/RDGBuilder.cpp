@@ -165,24 +165,52 @@ namespace GameEngine {
 
 	void RDGBuilder::Execute()
 	{
-		// TODO 还没做剔除
-		for (auto& pass : passes)
-		{
-			if (pass->isCulled || !pass) continue;
-			command->PushLabel(pass->Name(), pass->GetLabelColor());
-#ifdef RDG_DEBUG
-			LOG_INFO("RDG: Execute Pass: {0}", pass->Name());
-#endif
+		std::string currentPrefix;
+
+		for (size_t i = 0; i < passes.size(); ++i) {
+			auto& pass = passes[i];
+			if (!pass || pass->isCulled) continue;
+			std::string name = pass->Name();
+			size_t pos = name.find('_');
+			std::string prefix = (pos != std::string::npos) ? name.substr(0, pos) : name;
+			if (!currentPrefix.empty() && currentPrefix != prefix) {
+				command->PopLabel();
+				currentPrefix.clear();
+			}
+			if (currentPrefix.empty()) {
+				command->PushLabel(prefix, pass->GetLabelColor());
+				currentPrefix = prefix;
+			}
+
+			// 执行 pass
 			switch (pass->NodeType()) {
-			case RDG_PASS_NODE_TYPE_RENDER:         ExecutePass(dynamic_cast<RDGRenderPassNodeRef>(pass));          break;
-			case RDG_PASS_NODE_TYPE_COMPUTE:        ExecutePass(dynamic_cast<RDGComputePassNodeRef>(pass));         break;
-			case RDG_PASS_NODE_TYPE_RAY_TRACING:    ExecutePass(dynamic_cast<RDGRayTracingPassNodeRef>(pass));      break;
-			case RDG_PASS_NODE_TYPE_PRESENT:        ExecutePass(dynamic_cast<RDGPresentPassNodeRef>(pass));         break;
-			case RDG_PASS_NODE_TYPE_COPY:           ExecutePass(dynamic_cast<RDGCopyPassNodeRef>(pass));            break;
+			case RDG_PASS_NODE_TYPE_RENDER:         ExecutePass(dynamic_cast<RDGRenderPassNodeRef>(pass)); break;
+			case RDG_PASS_NODE_TYPE_COMPUTE:        ExecutePass(dynamic_cast<RDGComputePassNodeRef>(pass)); break;
+			case RDG_PASS_NODE_TYPE_RAY_TRACING:    ExecutePass(dynamic_cast<RDGRayTracingPassNodeRef>(pass)); break;
+			case RDG_PASS_NODE_TYPE_PRESENT:        ExecutePass(dynamic_cast<RDGPresentPassNodeRef>(pass)); break;
+			case RDG_PASS_NODE_TYPE_COPY:           ExecutePass(dynamic_cast<RDGCopyPassNodeRef>(pass)); break;
 			default:                                LOG_ERROR("Unsupported RDG pass type!");
 			}
-			command->PopLabel();
+
+			// 检查下一个 pass 前缀，如果变化或者是最后一个 pass，pop
+			size_t nextIndex = i + 1;
+			std::string nextPrefix;
+			while (nextIndex < passes.size() && (!passes[nextIndex] || passes[nextIndex]->isCulled)) {
+				++nextIndex;
+			}
+			if (nextIndex < passes.size()) {
+				std::string nextName = passes[nextIndex]->Name();
+				size_t nextPos = nextName.find('_');
+				nextPrefix = (nextPos != std::string::npos) ? nextName.substr(0, nextPos) : nextName;
+			}
+
+			if (nextIndex == passes.size() || nextPrefix != prefix) {
+				command->PopLabel();
+				currentPrefix.clear();
+			}
 		}
+
+
 
 		for (auto& pass : passes)   // 释放池化资源
 		{

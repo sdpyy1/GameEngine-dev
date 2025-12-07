@@ -274,5 +274,8 @@ uint GetSpotLightCount()
     return LIGHTINFO.data.spotLightCount;
 }
 
-
+DDGISetting GetDDGISetting()
+{
+    return GLOBAL_SETTING.data.ddgiSetting;
+}
 #endif // GET_GLSL

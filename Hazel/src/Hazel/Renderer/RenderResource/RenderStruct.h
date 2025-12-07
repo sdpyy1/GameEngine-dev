@@ -5,7 +5,7 @@
 #define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
 #define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless 单个binding的最大描述符数目
 #define MAX_PER_FRAME_OBJECT_SIZE 10240			    //全局最大支持的物体数目
-#define MAX_GIZMO_PRIMITIVE_COUNT 200
+#define MAX_GIZMO_PRIMITIVE_COUNT 2000
 
 #define MAX_POINT_LIGHT_SIZE 16
 #define MAX_SPOT_LIGHT_SIZE 16
@@ -32,7 +32,6 @@ namespace GameEngine {
 		BINDLESS_SLOT_TEXTURE_2D_ARRAY,
 		BINDLESS_SLOT_TEXTURE_CUBE,
 		BINDLESS_SLOT_TEXTURE_3D,
-
 		BINDLESS_SLOT_MAX_ENUM,     //
 	};
 
@@ -291,6 +290,7 @@ namespace GameEngine {
 	{
 		uint32_t DebugCSM;
 		uint32_t ShadowType = SHADOW_TYPE_PCSS;
+        uint32_t _padding[2];
 	};
 
 	struct TAASetting
@@ -314,12 +314,34 @@ namespace GameEngine {
 		float IbLScale;
 		float pading[2];
 	};
+	struct DDGISetting {
+		glm::vec3 centerPosition;
+		uint32_t _padding1;
 
+
+		glm::vec3 probeCount;
+		uint32_t enable;
+
+		glm::vec3 gridStep;
+		uint32_t visulaize;
+
+		uint32_t raysPerProbe;
+		uint32_t _padding[3];
+
+		BoundingBox box;
+	};
 	struct GlobalSettingInfo
 	{
 		SkySetting skySetting;
 		PostprocessSetting postprocess;
 		ShadowSetting shadowSetting;
 		IconTextureInfo iconTextures;
+		DDGISetting ddgiSetting;
+
+	};
+
+	struct DDGIVolume
+	{
+
 	};
 }

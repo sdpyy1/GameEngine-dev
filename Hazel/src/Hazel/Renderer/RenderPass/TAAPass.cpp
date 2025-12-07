@@ -66,13 +66,13 @@ namespace GameEngine {
 			.Finish();
 
 		// 采样结果cpoy到历史纹理
-		builder.CreateCopyPass("TAA History Copy")
+		builder.CreateCopyPass("TAA_HistoryCopy")
 			.From(TaaRes)
 			.To(history)
 			.Finish();
 
 		// 渲染结果写到Viewport
-		builder.CreateCopyPass("TAA Copy")
+		builder.CreateCopyPass("TAA_Copy")
 			.From(TaaRes)
 			.To(Viewport)
 			.Finish();

@@ -119,7 +119,7 @@ void GameEngine::GizmoPass::Init()
 		command[0].vertexOffset = 0;
 		command[0].firstInstance = 0;
 
-		sphereWire = std::make_shared<Model>(APP_MODEL_PATH + "Basic/sphere_wire.obj", m_ModelSpec);
+		sphereWire = std::make_shared<Model>(APP_MODEL_PATH + "Basic/sphere.obj", m_ModelSpec);
 		sphereWire->OnLoadAsset();
 		command[1].indexCount = sphereWire->GetIndexBuffer(0)->IndexNum();
 		command[1].instanceCount = 0;
@@ -151,7 +151,7 @@ void GameEngine::GizmoPass::Build(RDGBuilder& builder)
         .Finish();
 
 	// 通过设置信息装填各种光源信息到GizmoDrawData
-	builder.CreateComputePass("GizmoInit")
+	builder.CreateComputePass("Gizmo_Init")
 		.RootSignature(m_RootSignature)
 		.Execute([&](RDGPassContext context) { 
 			 RHICommandListRef command = context.command;
@@ -171,7 +171,7 @@ void GameEngine::GizmoPass::Build(RDGBuilder& builder)
     // ------------------------------------------------------------
     // BoxPass
     // ------------------------------------------------------------
-    builder.CreateRenderPass("BoxPass")
+    builder.CreateRenderPass("Gizmo_BoxPass")
         .Color(0, viewport, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, { 0,0,0,0 })
         .DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
         .Execute([&](RDGPassContext context)
@@ -198,7 +198,7 @@ void GameEngine::GizmoPass::Build(RDGBuilder& builder)
     // ------------------------------------------------------------
     // SpherePass
     // ------------------------------------------------------------
-    builder.CreateRenderPass("SpherePass")
+    builder.CreateRenderPass("Gizmo_SpherePass")
         .Color(0, viewport, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, { 0,0,0,0 })
         .DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
         .Execute([&](RDGPassContext context)
@@ -226,7 +226,7 @@ void GameEngine::GizmoPass::Build(RDGBuilder& builder)
     // ------------------------------------------------------------
     // LinePass
     // ------------------------------------------------------------
-    builder.CreateRenderPass("LinePass")
+    builder.CreateRenderPass("Gizmo_LinePass")
         .Color(0, viewport, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, { 0,0,0,0 })
         .DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
         .Execute([&](RDGPassContext context)
@@ -252,7 +252,7 @@ void GameEngine::GizmoPass::Build(RDGBuilder& builder)
     // ------------------------------------------------------------
     // BillboardPass
     // ------------------------------------------------------------
-    builder.CreateRenderPass("BillboardPass")
+    builder.CreateRenderPass("Gizmo_BillboardPass")
         .Color(0, viewport, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, { 0,0,0,0 })
         .DepthStencil(depth, ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
         .Execute([&](RDGPassContext context)

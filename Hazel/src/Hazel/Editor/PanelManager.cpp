@@ -20,7 +20,7 @@ namespace GameEngine {
 		m_FolderPreviewPanel.OnImGuiRender();
 		m_AssetManagerPanel.OnImGuiRender();
 		m_LogPanel.OnImGuiRender();
-		// m_RDGPanel.OnImGuiRender();   // 一个玩意占20FPS
+		m_RDGPanel.OnImGuiRender();   // 一个玩意占20FPS
 	}
 	void PanelManager::ViewportGUI(RHIDescriptorSetRef viewportTexture)
 	{

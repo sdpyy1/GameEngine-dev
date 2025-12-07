@@ -32,8 +32,9 @@ namespace GameEngine
             // LOG_TRACE("RHIGraphicsPipelineInfo is not valid!");
             return { nullptr };
         }
+#ifdef RDG_DEBUG
         LOG_WARN("RHIGraphicsPipeline not found in cache, creating new.");
-
+#endif
         ret = { APP_DYNAMICRHI->CreateGraphicsPipeline(info)};
         cachedPipelines[info] = ret;
         return ret;
