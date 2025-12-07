@@ -195,6 +195,7 @@ namespace GameEngine {
 		glm::mat4 invPV;
 		glm::mat4 prevView;
 		glm::mat4 prevProj;
+		glm::mat4 projNoJetter;
 		float Width;
 		float Height;
 		float Near;

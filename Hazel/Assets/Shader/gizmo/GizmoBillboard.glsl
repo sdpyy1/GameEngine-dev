@@ -23,25 +23,25 @@ layout(location = 2) out vec4 OUT_COLOR;
 
 void Emit(vec3 center, vec2 extent, uint textureID, vec4 color){
     vec4 viewCenter = CAMERAINFO.data.view * vec4(center, 1.0f);
-    gl_Position = CAMERAINFO.data.proj * (viewCenter + vec4(-extent.x, extent.y, 0.0f, 0.0f));
+    gl_Position = CAMERAINFO.data.projNoJetter * (viewCenter + vec4(-extent.x, extent.y, 0.0f, 0.0f));
     OUT_TEXTURE_ID = textureID;
     OUT_UV = vec2(0.0f, 0.0f);
     OUT_COLOR = color;
 	EmitVertex();
 
-	gl_Position = CAMERAINFO.data.proj * (viewCenter + vec4(extent.x, extent.y, 0.0f, 0.0f));
+	gl_Position = CAMERAINFO.data.projNoJetter * (viewCenter + vec4(extent.x, extent.y, 0.0f, 0.0f));
 	OUT_TEXTURE_ID = textureID;
     OUT_UV = vec2(1.0f, 0.0f);
     OUT_COLOR = color;
 	EmitVertex();
 
-    gl_Position = CAMERAINFO.data.proj * (viewCenter + vec4(-extent.x, -extent.y, 0.0f, 0.0f));
+    gl_Position = CAMERAINFO.data.projNoJetter * (viewCenter + vec4(-extent.x, -extent.y, 0.0f, 0.0f));
 	OUT_TEXTURE_ID = textureID;
     OUT_UV = vec2(0.0f, 1.0f);
     OUT_COLOR = color;
 	EmitVertex();
 
-    gl_Position = CAMERAINFO.data.proj * (viewCenter + vec4(extent.x, -extent.y, 0.0f, 0.0f));
+    gl_Position = CAMERAINFO.data.projNoJetter * (viewCenter + vec4(extent.x, -extent.y, 0.0f, 0.0f));
 	OUT_TEXTURE_ID = textureID;
     OUT_UV = vec2(1.0f, 1.0f);
     OUT_COLOR = color;

@@ -11,7 +11,7 @@ void main()
     OUT_COLOR                   = info.color;
 
     vec4 pos = vec4(IN_POS * info.extent + info.center, 1.0f);
-    gl_Position = CAMERAINFO.data.proj * CAMERAINFO.data.view * pos;
+    gl_Position = CAMERAINFO.data.projNoJetter * CAMERAINFO.data.view * pos;
 }
 #endif
 

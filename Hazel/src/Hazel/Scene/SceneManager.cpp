@@ -33,7 +33,7 @@ namespace GameEngine
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.enable = component.enableTAA;
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.shaper = component.taaSharpen;
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.shaperStrength = component.taaSharpness;
-			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.UVjetter = Halton::GetTAAJetter(APP_TICK);
+			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.UVjetter = HaltonUtils::GetJitter(APP_TICK);
 		}
 		// Ìì¿ÕÉèÖÃ
 		auto skyLight = m_CurrentScene->GetFirstEntityWith<SkyComponent>();

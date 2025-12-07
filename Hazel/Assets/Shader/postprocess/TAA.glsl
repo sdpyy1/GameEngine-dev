@@ -73,7 +73,7 @@ void main()
     historyColor = YCoCgToRGB(ResultYCoCg);
 
     float motionLength = length(velocity);
-    float blendFactor = Saturate(0.05 + motionLength * 1000.0);
+    float blendFactor = Saturate(0.05 + motionLength * 100.0);
     bool valid = (historyTexCoords.x >= 0.0 && historyTexCoords.x <= 1.0) && 
                  (historyTexCoords.y >= 0.0 && historyTexCoords.y <= 1.0);
     if (!valid) {blendFactor = 1.0;}

@@ -33,9 +33,11 @@ namespace GameEngine {
 		RDGTextureHandle Viewport = builder.GetTexture("ViewPort");
 		RDGTextureHandle velocity = builder.GetTexture("GBufferVelocity");
 		RDGTextureHandle depth = builder.GetTexture("Depth");
-		RDGTextureHandle history = builder.CreateTexture("TAA History")
-			.Import(historyTexture, RESOURCE_STATE_UNDEFINED)
-			.Finish();
+		RDGTextureHandle history = isFirstTick ? builder.CreateTexture("TAA History").Import(historyTexture, RESOURCE_STATE_UNDEFINED).Finish()
+			: builder.CreateTexture("TAA History").Import(historyTexture, RESOURCE_STATE_TRANSFER_DST).Finish();
+		if (isFirstTick) {
+            isFirstTick = false;
+		}
 		RDGTextureHandle TaaRes = builder.CreateTexture("TAA Res")
 			.Exetent({ w,h,1 })
 			.AllowReadWrite()

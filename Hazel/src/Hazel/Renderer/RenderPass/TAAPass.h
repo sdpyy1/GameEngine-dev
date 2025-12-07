@@ -18,7 +18,7 @@ namespace GameEngine {
 		RHIShaderRef m_Shader;
 		RHIRootSignatureRef m_RootSignature;
 		RHIComputePipelineRef m_Pipeline;
-
+		bool isFirstTick = true;
 		RHITextureRef historyTexture;
 	};
 }

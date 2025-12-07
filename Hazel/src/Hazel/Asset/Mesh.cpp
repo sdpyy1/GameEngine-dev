@@ -9,7 +9,7 @@ namespace GameEngine{
 
     void Mesh::Merge(const Mesh& other, const std::vector<uint32_t>& subMeshIndex)
     {
-        uint32_t baseIndexSize = index.size();  //如果该mesh已有顶点，那需要保证可用的流是一致的
+        uint32_t baseIndexSize = index.size();
         if (baseIndexSize > 0)
         {
             assert((position.size() > 0 && other.position.size() > 0) || (position.size() == 0 && other.position.size() == 0));

@@ -174,6 +174,7 @@ struct Camera{
     mat4 InverseViewProj;
     mat4 prevView;
     mat4 prevProj;
+    mat4 projNoJetter;
 	float width;
 	float height;
 	float Near;

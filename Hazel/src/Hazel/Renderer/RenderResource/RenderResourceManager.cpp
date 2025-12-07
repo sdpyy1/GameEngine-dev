@@ -3,6 +3,7 @@
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
 #include "Hazel/Scene/SceneManager.h"
+#include "Hazel/Math/Halton.h"
 
 namespace GameEngine {
 	static uint32_t BindlessSlotToPerFrameBinding(BindlessSlot slot) { return slot + (uint32_t)GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION; }
@@ -176,7 +177,7 @@ namespace GameEngine {
 		setting.iconTextures.pointLightID = m_GlobalSettingInfo.iconTextures.pointLightID;
 		setting.iconTextures.spotLightID = m_GlobalSettingInfo.iconTextures.spotLightID;
 		SetGlobalSettingInfo(setting);
-
+		m_GlobalSettingInfo = setting;
 		cpuRenderSetting = APP_SCENEMANAGER->GetSceneInfo().cpuRenderSetting;
 
 		UpdateCameraInfo();
@@ -186,16 +187,21 @@ namespace GameEngine {
 	{
 		CameraData tmpdata;
 		EditorCameraRef camera = APP_SCENEMANAGER->GetSceneInfo().camera;
+
+		if (m_GlobalSettingInfo.postprocess.TaaSetting.enable) {
+			tmpdata.proj = HaltonUtils::JitterProjection(camera->GetProjectionMatrix(), APP_TICK, APP_WINDOWSIZE.first, APP_WINDOWSIZE.second);
+		}
+		else {
+            tmpdata.proj = camera->GetProjectionMatrix();
+		}
 		tmpdata.view = camera->GetViewMatrix();
-		tmpdata.proj = camera->GetProjectionMatrix();
 		tmpdata.invProj = glm::inverse(tmpdata.proj);
 		tmpdata.invView = glm::inverse(tmpdata.view);
-		tmpdata.viewproj = camera->GetViewProjection();
+		tmpdata.viewproj = tmpdata.proj * tmpdata.view;
 		tmpdata.invPV = glm::inverse(tmpdata.viewproj);
-
 		tmpdata.prevView = camera->GetPrevView(tmpdata.view);
 		tmpdata.prevProj = camera->GetPrevProjection(tmpdata.proj);
-
+		tmpdata.projNoJetter = camera->GetProjectionMatrix();
 		tmpdata.Width = APP_WINDOWSIZE.first;
 		tmpdata.Height = APP_WINDOWSIZE.second;
 		tmpdata.Near = camera->GetNearClip();
