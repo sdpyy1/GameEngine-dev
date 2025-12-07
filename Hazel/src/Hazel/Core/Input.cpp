@@ -4,6 +4,7 @@
 #include "Hazel/Core/Application.h"
 
 #include <GLFW/glfw3.h>
+#include <imgui.h>
 #include <imgui_internal.h>
 
 namespace GameEngine {

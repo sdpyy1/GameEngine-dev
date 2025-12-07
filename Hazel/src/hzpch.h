@@ -21,7 +21,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <fstream>
-
 #include "Hazel/Core/Base.h"
 
 #include "Hazel/Core/Log.h"

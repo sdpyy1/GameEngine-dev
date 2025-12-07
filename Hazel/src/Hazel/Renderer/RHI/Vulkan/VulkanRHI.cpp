@@ -1429,6 +1429,14 @@ namespace GameEngine
 	void VulkanRHICommandContext::ImGuiRenderDrawData()
 	{
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), handle);
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			VkCommandBuffer vk_cmd = static_cast<VkCommandBuffer>(handle);
+			ImGui::RenderPlatformWindowsDefault(NULL, (void*)&vk_cmd);
+			glfwMakeContextCurrent(backup_current_context);
+		}
 	}
 
 	void VulkanRHICommandContext::PushLabel(const std::string& name, Color3 color)

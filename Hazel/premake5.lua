@@ -71,11 +71,9 @@ project "Hazel"
 	}
 	links
 	{
-		"Box2D",
 		"GLFW",
 		"Glad",
 		"ImGui",
-		"msdf-atlas-gen",
 		"yaml-cpp",
 		"opengl32.lib",
 		"vulkan-1.lib",
