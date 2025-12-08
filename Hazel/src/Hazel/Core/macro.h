@@ -93,7 +93,7 @@
 
 // #define RTDEBUG
 #ifdef RTDEBUG
-	#define RENDER_SUBMIT(...) Renderer::Submit(__VA_ARGS__, __FILE__, __LINE__, __FUNCTION__)
+	#define RENDER_SUBMIT(...) RenderManager::Submit(__VA_ARGS__, __FILE__, __LINE__, __FUNCTION__)
 #else
-	#define RENDER_SUBMIT(...) Renderer::Submit(__VA_ARGS__)
+	#define RENDER_SUBMIT(...) RenderManager::Submit(__VA_ARGS__)
 #endif

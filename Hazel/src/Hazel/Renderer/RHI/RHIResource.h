@@ -76,7 +76,7 @@ namespace GameEngine {
 	public:
 		RHICommandPool(const RHICommandPoolInfo& info): RHIResource(RHI_COMMAND_POOL), info(info){}
 
-		RHICommandListRef CreateCommandList(bool byPass = true);
+		RHICommandListRef CreateCommandList(bool byPass = false);
 
 	protected:
 		RHICommandPoolInfo info;

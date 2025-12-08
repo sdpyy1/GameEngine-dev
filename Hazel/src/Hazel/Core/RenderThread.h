@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Thread.h"
-
+#include "Hazel/Core/Definations.h"
 #include <atomic>
 
 namespace GameEngine {
@@ -38,9 +38,8 @@ namespace GameEngine {
 		void NextFrame();
 		void BlockUntilRenderComplete();
 		void Kick();
-
 		void Pump();
-
+		static uint32_t RT_GetFrameIndex();
 		static bool IsCurrentThreadRT();
 	private:
 		RenderThreadData* m_Data;

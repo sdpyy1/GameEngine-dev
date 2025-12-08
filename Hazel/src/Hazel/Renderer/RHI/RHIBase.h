@@ -636,7 +636,7 @@ namespace GameEngine {
 		RHICommandPoolRef pool;
 		RHICommandContextRef context;
 
-		bool byPass = true; 		//是否立即录制
+		bool byPass = false; 		//是否立即录制
 
 	} CommandListInfo;
 	typedef struct CommandListImmediateInfo

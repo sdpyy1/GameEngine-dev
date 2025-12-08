@@ -24,8 +24,15 @@
 #include <Hazel/Renderer/RenderPass/DDGIPass.h>
 
 namespace GameEngine {
-	RenderManager::RenderManager()
+	constexpr static uint32_t s_RenderCommandQueueCount = 2;
+	static RenderCommandQueue* s_CommandQueue[s_RenderCommandQueueCount];
+	static std::atomic<uint32_t> s_RenderCommandQueueSubmissionIndex = 0;
+	RenderManager::RenderManager():m_RenderThread(ThreadingPolicy::MultiThreaded) // SingleThreaded  MultiThreaded
 	{
+		m_RenderThread.Run();
+		for (int i = 0; i < s_RenderCommandQueueCount; i++) {
+			s_CommandQueue[i] = new RenderCommandQueue();
+		}
 		RHIConfig config;
 		config.debug = true;
 		config.enableRayTracing = true;
@@ -37,23 +44,33 @@ namespace GameEngine {
 		m_SwapChain = m_DynamicRHI->CreateSwapChain({ m_Surface, m_GraphicsQueue, FRAMES_IN_FLIGHT, m_Surface->GetExetent(), SWAPCHAIN_COLOR_FORMAT });
 		m_CommandPool = m_DynamicRHI->CreateCommandPool({ m_GraphicsQueue });
 		for (int i = 0; i < FRAMES_IN_FLIGHT; i++) {
-			m_PerFrameBaseResources[i].commandList = m_CommandPool->CreateCommandList(true);
+			m_PerFrameBaseResources[i].commandList = m_CommandPool->CreateCommandList(false);
 			m_PerFrameBaseResources[i].startSemaphore = m_DynamicRHI->CreateSemaphore();
 			m_PerFrameBaseResources[i].finishSemaphore = m_DynamicRHI->CreateSemaphore();
 			m_PerFrameBaseResources[i].fence = m_DynamicRHI->CreateFence(true);
 		}
 	}
 
+	void RenderManager::RenderPrevFrame() {
+
+		m_RenderThread.BlockUntilRenderComplete(); // 等待RenderCommandQueue执行结束
+
+		SwapRenderCommandQueue(); // 交换RenderCommandQueue（交换后的queue用于收集）
+
+		m_RenderThread.Kick(); // 让RT开始工作
+
+	}
+
 	void RenderManager::Tick(float timestep)
 	{
+		RenderPrevFrame();
 		LightCollector::CollectLight();
 		MeshCollector::CollectMesh();
+		//LOG_INFO("收集第{}帧", APP_FRAMEINDEX);
 		m_RenderResourceManager->Tick();
 		auto& CurResource = m_PerFrameBaseResources[APP_FRAMEINDEX];
-		/// LOG_INFO("RenderManager::Tick");
-		CurResource.fence->Wait();
-		RHITextureRef CurSwapchainTexture = m_SwapChain->GetNewFrame(nullptr, CurResource.startSemaphore);
 		RHICommandListRef CurCommandList = CurResource.commandList;
+
 		CurCommandList->BeginCommand();
 		CurCommandList->ClearDrawCallCount();
 		RDGBuilder rdgBuilder = RDGBuilder(CurCommandList);
@@ -64,9 +81,18 @@ namespace GameEngine {
 		rdgDependencyGraph = rdgBuilder.GetGraph();
 		m_DrawCallCount = CurCommandList->GetDrawCallCount();
 		CurCommandList->EndCommand();
-		CurCommandList->Execute(CurResource.fence, CurResource.startSemaphore, CurResource.finishSemaphore);
-		m_GPUTimeInfos = CurCommandList->GetGPUTime();
-		m_SwapChain->Present(CurResource.finishSemaphore);
+		RENDER_SUBMIT([this]() {
+			//LOG_INFO("渲染第{}帧", APP_FRAMEINDEX_RT);
+			auto& CurResource = m_PerFrameBaseResources[APP_FRAMEINDEX_RT];
+			CurResource.fence->Wait(); // 先等待这个飞行帧上一帧渲染结束
+			m_SwapChain->GetNewFrame(nullptr, CurResource.startSemaphore);
+			RHICommandListRef CurCommandList = CurResource.commandList;
+			CurCommandList->Execute(CurResource.fence, CurResource.startSemaphore, CurResource.finishSemaphore);
+			m_GPUTimeInfos = CurCommandList->GetGPUTime();
+			m_SwapChain->Present(CurResource.finishSemaphore);
+			m_RenderThread.NextFrame();
+
+		});
 	}
 
 	void RenderManager::InitPasses()
@@ -83,13 +109,13 @@ namespace GameEngine {
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
 		if (RENDER_ENABLE_RAY_TRACING) {
 			passes[RAYTRACING_PASS] = std::make_shared<RayTracingPass>();
+			passes[DDGI_PASS] = std::make_shared<DDGIPass>();
 		}
 		passes[PREDEPTH_PASS] = meshPasses[MESH_PASS_PREDEPTH_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();
 		passes[GIZMO_PASS] = std::make_shared<GizmoPass>();
 		passes[SKY_PASS] = std::make_shared<SkyPass>();
 		passes[LIGHT_PASS] = std::make_shared<LightPass>();
-        passes[DDGI_PASS] = std::make_shared<DDGIPass>();
 		passes[TAA_PASS] = std::make_shared<TAAPass>();
 		passes[BLOOM_PASS] = std::make_shared<BloomPass>();
 		passes[POST_PROCESS_PASS] = std::make_shared<PostProcessPass>();
@@ -114,5 +140,41 @@ namespace GameEngine {
 			m_PanelManager->OnEvent(e);
 		}
 		return false;
+	}
+	void RenderManager::SwapRenderCommandQueue()
+	{
+		s_RenderCommandQueueSubmissionIndex = (s_RenderCommandQueueSubmissionIndex + 1) % s_RenderCommandQueueCount;
+	}
+	RenderCommandQueue& RenderManager::GetRenderCommandQueue()
+	{
+		return *s_CommandQueue[s_RenderCommandQueueSubmissionIndex];
+	}
+
+
+	// 挂在渲染线程的函数
+	void RenderManager::RenderThreadFunc(RenderThread* renderThread)
+	{
+		while (renderThread->IsRunning())
+		{
+			WaitAndRender(renderThread);
+		}
+	}
+
+	uint32_t RenderManager::GetRenderQueueIndex()
+	{
+		return (s_RenderCommandQueueSubmissionIndex + 1) % s_RenderCommandQueueCount;
+	}
+	void RenderManager::WaitAndRender(RenderThread* renderThread)
+	{
+		// Wait for kick, then set render thread to busy
+		{
+			// 渲染线程循环等待Kick信号，收到信号后，设置为Busy信号并开始工作
+			renderThread->WaitAndSet(RenderThread::State::Kick, RenderThread::State::Busy);
+		}
+		// 工作就是把缓存命令全部执行
+		s_CommandQueue[GetRenderQueueIndex()]->Execute();
+
+		// Rendering has completed, set state to idle
+		renderThread->Set(RenderThread::State::Idle);
 	}
 }

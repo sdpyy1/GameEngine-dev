@@ -3,6 +3,7 @@ namespace GameEngine {
 #define FRAMES_IN_FLIGHT 3							//Ö¡»º³åÊýÄ¿
 
 #define APP_FRAMEINDEX Application::GetFrameIndex()
+#define APP_FRAMEINDEX_RT RenderThread::RT_GetFrameIndex()
 #define APP_GLFWWINDOW Application::GetWindowManager()->GetGLFWWindow()
 #define APP_RENDERSYSTEM Application::GetRenderSystem()
 #define APP_SWAPCHAIN Application::GetRenderSystem()->GetSwapChain()

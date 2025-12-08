@@ -24,12 +24,7 @@ namespace GameEngine
 
         if (IsEnabled())
         {
-            if (viewportID[APP_FRAMEINDEX]) {
-                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)viewportID[APP_FRAMEINDEX]->RawHandle());
-            }
-            if (debugId[APP_FRAMEINDEX]) {
-                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)debugId[APP_FRAMEINDEX]->RawHandle());
-            }
+
             RDGTextureHandle viewport = builder.GetTexture("ViewPort");
 
             auto [w, h] = APP_WINDOWSIZE;
@@ -50,20 +45,28 @@ namespace GameEngine
                         auto [w, h] = APP_WINDOWSIZE;
                         Extent2D windowExtent = { w, h };
                         RHICommandListRef command = context.command;
-        
-                        viewportID[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
-                        if (builder.GetTexture(debugName)!= UINT32_MAX) {
-                            debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture(debugName));
+                        if (!viewportID[APP_FRAMEINDEX]) {
+                            viewportID[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
                         }
-                        else {
-                            debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+                        if (!debugId[APP_FRAMEINDEX]) {
+                            if (builder.GetTexture(debugName) != UINT32_MAX) {
+                                debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture(debugName));
+                            }
+                            else {
+                                debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+                            }
                         }
                         ImGui_ImplVulkan_NewFrame();
                         ImGui_ImplGlfw_NewFrame();
                         ImGui::NewFrame();
                         m_PanelManager->SetGPUTimeInfo(RENDER_GPU_TIME_INFO);
                         m_PanelManager->ImGuiCommand(viewportID[APP_FRAMEINDEX], debugId[APP_FRAMEINDEX]);
+                        ImGui::EndFrame();
                         ImGui::Render();
+
+                        ImGui::UpdatePlatformWindows();
+                        ImGui::RenderPlatformWindowsDefault();
+     
                         command->ImGuiRenderDrawData();
                     })
                 .Finish();

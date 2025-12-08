@@ -70,7 +70,7 @@ namespace GameEngine
 		if (info.imageCount != imageCount)
 		{
 			this->info.imageCount = capabilities.maxImageCount;
-			LOG_ERROR("Swapchain image count is greater than capability maximum!");
+			LOG_WARN("Swapchain image count is greater than capability maximum!");
 		}
 
 		// 创建交换链信息
@@ -228,7 +228,6 @@ namespace GameEngine
 	{
 		VkSemaphore semaphore = VK_NULL_HANDLE;
 		if (waitSemaphore != nullptr) semaphore = std::static_pointer_cast<VulkanRHISemaphore>(waitSemaphore)->GetHandle();
-
 		VkPresentInfoKHR presentInfo{};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 		presentInfo.swapchainCount = 1;

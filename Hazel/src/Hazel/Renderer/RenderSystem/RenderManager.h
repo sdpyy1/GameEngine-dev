@@ -5,6 +5,8 @@
 #include <Hazel/Renderer/RDG/DependencyGraph.h>
 #include <Hazel/Renderer/RenderPass/RenderPass.h>
 #include "Hazel/Core/Events/Event.h"
+#include <Hazel/Core/RenderThread.h>
+#include "RenderCommandQueue.h"
 // #define RDG_DEBUG
 #define RENDER_RESOURCEMANAGER APP_RENDERSYSTEM->GetRenderResourceManager()
 #define RENDER_GPU_TIME_INFO APP_RENDERSYSTEM->GetGPUTimeInfos()
@@ -18,6 +20,7 @@ namespace GameEngine
 	{
 	public:
 		RenderManager();
+		void RenderPrevFrame();
 		void InitPasses();
 		void Tick(float timestep);
 		RHISwapchainRef GetSwapChain() { return m_SwapChain; }
@@ -32,6 +35,33 @@ namespace GameEngine
 		bool IsEnableRayTracing() { return m_RHIConfig.enableRayTracing; }
 		void SetDrawMeshCount(uint32_t count) { m_DrawMeshCount = count; }
 		uint32_t GetDrawMeshCount() { return m_DrawMeshCount; }
+		void SwapRenderCommandQueue();
+
+		// RT
+		static RenderCommandQueue& GetRenderCommandQueue();
+		template<typename FuncT>
+		static void Submit(FuncT&& func, const char* file = nullptr, int line = 0, const char* function = nullptr)
+		{
+			auto& queue = GetRenderCommandQueue();
+#ifdef RTDEBUG
+			queue.m_DebugInfos.push_back({ file, line, function });
+#endif
+			auto renderCmd = [](void* ptr) {
+				auto pFunc = (FuncT*)ptr;
+				(*pFunc)();
+				pFunc->~FuncT();
+				};
+
+			auto storageBuffer = queue.Allocate(renderCmd, sizeof(FuncT));
+			new (storageBuffer) FuncT(std::forward<FuncT>(func));
+		}
+		static uint32_t GetRenderQueueIndex();
+		static void WaitAndRender(RenderThread* renderThread);
+
+		static void RenderThreadFunc(RenderThread* renderThread);
+
+
+
 	private:
 		// ´¦ÀíÆ÷
 		std::shared_ptr<RenderResourceManager> m_RenderResourceManager;
@@ -58,5 +88,7 @@ namespace GameEngine
 		uint32_t m_DrawCallCount = 0;
 		uint32_t m_DrawMeshCount = 0;
 		RHIConfig m_RHIConfig;
+
+		RenderThread m_RenderThread;
 	};
 }

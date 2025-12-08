@@ -1,6 +1,6 @@
 #include "hzpch.h"
 #include "Hazel/Core/RenderThread.h"
-
+#include "Hazel/Renderer/RenderSystem/RenderManager.h"
 #include <Windows.h>
 
 namespace GameEngine {
@@ -14,7 +14,7 @@ namespace GameEngine {
 	};
 
 	static std::thread::id s_RenderThreadID;
-
+	static uint32_t s_RenderThreadFrameIndex = 0;
 	RenderThread::RenderThread(ThreadingPolicy coreThreadingPolicy)
 		: m_RenderThread("Render Thread"), m_ThreadingPolicy(coreThreadingPolicy)
 	{
@@ -38,10 +38,11 @@ namespace GameEngine {
 	void RenderThread::Run()
 	{
 		m_IsRunning = true;
-		if (m_ThreadingPolicy == ThreadingPolicy::MultiThreaded)
-			// m_RenderThread.Dispatch(Renderer::RenderThreadFunc, this);
-
+		if (m_ThreadingPolicy == ThreadingPolicy::MultiThreaded) {
+			m_RenderThread.Dispatch(RenderManager::RenderThreadFunc, this);
+		}
 		s_RenderThreadID = m_RenderThread.GetID();
+
 	}
 
 	void RenderThread::Terminate()
@@ -98,7 +99,7 @@ namespace GameEngine {
 	void RenderThread::NextFrame()
 	{
 		m_AppThreadFrame++;
-		// Renderer::SwapQueues();  // ½»»»ÃüÁî»º³å³Ø
+		s_RenderThreadFrameIndex = (s_RenderThreadFrameIndex + 1 )% FRAMES_IN_FLIGHT;
 	}
 
 	void RenderThread::BlockUntilRenderComplete()
@@ -114,23 +115,23 @@ namespace GameEngine {
 		if (m_ThreadingPolicy == ThreadingPolicy::MultiThreaded)
 		{
 			Set(State::Kick);
-		}else
-		{
-			// Renderer::WaitAndRender(this);
 		}
 	}
 
 	void RenderThread::Pump()
 	{
-		NextFrame();  // ÇÐ»»ÃüÁî»º³å³ØÎªÏÂÒ»¸ö
+		NextFrame();
 		Kick();
 		BlockUntilRenderComplete();
 	}
 
+	uint32_t RenderThread::RT_GetFrameIndex()
+	{
+		return s_RenderThreadFrameIndex;
+	}
+
 	bool RenderThread::IsCurrentThreadRT()
 	{
-		// NOTE(Yan): for debugging
-		// VERIFY(s_RenderThreadID != std::thread::id());
 		return s_RenderThreadID == std::this_thread::get_id();
 	}
 
