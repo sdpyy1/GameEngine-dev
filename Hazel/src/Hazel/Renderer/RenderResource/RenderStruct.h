@@ -318,8 +318,7 @@ namespace GameEngine {
 		glm::vec3 centerPosition;
 		uint32_t _padding1;
 
-
-		glm::vec3 probeCount;
+		glm::uvec3 probeCount;
 		uint32_t enable;
 
 		glm::vec3 gridStep;
@@ -337,11 +336,6 @@ namespace GameEngine {
 		ShadowSetting shadowSetting;
 		IconTextureInfo iconTextures;
 		DDGISetting ddgiSetting;
-
-	};
-
-	struct DDGIVolume
-	{
 
 	};
 }

@@ -30,7 +30,7 @@ vec3 CalculateDirLights(vec3 F0)
 	float G = GaSchlickGGX(cosLi, m_Params.NdotV, m_Params.Roughness);
 
 	vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);   
-	vec3 diffuseBRDF = kd * m_Params.Albedo; // TODO: /PI
+	vec3 diffuseBRDF = kd/PI * m_Params.Albedo; // TODO: /PI
 
 	// Cook-Torrance
 	vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * m_Params.NdotV);
@@ -69,7 +69,7 @@ vec3 CalculatePointLights(in vec3 F0, vec3 worldPos)
 		float G = GaSchlickGGX(cosLi, m_Params.NdotV, m_Params.Roughness);
 
 		vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
-		vec3 diffuseBRDF = kd * m_Params.Albedo;
+		vec3 diffuseBRDF = kd/PI * m_Params.Albedo;
 
 		float pointScale = 1.0;
 		// TODO: 阴影计算简单写在这里,只实现了支持一个阴影
@@ -138,7 +138,7 @@ vec3 CalculateSpotLights(in vec3 F0, vec3 worldPos)
 		float G = GaSchlickGGX(cosLi, m_Params.NdotV, m_Params.Roughness);
 
 		vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
-		vec3 diffuseBRDF = kd * m_Params.Albedo;
+		vec3 diffuseBRDF = kd/PI * m_Params.Albedo;
 
 		// Cook-Torrance
 		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * m_Params.NdotV);

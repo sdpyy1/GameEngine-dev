@@ -72,6 +72,7 @@ namespace GameEngine {
 		// Global Setting
 		void SetGlobalSettingInfo(const GlobalSettingInfo& globalSettingInfo) { m_MultiFrameGlobalResources.globalSettingInfoBuffer.SetData(globalSettingInfo); };
 		void SetGlobalSettingInfo() { m_MultiFrameGlobalResources.globalSettingInfoBuffer.SetData(m_GlobalSettingInfo); };
+		GlobalSettingInfo GetGlobalSettingInfo() { return m_GlobalSettingInfo; };
 
 		// ²ÄÖÊInfo
 		uint32_t AllocateMaterialID() { return m_MultiFrameGlobalResources.materialBuffer.Allocate(); }

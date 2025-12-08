@@ -234,7 +234,7 @@ struct DDGISetting {
     vec3 centerPosition;
     uint _padding1;
 
-    vec3 probeCount;
+    uvec3 probeCount;
     uint enable;
 
     vec3 gridStep;

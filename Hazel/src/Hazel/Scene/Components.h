@@ -130,7 +130,7 @@ namespace GameEngine {
 	struct LightProbeComponent
 	{ 
 		bool enable = true;
-		glm::ivec3 probeCount = glm::ivec3(10,10,10);
+		glm::uvec3 probeCount = glm::uvec3(8,8,8);
 		glm::vec3 gridStep = glm::vec3(3.0f, 3.0f, 3.0f);
 		uint32_t raysPerProbe = 256;
 		bool visulaize = false;
@@ -143,11 +143,6 @@ namespace GameEngine {
 			SerailizeEntry(visulaize)
         EndSerailize
 	};
-
-
-
-
-
 
 
 	struct TransformComponent

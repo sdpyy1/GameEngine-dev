@@ -15,7 +15,13 @@ namespace GameEngine {
 		virtual std::string GetName() { return "DDGIPass"; }
 		virtual PassType GetType() override final { return DDGI_PASS; }
 	private:
-		
+		RHIShaderRef m_RayGenShader;
+		RHIShaderRef m_ClosestHitShader;
+		RHIShaderRef m_MissShader;
+
+
+		RHIRootSignatureRef m_RootSignature;
+		RHIRayTracingPipelineRef m_Pipeline;
 	};
 }
 
