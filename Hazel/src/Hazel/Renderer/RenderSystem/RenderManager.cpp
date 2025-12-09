@@ -24,7 +24,7 @@
 #include <Hazel/Renderer/RenderPass/DDGIPass.h>
 /*
 多线程现在的问题：
-1. ImGUI收集渲染指令后，可能还没来得及渲染，就被下一帧清除
+1. ImGUI收集渲染指令后，可能还没来得及渲染，就被下一帧清除，得找一种深拷贝的办法
 2. 切换窗口，VkQueueSubmit会报错在两个线程中调用，还没找到原因
 */
 namespace GameEngine {
