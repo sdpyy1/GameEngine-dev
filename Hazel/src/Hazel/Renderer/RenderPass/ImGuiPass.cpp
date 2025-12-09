@@ -63,7 +63,6 @@ namespace GameEngine
                         m_PanelManager->ImGuiCommand(viewportID[APP_FRAMEINDEX], debugId[APP_FRAMEINDEX]);
                         ImGui::EndFrame();
                         ImGui::Render();
-
                         ImGui::UpdatePlatformWindows();
                         ImGui::RenderPlatformWindowsDefault();
      

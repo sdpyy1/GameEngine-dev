@@ -25,7 +25,7 @@ namespace GameEngine
 		void Tick(float timestep);
 		RHISwapchainRef GetSwapChain() { return m_SwapChain; }
 		DynamicRHIRef GetRHI() { return m_DynamicRHI; }
-		std::vector<RHIGPUTimeInfo>& GetGPUTimeInfos() { return m_GPUTimeInfos; }
+		std::vector<RHIGPUTimeInfo>& GetGPUTimeInfos();
 		std::shared_ptr<RenderResourceManager> GetRenderResourceManager() { return m_RenderResourceManager; }
 		void SetPanelManager(std::shared_ptr<PanelManager> panelManager);
 		DependencyGraphRef GetRDGDependenctyGraph() { return rdgDependencyGraph; }
@@ -72,7 +72,7 @@ namespace GameEngine
 		RHIQueueRef m_GraphicsQueue;
 		RHISwapchainRef m_SwapChain;
 		RHICommandPoolRef m_CommandPool;
-		std::vector<RHIGPUTimeInfo> m_GPUTimeInfos;
+		std::vector<std::vector<RHIGPUTimeInfo>> m_GPUTimeInfos;
 		struct PerFrameBaseResource
 		{
 			RHICommandListRef commandList;

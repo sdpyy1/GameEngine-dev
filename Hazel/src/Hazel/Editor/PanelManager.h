@@ -52,6 +52,6 @@ namespace GameEngine {
 			float Distance = 0.0f;
 		};
 		// Êý¾Ý
-		std::vector<RHIGPUTimeInfo> m_GPUTimeInfo;
+		std::vector<std::vector<RHIGPUTimeInfo>> m_GPUTimeInfo;
 	};
 }

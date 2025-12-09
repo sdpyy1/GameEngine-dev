@@ -196,11 +196,12 @@ namespace GameEngine {
 	PanelManager::PanelManager()
 	{
 		m_GizmoType = -1;
+		m_GPUTimeInfo.resize(FRAMES_IN_FLIGHT);
 	}
 
 	void PanelManager::SetGPUTimeInfo(std::vector<RHIGPUTimeInfo>& timeInfo)
 	{
-		m_GPUTimeInfo = timeInfo;
+		m_GPUTimeInfo[APP_FRAMEINDEX] = timeInfo;
 	}
 	ImVec4 GetColorForDuration(float ms, float maxMs)
 	{
@@ -217,7 +218,7 @@ namespace GameEngine {
 	{
 		ImGui::Begin("GPU Profiler");
 
-		if (m_GPUTimeInfo.empty())
+		if (m_GPUTimeInfo[APP_FRAMEINDEX].empty())
 		{
 			ImGui::TextDisabled("No GPU timing data captured.");
 			ImGui::End();
@@ -226,7 +227,7 @@ namespace GameEngine {
 
 		// ¼ÆËã×ÜÖ¡ GPU ºÄÊ±
 		float totalFrameMs = 0.0f;
-		for (auto& info : m_GPUTimeInfo)
+		for (auto& info : m_GPUTimeInfo[APP_FRAMEINDEX])
 			totalFrameMs += info.DurationMs;
 
 		ImGui::Text("Total GPU Frame Time: %.3f ms", totalFrameMs);
@@ -244,7 +245,7 @@ namespace GameEngine {
 
 			const float barMaxWidth = 200.0f;
 
-			for (auto& info : m_GPUTimeInfo)
+			for (auto& info : m_GPUTimeInfo[APP_FRAMEINDEX])
 			{
 				float percent = info.DurationMs / totalFrameMs;
 				ImVec4 color = GetColorForDuration(info.DurationMs, totalFrameMs);

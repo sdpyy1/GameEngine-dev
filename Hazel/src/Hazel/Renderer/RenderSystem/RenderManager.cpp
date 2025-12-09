@@ -22,7 +22,11 @@
 #include <Hazel/Renderer/RenderPass/RayTracingPass.h>
 #include <Hazel/Renderer/RenderPass/TAAPass.h>
 #include <Hazel/Renderer/RenderPass/DDGIPass.h>
-
+/*
+多线程现在的问题：
+1. ImGUI收集渲染指令后，可能还没来得及渲染，就被下一帧清除
+2. 切换窗口，VkQueueSubmit会报错在两个线程中调用，还没找到原因
+*/
 namespace GameEngine {
 	constexpr static uint32_t s_RenderCommandQueueCount = 2;
 	static RenderCommandQueue* s_CommandQueue[s_RenderCommandQueueCount];
@@ -33,6 +37,7 @@ namespace GameEngine {
 		for (int i = 0; i < s_RenderCommandQueueCount; i++) {
 			s_CommandQueue[i] = new RenderCommandQueue();
 		}
+		m_GPUTimeInfos.resize(FRAMES_IN_FLIGHT);
 		RHIConfig config;
 		config.debug = true;
 		config.enableRayTracing = true;
@@ -88,7 +93,7 @@ namespace GameEngine {
 			m_SwapChain->GetNewFrame(nullptr, CurResource.startSemaphore);
 			RHICommandListRef CurCommandList = CurResource.commandList;
 			CurCommandList->Execute(CurResource.fence, CurResource.startSemaphore, CurResource.finishSemaphore);
-			m_GPUTimeInfos = CurCommandList->GetGPUTime();
+			m_GPUTimeInfos[APP_FRAMEINDEX_RT] = CurCommandList->GetGPUTime();
 			m_SwapChain->Present(CurResource.finishSemaphore);
 			m_RenderThread.NextFrame();
 
@@ -128,6 +133,8 @@ namespace GameEngine {
 			}
 		}
 	}
+
+	std::vector<RHIGPUTimeInfo>& RenderManager::GetGPUTimeInfos() { return m_GPUTimeInfos[APP_FRAMEINDEX]; }
 
 	void RenderManager::SetPanelManager(std::shared_ptr<PanelManager> panelManager)
 	{
