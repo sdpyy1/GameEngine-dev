@@ -19,9 +19,20 @@ namespace GameEngine {
 		RHIShaderRef m_ClosestHitShader;
 		RHIShaderRef m_MissShader;
 
+		RHIShaderRef m_ProbeIrrandianceBlendShader;
+        RHIShaderRef m_ProbeDistanceBlendShader;
 
-		RHIRootSignatureRef m_RootSignature;
-		RHIRayTracingPipelineRef m_Pipeline;
+
+		RHIRootSignatureRef m_VolumeTraceRootSignature;
+		RHIRayTracingPipelineRef m_VolumeTracePipeline;
+
+
+		RHIRootSignatureRef m_ProbeIrrandianceBlendRootSignature;
+		RHIComputePipelineRef m_ProbeIrrandianceBlendPipeline;
+
+        RHIRootSignatureRef m_ProbeDistanceBlendRootSignature;
+		RHIComputePipelineRef m_ProbeDistanceBlendPipeline;
+
 	};
 }
 

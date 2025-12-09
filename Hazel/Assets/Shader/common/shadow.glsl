@@ -203,30 +203,4 @@ float PCSS_DirectionalLight(texture2DArray shadowMap, uint cascade, vec3 shadowC
 
 
 
-
-
-/////////////////////////////////////////////
-//  Interface
-/////////////////////////////////////////////
-
-
-float GetDirLightShadowScale()
-{
-    float shadowScale = 1.0;
-    uint cascadeIndex = 0;
-	DirectionLight dirLight = GetDirectionLight();
-    if(dirLight.radiance == vec3(0.0)){   // no directional light
-        return shadowScale;
-    }
-	Camera camera = GetCamera();
-    vec3 WorldPosition = GetGBufferPosition(TexCoord);
-
-    // TODO： 把光照的阴影和光照计算规范一点
-    return shadowScale;
-}
-
-
-
-
-
 #endif // SHADOW_GLSL

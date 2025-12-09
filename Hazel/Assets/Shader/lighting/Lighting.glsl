@@ -36,7 +36,25 @@ struct PBRParameters
 } m_Params;
 #include "../common/shadow.glsl"
 #include "../common/light.glsl" 
+/////////////////////////////////////////////
+// IBL Light
+/////////////////////////////////////////////
 
+vec3 IBL(vec3 F0, vec3 Lr)
+{
+	vec3 irradiance = texture(samplerCube(u_EnvIrradianceTex,SAMPLER[0]), m_Params.Normal).rgb;
+	vec3 F = FresnelSchlickRoughness(F0, m_Params.NdotV, m_Params.Roughness);
+	vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
+	vec3 diffuseIBL = m_Params.Albedo * irradiance;
+
+	int envRadianceTexLevels = textureQueryLevels(u_EnvRadianceTex);
+	vec3 specularIrradiance = textureLod(samplerCube(u_EnvRadianceTex,SAMPLER[0]), Lr, m_Params.Roughness * envRadianceTexLevels).rgb;
+
+	vec2 specularBRDF = texture(sampler2D(u_BRDFLUTTexture,SAMPLER[0]), vec2(m_Params.NdotV, m_Params.Roughness)).rg;
+	vec3 specularIBL = specularIrradiance * (F0 * specularBRDF.x + specularBRDF.y);
+
+	return kd * diffuseIBL + specularIBL;
+}
 void main()
 {
     vec3 WorldPosition = GetGBufferPosition(TexCoord);

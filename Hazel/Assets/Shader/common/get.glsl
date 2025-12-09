@@ -87,34 +87,34 @@ vec4 GetVertexBoneWeight(in uint vertexID, in uint index)
                 BONEWEIGHTS[boneWeightID].boneWeight[4 * index + 2],
                 BONEWEIGHTS[boneWeightID].boneWeight[4 * index + 3]);   
 }
-mat4 GetModelMatrix(in uint objectID)
+mat4 GetModelMatrix(in uint instanceID)
 {
-    return MESHINSTANCEINFO.slot[objectID].model;
+    return MESHINSTANCEINFO.slot[instanceID].model;
 }
-mat4 GetPrevModelMatrix(in uint objectID)
+mat4 GetPrevModelMatrix(in uint instanceID)
 {
-    return MESHINSTANCEINFO.slot[objectID].prevModel;
+    return MESHINSTANCEINFO.slot[instanceID].prevModel;
 }
-uint GetIndex(in uint objectID, in uint offset)
+uint GetIndex(in uint instanceID, in uint offset)
 {
-    uint indexID = MESHINSTANCEINFO.slot[objectID].indexID;
+    uint indexID = MESHINSTANCEINFO.slot[instanceID].indexID;
     uint index = INDICES[indexID].index[offset];
 
     return index;
 }
-vec4 GetPosition(in uint objectID, in uint index)
+vec4 GetPosition(in uint instanceID, in uint index)
 {
-    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[instanceID].vertexID;
     return GetVertexPos(vertexID, index);
 }
-vec3 GetNormal(in uint objectID, in uint index)
+vec3 GetNormal(in uint instanceID, in uint index)
 {
-    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[instanceID].vertexID;
     return GetVertexNormal(vertexID, index);
 }
-vec4 GetTangent(in uint objectID, in uint index)
+vec4 GetTangent(in uint instanceID, in uint index)
 {
-    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[instanceID].vertexID;
     return GetVertexTangent(vertexID, index);
 }
 vec3 GetWorldNormal(in vec3 normal, in mat4 model)
@@ -127,28 +127,29 @@ vec4 GetWorldTangent(in vec4 tangent, in mat4 model)
     mat3 tbnModel = mat3(model);
     return vec4(normalize(tbnModel * tangent.xyz), tangent.w);
 }
-vec2 GetTexCoord(in uint objectID, in uint index)
+vec2 GetTexCoord(in uint instanceID, in uint index)
 {
-    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[instanceID].vertexID;
     return GetVertexTexCoord(vertexID, index);
 }
-vec3 GetColor(in uint objectID, in uint index)
+vec3 GetColor(in uint instanceID, in uint index)
 {
-    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[instanceID].vertexID;
     return GetVertexColor(vertexID, index);
 }
 
-uvec4 GetBoneIndex(in uint objectID, in uint index)
+uvec4 GetBoneIndex(in uint instanceID, in uint index)
 {
-    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[instanceID].vertexID;
     return GetVertexBoneIndex(vertexID, index);  
 }
 
-vec4 GetBoneWeight(in uint objectID, in uint index)
+vec4 GetBoneWeight(in uint instanceID, in uint index)
 {
-    uint vertexID = MESHINSTANCEINFO.slot[objectID].vertexID;
+    uint vertexID = MESHINSTANCEINFO.slot[instanceID].vertexID;
     return GetVertexBoneWeight(vertexID, index); 
 }
+
 vec4 GetBaseColor(in MaterialInfo material){
     return material.diffuse;  
 }
@@ -176,8 +177,8 @@ vec4 GetTex3D(in uint slot, in vec3 vector, in float lod) {
 	return textureLod(sampler3D(TEXTURES_3D[slot], SAMPLER[1]), vector, lod);   
 }
 
-MaterialInfo GetMaterialInfo(in uint objectID) {
-	return MATERIALINFO.slot[MESHINSTANCEINFO.slot[objectID].materialInfoID]; 
+MaterialInfo GetMaterialInfo(in uint instanceID) {
+	return MATERIALINFO.slot[MESHINSTANCEINFO.slot[instanceID].materialInfoID]; 
 }
 
 vec4 GetDiffuse(in MaterialInfo material, in vec2 coord) {
@@ -238,6 +239,66 @@ vec3 GetNormal(in MaterialInfo material, in vec2 coord, in vec3 normal, in vec4 
     else
         return normal;
 }
+
+////////////////////////////////////////////////////// RT  光追需要获得某个三角形三个顶点数据，手动进行插值 ////////////////////////////////////////////////////
+//重心插值
+float BarycentricsInterpolation(in float v0, in float v1, in float v2, vec3 barycentrics){
+  return v0 * barycentrics.x + v1 * barycentrics.y + v2 * barycentrics.z;
+}
+
+vec2 BarycentricsInterpolation(in vec2 v0, in vec2 v1, in vec2 v2, vec3 barycentrics){
+  return v0 * barycentrics.x + v1 * barycentrics.y + v2 * barycentrics.z;
+}
+
+vec3 BarycentricsInterpolation(in vec3 v0, in vec3 v1, in vec3 v2, vec3 barycentrics){
+  return v0 * barycentrics.x + v1 * barycentrics.y + v2 * barycentrics.z;
+}
+
+vec4 BarycentricsInterpolation(in vec4 v0, in vec4 v1, in vec4 v2, vec3 barycentrics){
+  return v0 * barycentrics.x + v1 * barycentrics.y + v2 * barycentrics.z;
+}
+
+
+uvec3 GetTriangleIndex(in uint instanceID, in uint triangleID){
+    uint indexID = MESHINSTANCEINFO.slot[instanceID].indexID;
+    return uvec3(	INDICES[indexID].index[triangleID * 3],
+					INDICES[indexID].index[triangleID * 3 + 1],
+					INDICES[indexID].index[triangleID * 3 + 2]);
+}
+
+vec4 GetTrianglePosition(in uint instanceID, uvec3 triangleIndex, in vec3 barycentrics){
+    return BarycentricsInterpolation(
+		GetPosition(instanceID, triangleIndex[0]),
+		GetPosition(instanceID, triangleIndex[1]),
+		GetPosition(instanceID, triangleIndex[2]),
+		barycentrics);
+}
+
+vec3 GetTriangleMeshNormal(in uint instanceID, uvec3 triangleIndex, in vec3 barycentrics){
+        return normalize(BarycentricsInterpolation(
+		GetNormal(instanceID, triangleIndex[0]),
+		GetNormal(instanceID, triangleIndex[1]),
+		GetNormal(instanceID, triangleIndex[2]),
+		barycentrics));
+}
+vec4 GetTriangleTangent(in uint instanceID, in uvec3 triangleIndex, in vec3 barycentrics)
+{
+    return BarycentricsInterpolation(
+		GetTangent(instanceID, triangleIndex[0]),
+		GetTangent(instanceID, triangleIndex[1]),
+		GetTangent(instanceID, triangleIndex[2]),
+		barycentrics);
+}
+vec2 GetTriangleTexCoord(in uint instanceID, in uvec3 triangleIndex, in vec3 barycentrics)
+{
+    return BarycentricsInterpolation(
+		GetTexCoord(instanceID, triangleIndex[0]),
+		GetTexCoord(instanceID, triangleIndex[1]),
+		GetTexCoord(instanceID, triangleIndex[2]),
+		barycentrics);
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ShadowSetting GetShadowSetting(){
     return GLOBAL_SETTING.data.shadowSetting;
 }

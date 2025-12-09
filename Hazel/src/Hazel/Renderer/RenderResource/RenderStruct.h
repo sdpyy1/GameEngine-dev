@@ -5,7 +5,7 @@
 #define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
 #define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless 单个binding的最大描述符数目
 #define MAX_PER_FRAME_OBJECT_SIZE 10240			    //全局最大支持的物体数目
-#define MAX_GIZMO_PRIMITIVE_COUNT 2000
+#define MAX_GIZMO_PRIMITIVE_COUNT 4000
 
 #define MAX_POINT_LIGHT_SIZE 16
 #define MAX_SPOT_LIGHT_SIZE 16
@@ -313,6 +313,9 @@ namespace GameEngine {
 		uint32_t isDynamicSky;
 		float IbLScale;
 		float pading[2];
+	};
+	struct DDGITextureInfo {
+
 	};
 	struct DDGISetting {
 		glm::vec3 centerPosition;

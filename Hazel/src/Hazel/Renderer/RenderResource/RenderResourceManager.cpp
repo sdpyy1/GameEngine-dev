@@ -258,7 +258,7 @@ namespace GameEngine {
 
 		m_MultiFrameGlobalResources.samplers.push_back(std::make_shared<Sampler>(
 			ADDRESS_MODE_CLAMP_TO_EDGE,
-			FILTER_TYPE_LINEAR,
+			FILTER_TYPE_NEAREST,
 			MIPMAP_MODE_NEAREST,
 			0.0f,
 			SAMPLER_REDUCTION_MODE_MIN));

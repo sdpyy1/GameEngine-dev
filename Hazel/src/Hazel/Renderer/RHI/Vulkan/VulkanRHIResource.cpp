@@ -387,7 +387,6 @@ namespace GameEngine
 
 			创建后布局为 UNDEFINED
 		*/
-
 		// 创建默认的View参数
 		ASSERT(info.mipLevels > 0, "RHI层不会自动Mip！！！");
 		ASSERT(info.arrayLayers > 0, "layer没传？");

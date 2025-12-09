@@ -4,16 +4,38 @@
 #extension GL_GOOGLE_include_directive : enable
 #include "../common/common.glsl"
 #include "../common/DDGI.glsl"
+#include "../common/gizmo.glsl"
 struct Payload {
     vec3 albedo;
+	float roughness; 
 	vec3 worldPosition;
+	float metallic;
 	vec3 normal;
+	float  hitT;
+
 };
 #ifdef RAYGEN_SHADER
 
-layout(set = 1, binding = 0, rgba32f) uniform image2DArray  out_RAYDATA; // radiance(3) + hitT(1)
 
-layout(location = 0) rayPayloadEXT Payload payload ;   // 必须有rayPayloadEXT前缀
+layout(location = 0) rayPayloadEXT Payload payload;
+
+layout(set = 1, binding = 0, rgba32f) uniform image2DArray  out_RAYDATA; // radiance(3) + hitT(1)
+layout(set = 1, binding = 1) uniform texture2DArray u_DirShadowMapTexture;
+layout(set = 1, binding = 2) uniform textureCube u_PointShadowMapTexture;
+struct PBRParameters
+{
+	vec3 Albedo;
+	float Roughness;
+	float Metalness;
+
+	vec3 Normal;
+	vec3 View;
+	float NdotV;
+} m_Params;
+
+#include "../common/shadow.glsl"
+#include "../common/light.glsl" 
+
 
 void main() 
 {
@@ -29,8 +51,14 @@ void main()
 
 	// 获取探针的世界坐标和射线方向
 	vec3 probeWorldPosition = DDGIGetProbeWorldPosition(probeCoords, volume);
-	vec3 rayDirection = RTXGISphericalFibonacci(rayIndex,volume.raysPerProbe);
-	// 获取这条光线的存储位置（TODO: 还没理清楚后续需要如何存储数据,先抄的代码）
+	vec3 rayDirection = normalize(RTXGISphericalFibonacci(rayIndex,volume.raysPerProbe));
+
+	// // 可视化射线
+	// if(volume.visulaize == 1 && probeCoords == uvec3(4,4,4)){
+	// 	AddGizmoLine(probeWorldPosition, probeWorldPosition + rayDirection,vec4(1));
+	// }
+
+	// 获取这条光线最终在纹理中的存储位置 x: RayIndex y: probeIndexInLayer z:layerIndex
 	uvec3 outputCoords = DDGIGetRayDataTexelCoords(rayIndex,probeIndex,volume);
 
 	// 启动射线
@@ -47,64 +75,103 @@ void main()
 		0               				// payload (location = 0) payload的位置
   	);
 
+	// 计算每条光线的Radiance
+	if(payload.hitT< 0.f){
+		// 直接存储采样天空盒的结果
+		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(payload.albedo.xyz, 1));
+		return;
+	}
 
+	// 计算击中点的直接光
+	float shadowScale = 1.0;
+	uint cascadeIndex = 0;
+	m_Params.Albedo = payload.albedo;
+	m_Params.Metalness = payload.metallic;
+    m_Params.Roughness = payload.roughness;
+    m_Params.Normal = payload.normal;
+	m_Params.View = normalize(probeWorldPosition - payload.worldPosition); 
+	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
+	const vec3 Fdielectric = vec3(0.04);
+	vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
+
+	//直接光应该是只需要计算漫反射分量，不需要镜面反射和阴影  // TODO:但是RTXGI好像做了阴影判断
+	vec3 diffuse = CalculateDirLightsOnlyDiffuse(F0) + CalculatePointLightsOnlyDiffuse(F0, payload.worldPosition) + CalculateSpotLightsOnlyDiffuse(F0, payload.worldPosition);
+	
+	// 读取探针信息，获取间接Irrandiance
+	vec3 irradiance = vec3(0);
+	// float3 surfaceBias = DDGIGetSurfaceBias(payload.normal, ray.Direction, volume);  // TODO:???
+
+	// 离Volume越远，权重越小
+	float volumeBlendWeight = DDGIGetVolumeBlendWeight(payload.worldPosition, volume);
+	if (volumeBlendWeight > 0){
+
+		// TODO: 就差在这里计算间接光
+        // irradiance = DDGIGetVolumeIrradiance(
+        //     payload.worldPosition,
+        //     surfaceBias,
+        //     payload.normal,
+        //     volume,
+        //     resources);
+	}
+	// Perfectly diffuse reflectors don't exist in the real world.
+    // Limit the BRDF albedo to a maximum value to account for the energy loss at each bounce.
+    float maxAlbedo = 0.9f;
+	
+    vec3 radiance = diffuse + ((min(payload.albedo, vec3(maxAlbedo, maxAlbedo, maxAlbedo)) / PI) * irradiance * volumeBlendWeight);
 
 	// 最终存储rayData radiance(3) + hitT(1)
-	imageStore(out_RAYDATA, ivec3(outputCoords), vec4(payload.albedo.xyz, 1));
+	imageStore(out_RAYDATA, ivec3(outputCoords), vec4(radiance, payload.hitT));
 }
 
 #endif
 
 #ifdef RAYCLOSEST_HIT_SHADER
-/*
+layout(location = 0) rayPayloadInEXT Payload payload;
 
-	Hit是具体到Mesh的某一个三角形以及击中点，并且会给hitAttributeEXT来表示重心坐标，需要手动插值来计算击中点的信息
-	gl_WorldRayTmaxEXT 可以获得击中的时间 t 
-*/
-layout(location = 0) rayPayloadInEXT Payload payload;    // rayPayloadInEXT 注意是InEXT
-
-// Hit shader 可以访问击中的 geometry 信息
-hitAttributeEXT vec2 attribs;   // 用来求重心坐标，表示击中点对于击中三角形的三个顶点的权重
+hitAttributeEXT vec2 attribs;
 void main()
 {
 	uint instanceID       = gl_InstanceCustomIndexEXT;   // 在构建TLAS时，给每个实例分配的ID
 	uint primitiveID     = gl_PrimitiveID;  // 击中的三角形索引
 
-	vec3 barycentrics = vec3(1.0 - attribs.x - attribs.y, attribs.x, attribs.y);   // 插值需要手动进行
+	vec3 barycentrics = vec3(1.0 - attribs.x - attribs.y, attribs.x, attribs.y); 
 
-	// 需要根据实例ID和三角形索引去Bindless找对应三个顶点的信息，再根据barycentrics进行插值
+	// 收集MeshInfo
+	mat4 model = GetModelMatrix(instanceID);
+	uvec3 triangleIndex = GetTriangleIndex(instanceID, primitiveID);
+	vec4 position = GetTrianglePosition(instanceID,triangleIndex,barycentrics);
+	vec3 meshNormal = GetTriangleMeshNormal(instanceID,triangleIndex,barycentrics);
+	vec4 tangent = GetTriangleTangent(instanceID,triangleIndex,barycentrics);
 
-
-	// 根据插值后的结果计算着色信息
+	vec3 worldNormal = GetWorldNormal(meshNormal,model);
+	vec4 worldTangent = GetWorldTangent(tangent,model);
+	// vec3 color = FetchTriangleColor(objectID, index, barycentrics);   不使用顶点颜色
+	vec2 texCoord  = GetTriangleTexCoord(instanceID, triangleIndex, barycentrics);    
+    vec4 worldPos       = model * position; 
 	MaterialInfo material   = GetMaterialInfo(instanceID);
+	vec4 albedo = GetDiffuse(material,texCoord);
+	vec3 normal = GetNormal(material, texCoord, worldNormal, worldTangent);
+    vec4 emission = GetEmission(material,texCoord);
+	albedo += emission;
+	float roughness = GetRoughness(material,texCoord);
+    float metallic = GetMetallic(material, texCoord);
 
-
-	// 返回颜色
-	payload.albedo = material.diffuse.xyz;
-
-	// 或者继续递归
+	payload.worldPosition = worldPos.xyz;
+	payload.normal = normal;
+	payload.roughness = roughness;
+	payload.metallic = metallic;
+	payload.albedo = albedo.rgb;
+	payload.hitT = gl_HitTEXT;
 }
 #endif
 
 #ifdef RAYMISS_SHADER
-/*
-	MissShader是当Ray没有击中任何几何体时，会调用MissShader，MissShader可以返回一个颜色，或者继续递归
-*/
 layout(location = 0) rayPayloadInEXT Payload payload;    // rayPayloadInEXT 注意是InEXT
-layout(set = 1, binding = 1) uniform textureCube skyCube;
+layout(set = 1, binding = 3) uniform textureCube skyCube;
 void main()
 {
-	// TODO: 这里要改成探针的位置方向，而不是摄像机的位置方向
-	// 1. 计算屏幕坐标，并转到NDC坐标
-	const vec2 pixelCenter = vec2(gl_LaunchIDEXT.xy) + vec2(0.5);  // 移动到像素中心
-	const vec2 inUV = pixelCenter / vec2(gl_LaunchSizeEXT.xy);  // UV坐标
-	vec2 ndc = inUV * 2.0 - 1.0; // 屏幕坐标转NDC[-1,1]
-	// 2. Ray参数
-	vec3 origin = CAMERAINFO.data.position;  // 相机位置
-	vec4 target = CAMERAINFO.data.invProj * vec4(ndc.x, ndc.y, 0, 1) ; // 射线终点， 设置在像素NDC坐标，深度最近的位置  并转到View空间
-	target /= target.w;   // 透视除法
-	target = CAMERAINFO.data.invView * target;
-	vec3 direction = normalize(target.xyz - origin.xyz);
-    payload.albedo = texture(samplerCube(skyCube,SAMPLER[0]),direction).rgb;
+	vec3 rayDir = normalize(gl_WorldRayDirectionEXT);
+    payload.albedo = texture(samplerCube(skyCube,SAMPLER[0]),rayDir).rgb;
+	payload.hitT = -1;
 }
 #endif

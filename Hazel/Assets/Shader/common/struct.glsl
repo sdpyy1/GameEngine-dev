@@ -253,6 +253,4 @@ struct GlobalSettingInfo
     IconTextureInfo iconTextures;
     DDGISetting ddgiSetting;
 };
-
-
 #endif

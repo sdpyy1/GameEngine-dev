@@ -189,7 +189,7 @@ namespace GameEngine
 		rhiTextureViewInfo.texture = texture;
 		rhiTextureViewInfo.format = texture->GetInfo().format;
 		rhiTextureViewInfo.viewType = texture->GetInfo().arrayLayers == 1?VIEW_TYPE_2D: VIEW_TYPE_2D_ARRAY;
-		rhiTextureViewInfo.subresource = { isDepthFormalt(texture->GetInfo().format) ? TEXTURE_ASPECT_DEPTH : TEXTURE_ASPECT_COLOR, 0, 1, 0, 1 };
+		rhiTextureViewInfo.subresource = { isDepthFormalt(texture->GetInfo().format) ? TEXTURE_ASPECT_DEPTH : TEXTURE_ASPECT_COLOR, 0, 1, texture->GetInfo().arrayLayers/2, 1 };
 		// return RDGTextureViewPool::Get()->Allocate(rhiTextureViewInfo).textureView;   // TODO:这种入池没有释放有没有问题
 		return APP_DYNAMICRHI->CreateTextureView(rhiTextureViewInfo);
 	}

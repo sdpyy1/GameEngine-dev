@@ -41,7 +41,6 @@ namespace GameEngine {
 
 	void DirShadowPass::Build(RDGBuilder& builder)
 	{ 
-
 		RDGTextureHandle depth = builder.CreateTexture("CSMTextureArray")
 			.ArrayLayers(CSM_LEVEL_COUNT)
 			.AllowDepthStencil()

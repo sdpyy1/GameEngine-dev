@@ -83,13 +83,14 @@ namespace GameEngine {
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
 		if (RENDER_ENABLE_RAY_TRACING) {
 			passes[RAYTRACING_PASS] = std::make_shared<RayTracingPass>();
+			passes[DDGI_PASS] = std::make_shared<DDGIPass>();
 		}
+
 		passes[PREDEPTH_PASS] = meshPasses[MESH_PASS_PREDEPTH_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();
 		passes[GIZMO_PASS] = std::make_shared<GizmoPass>();
 		passes[SKY_PASS] = std::make_shared<SkyPass>();
 		passes[LIGHT_PASS] = std::make_shared<LightPass>();
-        passes[DDGI_PASS] = std::make_shared<DDGIPass>();
 		passes[TAA_PASS] = std::make_shared<TAAPass>();
 		passes[BLOOM_PASS] = std::make_shared<BloomPass>();
 		passes[POST_PROCESS_PASS] = std::make_shared<PostProcessPass>();
