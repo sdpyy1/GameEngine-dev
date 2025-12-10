@@ -35,7 +35,7 @@ namespace GameEngine {
 		{
 			LOG_WARN("Double-click to open Scene is not yet supported. Please drag the file into the scene to use it.");
 		}
-		else if (ext == ".fbx" || ext == ".gltf" || ext == ".obj")
+		else if (ext == ".fbx" || ext == ".gltf" || ext == ".obj" || ext == ".glb")
 		{
 			Application::GetSceneManager()->GetActiveScene()->LoadModel(path.string());
 			

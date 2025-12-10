@@ -33,6 +33,10 @@ namespace GameEngine {
         RHIRootSignatureRef m_ProbeDistanceBlendRootSignature;
 		RHIComputePipelineRef m_ProbeDistanceBlendPipeline;
 
+
+		RHITextureRef m_ProbeDistanceTexture;
+        RHITextureRef m_ProbeIrrandianceTexture;
+
 	};
 }
 

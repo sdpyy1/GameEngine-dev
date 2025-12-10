@@ -57,10 +57,10 @@ void main()
 	vec3 probeWorldPosition = DDGIGetProbeWorldPosition(probeCoords, volume);
 	vec3 rayDirection = normalize(RTXGISphericalFibonacci(rayIndex,volume.raysPerProbe));
 
-	// // 可视化射线
-	// if(volume.visulaize == 1 && probeCoords == uvec3(4,4,4)){
-	// 	AddGizmoLine(probeWorldPosition, probeWorldPosition + rayDirection,vec4(1));
-	// }
+	// 可视化射线
+	if(volume.visulaize == 1 && probeIndex == 34){
+		AddGizmoLine(probeWorldPosition, probeWorldPosition + rayDirection,vec4(1,0,0,1));
+	}
 
 	// 获取这条光线最终在纹理中的存储位置 x: RayIndex y: probeIndexInLayer z:layerIndex
 	
@@ -83,7 +83,7 @@ void main()
 	// 计算每条光线的Radiance
 	if(payload.hitT == -1.f){
 		// 直接存储采样天空盒的结果
-		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(vec3(0), payload.hitT));
+		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(vec3(0), -1));
 		return;
 	}
 
@@ -123,7 +123,7 @@ void main()
     vec3 radiance = diffuse + ((min(payload.albedo, vec3(maxAlbedo, maxAlbedo, maxAlbedo)) / PI) * irradiance * volumeBlendWeight);
 
 	// 最终存储rayData radiance(3) + hitT(1)
-	imageStore(out_RAYDATA, ivec3(outputCoords), vec4(radiance, payload.hitT));
+	imageStore(out_RAYDATA, ivec3(outputCoords), vec4(payload.albedo, payload.hitT));
 }
 
 #endif

@@ -63,6 +63,31 @@ namespace GameEngine
 			pipelineInfo.rootSignature = m_ProbeDistanceBlendRootSignature;
 			m_ProbeDistanceBlendPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
 		}
+
+
+		{
+			RHITextureInfo textureInfo;
+			textureInfo.extent = { 8*8, 8*8, 1 };
+            textureInfo.format = RHIFormat::FORMAT_R32G32B32A32_SFLOAT;
+            textureInfo.mipLevels = 1;
+            textureInfo.arrayLayers = 8;
+			textureInfo.type |= RESOURCE_TYPE_RW_TEXTURE;
+			m_ProbeIrrandianceTexture = APP_DYNAMICRHI->CreateTexture(textureInfo);
+		}
+
+		{
+			RHITextureInfo textureInfo;
+			textureInfo.extent = { 8 * 16, 8 * 16, 1 };
+			textureInfo.format = RHIFormat::FORMAT_R32G32B32A32_SFLOAT;
+			textureInfo.mipLevels = 1;
+			textureInfo.arrayLayers = 8;
+			textureInfo.type |= RESOURCE_TYPE_RW_TEXTURE;
+			m_ProbeDistanceTexture = APP_DYNAMICRHI->CreateTexture(textureInfo);
+		}
+
+
+
+
 	}
 
 	void DDGIPass::Build(RDGBuilder& builder)
@@ -83,19 +108,29 @@ namespace GameEngine
 				.AllowReadWrite()
 				.Finish();
 
+			//RDGTextureHandle irrandiance = builder.CreateTexture("DDGI_Irrandiance")
+			//	.Exetent({ probeCount.x * 8,probeCount.z * 8,1 })
+			//	.ArrayLayers(volumeLayerCount)
+			//	.AllowReadWrite()
+			//	.Format(FORMAT_R32G32B32A32_SFLOAT)
+			//	.Finish();
+
 			RDGTextureHandle irrandiance = builder.CreateTexture("DDGI_Irrandiance")
-				.Exetent({ probeCount.x * 8,probeCount.z * 8,1 })
-				.ArrayLayers(volumeLayerCount)
-				.AllowReadWrite()
-				.Format(FORMAT_R32G32B32A32_SFLOAT)
+				.Import(m_ProbeIrrandianceTexture,RESOURCE_STATE_UNDEFINED)
 				.Finish();
 
+			//RDGTextureHandle distance = builder.CreateTexture("DDGI_Distance")
+			//	.Exetent({ probeCount.x * 16,probeCount.z * 16,1 })
+			//	.ArrayLayers(volumeLayerCount)
+			//	.AllowReadWrite()
+			//	.Format(FORMAT_R32G32B32A32_SFLOAT)
+			//	.Finish();
+			 
 			RDGTextureHandle distance = builder.CreateTexture("DDGI_Distance")
-				.Exetent({ probeCount.x * 16,probeCount.z * 16,1 })
-				.ArrayLayers(volumeLayerCount)
-				.AllowReadWrite()
-				.Format(FORMAT_R32G32B32A32_SFLOAT)
-				.Finish();
+				.Import(m_ProbeDistanceTexture,RESOURCE_STATE_UNDEFINED)
+                .Finish();
+
+
 			RDGTextureHandle dirShadowMap = builder.GetTexture("CSMTextureArray");
 
 			RDGTextureHandle skyBox = builder.GetTexture("CubeMap");
@@ -131,7 +166,7 @@ namespace GameEngine
 					.ReadWrite(1, 0, 0, irrandiance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
 					.Read(1, 1, 0, rayTexture, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
 					.RootSignature(m_ProbeIrrandianceBlendRootSignature)
-					.PassIndex(probeCount.x, probeCount.z, probeCount.y)// Y_up
+					.PassIndex(probeCount.x, probeCount.y, probeCount.z)// Y_up
 					.Execute([&](RDGPassContext context) {
 					RHICommandListRef command = context.command;
 					command->SetComputePipeline(m_ProbeIrrandianceBlendPipeline);
@@ -148,7 +183,7 @@ namespace GameEngine
 					.ReadWrite(1, 0, 0, distance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
 					.Read(1, 1, 0, rayTexture, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
 					.RootSignature(m_ProbeDistanceBlendRootSignature)
-					.PassIndex(probeCount.x, probeCount.z, probeCount.y) // Y_up
+					.PassIndex(probeCount.x, probeCount.y, probeCount.z) // Y_up
 					.Execute([&](RDGPassContext context) {
 					RHICommandListRef command = context.command;
 					command->SetComputePipeline(m_ProbeDistanceBlendPipeline);

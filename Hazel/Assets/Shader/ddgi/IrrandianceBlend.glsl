@@ -23,7 +23,8 @@ void main(){
     bool isBorderTexel = (LocalInvocationID.x == 0 || LocalInvocationID.x == (DDGI_PROBE_NUM_TEXELS_IRRANDIANCE_INTERIOR + 1)) || (LocalInvocationID.y == 0 || LocalInvocationID.y == (DDGI_PROBE_NUM_TEXELS_IRRANDIANCE_INTERIOR + 1)); // Border Columns
 
     // 从invocationID获取当先要处理的探针索引
-    uint probeIndex = DDGIGetProbeIndex(invocationID, DDGI_PROBE_NUM_TEXELS_IRRANDIANCE, volume);
+    // uint probeIndex = DDGIGetProbeIndex(invocationID, DDGI_PROBE_NUM_TEXELS_IRRANDIANCE, volume);
+    uint probeIndex = (groupID.y * DDGIGetProbesPerPlane(volume.probeCount)) + groupID.z * volume.probeCount.x + groupID.x ;
 
     // Early out: no probe maps to this thread
     uint numProbes = (volume.probeCount.x * volume.probeCount.y * volume.probeCount.z);
@@ -43,15 +44,14 @@ void main(){
 
 
         uvec3 probeCoords = groupID;
-        if(volume.visulaize == 1 && probeCoords == uvec3(4,4,4)){
-            // vec3 probeWorldPosition = DDGIGetProbeWorldPosition(probeCoords, volume);
-
-            // vec3 testPostion = vec3(0,0,0);
-            // ivec3 getCoor = DDGIGetBaseProbeGridCoords(testPostion, volume);
-            // vec3 getWorld = DDGIGetProbeWorldPosition(getCoor, volume);
-            // AddGizmoSphere(getWorld, 0.5, vec4(1,1,1,1));
+        // if(volume.visulaize == 1 && probeCoords == uvec3(2,4,2)){
+        //     vec3 probeWorldPosition = DDGIGetProbeWorldPosition(probeCoords, volume);
+        //     AddGizmoLine(probeWorldPosition, probeWorldPosition + probeRayDirection, vec4(1,1,1,1));
+        // }
+        if(volume.visulaize == 1 && probeIndex == 64){
+            vec3 probeWorldPosition = DDGIGetProbeWorldPosition(probeCoords, volume);
+            AddGizmoLine(probeWorldPosition, probeWorldPosition + probeRayDirection, vec4(1,1,1,1));
         }
-
     
         // 遍历当前探针的所有光线
         for (uint rayIndex = 0; rayIndex < volume.raysPerProbe; rayIndex++){
@@ -60,7 +60,13 @@ void main(){
             // 当前要存储的方向与这跟光线的cos，两个方向夹角越小，权重越大
             float weight = max(0.0, dot(probeRayDirection, rayDirection));
             // 解析RayData中的信息
-            uvec3 rayDataTexCoords = DDGIGetRayDataTexelCoords(rayIndex, probeIndex, volume);
+            uvec3 rayDataTexCoords = uvec3(0);            
+            rayDataTexCoords.x = rayIndex;
+            rayDataTexCoords.y = groupID.z * volume.probeCount.x + groupID.x;
+            rayDataTexCoords.z = groupID.y;
+
+
+
             vec3 probeRayRadiance = DDGIGetRandianceFromRayData(IN_RayData, rayDataTexCoords, volume);
             float probeRayDistance = DDGIGetDistanceFromRayData(IN_RayData, rayDataTexCoords, volume);
             if(probeRayDistance < 0){ 
@@ -68,10 +74,14 @@ void main(){
             }
 
             // TODO: 采样有问题
-            // if(volume.visulaize == 1 && probeCoords == uvec3(0,0,0) && LocalInvocationID == uvec3(1,1,0)){
-            //     vec3 probeWorldPosition = DDGIGetProbeWorldPosition(probeCoords, volume);
-            //     AddGizmoLine(probeWorldPosition, probeWorldPosition + rayDirection * probeRayDistance , vec4(0,1,0,1));
-            // }
+            if(volume.visulaize == 1 && probeCoords == uvec3(0,0,0) && LocalInvocationID == uvec3(1,1,0)){
+                vec3 probeWorldPosition = DDGIGetProbeWorldPosition(probeCoords, volume);
+                AddGizmoLine(probeWorldPosition, probeWorldPosition + rayDirection * probeRayDistance , vec4(0,1,0,1));
+            }
+            if(volume.visulaize == 1 && probeCoords == uvec3(2,4,2) && LocalInvocationID == uvec3(1,1,0)){
+                vec3 probeWorldPosition = DDGIGetProbeWorldPosition(probeCoords, volume);
+                AddGizmoLine(probeWorldPosition, probeWorldPosition + rayDirection * probeRayDistance , vec4(0,1,0,1));
+            }
 
             result += vec4(probeRayRadiance * weight, weight);
         }
@@ -86,7 +96,7 @@ void main(){
         // Irradiance.hlsl line 138).
         float epsilon = float(volume.raysPerProbe);
         epsilon *= 1e-9f;
-        result.rgb *= 1.f / (1.f * max(result.a, epsilon));
+        result.rgb *= 1.f / (2.f * max(result.a, epsilon));
 
         // 时域加权混合
         vec4 history = imageLoad(o_Texture,ivec3(gl_GlobalInvocationID));

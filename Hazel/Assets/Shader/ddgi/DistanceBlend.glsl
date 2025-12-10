@@ -10,10 +10,8 @@ void main(){
     uvec3 groupID = gl_WorkGroupID;  // 对于dispatch的ID
     uvec3 invocationID = gl_GlobalInvocationID; // 相对于全局的调用ID
     uvec3 LocalInvocationID = gl_LocalInvocationID; // 相对于组内的调用ID
-
-    bool isBorderTexel = (LocalInvocationID.x == 0 || LocalInvocationID.x == (DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR + 1)) || (LocalInvocationID.y == 0 || LocalInvocationID.y == (DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR + 1)); // Border Columns
-
-    uint probeIndex = DDGIGetProbeIndex(invocationID, DDGI_PROBE_NUM_TEXELS_IRRANDIANCE, volume);
+    bool isBorderTexel = (LocalInvocationID.x == 0 || LocalInvocationID.x == (DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR + 1)) || (LocalInvocationID.y == 0 || LocalInvocationID.y == (DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR + 1));
+    uint probeIndex = DDGIGetProbeIndex(invocationID, DDGI_PROBE_NUM_TEXELS_DISTANCE, volume);
 
     vec4 result = vec4(0.0);
 
@@ -24,7 +22,6 @@ void main(){
         vec2 probeOctantUV = DDGIGetNormalizedOctahedralCoordinates(uvec2(threadCoords.xy), DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR);
         // 当前像素对应投影到八面体上的射线方向
         vec3 probeRayDirection = DDGIGetOctahedralDirection(probeOctantUV);
-
         // 遍历当前探针的所有光线
         for (uint rayIndex = 0; rayIndex < volume.raysPerProbe; rayIndex++){
             vec3 rayDirection = normalize(RTXGISphericalFibonacci(rayIndex, volume.raysPerProbe));
@@ -37,13 +34,13 @@ void main(){
         }
         float epsilon = float(volume.raysPerProbe);
         epsilon *= 1e-9f;
-        result.rgb *= 1.f / (2.f * max(result.a, epsilon));
+        result.rgb *= 1.f / (max(result.a, epsilon));
         result.a = 1.f;
         // 时域加权混合
         vec4 history = imageLoad(o_Texture,ivec3(gl_GlobalInvocationID));
         result = mix(result, history, RGBtoLuminance(history) < 0.01f ? 0.0f : 0.97);
         result.a = 1.0f;
-        result.b = 1.0f;
+        result.b = 0.0f;
         imageStore(o_Texture, ivec3(gl_GlobalInvocationID), result);
     }else{
         imageStore(o_Texture, ivec3(gl_GlobalInvocationID), result);

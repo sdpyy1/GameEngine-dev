@@ -72,8 +72,9 @@ namespace GameEngine {
 			.Read(1, 1, 0, envRadiance, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR,0,builder.GetRHITexture("PrefilterMap")->GetInfo().mipLevels,0,6 })
 			.Read(1, 2, 0, envIrradiance, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR,0,1,0,6 })
 			.Read(1, 3, 0, envBRDF)
-            .Read(1, 4, 0, ddgi_Irrandiance, VIEW_TYPE_2D_ARRAY,{ TEXTURE_ASPECT_COLOR,0,1,0,ddgi_LaryCount })
-            .Read(1, 5, 0, ddgi_Distance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR,0,1,0,ddgi_LaryCount })
+			// 注意4是点光源阴影
+            .Read(1, 5, 0, ddgi_Irrandiance, VIEW_TYPE_2D_ARRAY,{ TEXTURE_ASPECT_COLOR,0,1,0,ddgi_LaryCount })
+            .Read(1, 6, 0, ddgi_Distance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR,0,1,0,ddgi_LaryCount })
 			.Execute([&](RDGPassContext context)
 				{
 					auto [w, h] = APP_WINDOWSIZE;
