@@ -15,6 +15,18 @@ namespace GameEngine
 	}
 
 	void SceneManager::PackSettingForRender() {
+		// 全局设置
+		auto& settings = m_CurrentScene->settings;
+		if(settings.onlyIndirectionLight){
+			m_SceneInfo.globalSettingInfos.renderSetting.onlyIndirectionLight = 1;
+		}
+		else if(settings.noDDGI){
+            m_SceneInfo.globalSettingInfos.renderSetting.onlyIndirectionLight = 2;
+		}
+		else {
+            m_SceneInfo.globalSettingInfos.renderSetting.onlyIndirectionLight = 0;
+		}
+
 		// 灯光设置
 		auto dirLight = m_CurrentScene->GetFirstEntityWith<DirectionalLightComponent>();
 		Entity dirLightEntity = Entity{ dirLight ,m_CurrentScene };

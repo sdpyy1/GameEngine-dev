@@ -2,6 +2,11 @@
 #include "entt.hpp"
 #include "Hazel/Asset/Asset.h"
 namespace GameEngine {
+	// 这里存放非组件类型的设置
+	struct Settings {
+		bool onlyIndirectionLight = false;
+		bool noDDGI = false;
+	};
 	class Entity;
 	class Scene : public Asset
 	{
@@ -12,7 +17,7 @@ namespace GameEngine {
 		virtual AssetType GetAssetType() override { return ASSET_TYPE_SCENE; }
 		virtual void OnLoadAsset() override;
 		virtual void OnSaveAsset() override;
-
+		Settings settings;
 	public:
 		void testButton() { LOG_INFO("Test"); };
 		void SetViewprotSize(float width, float height) { m_ViewportWidth = width; m_ViewportHeight = height; }

@@ -16,8 +16,8 @@
             "TransformComponent": {
                 "Translation": {
                     "x": 0.0,
-                    "y": -0.21361422538757325,
-                    "z": -2.932796001434326
+                    "y": 4.2277631759643559,
+                    "z": -4.540311813354492
                 },
                 "Scale": {
                     "x": 24.63243865966797,
@@ -184,63 +184,6 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 3059351432307048186
-                }
-            },
-            "HasTagComponent": true,
-            "TagComponent": {
-                "Tag": "PostProcess"
-            },
-            "HasTransformComponent": true,
-            "TransformComponent": {
-                "Translation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "Scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "RotationEuler": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "Rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0,
-                    "w": 1.0
-                }
-            },
-            "HasRelationshipComponent": true,
-            "RelationshipComponent": {
-                "ParentHandle": {
-                    "m_UUID": 0
-                },
-                "Children": []
-            },
-            "HasDirectionalLightComponent": false,
-            "HasPointLightComponent": false,
-            "HasSpotLightComponent": false,
-            "HasSkyComponent": false,
-            "HasPostProcessingComponent": true,
-            "PostProcessingComponent": {
-                "bloomScale": 0.06300000101327896,
-                "enableTAA": true,
-                "taaSharpen": false,
-                "taaSharpness": 1.0
-            },
-            "HasModelComponent": false,
-            "HasSubmeshComponent": false,
-            "HasLightProbeComponent": false
-        },
-        "Entity": {
-            "HasIDComponent": true,
-            "IDComponent": {
-                "ID": {
                     "m_UUID": 7551902689989704666
                 }
             },
@@ -295,6 +238,63 @@
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\helmet\\DamagedHelmet.gltf",
                 "Visible": true
             },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 3059351432307048186
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "PostProcess"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": true,
+            "PostProcessingComponent": {
+                "bloomScale": 0.0,
+                "enableTAA": true,
+                "taaSharpen": false,
+                "taaSharpness": 1.0
+            },
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false,
             "HasLightProbeComponent": false
         },
         "Entity": {
@@ -373,25 +373,25 @@
             "HasTransformComponent": true,
             "TransformComponent": {
                 "Translation": {
-                    "x": 3.0226364135742189,
-                    "y": 3.652385950088501,
-                    "z": 0.4949522316455841
+                    "x": -5.288365364074707,
+                    "y": 8.159723281860352,
+                    "z": -14.808802604675293
                 },
                 "Scale": {
-                    "x": 1.6544232368469239,
-                    "y": 1.654447317123413,
-                    "z": 1.6544102430343629
+                    "x": 1.6544264554977418,
+                    "y": 1.6544508934020997,
+                    "z": 1.6544113159179688
                 },
                 "RotationEuler": {
-                    "x": 0.6528761386871338,
-                    "y": -1.480445384979248,
-                    "z": 0.9159801602363586
+                    "x": 0.6528708934783936,
+                    "y": -1.4804487228393555,
+                    "z": 0.9160058498382568
                 },
                 "Rotation": {
-                    "x": 0.494816392660141,
-                    "y": -0.4683171212673187,
-                    "z": 0.5031938552856445,
-                    "w": 0.5316312313079834
+                    "x": 0.4948211908340454,
+                    "y": -0.46831318736076357,
+                    "z": 0.5031993389129639,
+                    "w": 0.531624972820282
                 }
             },
             "HasRelationshipComponent": true,
@@ -804,8 +804,8 @@
             "HasTransformComponent": true,
             "TransformComponent": {
                 "Translation": {
-                    "x": -6.909651756286621,
-                    "y": 5.238365173339844,
+                    "x": 3.029053211212158,
+                    "y": 8.904687881469727,
                     "z": -0.8035759925842285
                 },
                 "Scale": {
@@ -848,11 +848,11 @@
                     "z": 8
                 },
                 "gridStep": {
-                    "x": 1.0490000247955323,
-                    "y": 0.9139999747276306,
-                    "z": 1.4559999704360963
+                    "x": 5.520999908447266,
+                    "y": 0.6890000104904175,
+                    "z": 4.642000198364258
                 },
-                "raysPerProbe": 218,
+                "raysPerProbe": 118,
                 "visulaize": true
             }
         }

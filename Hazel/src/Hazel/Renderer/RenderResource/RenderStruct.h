@@ -332,8 +332,13 @@ namespace GameEngine {
 
 		BoundingBox box;
 	};
+	struct RenderSettingInfo {
+		uint32_t onlyIndirectionLight;
+		uint32_t _padding[3];
+	};
 	struct GlobalSettingInfo
 	{
+		RenderSettingInfo renderSetting;
 		SkySetting skySetting;
 		PostprocessSetting postprocess;
 		ShadowSetting shadowSetting;

@@ -245,8 +245,13 @@ struct DDGISetting {
 
     BoundingBox box;
 };
+struct RenderSetting {
+    uint onlyIndirectionLight;
+    uint _padding[3];
+};
 struct GlobalSettingInfo
 { 
+    RenderSetting renderSetting;
     SkySetting skySetting;
     PostprocessSetting postprocessSetting;
     ShadowSetting shadowSetting;

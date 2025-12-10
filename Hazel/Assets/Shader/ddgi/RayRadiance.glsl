@@ -22,6 +22,8 @@ layout(location = 0) rayPayloadEXT Payload payload;
 layout(set = 1, binding = 0, rgba32f) uniform image2DArray  out_RAYDATA; // radiance(3) + hitT(1)
 layout(set = 1, binding = 1) uniform texture2DArray u_DirShadowMapTexture;
 layout(set = 1, binding = 2) uniform textureCube u_PointShadowMapTexture;
+layout(set = 1, binding = 4) uniform texture2DArray ddgi_Irrandiance;
+layout(set = 1, binding = 5) uniform texture2DArray ddgi_Distance;
 struct PBRParameters
 {
 	vec3 Albedo;
@@ -35,17 +37,19 @@ struct PBRParameters
 
 #include "../common/shadow.glsl"
 #include "../common/light.glsl" 
-
+/**
+ * gl_LaunchIDEXT: x: RayIndex y:probeCountPreLayer z:LayerCount
+ */
 
 void main() 
 {
     // 获取要处理的Volume信息，这里简化一下，全局只有一个Volume
 	DDGISetting volume = GetDDGISetting();
-    uint rayIndex = gl_LaunchIDEXT.x; // 哪条光线
-    uint probePlaneIndex = gl_LaunchIDEXT.y; // 一层中的哪个
-    uint planeIndex = gl_LaunchIDEXT.z; // 哪一层
-	uint probeCountPrePlane = DDGIGetProbesPerPlane(volume.probeCount); // 获取一层有几个的probe
-	uint probeIndex = (planeIndex * probeCountPrePlane) + probePlaneIndex; // 当前处理的probe的全局索引
+    uint rayIndex = gl_LaunchIDEXT.x;
+    uint probePlaneIndex = gl_LaunchIDEXT.y;
+    uint planeIndex = gl_LaunchIDEXT.z;
+	uint probeCountPrePlane = DDGIGetProbesPerPlane(volume.probeCount);
+	uint probeIndex = (planeIndex * probeCountPrePlane) + probePlaneIndex; // 当前处理的probe的索引
 	uvec3 probeCoords = DDGIGetProbeCoords(probeIndex,volume); // 获取探针在探针网格的3D坐标
 	// probeIndex = DDGIGetScrollingProbeIndex(probeCoords, volume); // TODO: 滚动探针
 
@@ -59,8 +63,9 @@ void main()
 	// }
 
 	// 获取这条光线最终在纹理中的存储位置 x: RayIndex y: probeIndexInLayer z:layerIndex
+	
 	uvec3 outputCoords = DDGIGetRayDataTexelCoords(rayIndex,probeIndex,volume);
-
+	// uvec3 outputCoords = uvec3(rayIndex,probePlaneIndex,planeIndex);
 	// 启动射线
 	traceRayEXT(TLAS, 					// acceleration structure
 		gl_RayFlagsOpaqueEXT,       	// rayFlags 控制光线的行为，比如是否忽略背面、是否启用 any-hit、是否可用 conservative tracing 等
@@ -76,9 +81,9 @@ void main()
   	);
 
 	// 计算每条光线的Radiance
-	if(payload.hitT< 0.f){
+	if(payload.hitT == -1.f){
 		// 直接存储采样天空盒的结果
-		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(payload.albedo.xyz, 1));
+		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(vec3(0), payload.hitT));
 		return;
 	}
 
@@ -105,13 +110,11 @@ void main()
 	float volumeBlendWeight = DDGIGetVolumeBlendWeight(payload.worldPosition, volume);
 	if (volumeBlendWeight > 0){
 
-		// TODO: 就差在这里计算间接光
-        // irradiance = DDGIGetVolumeIrradiance(
-        //     payload.worldPosition,
-        //     surfaceBias,
-        //     payload.normal,
-        //     volume,
-        //     resources);
+        irradiance = DDGIGetIrrandianceByWorldPosition(
+            payload.worldPosition,
+            payload.normal,
+            volume,
+            ddgi_Irrandiance,ddgi_Distance);
 	}
 	// Perfectly diffuse reflectors don't exist in the real world.
     // Limit the BRDF albedo to a maximum value to account for the energy loss at each bounce.
@@ -127,7 +130,6 @@ void main()
 
 #ifdef RAYCLOSEST_HIT_SHADER
 layout(location = 0) rayPayloadInEXT Payload payload;
-
 hitAttributeEXT vec2 attribs;
 void main()
 {

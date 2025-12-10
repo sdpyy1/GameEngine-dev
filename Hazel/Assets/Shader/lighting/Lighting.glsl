@@ -1,6 +1,7 @@
 #version 450 core
 #include "../common/common.glsl"
 #include "../common/Gbuffer.glsl"
+#include "../common/DDGI.glsl"
 #ifdef VERTEX_SHADER
 vec3 kNdcPoints[3] = vec3[]( 
     vec3(-1.0, -1.0, 0.0), 
@@ -24,6 +25,10 @@ layout(set = 1, binding = 1) uniform textureCube u_EnvRadianceTex;
 layout(set = 1, binding = 2) uniform textureCube u_EnvIrradianceTex;
 layout(set = 1, binding = 3) uniform texture2D u_BRDFLUTTexture;
 layout(set = 1, binding = 4) uniform textureCube u_PointShadowMapTexture;
+layout(set = 1, binding = 5) uniform texture2DArray ddgi_Irrandiance;
+layout(set = 1, binding = 6) uniform texture2DArray ddgi_Distance;
+
+
 struct PBRParameters
 {
 	vec3 Albedo;
@@ -103,7 +108,19 @@ void main()
 	// IBL
 	vec3 iblContribution = IBL(F0, Lr) * GetSkySetting().IbLScale;  
 
-	vec3 finalColor = lightContribution + iblContribution;
+
+	// DDGI
+	DDGISetting volume = GetDDGISetting();
+
+	vec3 DDGIContribution = DDGIGetIrrandianceByWorldPosition(WorldPosition,m_Params.Normal,volume,ddgi_Irrandiance,ddgi_Distance);
+	if(GetRenderSetting().onlyIndirectionLight == 1){
+		o_Color = vec4(DDGIContribution,1);
+		return;
+	}else if(GetRenderSetting().onlyIndirectionLight == 2){  // TODO:没有DDGI的情况，这些设置需要统一规划
+		o_Color = vec4(lightContribution + iblContribution,1);
+		return;
+	}
+	vec3 finalColor = lightContribution + iblContribution + DDGIContribution;
 
 	o_Color = vec4(finalColor,1);
 	// Debug

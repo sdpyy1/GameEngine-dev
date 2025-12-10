@@ -334,7 +334,10 @@ uint GetSpotLightCount()
 {
     return LIGHTINFO.data.spotLightCount;
 }
-
+RenderSetting GetRenderSetting()
+{
+    return GLOBAL_SETTING.data.renderSetting;
+}
 DDGISetting GetDDGISetting()
 {
     return GLOBAL_SETTING.data.ddgiSetting;

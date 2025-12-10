@@ -51,7 +51,7 @@ void GameEngine::GizmoPass::Init()
         pipelineInfo.vertexShader = m_SphereVertShader;
         pipelineInfo.fragmentShader = m_SphereFragShader;
         pipelineInfo.primitiveType = PRIMITIVE_TYPE_TRIANGLE_LIST;
-        pipelineInfo.rasterizerState = { FILL_MODE_WIREFRAME, CULL_MODE_NONE, DEPTH_CLIP, 0.0f, 0.0f };
+        pipelineInfo.rasterizerState = { FILL_MODE_SOLID, CULL_MODE_NONE, DEPTH_CLIP, 0.0f, 0.0f };
         pipelineInfo.depthStencilState = { COMPARE_FUNCTION_LESS_EQUAL, true, true };
         pipelineInfo.rootSignature = m_RootSignature;
         pipelineInfo.blendState.renderTargets[0].enable = false;

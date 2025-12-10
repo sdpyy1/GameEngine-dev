@@ -53,6 +53,14 @@ namespace GameEngine {
         RDGTextureHandle envBRDF = builder.GetTexture("BRDFLut");
         RDGTextureHandle envIrradiance = builder.GetTexture("IrradianceMap");
 
+		// DDGI
+		DDGISetting ddgiSetting = RENDER_RESOURCEMANAGER->GetGlobalSettingInfo().ddgiSetting;
+		uint32_t ddgi_LaryCount = ddgiSetting.probeCount.y;
+		RDGTextureHandle ddgi_Distance = builder.GetTexture("DDGI_Distance");
+		RDGTextureHandle ddgi_Irrandiance = builder.GetTexture("DDGI_Irrandiance");
+
+
+
 		auto& builde = builder.CreateRenderPass(GetName())
 			.RootSignature(m_RootSignature)
 			.Color(0, ViewPort, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE)
@@ -64,6 +72,8 @@ namespace GameEngine {
 			.Read(1, 1, 0, envRadiance, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR,0,builder.GetRHITexture("PrefilterMap")->GetInfo().mipLevels,0,6 })
 			.Read(1, 2, 0, envIrradiance, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR,0,1,0,6 })
 			.Read(1, 3, 0, envBRDF)
+            .Read(1, 4, 0, ddgi_Irrandiance, VIEW_TYPE_2D_ARRAY,{ TEXTURE_ASPECT_COLOR,0,1,0,ddgi_LaryCount })
+            .Read(1, 5, 0, ddgi_Distance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR,0,1,0,ddgi_LaryCount })
 			.Execute([&](RDGPassContext context)
 				{
 					auto [w, h] = APP_WINDOWSIZE;

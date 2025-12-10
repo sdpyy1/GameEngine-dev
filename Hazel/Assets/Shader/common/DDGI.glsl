@@ -9,12 +9,12 @@
 uint DDGIGetProbesPerPlane(uvec3 probeCount){
     return probeCount.x * probeCount.z;
 }
-uvec3 DDGIGetProbeCoords(uint probeIndex, DDGISetting volume)
+uvec3 DDGIGetProbeCoords(uint probeIndex, DDGISetting volume) // y_up
 {
     uvec3 probeCoords;
     probeCoords.x = probeIndex % volume.probeCount.x;
-    probeCoords.y = probeIndex / (volume.probeCount.x * volume.probeCount.z);
-    probeCoords.z = (probeIndex / volume.probeCount.x) % volume.probeCount.z;
+    probeCoords.y = probeIndex / (volume.probeCount.x * volume.probeCount.z); // y_up
+    probeCoords.z = (probeIndex / volume.probeCount.x) % volume.probeCount.z;// y_up
     return probeCoords;
 }
 
@@ -150,6 +150,10 @@ vec3 DDGIGetRandianceFromRayData(texture2DArray raydataTexture,uvec3 rayDataTexC
     return texture(sampler2DArray(raydataTexture, SAMPLER[2]), uvw).xyz; // 注意采样器filter是Nearest
 }
 
+float RGBtoLuminance(vec4 c)
+{
+    return dot(c, vec4(0.2125, 0.7154, 0.0721,1)); 
+}
 
 /**
  * 对于一个世界坐标，计算一个权重
@@ -178,7 +182,127 @@ float DDGIGetVolumeBlendWeight(vec3 worldPosition, DDGISetting volume)
 
     return volumeBlendWeight;
 }
+uvec3 DDGIGetProbeTexelCoords(int probeIndex, DDGISetting volume)
+{
+    // Find the probe's plane index
+    int probesPerPlane = int(DDGIGetProbesPerPlane(volume.probeCount));
+    int planeIndex = int(probeIndex / probesPerPlane);
+    int x = (probeIndex % int(volume.probeCount.x));
+    int y = (probeIndex / int(volume.probeCount.x)) % int(volume.probeCount.z);
+    return uvec3(x, y, planeIndex);
+}
+vec3 DDGIGetProbeUV(int probeIndex, vec2 octantCoordinates, int numProbeInteriorTexels, DDGISetting volume)
+{
+    // Get the probe's texel coordinates, assuming one texel per probe
+    uvec3 coords = DDGIGetProbeTexelCoords(probeIndex, volume);
+
+    // Add the border texels to get the total texels per probe
+    float numProbeTexels = (numProbeInteriorTexels + 2.f);
+
+    float textureWidth = numProbeTexels * volume.probeCount.x;
+    float textureHeight = numProbeTexels * volume.probeCount.z;
 
 
+    // Move to the center of the probe and move to the octant texel before normalizing
+    vec2 uv = vec2(coords.x * numProbeTexels, coords.y * numProbeTexels) + (numProbeTexels * 0.5f);
+    uv += octantCoordinates.xy * (float(numProbeInteriorTexels) * 0.5f);
+    uv /= vec2(textureWidth, textureHeight);
+    return vec3(uv, coords.z);
+}
 
+vec2 DDGIGetOctahedralCoordinates(vec3 direction)
+{
+    float l1norm = abs(direction.x) + abs(direction.y) + abs(direction.z);
+    vec2 uv = direction.xy * (1.f / l1norm);
+    if (direction.z < 0.f)
+    {
+        uv = (1.f - abs(uv.yx)) * RTXGISignNotZero(uv.xy);
+    }
+    return uv;
+}
+// 获取离worldPosition最近的探针在探针网络的3D坐标
+ivec3 DDGIGetBaseProbeGridCoords(vec3 worldPosition, DDGISetting volume){
+    vec3 position = worldPosition - volume.centerPosition;
+    position += (volume.gridStep * (volume.probeCount - 1)) * 0.5f;
+    ivec3 probeCoords = ivec3(position / volume.gridStep);
+    probeCoords = clamp(probeCoords, ivec3(0, 0, 0), (ivec3(volume.probeCount) - ivec3(1, 1, 1)));
+    return probeCoords;
+}
+
+// 根据一个世界坐标，计算从探针中获取的Irrandiance
+vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction,DDGISetting volume, texture2DArray IrrdianceTexture,texture2DArray distanceTexture){
+    vec3 irradiance = vec3(0.f, 0.f, 0.f);
+    float accumulatedWeights = 0.f;
+    vec3 biasedWorldPosition = worldPosition;
+
+    // 得到离worldPosition最近的探针坐标
+    ivec3 baseProbeCoords = DDGIGetBaseProbeGridCoords(biasedWorldPosition, volume);
+    vec3 baseProbeWorldPosition = DDGIGetProbeWorldPosition(baseProbeCoords,volume);
+    vec3 gridSpaceDistance = (worldPosition - baseProbeWorldPosition);
+    vec3 alpha = clamp((gridSpaceDistance / volume.gridStep), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
+
+    // 取最近的8个探针
+    for(int probeIndex = 0; probeIndex < 8; probeIndex++){
+        ivec3 adjacentProbeOffset = ivec3(probeIndex, probeIndex >> 1, probeIndex >> 2) & ivec3(1, 1, 1);
+        ivec3 adjacentProbeCoords = clamp(baseProbeCoords + adjacentProbeOffset, ivec3(0, 0, 0), ivec3(volume.probeCount) - ivec3(1, 1, 1));
+        //int adjacentProbeIndex = DDGIGetScrollingProbeIndex(adjacentProbeCoords, volume);
+        int adjacentProbeIndex = probeIndex;  // 没有上边这个功能
+        //vec3 adjacentProbeWorldPosition = DDGIGetProbeWorldPosition(adjacentProbeCoords, volume, resources.probeData); // 这里多一个参数是为了兼容Relocation功能
+        vec3 adjacentProbeWorldPosition = DDGIGetProbeWorldPosition(adjacentProbeCoords, volume);
+
+        vec3 worldPosToAdjProbe = normalize(adjacentProbeWorldPosition - worldPosition);
+        vec3 biasedPosToAdjProbe = normalize(adjacentProbeWorldPosition - biasedWorldPosition);
+        float  biasedPosToAdjProbeDist = length(adjacentProbeWorldPosition - biasedWorldPosition);
+        vec3 trilinear = max(vec3(0.001f), mix(1.f - alpha, alpha, adjacentProbeOffset));
+        float  trilinearWeight = (trilinear.x * trilinear.y * trilinear.z);
+        float  weight = 1.f;
+        float wrapShading = (dot(worldPosToAdjProbe, direction) + 1.f) * 0.5f;
+        weight *= (wrapShading * wrapShading) + 0.2f;
+        vec2 octantCoords = DDGIGetOctahedralCoordinates(-biasedPosToAdjProbe);
+        vec3 probeTextureUV = DDGIGetProbeUV(adjacentProbeIndex, octantCoords, int(DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR), volume);
+        // vec2 filteredDistance = 2.f * resources.probeDistance.SampleLevel(resources.bilinearSampler, probeTextureUV, 0).rg;
+        vec2 filteredDistance = 2.f * texture(sampler2DArray(distanceTexture,SAMPLER[2]),probeTextureUV).rg;  // 采样纹理  TODO： 这*2，因为存的时候/2了
+        float variance = abs((filteredDistance.x * filteredDistance.x) - filteredDistance.y);
+
+        // 切比雪夫遮挡判断
+        float chebyshevWeight = 1.f;
+        if(biasedPosToAdjProbeDist > filteredDistance.x){
+            float v = biasedPosToAdjProbeDist - filteredDistance.x;
+            chebyshevWeight = variance / (variance + (v * v));
+            chebyshevWeight = max((chebyshevWeight * chebyshevWeight * chebyshevWeight), 0.f);
+        }
+        weight *= max(0.05f, chebyshevWeight);
+        weight = max(0.000001f, weight);
+        const float crushThreshold = 0.2f;
+        if (weight < crushThreshold)
+        {
+            weight *= (weight * weight) * (1.f / (crushThreshold * crushThreshold));
+        }
+        weight *= trilinearWeight;
+
+
+        // 这样采样
+        octantCoords = DDGIGetOctahedralCoordinates(direction);
+        probeTextureUV = DDGIGetProbeUV(adjacentProbeIndex, octantCoords, int(DDGI_PROBE_NUM_TEXELS_IRRANDIANCE_INTERIOR), volume);
+        vec3 probeIrradiance = texture(sampler2DArray(IrrdianceTexture,SAMPLER[2]),probeTextureUV).rgb;
+        float probeIrradianceEncodingGamma = 5.f; // TODO:volum参数 
+        vec3 exponent = vec3(probeIrradianceEncodingGamma * 0.5f);
+        probeIrradiance = pow(probeIrradiance, exponent);
+        irradiance += (weight * probeIrradiance);
+        accumulatedWeights += weight;
+    }
+    if(accumulatedWeights == 0.f) return vec3(0.f, 0.f, 0.f);
+    irradiance *= (1.f / accumulatedWeights);
+    irradiance *= irradiance;
+    irradiance *= TwoPI;
+
+    // Adjust for energy loss due to reduced precision in the R10G10B10A2 irradiance texture format 牛
+    // if (volume.probeIrradianceFormat == RTXGI_DDGI_VOLUME_TEXTURE_FORMAT_U32)
+    // {
+    //     irradiance *= 1.0989f;
+    // }
+
+
+    return irradiance;
+}
 #endif

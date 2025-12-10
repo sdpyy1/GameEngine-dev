@@ -60,7 +60,7 @@ void main()
         for(int x = 0; x < probeCount.x; ++x)
         {
             vec3 probePos = startPos + vec3(x, y, z) * step;
-            AddGizmoSphere(probePos, radius, vec4(1.0, 0.1, 0.0, 1.0));
+            AddGizmoSphere(probePos, radius, vec4(1.0, 0.0, 0.0, 1.0));
         }
     }
 }

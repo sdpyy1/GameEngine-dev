@@ -28,7 +28,9 @@ namespace GameEngine
 				.AddEntry({ 1, 0, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_RW_TEXTURE })
 				.AddEntry({ 1, 1, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_TEXTURE })
 				.AddEntry({ 1, 2, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_TEXTURE_CUBE })
-				.AddEntry({ 1, 3, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_TEXTURE_CUBE });
+				.AddEntry({ 1, 3, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_TEXTURE_CUBE })
+				.AddEntry({ 1, 4, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_TEXTURE })
+				.AddEntry({ 1, 5, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_TEXTURE });
 			m_VolumeTraceRootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
 
 			RHIRayTracingPipelineInfo pipelineInfo = {};
@@ -81,7 +83,6 @@ namespace GameEngine
 				.AllowReadWrite()
 				.Finish();
 
-
 			RDGTextureHandle irrandiance = builder.CreateTexture("DDGI_Irrandiance")
 				.Exetent({ probeCount.x * 8,probeCount.z * 8,1 })
 				.ArrayLayers(volumeLayerCount)
@@ -93,7 +94,7 @@ namespace GameEngine
 				.Exetent({ probeCount.x * 16,probeCount.z * 16,1 })
 				.ArrayLayers(volumeLayerCount)
 				.AllowReadWrite()
-				.Format(FORMAT_R32G32_SFLOAT)
+				.Format(FORMAT_R32G32B32A32_SFLOAT)
 				.Finish();
 			RDGTextureHandle dirShadowMap = builder.GetTexture("CSMTextureArray");
 
@@ -108,7 +109,8 @@ namespace GameEngine
 					.Read(1, 1, 0, dirShadowMap, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_DEPTH ,0,1,0,4 })
 					// 点光源阴影单独处理
 					.Read(1, 3, 0, skyBox, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR ,0,1,0,6 })
-
+					.Read(1, 4, 0, irrandiance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR,0,1,0,volumeLayerCount })
+					.Read(1, 5, 0, distance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR,0,1,0,volumeLayerCount })
 					.Execute([&](RDGPassContext context) {
 					RHICommandListRef command = context.command;
 					command->SetRayTracingPipeline(m_VolumeTracePipeline);
