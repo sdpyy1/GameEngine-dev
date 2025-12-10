@@ -57,10 +57,7 @@ void main()
 	vec3 probeWorldPosition = DDGIGetProbeWorldPosition(probeCoords, volume);
 	vec3 rayDirection = normalize(RTXGISphericalFibonacci(rayIndex,volume.raysPerProbe));
 
-	// 可视化射线
-	if(volume.visulaize == 1 && probeIndex == 34){
-		AddGizmoLine(probeWorldPosition, probeWorldPosition + rayDirection,vec4(1,0,0,1));
-	}
+
 
 	// 获取这条光线最终在纹理中的存储位置 x: RayIndex y: probeIndexInLayer z:layerIndex
 	
@@ -121,6 +118,13 @@ void main()
     float maxAlbedo = 0.9f;
 	
     vec3 radiance = diffuse + ((min(payload.albedo, vec3(maxAlbedo, maxAlbedo, maxAlbedo)) / PI) * irradiance * volumeBlendWeight);
+
+
+
+		// 可视化射线
+	if(volume.visulaize == 1 && outputCoords.y == 33 && outputCoords.z == 3){
+		AddGizmoLine(probeWorldPosition, probeWorldPosition + rayDirection *payload.hitT ,vec4(1,0,0,1));
+	}
 
 	// 最终存储rayData radiance(3) + hitT(1)
 	imageStore(out_RAYDATA, ivec3(outputCoords), vec4(payload.albedo, payload.hitT));

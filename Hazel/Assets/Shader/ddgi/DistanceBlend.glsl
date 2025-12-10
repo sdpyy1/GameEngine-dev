@@ -2,7 +2,7 @@
 #include "../common/common.glsl"
 #include "../common/DDGI.glsl"
 layout(set = 1, rgba32f, binding = 0) uniform image2DArray o_Texture;
-layout(set = 1, binding = 1) uniform texture2DArray  IN_RayData;
+layout(set = 1,rgba32f, binding = 1) uniform image2DArray  IN_RayData;
 #ifdef COMPUTE_SHADER
 layout(local_size_x = DDGI_PROBE_NUM_TEXELS_DISTANCE, local_size_y = DDGI_PROBE_NUM_TEXELS_DISTANCE, local_size_z = 1) in;  
 void main(){
@@ -11,16 +11,13 @@ void main(){
     uvec3 invocationID = gl_GlobalInvocationID; // 相对于全局的调用ID
     uvec3 LocalInvocationID = gl_LocalInvocationID; // 相对于组内的调用ID
     bool isBorderTexel = (LocalInvocationID.x == 0 || LocalInvocationID.x == (DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR + 1)) || (LocalInvocationID.y == 0 || LocalInvocationID.y == (DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR + 1));
-    uint probeIndex = DDGIGetProbeIndex(invocationID, DDGI_PROBE_NUM_TEXELS_DISTANCE, volume);
+    uint probeIndex = (groupID.y * DDGIGetProbesPerPlane(volume.probeCount)) + groupID.z * volume.probeCount.x + groupID.x ;
 
     vec4 result = vec4(0.0);
 
     if(!isBorderTexel){
         uvec3 threadCoords = uvec3(groupID.x * DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR, groupID.y * DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR, invocationID.z) + LocalInvocationID - uvec3(1, 1, 0);
-
-        // 一个6*6的区域，获取某个像素对应到八面体上的UV坐标
         vec2 probeOctantUV = DDGIGetNormalizedOctahedralCoordinates(uvec2(threadCoords.xy), DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR);
-        // 当前像素对应投影到八面体上的射线方向
         vec3 probeRayDirection = DDGIGetOctahedralDirection(probeOctantUV);
         // 遍历当前探针的所有光线
         for (uint rayIndex = 0; rayIndex < volume.raysPerProbe; rayIndex++){
@@ -28,8 +25,9 @@ void main(){
             float weight = max(0.f, dot(probeRayDirection, rayDirection));
             uvec3 rayDataTexCoords = DDGIGetRayDataTexelCoords(rayIndex, probeIndex, volume);
             float probeMaxRayDistance = length(volume.gridStep) * 1.5f;
-            float probeRayDistance = 0.f;
-            probeRayDistance = min(abs(DDGIGetDistanceFromRayData(IN_RayData, rayDataTexCoords, volume)), probeMaxRayDistance);
+            vec4 storedData = imageLoad(IN_RayData, ivec3(rayDataTexCoords));
+            float probeRayDistance = storedData.w;
+            probeRayDistance = min(abs(probeRayDistance),probeMaxRayDistance);
             result += vec4(probeRayDistance * weight, (probeRayDistance * probeRayDistance) * weight, 0.f, weight);
         }
         float epsilon = float(volume.raysPerProbe);
@@ -38,7 +36,7 @@ void main(){
         result.a = 1.f;
         // 时域加权混合
         vec4 history = imageLoad(o_Texture,ivec3(gl_GlobalInvocationID));
-        result = mix(result, history, RGBtoLuminance(history) < 0.01f ? 0.0f : 0.97);
+        result = mix(result, history, RGBtoLuminance(history) < 0.01f ? 0.0f : 0.97);// TODO：混合系数是参数
         result.a = 1.0f;
         result.b = 0.0f;
         imageStore(o_Texture, ivec3(gl_GlobalInvocationID), result);
