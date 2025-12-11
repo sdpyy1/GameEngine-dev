@@ -62,7 +62,7 @@ void main(){
         // 工程化修正问题：需要结合蒙特卡洛积分理解
         float epsilon = float(volume.raysPerProbe);
         epsilon *= 1e-9f;
-        result.rgb *= 1.f / (2.f * max(result.a, epsilon));   
+        result.rgb *= 1.f / (2.f * max(result.a, epsilon));
 
         // 时域加权混合
         vec4 history = imageLoad(o_Texture,ivec3(gl_GlobalInvocationID));

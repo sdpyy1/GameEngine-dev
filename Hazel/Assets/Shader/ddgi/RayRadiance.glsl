@@ -100,11 +100,8 @@ void main()
 
 
 /////////////////////////////////////////////
-// Directional Light TODO: 点光源和聚光
+// Directional Light
 /////////////////////////////////////////////
-	vec3 brdf = (payload.albedo / PI);
-	vec3 lighting = vec3(0.f);
-
 	DirectionLight dirLight = GetDirectionLight();
 	// 硬件在找到第一个 hit 后立即停止 | 跳过ClosestHitShader，直接返回rayGen | 所有模型都被视为不透明
 	const uint rayFlags = gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsSkipClosestHitShaderEXT | gl_RayFlagsOpaqueEXT;
@@ -125,29 +122,20 @@ void main()
 	if(shadowPayload.hitT != -1.f){
 		shadowScale = 0.0;
 	}
-    vec3 lightDirection = -normalize(dirLight.direction);
-    float nol = max(dot(payload.normal, lightDirection), 0.f);
-	vec3 dirLighting = nol * dirLight.radiance * shadowScale;
-	lighting += dirLighting;
 
-// 计算击中点的直接光
-	//float shadowScale = 1.0;
-	//uint cascadeIndex = 0;
+	// 计算击中点的直接光
 	m_Params.Albedo = payload.albedo;
 	m_Params.Metalness = payload.metallic;
     m_Params.Roughness = payload.roughness;
     m_Params.Normal = payload.normal;
 	m_Params.View = normalize(probeWorldPosition - payload.worldPosition); 
-	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
+	m_Params.NdotV = max(dot(m_Params.Normal, -m_Params.View), 0.0);
 	const vec3 Fdielectric = vec3(0.04);
 	vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
 
 	//直接光应该是只需要计算漫反射分量，不需要镜面反射
-	vec3 diffuse = CalculateDirLightsOnlyDiffuse(F0)*shadowScale + CalculatePointLightsOnlyDiffuse(F0, payload.worldPosition) + CalculateSpotLightsOnlyDiffuse(F0, payload.worldPosition);
+	vec3 diffuse = CalculateDirLightsOnlyDiffuse(F0) * shadowScale + CalculatePointLightsOnlyDiffuse(F0, payload.worldPosition) + CalculateSpotLightsOnlyDiffuse(F0, payload.worldPosition);
 	
-
-	//vec3 diffuse = lighting * brdf;
-
 /////////////////////////////////////////////
 // Indirection Light
 /////////////////////////////////////////////
@@ -174,7 +162,7 @@ void main()
 		}
 	}
 	// 最终存储rayData radiance(3) + hitT(1)
-	imageStore(out_RAYDATA, ivec3(outputCoords), vec4(Saturate(radiance), payload.hitT));  // TODO：测试时没有+irradiance
+	imageStore(out_RAYDATA, ivec3(outputCoords), vec4(radiance, payload.hitT)); 
 }
 
 #endif
