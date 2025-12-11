@@ -3,7 +3,6 @@
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
-#include "Hazel/Scene/SceneManager.h"
 #include <Hazel/Renderer/RenderResource/Shader.h>
 #include "Hazel/Renderer/RenderSystem/LightCollector.h"
 
@@ -14,12 +13,14 @@ namespace GameEngine
 		{
 			m_RayGenShader = std::make_shared<Shader>("ddgi/RayRadiance", SHADER_FREQUENCY_RAY_GEN)->GetRHIShader();
 			m_MissShader = std::make_shared<Shader>("ddgi/RayRadiance", SHADER_FREQUENCY_RAY_MISS)->GetRHIShader();
+			m_ShadowMissShader = std::make_shared<Shader>("ddgi/shadowMiss", SHADER_FREQUENCY_RAY_MISS)->GetRHIShader();
 			m_ClosestHitShader = std::make_shared<Shader>("ddgi/RayRadiance", SHADER_FREQUENCY_CLOSEST_HIT)->GetRHIShader();
 
 			// SBT
 			RHIShaderBindingTableInfo sbtInfo = {};
 			sbtInfo.AddRayGenGroup(m_RayGenShader);
 			sbtInfo.AddMissGroup(m_MissShader);
+			sbtInfo.AddMissGroup(m_ShadowMissShader);
 			sbtInfo.AddHitGroup(m_ClosestHitShader);
 			RHIShaderBindingTableRef sbt = APP_DYNAMICRHI->CreateShaderBindingTable(sbtInfo);
 
@@ -44,7 +45,7 @@ namespace GameEngine
             RHIRootSignatureInfo rootSignatureInfo;
 			rootSignatureInfo.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo())
 				.AddEntry({ 1, 0, 1, SHADER_FREQUENCY_COMPUTE, RESOURCE_TYPE_RW_TEXTURE })
-				.AddEntry({ 1, 1, 1, SHADER_FREQUENCY_COMPUTE, RESOURCE_TYPE_TEXTURE });
+				.AddEntry({ 1, 1, 1, SHADER_FREQUENCY_COMPUTE, RESOURCE_TYPE_RW_TEXTURE });
 			m_ProbeIrrandianceBlendRootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
 			RHIComputePipelineInfo pipelineInfo;
             pipelineInfo.computeShader = m_ProbeIrrandianceBlendShader;
@@ -56,7 +57,7 @@ namespace GameEngine
 			RHIRootSignatureInfo rootSignatureInfo;
 			rootSignatureInfo.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo())
 				.AddEntry({ 1, 0, 1, SHADER_FREQUENCY_COMPUTE, RESOURCE_TYPE_RW_TEXTURE })
-				.AddEntry({ 1, 1, 1, SHADER_FREQUENCY_COMPUTE, RESOURCE_TYPE_TEXTURE });
+				.AddEntry({ 1, 1, 1, SHADER_FREQUENCY_COMPUTE, RESOURCE_TYPE_RW_TEXTURE });
 			m_ProbeDistanceBlendRootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
 			RHIComputePipelineInfo pipelineInfo;
 			pipelineInfo.computeShader = m_ProbeDistanceBlendShader;
@@ -64,7 +65,7 @@ namespace GameEngine
 			m_ProbeDistanceBlendPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
 		}
 
-
+		// TODO:这张图应该交给Volum自己管理，这里初始化只能固定大小
 		{
 			RHITextureInfo textureInfo;
 			textureInfo.extent = { 8*8, 8*8, 1 };
@@ -84,9 +85,6 @@ namespace GameEngine
 			textureInfo.type |= RESOURCE_TYPE_RW_TEXTURE;
 			m_ProbeDistanceTexture = APP_DYNAMICRHI->CreateTexture(textureInfo);
 		}
-
-
-
 
 	}
 
@@ -115,9 +113,6 @@ namespace GameEngine
 			//	.Format(FORMAT_R32G32B32A32_SFLOAT)
 			//	.Finish();
 
-			RDGTextureHandle irrandiance = builder.CreateTexture("DDGI_Irrandiance")
-				.Import(m_ProbeIrrandianceTexture,RESOURCE_STATE_UNDEFINED)
-				.Finish();
 
 			//RDGTextureHandle distance = builder.CreateTexture("DDGI_Distance")
 			//	.Exetent({ probeCount.x * 16,probeCount.z * 16,1 })
@@ -126,9 +121,17 @@ namespace GameEngine
 			//	.Format(FORMAT_R32G32B32A32_SFLOAT)
 			//	.Finish();
 			 
-			RDGTextureHandle distance = builder.CreateTexture("DDGI_Distance")
-				.Import(m_ProbeDistanceTexture,RESOURCE_STATE_UNDEFINED)
-                .Finish();
+			RDGTextureHandle irrandiance = isFirstTick ? builder.CreateTexture("DDGI_Irrandiance").Import(m_ProbeIrrandianceTexture, RESOURCE_STATE_UNDEFINED).Finish()
+				: builder.CreateTexture("DDGI_Irrandiance").Import(m_ProbeIrrandianceTexture, RESOURCE_STATE_SHADER_RESOURCE).Finish();
+
+
+			RDGTextureHandle distance = isFirstTick ? builder.CreateTexture("DDGI_Distance").Import(m_ProbeDistanceTexture, RESOURCE_STATE_UNDEFINED).Finish()
+				: builder.CreateTexture("DDGI_Distance").Import(m_ProbeDistanceTexture, RESOURCE_STATE_SHADER_RESOURCE).Finish();
+
+
+			if (isFirstTick) {
+				isFirstTick = false;
+			}
 
 
 			RDGTextureHandle dirShadowMap = builder.GetTexture("CSMTextureArray");
@@ -151,7 +154,7 @@ namespace GameEngine
 					command->SetRayTracingPipeline(m_VolumeTracePipeline);
 					command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
 					command->BindDescriptorSet(context.descriptors[1], 1);
-					command->TraceRays(context.passIndex[0], context.passIndex[1], context.passIndex[2]); // 注意这里传递的是射线数量、每层探针数量、探针层数
+					command->TraceRays(context.passIndex[0], context.passIndex[1], context.passIndex[2]);
 						});
 				LightInfo& lightInfo = LightCollector::GetLightInfo();
 				if (lightInfo.pointLightCount > 0) {
@@ -164,9 +167,9 @@ namespace GameEngine
 				// Irrandiance Blend
 				builder.CreateComputePass(GetName() + "_ProbeIrrandianceBlend")
 					.ReadWrite(1, 0, 0, irrandiance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
-					.Read(1, 1, 0, rayTexture, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
+					.ReadWrite(1, 1, 0, rayTexture, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
 					.RootSignature(m_ProbeIrrandianceBlendRootSignature)
-					.PassIndex(probeCount.x, probeCount.y, probeCount.z)// Y_up
+					.PassIndex(probeCount.x, probeCount.z, probeCount.y)// Y_up
 					.Execute([&](RDGPassContext context) {
 					RHICommandListRef command = context.command;
 					command->SetComputePipeline(m_ProbeIrrandianceBlendPipeline);
@@ -181,9 +184,9 @@ namespace GameEngine
 				// Distance Blend
 				builder.CreateComputePass(GetName() + "_ProbeDistanceBlend")
 					.ReadWrite(1, 0, 0, distance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
-					.Read(1, 1, 0, rayTexture, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
+					.ReadWrite(1, 1, 0, rayTexture, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
 					.RootSignature(m_ProbeDistanceBlendRootSignature)
-					.PassIndex(probeCount.x, probeCount.y, probeCount.z) // Y_up
+					.PassIndex(probeCount.x, probeCount.z, probeCount.y) // Y_up
 					.Execute([&](RDGPassContext context) {
 					RHICommandListRef command = context.command;
 					command->SetComputePipeline(m_ProbeDistanceBlendPipeline);

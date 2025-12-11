@@ -15,9 +15,11 @@ namespace GameEngine {
 		virtual std::string GetName() { return "DDGIPass"; }
 		virtual PassType GetType() override final { return DDGI_PASS; }
 	private:
+		bool isFirstTick = true;
 		RHIShaderRef m_RayGenShader;
 		RHIShaderRef m_ClosestHitShader;
 		RHIShaderRef m_MissShader;
+		RHIShaderRef m_ShadowMissShader;
 
 		RHIShaderRef m_ProbeIrrandianceBlendShader;
         RHIShaderRef m_ProbeDistanceBlendShader;

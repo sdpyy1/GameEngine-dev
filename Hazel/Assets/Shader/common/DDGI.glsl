@@ -176,7 +176,6 @@ float DDGIGetVolumeBlendWeight(vec3 worldPosition, DDGISetting volume)
 */
 vec3 DDGIGetProbeUV(int probeIndex, vec2 octantCoordinates, int numProbeInteriorTexels, DDGISetting volume)
 {
-    // Get the probe's texel coordinates, assuming one texel per probe
     uvec3 coords = DDGIGetProbeCoords(probeIndex, volume);
 
     // Add the border texels to get the total texels per probe
@@ -226,17 +225,16 @@ bool DDGICheckPostion(vec3 worldPosition,DDGISetting volume){
 vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction, DDGISetting volume, texture2DArray IrrdianceTexture,texture2DArray distanceTexture){
 
     // 如果WorldPosition不在DDGIvolume内，直接返回
-    if(!DDGICheckPostion(worldPosition,volume)){
-        return vec3(0.f, 0.f, 0.f);
-    }
+    // if(!DDGICheckPostion(worldPosition,volume)){
+    //     return vec3(0.f, 0.f, 0.f);
+    // }
     vec3  sumIrradiance = vec3(0.0f);
     float sumWeight = 0.0f;
 
     vec3 irradiance = vec3(0.f, 0.f, 0.f);
     float accumulatedWeights = 0.f;
-    vec3 biasedWorldPosition = worldPosition;
     // 得到离worldPosition最近的探针坐标
-    ivec3 baseProbeCoords = DDGIGetBaseProbeGridCoords(biasedWorldPosition, volume);
+    ivec3 baseProbeCoords = DDGIGetBaseProbeGridCoords(worldPosition, volume);
     vec3 baseProbeWorldPosition = DDGIGetProbeWorldPosition(baseProbeCoords,volume);
     vec3 alpha = clamp(((worldPosition - baseProbeWorldPosition) / volume.gridStep), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 
@@ -245,31 +243,31 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction, DDGIS
         // 使用魔法获得一个探针😄
         ivec3  offset  = ivec3(i, i >> 1, i >> 2) & ivec3(1);
         ivec3  probeGridCoord   = clamp(baseProbeCoords + offset, ivec3(0), ivec3(volume.probeCount) - ivec3(1));
-        uint probeIndex =  (probeGridCoord.y * DDGIGetProbesPerPlane(volume.probeCount)) + probeGridCoord.z * volume.probeCount.x + probeGridCoord.x ;
+        uint probeIndex =  (probeGridCoord.y * DDGIGetProbesPerPlane(volume.probeCount)) + probeGridCoord.z * volume.probeCount.x + probeGridCoord.x;
         vec3 probePos = DDGIGetProbeWorldPosition(probeGridCoord, volume);
-        
+
         // 方向系数
         {
             vec3 directionToProbe = normalize(probePos - worldPosition);
             weight *= Square(max(0.0001, (dot(directionToProbe, direction) + 1.0) * 0.5)) + 0.2;  
         }
 
-        //切比雪夫系数
-        {
-            vec3 probeToPoint   = worldPosition - probePos;
-            vec3 dir            = normalize(-probeToPoint);
-            float dist          = length(probeToPoint);
-            vec2 octantCoords = DDGIGetOctahedralCoordinates(dir);
-            vec3 probeTextureUV = DDGIGetProbeUV(int(probeIndex), octantCoords, int(DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR), volume);
-            vec2 temp = texture(sampler2DArray(distanceTexture,SAMPLER[0]),probeTextureUV).rg;  // 采样距离纹理
-            float mean      = temp.x;
-            float variance  = abs(Square(temp.x) - temp.y);
+        // //切比雪夫系数
+        // {
+        //     vec3 probeToPoint   = worldPosition - probePos;
+        //     vec3 dir            = normalize(-probeToPoint);
+        //     float dist          = length(probeToPoint);
+        //     vec2 octantCoords = DDGIGetOctahedralCoordinates(dir);
+        //     vec3 probeTextureUV = DDGIGetProbeUV(int(probeIndex), octantCoords, int(DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR), volume);
+        //     vec2 temp = texture(sampler2DArray(distanceTexture,SAMPLER[0]),probeTextureUV).rg;  // 采样距离纹理
+        //     float mean      = temp.x;
+        //     float variance  = abs(Square(temp.x) - temp.y);
 
-            float chebyshev = variance / (variance + Square(max(dist - mean, 0.0)));
-            chebyshev       = max(Pow3(chebyshev), 0.0);  //以切比雪夫系数三次方作为权重
+        //     float chebyshev = variance / (variance + Square(max(dist - mean, 0.0)));
+        //     chebyshev       = max(Pow3(chebyshev), 0.0);  //以切比雪夫系数三次方作为权重
 
-            weight *= (dist <= mean) ? 1.0 : chebyshev;
-        }
+        //     weight *= (dist <= mean) ? 1.0 : chebyshev;
+        // }
 
         //避免计算精度问题
         {
@@ -299,12 +297,10 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction, DDGIS
     }
 
     vec3 netIrradiance = sumIrradiance / sumWeight;
-    netIrradiance *= 0.95;
-
     return 2 * PI * netIrradiance; 
 }
 
-// // 根据一个世界坐标，计算从探针中获取的Irrandiance
+// 根据一个世界坐标，计算从探针中获取的Irrandiance
 // vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction,DDGISetting volume, texture2DArray IrrdianceTexture,texture2DArray distanceTexture){
 //     vec3 irradiance = vec3(0.f, 0.f, 0.f);
 //     float accumulatedWeights = 0.f;

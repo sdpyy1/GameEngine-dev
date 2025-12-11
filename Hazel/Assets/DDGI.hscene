@@ -1,16 +1,16 @@
 {
     "Scene": {
-        "EntityCount": 5,
+        "EntityCount": 30,
         "Entity": {
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 2633585165713245134
+                    "m_UUID": 2337824293858795043
                 }
             },
             "HasTagComponent": true,
             "TagComponent": {
-                "Tag": "cornell-1"
+                "Tag": "meshes[0]-99.meshes[0]-97.meshes[0]-3"
             },
             "HasTransformComponent": true,
             "TransformComponent": {
@@ -39,7 +39,7 @@
             "HasRelationshipComponent": true,
             "RelationshipComponent": {
                 "ParentHandle": {
-                    "m_UUID": 5145266685356364566
+                    "m_UUID": 3668933315474137627
                 },
                 "Children": []
             },
@@ -52,11 +52,11 @@
             "HasSubmeshComponent": true,
             "SubmeshComponent": {
                 "modelID": {
-                    "m_UUID": 11469616403192924840
+                    "m_UUID": 3747098191135100173
                 },
-                "SubmeshIndex": 1,
+                "SubmeshIndex": 3,
                 "castShadow": true,
-                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\cornell.glb",
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
                 "Visible": true
             },
             "HasLightProbeComponent": false
@@ -65,35 +65,95 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 5145266685356364566
+                    "m_UUID": 17399790767812228835
                 }
             },
             "HasTagComponent": true,
             "TagComponent": {
-                "Tag": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\cornell.glb"
+                "Tag": "meshes[0]-10.meshes[0]-14.meshes[0]-17.meshes[0]-19.meshes[0]-21.meshes[0]-23.meshes[0]-25.meshes[0]-27.meshes[0]-29.meshes[0]-31.meshes[0]-33.meshes[0]-6"
             },
             "HasTransformComponent": true,
             "TransformComponent": {
                 "Translation": {
-                    "x": 1.380631446838379,
-                    "y": 7.091980934143066,
-                    "z": -0.09229534864425659
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
                 },
                 "Scale": {
-                    "x": 4.679503917694092,
-                    "y": 4.679503440856934,
-                    "z": 4.679498195648193
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
                 },
                 "RotationEuler": {
-                    "x": 0.6410799026489258,
-                    "y": -1.5054316520690919,
-                    "z": 0.9287102222442627
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
                 },
                 "Rotation": {
-                    "x": 0.4961699843406677,
-                    "y": -0.47711703181266787,
-                    "z": 0.50279301404953,
-                    "w": 0.5228516459465027
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 6,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 3668933315474137627
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": -0.05326414108276367,
+                    "y": 15.73927116394043,
+                    "z": 0.8678643107414246
+                },
+                "Scale": {
+                    "x": 0.012250004336237908,
+                    "y": 0.011894174851477147,
+                    "z": 0.012250004336237908
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
                 }
             },
             "HasRelationshipComponent": true,
@@ -103,13 +163,79 @@
                 },
                 "Children": [
                     {
-                        "m_UUID": 16605141728779143257
+                        "m_UUID": 673396355942248953
                     },
                     {
-                        "m_UUID": 2633585165713245134
+                        "m_UUID": 15114620688136445503
                     },
                     {
-                        "m_UUID": 14966390364581764121
+                        "m_UUID": 16530328275356461364
+                    },
+                    {
+                        "m_UUID": 2337824293858795043
+                    },
+                    {
+                        "m_UUID": 13346881118443795880
+                    },
+                    {
+                        "m_UUID": 10797110994779356596
+                    },
+                    {
+                        "m_UUID": 17399790767812228835
+                    },
+                    {
+                        "m_UUID": 3766631014656479360
+                    },
+                    {
+                        "m_UUID": 7645710054890993367
+                    },
+                    {
+                        "m_UUID": 6978499111302967391
+                    },
+                    {
+                        "m_UUID": 12624027177946665933
+                    },
+                    {
+                        "m_UUID": 3461489757914454445
+                    },
+                    {
+                        "m_UUID": 4044834398087311058
+                    },
+                    {
+                        "m_UUID": 3858538019643781377
+                    },
+                    {
+                        "m_UUID": 12439472330643814884
+                    },
+                    {
+                        "m_UUID": 17121898514128484190
+                    },
+                    {
+                        "m_UUID": 15854519136866607239
+                    },
+                    {
+                        "m_UUID": 17922620754587834812
+                    },
+                    {
+                        "m_UUID": 5101427140512004247
+                    },
+                    {
+                        "m_UUID": 11274058522916776632
+                    },
+                    {
+                        "m_UUID": 11344946564694375472
+                    },
+                    {
+                        "m_UUID": 9272643646774550866
+                    },
+                    {
+                        "m_UUID": 16559027987740294783
+                    },
+                    {
+                        "m_UUID": 9286030624927517427
+                    },
+                    {
+                        "m_UUID": 9945026783610481750
                     }
                 ]
             },
@@ -121,9 +247,9 @@
             "HasModelComponent": true,
             "ModelComponent": {
                 "ModelID": {
-                    "m_UUID": 11469616403192924840
+                    "m_UUID": 3747098191135100173
                 },
-                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\cornell.glb",
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
                 "Visible": true,
                 "castShadow": true
             },
@@ -134,12 +260,12 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 14966390364581764121
+                    "m_UUID": 673396355942248953
                 }
             },
             "HasTagComponent": true,
             "TagComponent": {
-                "Tag": "cornell-2"
+                "Tag": "meshes[0]-53.meshes[0]-0"
             },
             "HasTransformComponent": true,
             "TransformComponent": {
@@ -168,7 +294,7 @@
             "HasRelationshipComponent": true,
             "RelationshipComponent": {
                 "ParentHandle": {
-                    "m_UUID": 5145266685356364566
+                    "m_UUID": 3668933315474137627
                 },
                 "Children": []
             },
@@ -181,71 +307,11 @@
             "HasSubmeshComponent": true,
             "SubmeshComponent": {
                 "modelID": {
-                    "m_UUID": 11469616403192924840
-                },
-                "SubmeshIndex": 2,
-                "castShadow": true,
-                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\cornell.glb",
-                "Visible": true
-            },
-            "HasLightProbeComponent": false
-        },
-        "Entity": {
-            "HasIDComponent": true,
-            "IDComponent": {
-                "ID": {
-                    "m_UUID": 16605141728779143257
-                }
-            },
-            "HasTagComponent": true,
-            "TagComponent": {
-                "Tag": "cornell-0"
-            },
-            "HasTransformComponent": true,
-            "TransformComponent": {
-                "Translation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "Scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "RotationEuler": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "Rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0,
-                    "w": 1.0
-                }
-            },
-            "HasRelationshipComponent": true,
-            "RelationshipComponent": {
-                "ParentHandle": {
-                    "m_UUID": 5145266685356364566
-                },
-                "Children": []
-            },
-            "HasDirectionalLightComponent": false,
-            "HasPointLightComponent": false,
-            "HasSpotLightComponent": false,
-            "HasSkyComponent": false,
-            "HasPostProcessingComponent": false,
-            "HasModelComponent": false,
-            "HasSubmeshComponent": true,
-            "SubmeshComponent": {
-                "modelID": {
-                    "m_UUID": 11469616403192924840
+                    "m_UUID": 3747098191135100173
                 },
                 "SubmeshIndex": 0,
                 "castShadow": true,
-                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\cornell.glb",
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
                 "Visible": true
             },
             "HasLightProbeComponent": false
@@ -254,7 +320,1516 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 17490632976930396916
+                    "m_UUID": 16559027987740294783
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-101"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 22,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 15114620688136445503
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-81.meshes[0]-83.meshes[0]-85.meshes[0]-87.meshes[0]-89.meshes[0]-91.meshes[0]-93.meshes[0]-1"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 1,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 16530328275356461364
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-82.meshes[0]-94.meshes[0]-84.meshes[0]-92.meshes[0]-86.meshes[0]-90.meshes[0]-88.meshes[0]-2"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 2,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 10797110994779356596
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-8.meshes[0]-11.meshes[0]-16.meshes[0]-18.meshes[0]-20.meshes[0]-22.meshes[0]-24.meshes[0]-26.meshes[0]-28.meshes[0]-30.meshes[0]-32.meshes[0]-34.meshes[0]-36.meshes[0]-48.meshes[0]-5"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 5,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 13346881118443795880
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-13.meshes[0]-15.meshes[0]-35.meshes[0]-100.meshes[0]-37.meshes[0]-39.meshes[0]-41.meshes[0]-43.meshes[0]-45.meshes[0]-51.meshes[0]-102.meshes[0]-4"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 4,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 3766631014656479360
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-47.meshes[0]-7"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 7,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 5101427140512004247
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-68.meshes[0]-64.meshes[0]-66.meshes[0]-71"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 18,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 7645710054890993367
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-76.meshes[0]-80.meshes[0]-78.meshes[0]-74"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 8,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 6978499111302967391
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-46.meshes[0]-9"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 9,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 12624027177946665933
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-56.meshes[0]-60"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 10,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 3461489757914454445
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-75.meshes[0]-77.meshes[0]-79.meshes[0]-73"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 11,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 9272643646774550866
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-62.meshes[0]-52"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 21,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 4044834398087311058
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-44.meshes[0]-12"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 12,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 3858538019643781377
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-96.meshes[0]-98"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 13,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 12439472330643814884
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-57.meshes[0]-54.meshes[0]-59"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 14,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 17121898514128484190
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-49"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 15,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 15854519136866607239
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-69.meshes[0]-63.meshes[0]-72"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 16,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 17922620754587834812
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-55.meshes[0]-61.meshes[0]-58"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 17,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 11274058522916776632
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-40.meshes[0]-42.meshes[0]-38"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 19,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 11344946564694375472
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-67.meshes[0]-65.meshes[0]-70"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 20,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 14297025046528950323
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Light Probe"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": -1.5131100416183472,
+                    "y": 23.322072982788087,
+                    "z": -0.4351949691772461
+                },
+                "Scale": {
+                    "x": 0.519800066947937,
+                    "y": 0.5198003649711609,
+                    "z": 0.5198003649711609
+                },
+                "RotationEuler": {
+                    "x": 0.2711622714996338,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.13516613841056825,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 0.990822970867157
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": true,
+            "LightProbeComponent": {
+                "enable": true,
+                "probeCount": {
+                    "x": 8,
+                    "y": 8,
+                    "z": 8
+                },
+                "gridStep": {
+                    "x": 6.817999839782715,
+                    "y": 3.871000051498413,
+                    "z": 3.7109999656677248
+                },
+                "raysPerProbe": 256,
+                "visulaize": true
+            }
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 9286030624927517427
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-95"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 23,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 9945026783610481750
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "meshes[0]-50"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3668933315474137627
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 3747098191135100173
+                },
+                "SubmeshIndex": 24,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Sponza\\glTF\\Sponza.gltf",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 5731866925994421134
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Directional Light"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 1.3385189771652222,
+                    "y": 19.725366592407228,
+                    "z": -0.571882426738739
+                },
+                "Scale": {
+                    "x": 0.9999390244483948,
+                    "y": 0.9999458193778992,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": -0.25972914695739748,
+                    "z": 1.974640130996704
+                },
+                "Rotation": {
+                    "x": 0.10807442665100098,
+                    "y": -0.07134514302015305,
+                    "z": 0.8275250792503357,
+                    "w": 0.5462892055511475
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": true,
+            "DirectionalLightComponent": {
+                "Intensity": 1.0,
+                "Radiance": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "shadowType": 3,
+                "showDirection": true,
+                "showCSM": false
+            },
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 8613065890071513481
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Point Light"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": -1.7790870666503907,
+                    "y": 17.872783660888673,
+                    "z": 2.1021878719329836
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": true,
+            "PointLightComponent": {
+                "Intensity": 1.0,
+                "Radiance": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "Radius": 2.700000047683716,
+                "showRadius": false
+            },
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 371618854794425697
                 }
             },
             "HasTagComponent": true,
@@ -299,7 +1874,7 @@
             "SkyComponent": {
                 "DynamicSky": false,
                 "selectedIBL": 0,
-                "IBLScale": 0.0
+                "IBLScale": 1.0
             },
             "HasPostProcessingComponent": false,
             "HasModelComponent": false,

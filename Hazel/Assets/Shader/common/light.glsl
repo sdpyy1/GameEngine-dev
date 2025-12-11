@@ -140,7 +140,17 @@ vec3 CalculatePointLightsOnlyDiffuse(in vec3 F0, vec3 worldPos)
 		vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
 		vec3 diffuseBRDF = kd/PI * m_Params.Albedo;
 		float pointScale = 1.0;
+		if(i==0){
+			vec3 lightToFrag = worldPos.xyz - light.position; 
+			vec3 sampleDir = normalize(lightToFrag);   
+			float actualDepth = length(lightToFrag) / light.sphere.radius;
+			float storedDepth = texture(samplerCube(u_PointShadowMapTexture, SAMPLER[0]), sampleDir).r;
+			float bias = 0.005; 
+			bool inShadow = actualDepth > storedDepth + bias;
 
+			// 5. 阴影系数：在阴影中则为 0，否则为 1
+			pointScale = inShadow ? 0.0f : 1.0f;
+		}
 		result += diffuseBRDF * Lradiance * cosLi * pointScale;
 	}
 	return result;

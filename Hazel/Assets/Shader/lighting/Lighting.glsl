@@ -111,8 +111,15 @@ void main()
 
 	// DDGI
 	DDGISetting volume = GetDDGISetting();
+	vec3 DDGIContribution = vec3(0);
+	float blendWeight = DDGIGetVolumeBlendWeight(WorldPosition, volume);
+	if(blendWeight > 0){
+		DDGIContribution = DDGIGetIrrandianceByWorldPosition(WorldPosition,m_Params.Normal,volume,ddgi_Irrandiance,ddgi_Distance);
+		DDGIContribution*= blendWeight;
+	}
+    DDGIContribution = (m_Params.Albedo / PI) * DDGIContribution;
 
-	vec3 DDGIContribution = DDGIGetIrrandianceByWorldPosition(WorldPosition,m_Params.Normal,volume,ddgi_Irrandiance,ddgi_Distance);
+
 	if(GetRenderSetting().onlyIndirectionLight == 1){
 		o_Color = vec4(DDGIContribution,1);
 		return;

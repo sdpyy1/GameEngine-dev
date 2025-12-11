@@ -10,8 +10,6 @@ layout(set = 1, rgba32f, binding = 1) uniform image2DArray  IN_RayData;
 #ifdef COMPUTE_SHADER
 layout(local_size_x = DDGI_PROBE_NUM_TEXELS_IRRANDIANCE, local_size_y = DDGI_PROBE_NUM_TEXELS_IRRANDIANCE, local_size_z = 1) in;
 void main(){
-
-    // 索引探针在RayData的位置
 	DDGISetting volume = GetDDGISetting();
     uvec3 groupID = gl_WorkGroupID;  // 对于dispatch的ID
     uvec3 invocationID = gl_GlobalInvocationID; // 相对于全局的调用ID
@@ -64,7 +62,7 @@ void main(){
         // 工程化修正问题：需要结合蒙特卡洛积分理解
         float epsilon = float(volume.raysPerProbe);
         epsilon *= 1e-9f;
-        result.rgb *= 1.f / (2.f * max(result.a, epsilon));
+        result.rgb *= 1.f / (2.f * max(result.a, epsilon));   
 
         // 时域加权混合
         vec4 history = imageLoad(o_Texture,ivec3(gl_GlobalInvocationID));

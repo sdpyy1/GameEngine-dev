@@ -184,6 +184,63 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
+                    "m_UUID": 3059351432307048186
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "PostProcess"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": true,
+            "PostProcessingComponent": {
+                "bloomScale": 0.0,
+                "enableTAA": true,
+                "taaSharpen": false,
+                "taaSharpness": 1.0
+            },
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
                     "m_UUID": 7551902689989704666
                 }
             },
@@ -238,63 +295,6 @@
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\helmet\\DamagedHelmet.gltf",
                 "Visible": true
             },
-            "HasLightProbeComponent": false
-        },
-        "Entity": {
-            "HasIDComponent": true,
-            "IDComponent": {
-                "ID": {
-                    "m_UUID": 3059351432307048186
-                }
-            },
-            "HasTagComponent": true,
-            "TagComponent": {
-                "Tag": "PostProcess"
-            },
-            "HasTransformComponent": true,
-            "TransformComponent": {
-                "Translation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "Scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "RotationEuler": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "Rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0,
-                    "w": 1.0
-                }
-            },
-            "HasRelationshipComponent": true,
-            "RelationshipComponent": {
-                "ParentHandle": {
-                    "m_UUID": 0
-                },
-                "Children": []
-            },
-            "HasDirectionalLightComponent": false,
-            "HasPointLightComponent": false,
-            "HasSpotLightComponent": false,
-            "HasSkyComponent": false,
-            "HasPostProcessingComponent": true,
-            "PostProcessingComponent": {
-                "bloomScale": 0.0,
-                "enableTAA": true,
-                "taaSharpen": false,
-                "taaSharpness": 1.0
-            },
-            "HasModelComponent": false,
-            "HasSubmeshComponent": false,
             "HasLightProbeComponent": false
         },
         "Entity": {
@@ -373,25 +373,25 @@
             "HasTransformComponent": true,
             "TransformComponent": {
                 "Translation": {
-                    "x": -5.288365364074707,
-                    "y": 8.159723281860352,
-                    "z": -14.808802604675293
+                    "x": 4.594844818115234,
+                    "y": 8.485231399536133,
+                    "z": -10.285916328430176
                 },
                 "Scale": {
-                    "x": 1.6544264554977418,
-                    "y": 1.6544508934020997,
-                    "z": 1.6544113159179688
+                    "x": 1.6544263362884522,
+                    "y": 1.65445077419281,
+                    "z": 1.6544111967086793
                 },
                 "RotationEuler": {
-                    "x": 0.6528708934783936,
-                    "y": -1.4804487228393555,
-                    "z": 0.9160058498382568
+                    "x": 0.6528701782226563,
+                    "y": -1.4804480075836182,
+                    "z": 0.9160053730010986
                 },
                 "Rotation": {
-                    "x": 0.4948211908340454,
-                    "y": -0.46831318736076357,
-                    "z": 0.5031993389129639,
-                    "w": 0.531624972820282
+                    "x": 0.49482089281082156,
+                    "y": -0.4683133363723755,
+                    "z": 0.5031991004943848,
+                    "w": 0.531625509262085
                 }
             },
             "HasRelationshipComponent": true,
@@ -848,8 +848,8 @@
                     "z": 8
                 },
                 "gridStep": {
-                    "x": 5.520999908447266,
-                    "y": 0.6890000104904175,
+                    "x": 6.817999839782715,
+                    "y": 3.1640000343322756,
                     "z": 4.642000198364258
                 },
                 "raysPerProbe": 118,
