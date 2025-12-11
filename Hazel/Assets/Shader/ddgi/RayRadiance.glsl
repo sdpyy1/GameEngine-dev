@@ -8,16 +8,21 @@
 struct Payload {
     vec3 albedo;
 	float roughness; 
+
 	vec3 worldPosition;
 	float metallic;
+
 	vec3 normal;
 	float  hitT;
 
+	uint hitKind;
+};
+struct ShadowPayLoad{
+	float hitT;
 };
 #ifdef RAYGEN_SHADER
-
-
 layout(location = 0) rayPayloadEXT Payload payload;
+layout(location = 1) rayPayloadEXT ShadowPayLoad shadowPayload;  // 定义可以定义好几个，但是接收每个Shader只能有一个，要在group中多添加shader，然后rayTraces时指定用哪一个
 
 layout(set = 1, binding = 0, rgba32f) uniform image2DArray  out_RAYDATA; // radiance(3) + hitT(1)
 layout(set = 1, binding = 1) uniform texture2DArray u_DirShadowMapTexture;
@@ -43,24 +48,17 @@ struct PBRParameters
 
 void main() 
 {
-    // 获取要处理的Volume信息，这里简化一下，全局只有一个Volume
 	DDGISetting volume = GetDDGISetting();
     uint rayIndex = gl_LaunchIDEXT.x;
     uint probePlaneIndex = gl_LaunchIDEXT.y;
     uint planeIndex = gl_LaunchIDEXT.z;
 	uint probeCountPrePlane = DDGIGetProbesPerPlane(volume.probeCount);
-	uint probeIndex = (planeIndex * probeCountPrePlane) + probePlaneIndex; // 当前处理的probe的索引
-	uvec3 probeCoords = DDGIGetProbeCoords(probeIndex,volume); // 获取探针在探针网格的3D坐标
-	// probeIndex = DDGIGetScrollingProbeIndex(probeCoords, volume); // TODO: 滚动探针
-
-	// 获取探针的世界坐标和射线方向
+	uint probeIndex = (planeIndex * probeCountPrePlane) + probePlaneIndex; 
+	uvec3 probeCoords = DDGIGetProbeCoords(probeIndex,volume);
 	vec3 probeWorldPosition = DDGIGetProbeWorldPosition(probeCoords, volume);
 	vec3 rayDirection = normalize(RTXGISphericalFibonacci(rayIndex,volume.raysPerProbe));
 
-
-
 	// 获取这条光线最终在纹理中的存储位置 x: RayIndex y: probeIndexInLayer z:layerIndex
-	
 	uvec3 outputCoords = DDGIGetRayDataTexelCoords(rayIndex,probeIndex,volume);
 	// uvec3 outputCoords = uvec3(rayIndex,probePlaneIndex,planeIndex);
 	// 启动射线
@@ -77,57 +75,88 @@ void main()
 		0               				// payload (location = 0) payload的位置
   	);
 
-	// 计算每条光线的Radiance
+	// Miss
 	if(payload.hitT == -1.f){
-		// 直接存储采样天空盒的结果
-		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(vec3(0), -1));
+		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(vec3(0), 1e27f));
 		return;
 	}
 
-	// 计算击中点的直接光
+	// 击中背面
+	if(payload.hitKind == gl_HitKindBackFacingTriangleEXT){
+		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(vec3(0), -payload.hitT * 0.2));
+		return;
+	}
+
+	// 如果开启probeRelocationEnabled或者probeClassificationEnabled 就只存储payload.hitT 待研究
+	// Early out: a "fixed" ray hit a front facing surface. Fixed rays are not blended since their direction
+    // is not random and they would bias the irradiance estimate. Don't perform lighting for these rays.
+    // if((volume.probeRelocationEnabled || volume.probeClassificationEnabled) && rayIndex < RTXGI_DDGI_NUM_FIXED_RAYS)
+    // {
+    //     // Store the ray front face hit distance (only)
+    //     DDGIStoreProbeRayFrontfaceHit(RayData, outputCoords, volume, payload.hitT);
+    //     return;
+    // }
+
+
+
+/////////////////////////////////////////////
+// Directional Light TODO: 点光源和聚光
+/////////////////////////////////////////////
+	vec3 brdf = (payload.albedo / PI);
+	vec3 lighting = vec3(0.f);
+	DirectionLight dirLight = GetDirectionLight();
+	// 硬件在找到第一个 hit 后立即停止 | 跳过ClosestHitShader，直接返回rayGen | 所有模型都被视为不透明
+	const uint rayFlags =gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsSkipClosestHitShaderEXT | gl_RayFlagsOpaqueEXT;
+	// 发射光线计算遮挡
+	traceRayEXT(TLAS,
+		rayFlags,
+		0xFF, 
+		0, 
+		1,
+		1, 
+		payload.worldPosition,
+		0,   
+		-dirLight.direction,
+		MAX_RAY_TRACING_DISTANCE,
+		1
+  	);
 	float shadowScale = 1.0;
-	uint cascadeIndex = 0;
-	m_Params.Albedo = payload.albedo;
-	m_Params.Metalness = payload.metallic;
-    m_Params.Roughness = payload.roughness;
-    m_Params.Normal = payload.normal;
-	m_Params.View = normalize(probeWorldPosition - payload.worldPosition); 
-	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
-	const vec3 Fdielectric = vec3(0.04);
-	vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
+	if(shadowPayload.hitT !=  -1.f){
+		shadowScale = 0.0;
+	}
+    vec3 lightDirection = -normalize(dirLight.direction);
+    float  nol = max(dot(payload.normal, lightDirection), 0.f);
+	vec3 dirLighting = nol * dirLight.radiance * shadowScale;
+	lighting += dirLighting;
+	vec3 diffuse = lighting * brdf;
 
-	//直接光应该是只需要计算漫反射分量，不需要镜面反射和阴影  // TODO:但是RTXGI好像做了阴影判断
-	vec3 diffuse = CalculateDirLightsOnlyDiffuse(F0) + CalculatePointLightsOnlyDiffuse(F0, payload.worldPosition) + CalculateSpotLightsOnlyDiffuse(F0, payload.worldPosition);
-	
-	// 读取探针信息，获取间接Irrandiance
+/////////////////////////////////////////////
+// Indirection Light
+/////////////////////////////////////////////
 	vec3 irradiance = vec3(0);
-	// float3 surfaceBias = DDGIGetSurfaceBias(payload.normal, ray.Direction, volume);  // TODO:???
-
-	// 离Volume越远，权重越小
 	float volumeBlendWeight = DDGIGetVolumeBlendWeight(payload.worldPosition, volume);
-	if (volumeBlendWeight > 0){
-
+	if (volumeBlendWeight > 0){    // TODO：是否混合间接光需要通过设置infineBounds
         irradiance = DDGIGetIrrandianceByWorldPosition(
             payload.worldPosition,
             payload.normal,
             volume,
             ddgi_Irrandiance,ddgi_Distance);
+		irradiance *= volumeBlendWeight;
 	}
 	// Perfectly diffuse reflectors don't exist in the real world.
     // Limit the BRDF albedo to a maximum value to account for the energy loss at each bounce.
     float maxAlbedo = 0.9f;
 	
-    vec3 radiance = diffuse + ((min(payload.albedo, vec3(maxAlbedo, maxAlbedo, maxAlbedo)) / PI) * irradiance * volumeBlendWeight);
-
-
-
-		// 可视化射线
-	if(volume.visulaize == 1 && outputCoords.y == 33 && outputCoords.z == 3){
-		AddGizmoLine(probeWorldPosition, probeWorldPosition + rayDirection *payload.hitT ,vec4(1,0,0,1));
+    vec3 radiance = diffuse + ((min(payload.albedo, vec3(maxAlbedo)) / PI) * irradiance);
+	if(volume.visulaize == 1 && probeIndex == 164){
+		if(payload.hitT < 1e27f){ 
+			uvec3 prebeCoords = DDGIGetProbeCoords(probeIndex,volume);
+			vec3 probePosition = DDGIGetProbeWorldPosition(prebeCoords,volume);
+			AddGizmoLine(probePosition, probePosition + (rayDirection * payload.hitT), vec4(Saturate(radiance),1));
+		}
 	}
-
 	// 最终存储rayData radiance(3) + hitT(1)
-	imageStore(out_RAYDATA, ivec3(outputCoords), vec4(payload.albedo, payload.hitT));
+	imageStore(out_RAYDATA, ivec3(outputCoords), vec4(Saturate(radiance), payload.hitT));  // TODO：测试时没有+irradiance
 }
 
 #endif
@@ -151,7 +180,6 @@ void main()
 
 	vec3 worldNormal = GetWorldNormal(meshNormal,model);
 	vec4 worldTangent = GetWorldTangent(tangent,model);
-	// vec3 color = FetchTriangleColor(objectID, index, barycentrics);   不使用顶点颜色
 	vec2 texCoord  = GetTriangleTexCoord(instanceID, triangleIndex, barycentrics);    
     vec4 worldPos       = model * position; 
 	MaterialInfo material   = GetMaterialInfo(instanceID);
@@ -168,11 +196,13 @@ void main()
 	payload.metallic = metallic;
 	payload.albedo = albedo.rgb;
 	payload.hitT = gl_HitTEXT;
+	payload.hitKind = gl_HitKindEXT;
 }
 #endif
 
 #ifdef RAYMISS_SHADER
 layout(location = 0) rayPayloadInEXT Payload payload;    // rayPayloadInEXT 注意是InEXT
+
 layout(set = 1, binding = 3) uniform textureCube skyCube;
 void main()
 {
