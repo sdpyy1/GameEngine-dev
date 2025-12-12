@@ -54,7 +54,7 @@ vec3 CalculateDirLightsOnlyDiffuse(vec3 F0)
 	vec3 F = FresnelSchlickRoughness(F0, max(0.0, dot(Lh, m_Params.View)), m_Params.Roughness);
 
 	vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);   
-	vec3 diffuseBRDF = kd/PI * m_Params.Albedo; // TODO: /PI
+	vec3 diffuseBRDF = kd/PI * m_Params.Albedo;
 
 	// Cook-Torrance
 	result += diffuseBRDF * Lradiance * cosLi;

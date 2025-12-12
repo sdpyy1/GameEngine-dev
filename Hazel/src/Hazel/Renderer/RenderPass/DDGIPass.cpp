@@ -15,6 +15,7 @@ namespace GameEngine
 			m_MissShader = std::make_shared<Shader>("ddgi/RayRadiance", SHADER_FREQUENCY_RAY_MISS)->GetRHIShader();
 			m_ShadowMissShader = std::make_shared<Shader>("ddgi/shadowMiss", SHADER_FREQUENCY_RAY_MISS)->GetRHIShader();
 			m_ClosestHitShader = std::make_shared<Shader>("ddgi/RayRadiance", SHADER_FREQUENCY_CLOSEST_HIT)->GetRHIShader();
+			m_ShadowHitShader = std::make_shared<Shader>("ddgi/ShadowHit", SHADER_FREQUENCY_CLOSEST_HIT)->GetRHIShader();
 
 			// SBT
 			RHIShaderBindingTableInfo sbtInfo = {};
@@ -22,6 +23,7 @@ namespace GameEngine
 			sbtInfo.AddMissGroup(m_MissShader);
 			sbtInfo.AddMissGroup(m_ShadowMissShader);
 			sbtInfo.AddHitGroup(m_ClosestHitShader);
+			sbtInfo.AddHitGroup(m_ShadowHitShader);
 			RHIShaderBindingTableRef sbt = APP_DYNAMICRHI->CreateShaderBindingTable(sbtInfo);
 
 			RHIRootSignatureInfo rootSignatureInfo = {};
@@ -65,7 +67,7 @@ namespace GameEngine
 			m_ProbeDistanceBlendPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
 		}
 
-		// TODO:这张图应该交给Volum自己管理，这里初始化只能固定大小
+		// TODO:这两张图应该交给Volum自己管理，这里初始化只能固定大小
 		{
 			RHITextureInfo textureInfo;
 			textureInfo.extent = { 8*8, 8*8, 1 };

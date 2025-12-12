@@ -14,22 +14,13 @@ void main(){
     uvec3 groupID = gl_WorkGroupID;  // 对于dispatch的ID
     uvec3 invocationID = gl_GlobalInvocationID; // 相对于全局的调用ID
     uvec3 LocalInvocationID = gl_LocalInvocationID; // 相对于组内的调用ID
-
-    // 判断是不是边界（边界是填充，不是计算），利用的是在本组内的索引xy，因为这个索引对应的是一个探针的8*8数据块，所以如果索引是0或者7，那么就是边界
     bool isBorderTexel = (LocalInvocationID.x == 0 || LocalInvocationID.x == (DDGI_PROBE_NUM_TEXELS_IRRANDIANCE_INTERIOR + 1)) || (LocalInvocationID.y == 0 || LocalInvocationID.y == (DDGI_PROBE_NUM_TEXELS_IRRANDIANCE_INTERIOR + 1));
-
-    // 从invocationID获取当先要处理的探针索引
     uint probeIndex = DDGIGetProbeIndex(invocationID, DDGI_PROBE_NUM_TEXELS_IRRANDIANCE, volume);
-    //uint probeIndex = (groupID.z * DDGIGetProbesPerPlane(volume.probeCount)) + groupID.y * volume.probeCount.x + groupID.x;
-
-    // Early out: no probe maps to this thread
-    uint numProbes = (volume.probeCount.x * volume.probeCount.y * volume.probeCount.z);
-    if (probeIndex >= numProbes || probeIndex < 0) return;
-
-    vec4 result = vec4(0.0);
 
     // 不是边界，就需要计算了 
     if(!isBorderTexel){
+        vec3 result = vec3(0.0);
+        float sumWeight = 0.0;
         uvec3 threadCoords = uvec3(groupID.x * DDGI_PROBE_NUM_TEXELS_IRRANDIANCE_INTERIOR, groupID.y * DDGI_PROBE_NUM_TEXELS_IRRANDIANCE_INTERIOR, invocationID.z) + LocalInvocationID - uvec3(1, 1, 0);
         vec2 probeOctantUV = DDGIGetNormalizedOctahedralCoordinates(uvec2(threadCoords.xy), DDGI_PROBE_NUM_TEXELS_IRRANDIANCE_INTERIOR);
         vec3 probeRayDirection = DDGIGetOctahedralDirection(probeOctantUV);
@@ -48,60 +39,28 @@ void main(){
             if(probeRayDistance < 0){  // 击中的是背面
                 continue;
             }
-            // 展示探针数据（射线长度和射线采集的Radiance）// TODO:后期可拓展为选中某个探针，可视化它的数据
-            // if(volume.visulaize == 1 && probeIndex == 164 && LocalInvocationID == uvec3(1,1,0)){
-            //     if(probeRayDistance < 1e27f){ 
-            //         uvec3 prebeCoords = DDGIGetProbeCoords(probeIndex,volume);
-            //         vec3 probePosition = DDGIGetProbeWorldPosition(prebeCoords,volume);
-            //         AddGizmoLine(probePosition,probePosition + (rayDirection * probeRayDistance), vec4(probeRayRadiance*3,1));
-            //     }
-            // }
-            result += vec4(probeRayRadiance * weight, weight);
+            result += probeRayRadiance * weight;
+            sumWeight += weight;
         }
 
-        // 工程化修正问题：需要结合蒙特卡洛积分理解
+        // epsilon避免/0
         float epsilon = float(volume.raysPerProbe);
         epsilon *= 1e-9f;
-        result.rgb *= 1.f / (2.f * max(result.a, epsilon));
-
+        result *= 1.f / (2.f * max(sumWeight, epsilon));  // 蒙特卡洛积分应该是除以样本个数，为了减少方差这里除的是余弦权重，为了期望一致，还需要/2
+        
         // 时域加权混合
         vec4 history = imageLoad(o_Texture,ivec3(gl_GlobalInvocationID));
-        vec3 delta = (result.rgb - history.rgb);
-
         float  hysteresis = 0.97; // TODO：混合系数是参数
         if (dot(history, history) == 0) hysteresis = 0.f;
-        float probeIrradianceEncodingGamma = 5.0f;  // TODO：编码Gamma是参数
-        
-        result.rgb = pow(result.rgb, vec3(1.f / probeIrradianceEncodingGamma));
-        float probeIrradianceThreshold = 0.25f; // TODO：阈值是参数
-        if (RTXGIMaxComponent(history.rgb - result.rgb) > probeIrradianceThreshold)
-        {
-            // Lower the hysteresis when a large lighting change is detected
-            hysteresis = max(0.f, hysteresis - 0.75f);
-        }
-        float probeBrightnessThreshold  = 0.10f; // TODO：阈值是参数
-        if (RGBtoLuminance(delta) > probeBrightnessThreshold)
-        {
-            // Clamp the maximum per-update change in irradiance when a large brightness change is detected
-            delta *= 0.25f;
-        }
-        const float c_threshold = 1.f / 1024.f;
-        vec3 lerpDelta = (1.f - hysteresis) * delta;
-
-        if (RTXGIMaxComponent(result.rgb) < RTXGIMaxComponent(history.rgb))
-        {
-            lerpDelta = min(max(vec3(c_threshold), abs(lerpDelta)), abs(delta)) * sign(lerpDelta);
-        }
-        result = vec4(history.rgb + lerpDelta, 1.f);
-
+        result = mix(result, history.rgb, hysteresis);
         // 可视化探针颜色
         if(volume.visulaize == 1 && LocalInvocationID == uvec3(1,1,0)){
             uvec3 prebeCoords = DDGIGetProbeCoords(probeIndex, volume);
             vec3 probePosition = DDGIGetProbeWorldPosition(prebeCoords, volume);
-            AddGizmoSphere(probePosition,0.5,result);
+            AddGizmoSphere(probePosition,0.5,vec4(result,1));
         }
 
-        imageStore(o_Texture, ivec3(gl_GlobalInvocationID), result);
+        imageStore(o_Texture, ivec3(gl_GlobalInvocationID), vec4(result,1));
     }else{
         // 边界
         memoryBarrier();        // 所有全局内存类型的屏障

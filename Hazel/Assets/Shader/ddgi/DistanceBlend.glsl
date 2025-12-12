@@ -38,7 +38,6 @@ void main(){
         float epsilon = float(volume.raysPerProbe);
         epsilon *= 1e-9f;
         result.rgb *= 1.f / (1.f * max(result.a, epsilon));
-
         // 时域加权混合
         vec4 history = imageLoad(o_Texture,ivec3(gl_GlobalInvocationID));
         float  hysteresis = 0.97; // TODO：混合系数是参数

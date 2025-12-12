@@ -15,9 +15,9 @@
             "HasTransformComponent": true,
             "TransformComponent": {
                 "Translation": {
-                    "x": 9.05997371673584,
-                    "y": 0.49943143129348757,
-                    "z": -5.610347270965576
+                    "x": -2.6705093383789064,
+                    "y": 0.6220602989196777,
+                    "z": -5.498027324676514
                 },
                 "Scale": {
                     "x": 0.03640018031001091,
@@ -86,6 +86,66 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
+                    "m_UUID": 7623763008892506687
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "back"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3548846629915371034
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 13352801462119185615
+                },
+                "SubmeshIndex": 2,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\conner\\cornell_box.obj",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
                     "m_UUID": 9695507280183189807
                 }
             },
@@ -146,12 +206,12 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 7623763008892506687
+                    "m_UUID": 5509979606362436961
                 }
             },
             "HasTagComponent": true,
             "TagComponent": {
-                "Tag": "back"
+                "Tag": "short_box"
             },
             "HasTransformComponent": true,
             "TransformComponent": {
@@ -195,7 +255,7 @@
                 "modelID": {
                     "m_UUID": 13352801462119185615
                 },
-                "SubmeshIndex": 2,
+                "SubmeshIndex": 5,
                 "castShadow": true,
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\conner\\cornell_box.obj",
                 "Visible": true
@@ -326,12 +386,12 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 5509979606362436961
+                    "m_UUID": 3227222554780955686
                 }
             },
             "HasTagComponent": true,
             "TagComponent": {
-                "Tag": "short_box"
+                "Tag": "tall_box"
             },
             "HasTransformComponent": true,
             "TransformComponent": {
@@ -375,7 +435,7 @@
                 "modelID": {
                     "m_UUID": 13352801462119185615
                 },
-                "SubmeshIndex": 5,
+                "SubmeshIndex": 6,
                 "castShadow": true,
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\conner\\cornell_box.obj",
                 "Visible": true
@@ -436,66 +496,6 @@
                     "m_UUID": 13352801462119185615
                 },
                 "SubmeshIndex": 4,
-                "castShadow": true,
-                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\conner\\cornell_box.obj",
-                "Visible": true
-            },
-            "HasLightProbeComponent": false
-        },
-        "Entity": {
-            "HasIDComponent": true,
-            "IDComponent": {
-                "ID": {
-                    "m_UUID": 3227222554780955686
-                }
-            },
-            "HasTagComponent": true,
-            "TagComponent": {
-                "Tag": "tall_box"
-            },
-            "HasTransformComponent": true,
-            "TransformComponent": {
-                "Translation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "Scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "RotationEuler": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "Rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0,
-                    "w": 1.0
-                }
-            },
-            "HasRelationshipComponent": true,
-            "RelationshipComponent": {
-                "ParentHandle": {
-                    "m_UUID": 3548846629915371034
-                },
-                "Children": []
-            },
-            "HasDirectionalLightComponent": false,
-            "HasPointLightComponent": false,
-            "HasSpotLightComponent": false,
-            "HasSkyComponent": false,
-            "HasPostProcessingComponent": false,
-            "HasModelComponent": false,
-            "HasSubmeshComponent": true,
-            "SubmeshComponent": {
-                "modelID": {
-                    "m_UUID": 13352801462119185615
-                },
-                "SubmeshIndex": 6,
                 "castShadow": true,
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\conner\\cornell_box.obj",
                 "Visible": true
@@ -631,7 +631,7 @@
                 "Translation": {
                     "x": 7.446185111999512,
                     "y": 10.372163772583008,
-                    "z": 8.655780792236329
+                    "z": 5.169435501098633
                 },
                 "Scale": {
                     "x": 1.0,
@@ -673,9 +673,9 @@
                     "z": 8
                 },
                 "gridStep": {
-                    "x": 10.0,
-                    "y": 10.0,
-                    "z": 10.0
+                    "x": 3.0460000038146974,
+                    "y": 2.928999900817871,
+                    "z": 3.244999885559082
                 },
                 "raysPerProbe": 256,
                 "visulaize": true
@@ -695,25 +695,25 @@
             "HasTransformComponent": true,
             "TransformComponent": {
                 "Translation": {
-                    "x": 18.015979766845704,
-                    "y": 11.865209579467774,
-                    "z": -12.732344627380371
+                    "x": 13.3842134475708,
+                    "y": 12.068954467773438,
+                    "z": -22.85563850402832
                 },
                 "Scale": {
-                    "x": 1.000007152557373,
+                    "x": 1.0000063180923463,
                     "y": 1.0,
-                    "z": 1.0000044107437134
+                    "z": 1.0000033378601075
                 },
                 "RotationEuler": {
-                    "x": 0.4356527328491211,
-                    "y": 1.0692903995513917,
-                    "z": 0.813004732131958
+                    "x": 0.30756881833076479,
+                    "y": 0.8364169597625732,
+                    "z": 0.6570286750793457
                 },
                 "Rotation": {
-                    "x": -0.025912463665008546,
-                    "y": 0.5304784774780273,
-                    "z": 0.23104001581668855,
-                    "w": 0.8151942491531372
+                    "x": 0.003007754683494568,
+                    "y": 0.42503100633621218,
+                    "z": 0.2324693202972412,
+                    "w": 0.87481290102005
                 }
             },
             "HasRelationshipComponent": true,

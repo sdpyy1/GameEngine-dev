@@ -18,6 +18,7 @@ namespace GameEngine {
 		bool isFirstTick = true;
 		RHIShaderRef m_RayGenShader;
 		RHIShaderRef m_ClosestHitShader;
+		RHIShaderRef m_ShadowHitShader;
 		RHIShaderRef m_MissShader;
 		RHIShaderRef m_ShadowMissShader;
 

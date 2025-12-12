@@ -16,9 +16,11 @@ struct Payload {
 	float  hitT;
 
 	uint hitKind;
+	uint _padding[3];
 };
 struct ShadowPayLoad{
 	float hitT;
+	uint _padding[3];
 };
 #ifdef RAYGEN_SHADER
 layout(location = 0) rayPayloadEXT Payload payload;
@@ -69,7 +71,7 @@ void main()
 		1,              				// sbtRecordStride SBT 中每条记录的间隔（单位是记录数，不是字节）
 		0,              				// missIndex 当光线没有击中任何几何体时，使用 SBT 中 miss shader 的索引
 		probeWorldPosition.xyz,     	// ray origin
-		0,       						// ray min range
+		MIN_RAY_TRACING_DISTANCE,       						// ray min range
 		rayDirection.xyz,  				// ray direction
 		1e27f,       // TODO:这个应该换成DDGI自己的参数设置
 		0               				// payload (location = 0) payload的位置
@@ -105,20 +107,22 @@ void main()
 	DirectionLight dirLight = GetDirectionLight();
 	// 硬件在找到第一个 hit 后立即停止 | 跳过ClosestHitShader，直接返回rayGen | 所有模型都被视为不透明
 	const uint rayFlags = gl_RayFlagsTerminateOnFirstHitEXT | gl_RayFlagsSkipClosestHitShaderEXT | gl_RayFlagsOpaqueEXT;
-	// 发射光线计算遮挡
+
+	float shadowScale = 1.0;
+
+	// // 发射光线计算遮挡
 	traceRayEXT(TLAS,
 		rayFlags,
 		0xFF, 
-		0, 
+		1, 
 		1,
 		1, 
 		payload.worldPosition,
-		0,   
+		MIN_RAY_TRACING_DISTANCE,   
 		-dirLight.direction,
 		1e27f,
 		1
   	);
-	float shadowScale = 1.0;
 	if(shadowPayload.hitT != -1.f){
 		shadowScale = 0.0;
 	}
@@ -129,7 +133,7 @@ void main()
     m_Params.Roughness = payload.roughness;
     m_Params.Normal = payload.normal;
 	m_Params.View = normalize(probeWorldPosition - payload.worldPosition); 
-	m_Params.NdotV = max(dot(m_Params.Normal, -m_Params.View), 0.0);
+	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 	const vec3 Fdielectric = vec3(0.04);
 	vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
 

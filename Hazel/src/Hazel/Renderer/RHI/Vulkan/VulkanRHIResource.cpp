@@ -1791,6 +1791,8 @@ namespace GameEngine
 		{
 			missStages.push_back(CAST<VulkanRHIShader>(shader)->GetShaderStageCreateInfo());
 		}
+		hitStages.reserve(info.hitGroups.size() * 3);
+		hitGroupInfos.reserve(info.hitGroups.size());
 		for (auto& shaders : info.hitGroups)
 		{
 			HitGroupInfo groupInfo = {};

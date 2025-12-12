@@ -222,7 +222,7 @@ bool DDGICheckPostion(vec3 worldPosition,DDGISetting volume){
 /*
     根据一个世界坐标，计算从探针中获取的Irrandiance
 */
-vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction, DDGISetting volume, texture2DArray IrrdianceTexture,texture2DArray distanceTexture){
+vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 normal, DDGISetting volume, texture2DArray IrrdianceTexture,texture2DArray distanceTexture){
 
     // 如果WorldPosition不在DDGIvolume内，直接返回
     // if(!DDGICheckPostion(worldPosition,volume)){
@@ -236,6 +236,8 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction, DDGIS
     // 得到离worldPosition最近的探针坐标
     ivec3 baseProbeCoords = DDGIGetBaseProbeGridCoords(worldPosition, volume);
     vec3 baseProbeWorldPosition = DDGIGetProbeWorldPosition(baseProbeCoords,volume);
+
+    // alpha 表示世界位置与Base探针位置的距离程度[0-1]
     vec3 alpha = clamp(((worldPosition - baseProbeWorldPosition) / volume.gridStep), vec3(0.f, 0.f, 0.f), vec3(1.f, 1.f, 1.f));
 
     for(int i = 0; i < 8; i++){
@@ -246,18 +248,24 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction, DDGIS
         uint probeIndex =  (probeGridCoord.y * DDGIGetProbesPerPlane(volume.probeCount)) + probeGridCoord.z * volume.probeCount.x + probeGridCoord.x;
         vec3 probePos = DDGIGetProbeWorldPosition(probeGridCoord, volume);
 
-        // 方向系数
+        // 指向探针方向与Normal的dot
+        // A naive soft backface weight would ignore a probe when
+        // it is behind the surface. That's good for walls, but for
+        // small details inside of a room, the normals on the details
+        // might rule out all of the probes that have mutual visibility 
+        // to the point. We instead use a "wrap shading" test. The small
+        // offset at the end reduces the "going to zero" impact.
         {
             vec3 directionToProbe = normalize(probePos - worldPosition);
-            weight *= Square(max(0.0001, (dot(directionToProbe, direction) + 1.0) * 0.5)) + 0.2;  
+            weight *= Square(max(0.0001, (dot(directionToProbe, normal) + 1.0) * 0.5)) + 0.2;  
         }
 
         // //切比雪夫系数
         // {
-        //     vec3 probeToPoint   = worldPosition - probePos;
-        //     vec3 dir            = normalize(-probeToPoint);
-        //     float dist          = length(probeToPoint);
-        //     vec2 octantCoords = DDGIGetOctahedralCoordinates(dir);
+        //     vec3 worldToProbe   = probePos - worldPosition;
+        //     vec3 dir            = normalize(worldToProbe);  // 世界位置指向探针
+        //     float dist          = length(worldToProbe); // 世界位置与探针的距离
+        //     vec2 octantCoords = DDGIGetOctahedralCoordinates(-dir);
         //     vec3 probeTextureUV = DDGIGetProbeUV(int(probeIndex), octantCoords, int(DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR), volume);
         //     vec2 temp = texture(sampler2DArray(distanceTexture,SAMPLER[0]),probeTextureUV).rg;  // 采样距离纹理
         //     float mean      = temp.x;
@@ -270,6 +278,8 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction, DDGIS
         // }
 
         //避免计算精度问题
+        // A small amount of light is visible due to logarithmic perception, so
+        // crush tiny weights but keep the curve continuous
         {
             weight = max(0.000001, weight); 
 
@@ -286,8 +296,8 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction, DDGIS
 
         //采样，累计光照      
         {
-            vec3 irradianceDir  = direction;
-            vec2 octantCoords = DDGIGetOctahedralCoordinates(direction);
+            vec3 irradianceDir  = normal;
+            vec2 octantCoords = DDGIGetOctahedralCoordinates(normal);
             vec3 probeTextureUV = DDGIGetProbeUV(int(probeIndex), octantCoords, int(DDGI_PROBE_NUM_TEXELS_IRRANDIANCE_INTERIOR), volume);
             vec3 probeIrradiance = texture(sampler2DArray(IrrdianceTexture,SAMPLER[0]),probeTextureUV).rgb;
             sumIrradiance += weight * probeIrradiance;
@@ -297,6 +307,6 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 direction, DDGIS
     }
 
     vec3 netIrradiance = sumIrradiance / sumWeight;
-    return 2 * PI * netIrradiance; 
+    return 2 * PI * netIrradiance;  // 2PI是指蒙特卡洛积分的/PDF
 }
 #endif

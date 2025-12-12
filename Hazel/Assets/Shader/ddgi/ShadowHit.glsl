@@ -9,10 +9,11 @@ struct ShadowPayLoad{
 	float hitT;
 	uint _padding[3];
 };
-#ifdef RAYMISS_SHADER
+#ifdef RAYCLOSEST_HIT_SHADER
 layout(location = 1) rayPayloadInEXT ShadowPayLoad shadowPayload;
+
 void main()
 {
-	shadowPayload.hitT = -1;
+	
 }
 #endif
