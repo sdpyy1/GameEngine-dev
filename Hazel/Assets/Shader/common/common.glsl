@@ -7,4 +7,5 @@
 #include "struct.glsl"
 #include "binding.glsl"
 #include "get.glsl"
+#include "helper.glsl"
 #endif

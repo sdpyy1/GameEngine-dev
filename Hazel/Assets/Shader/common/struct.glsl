@@ -187,7 +187,7 @@ struct Camera{
 	float Near;
 	float Far;
 	vec3 position;
-    float padding;
+    uint totalTick;
 };
 
 

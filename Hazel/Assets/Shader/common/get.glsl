@@ -310,6 +310,10 @@ SkySetting GetSkySetting()
 {
     return GLOBAL_SETTING.data.skySetting;
 }
+LightInfo GetLightInfo()
+{
+    return LIGHTINFO.data;
+}
 DirectionLight GetDirectionLight()
 {
     return LIGHTINFO.data.dirLights;
