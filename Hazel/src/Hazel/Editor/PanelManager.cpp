@@ -421,7 +421,7 @@ namespace GameEngine {
 			if (rdgDependencyGraph) {
 				auto& textures = rdgDependencyGraph->GetNodes<RDGTextureNode>();
 				static std::string selectedImageName;
-				static char filterBuffer[128] = "DD";
+				static char filterBuffer[128] = "Path";
 				ImGui::Text("Filter:");
 				ImGui::SameLine();
 				ImGui::SetNextItemWidth(std::max(100.0f, ImGui::GetContentRegionAvail().x - 80.0f));

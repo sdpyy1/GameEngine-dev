@@ -19,7 +19,7 @@
 #include <Hazel/Renderer/RenderPass/PreDepthPass.h>
 #include <Hazel/Renderer/RenderPass/GizmoPass.h>
 #include <Hazel/Renderer/RenderPass/PointShadowPass.h>
-#include <Hazel/Renderer/RenderPass/RayTracingPass.h>
+#include <Hazel/Renderer/RenderPass/PathTracingPass.h>
 #include <Hazel/Renderer/RenderPass/TAAPass.h>
 #include <Hazel/Renderer/RenderPass/DDGIPass.h>
 
@@ -82,7 +82,7 @@ namespace GameEngine {
 		passes[POINT_SHADOW_PASS] = meshPasses[MESH_PASS_POINTSHADOW_PASS];
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
 		if (RENDER_ENABLE_RAY_TRACING) {
-			passes[RAYTRACING_PASS] = std::make_shared<RayTracingPass>();
+			passes[PATHTRACING_PASS] = std::make_shared<PathTracingPass>();
 			passes[DDGI_PASS] = std::make_shared<DDGIPass>();
 		}
 

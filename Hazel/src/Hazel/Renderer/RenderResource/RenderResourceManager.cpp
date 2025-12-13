@@ -207,7 +207,7 @@ namespace GameEngine {
 		tmpdata.Near = camera->GetNearClip();
 		tmpdata.Far = camera->GetFarClip();
 		tmpdata.Position = camera->GetPosition();
-		tmpdata.padding = 1.f;
+		tmpdata.totalTick = APP_TICK;
 		m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer.SetData(tmpdata);
 	}
 

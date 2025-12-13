@@ -1,19 +1,17 @@
 #include "hzpch.h"
-#include "RayTracingPass.h"
+#include "PathTracingPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
-#include "Hazel/Scene/SceneManager.h"
 #include <Hazel/Renderer/RenderResource/Shader.h>
 namespace GameEngine { 
 
-	void RayTracingPass::Init()
+	void PathTracingPass::Init()
 	{
-		m_RayGenShader = std::make_shared<Shader>("raytracing/RayLearn", SHADER_FREQUENCY_RAY_GEN)->GetRHIShader();
-        m_MissShader = std::make_shared<Shader>("raytracing/RayLearn", SHADER_FREQUENCY_RAY_MISS)->GetRHIShader();
-        m_ClosestHitShader = std::make_shared<Shader>("raytracing/RayLearn", SHADER_FREQUENCY_CLOSEST_HIT)->GetRHIShader();
+		m_RayGenShader = std::make_shared<Shader>("raytracing/PathTracing", SHADER_FREQUENCY_RAY_GEN)->GetRHIShader();
+        m_MissShader = std::make_shared<Shader>("raytracing/PathTracing", SHADER_FREQUENCY_RAY_MISS)->GetRHIShader();
+        m_ClosestHitShader = std::make_shared<Shader>("raytracing/PathTracing", SHADER_FREQUENCY_CLOSEST_HIT)->GetRHIShader();
 
-		// SBT
 		RHIShaderBindingTableInfo sbtInfo = {};
 		sbtInfo.AddRayGenGroup(m_RayGenShader);
         sbtInfo.AddMissGroup(m_MissShader);
@@ -30,12 +28,22 @@ namespace GameEngine {
         pipelineInfo.rootSignature = m_RootSignature;
         pipelineInfo.shaderBindingTable = sbt;
         m_Pipeline = APP_DYNAMICRHI->CreateRayTracingPipeline(pipelineInfo);
+
+		auto& [w, h] = APP_WINDOWSIZE;
+		RHITextureInfo textureInfo = {};
+        textureInfo.extent = { w, h, 1 };
+		textureInfo.format = FORMAT_R32G32B32A32_SFLOAT;
+        textureInfo.mipLevels = 1;
+        textureInfo.arrayLayers = 1;
+		textureInfo.type = RESOURCE_TYPE_RW_TEXTURE | RESOURCE_TYPE_TEXTURE;
+		m_HistoryTexture = APP_DYNAMICRHI->CreateTexture(textureInfo);
+
 	}
 
-	void RayTracingPass::Build(RDGBuilder& builder)
+	void PathTracingPass::Build(RDGBuilder& builder)
 	{
 		auto& [w, h] = APP_WINDOWSIZE;
-		RDGTextureHandle rayTexture = builder.CreateTexture("RayColor")
+		RDGTextureHandle rayTexture = builder.CreateTexture("PathTracing")
 			.Exetent({ w, h ,1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
 			.AllowRenderTarget()
@@ -50,14 +58,13 @@ namespace GameEngine {
 			.ReadWrite(1, 0, 0, rayTexture)
 			.Read(1, 1, 0, skyBox, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR ,0,1,0,6 })
 			.Execute([&](RDGPassContext context) {
-			auto& [w, h] = APP_WINDOWSIZE;
-			RHICommandListRef command = context.command;
-			command->SetRayTracingPipeline(m_Pipeline);
-			command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
-			command->BindDescriptorSet(context.descriptors[1], 1);
-			// command->PushConstants(&setting, sizeof(RayTracingBaseSetting), SHADER_FREQUENCY_RAY_TRACING);
-			command->TraceRays(w, h, 1);  // 其实和dispatch道理一样
-				})
+				auto& [w, h] = APP_WINDOWSIZE;
+				RHICommandListRef command = context.command;
+				command->SetRayTracingPipeline(m_Pipeline);
+				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
+				command->BindDescriptorSet(context.descriptors[1], 1);
+				command->TraceRays(w, h, 1); 
+			})
 			.Finish();
 
 

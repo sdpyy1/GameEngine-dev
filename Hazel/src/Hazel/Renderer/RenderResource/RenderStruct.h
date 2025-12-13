@@ -200,7 +200,7 @@ namespace GameEngine {
 		float Near;
 		float Far;
 		glm::vec3 Position;
-		float padding;
+		uint32_t totalTick;
 	};
 
 	typedef struct MaterialInfo

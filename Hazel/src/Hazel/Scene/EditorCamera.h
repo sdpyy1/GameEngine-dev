@@ -56,7 +56,7 @@ namespace GameEngine {
 		EditorCamera() = default;
 		EditorCamera(const float degFov, const float width, const float height, const float nearP, const float farP);
 		void Init();
-
+		bool GetIsMove(){return isMove;}
 		void Focus(const glm::vec3& focusPoint);
 		void OnUpdate(Timestep ts);
 		void OnEvent(Event& e);
@@ -98,6 +98,13 @@ namespace GameEngine {
 
 		glm::mat4 GetPrevView(const glm::mat4 curView)
 		{
+			if (m_PrevView != curView) {
+				isMove = true;
+			}
+			else {
+				isMove = false;
+			}
+
 			glm::mat4 res = m_PrevView;
 			if (res == glm::mat4(0)) res = curView;
 			m_PrevView = curView;
@@ -161,7 +168,7 @@ namespace GameEngine {
 		bool m_IsCapturing = false;
 		bool m_IsMouseInViewport = true;
 
-
+		bool isMove = false;
 		glm::mat4 m_PrevProj = glm::mat4(0);
         glm::mat4 m_PrevView = glm::mat4(0);
 
