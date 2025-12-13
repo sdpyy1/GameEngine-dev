@@ -42,7 +42,7 @@ void main(){
         vec4 history = imageLoad(o_Texture,ivec3(gl_GlobalInvocationID));
         float  hysteresis = 0.97; // TODO：混合系数是参数
         if (dot(history, history) == 0) hysteresis = 0.f;
-        result = vec4(Lerp(result.rg, history.rg, hysteresis), 0.f, 1.f);
+        result = vec4(lerp(result.rg, history.rg, hysteresis), 0.f, 1.f);
 //////////////////////////////工程化修正/////////////////////////////////////////////
         imageStore(o_Texture, ivec3(gl_GlobalInvocationID), result);
         return;

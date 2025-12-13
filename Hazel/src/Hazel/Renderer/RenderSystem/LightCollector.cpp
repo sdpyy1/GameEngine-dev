@@ -60,6 +60,7 @@ namespace GameEngine {
 				lightInfo.pointLights[pointLightCount].intensity = pointLightComp.Intensity;
 				lightInfo.pointLights[pointLightCount].sphere = { lightInfo.pointLights[pointLightCount].position,pointLightComp.Radius };
                 lightInfo.pointLights[pointLightCount].showRadius = pointLightComp.showRadius? 1:0;
+
 				// 6¸öÃæµÄview proj
 				auto & position = transformComp.Translation;
 				glm::vec3 up = glm::vec3(0.0f, -1.0f, 0.0f); 
@@ -95,12 +96,18 @@ namespace GameEngine {
 			for (auto entity : spotLightEntity)
 			{
 				Entity curEntity = { entity, scene };
+                auto& transformComp = curEntity.GetComponent<TransformComponent>();
 				auto& spotLightComp = curEntity.GetComponent<SpotLightComponent>();
+				lightInfo.spotLights[spotLightCount].direction = glm::normalize(transformComp.GetDirection());
 				lightInfo.spotLights[spotLightCount].position = curEntity.GetComponent<TransformComponent>().Translation;
 				lightInfo.spotLights[spotLightCount].radiance = spotLightComp.Radiance;
 				lightInfo.spotLights[spotLightCount].intensity = spotLightComp.Intensity;
 				lightInfo.spotLights[spotLightCount].showRange = spotLightComp.showRadius?1:0;
 				lightInfo.spotLights[spotLightCount].range = spotLightComp.range;
+				lightInfo.spotLights[spotLightCount].angle = spotLightComp.angle;
+				lightInfo.spotLights[spotLightCount].falloff = spotLightComp.falloff;
+				lightInfo.spotLights[spotLightCount].showDirection = spotLightComp.showDirection?1:0;
+
 				spotLightCount++;
 			}
 			lightInfo.spotLightCount = spotLightCount;

@@ -2,6 +2,7 @@
 #include "../common/common.glsl"
 #include "../common/Gbuffer.glsl"
 #include "../common/DDGI.glsl"
+
 #ifdef VERTEX_SHADER
 vec3 kNdcPoints[3] = vec3[]( 
     vec3(-1.0, -1.0, 0.0), 
@@ -17,6 +18,8 @@ void main()
 #endif
 
 #ifdef FRAGMENT_SHADER
+#include "../common/light.glsl" 
+#include "../common/shadow.glsl"
 
 layout(location = 0) in vec2 TexCoord;
 layout(location = 0) out vec4 o_Color;
@@ -27,39 +30,6 @@ layout(set = 1, binding = 3) uniform texture2D u_BRDFLUTTexture;
 layout(set = 1, binding = 4) uniform textureCube u_PointShadowMapTexture;
 layout(set = 1, binding = 5) uniform texture2DArray ddgi_Irrandiance;
 layout(set = 1, binding = 6) uniform texture2DArray ddgi_Distance;
-
-
-struct PBRParameters
-{
-	vec3 Albedo;
-	float Roughness;
-	float Metalness;
-
-	vec3 Normal;
-	vec3 View;
-	float NdotV;
-} m_Params;
-#include "../common/shadow.glsl"
-#include "../common/light.glsl" 
-/////////////////////////////////////////////
-// IBL Light
-/////////////////////////////////////////////
-
-vec3 IBL(vec3 F0, vec3 Lr)
-{
-	vec3 irradiance = texture(samplerCube(u_EnvIrradianceTex,SAMPLER[0]), m_Params.Normal).rgb;
-	vec3 F = FresnelSchlickRoughness(F0, m_Params.NdotV, m_Params.Roughness);
-	vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
-	vec3 diffuseIBL = m_Params.Albedo * irradiance;
-
-	int envRadianceTexLevels = textureQueryLevels(u_EnvRadianceTex);
-	vec3 specularIrradiance = textureLod(samplerCube(u_EnvRadianceTex,SAMPLER[0]), Lr, m_Params.Roughness * envRadianceTexLevels).rgb;
-
-	vec2 specularBRDF = texture(sampler2D(u_BRDFLUTTexture,SAMPLER[0]), vec2(m_Params.NdotV, m_Params.Roughness)).rg;
-	vec3 specularIBL = specularIrradiance * (F0 * specularBRDF.x + specularBRDF.y);
-
-	return kd * diffuseIBL + specularIBL;
-}
 void main()
 {
     vec3 WorldPosition = GetGBufferPosition(TexCoord);
@@ -68,78 +38,67 @@ void main()
 		return;
 	}
 
-	float shadowScale = 1.0;
-	uint cascadeIndex = 0;
-	DirectionLight dirLight = GetDirectionLight();
 	Camera CAMERAINFO = GetCamera();
-	
-	if(dirLight.radiance != vec3(0.0)){
-		vec3 position = GetCamera().position;
-		float dis = length(WorldPosition - position);
-		for (uint i = 0; i < 4; i++)
-		{
-			if (dis < dirLight.SplitDepth[i])
-			{
-				cascadeIndex = i;
-				break;
-			}
-		}
-		vec4 shadowCoords = dirLight.viewProj[cascadeIndex] * vec4(WorldPosition, 1.0);
-		vec3 shadowTex = shadowCoords.xyz / shadowCoords.w;
-		vec3 shadowMapCoords = shadowTex;
-		
+	vec3 albedo = GetGBufferAlbedo(TexCoord);
+	float roughness =  GetGBufferRoughness(TexCoord);
+	float metallic = GetGBufferMetalness(TexCoord);
+	vec3 N = GetGBufferNormal(TexCoord);
+	vec3 V = normalize(CAMERAINFO.position - WorldPosition);
 
-		if(GetShadowSetting().ShadowType == 1) shadowScale = HardShadows_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords);
-		else if(GetShadowSetting().ShadowType == 2) shadowScale = PCF_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords,0.5);
-		else if(GetShadowSetting().ShadowType == 3) shadowScale = PCSS_DirectionalLight(u_DirShadowMapTexture, cascadeIndex, shadowMapCoords, 0.5);
+
+	
+///////////////////////////////////////////// 直接光照 /////////////////////////////////////////////
+	vec2 shadowRes = DirectionShadow(u_DirShadowMapTexture,WorldPosition,N);
+	vec3 directionLightContribution = CalculateDirectionalLight(albedo, roughness, metallic, N, V) *shadowRes.x ;
+	vec3 pointLightContribution = vec3(0);
+	for(int i = 0; i < GetPointLightCount(); i++){
+		pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, i) * PointShadow(u_PointShadowMapTexture,WorldPosition,i); 
 	}
-
-	m_Params.Albedo = GetGBufferAlbedo(TexCoord);
-	m_Params.Metalness = GetGBufferMetalness(TexCoord) ;
-    m_Params.Roughness = GetGBufferRoughness(TexCoord);
-    m_Params.Normal = GetGBufferNormal(TexCoord);
-	m_Params.View = normalize(CAMERAINFO.position - WorldPosition); 
-	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
-	vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
-	const vec3 Fdielectric = vec3(0.04);
-	vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
-	vec3 lightContribution = CalculateDirLights(F0) * shadowScale + CalculatePointLights(F0, WorldPosition) + CalculateSpotLights(F0, WorldPosition);
+	vec3 spotLightContribution = vec3(0);
+	for(int i = 0; i < GetSpotLightCount(); i++){
+		spotLightContribution += CalculateSpotLight(albedo, roughness, metallic,WorldPosition, N, V, i) * SpotShadow(u_PointShadowMapTexture,WorldPosition,i); 
+	}
+	vec3 lightContribution = directionLightContribution + pointLightContribution + spotLightContribution;
 	
-	// IBL
-	vec3 iblContribution = IBL(F0, Lr) * GetSkySetting().IbLScale;  
-
-
-	// DDGI
+///////////////////////////////////////////// IBL /////////////////////////////////////////////
+	vec3 iblContribution = CalculateIBLLight(N, V, albedo, metallic, roughness, u_EnvIrradianceTex, u_EnvRadianceTex, u_BRDFLUTTexture);
+///////////////////////////////////////////// DDGI /////////////////////////////////////////////
 	DDGISetting volume = GetDDGISetting();
 	vec3 DDGIContribution = vec3(0);
 	float blendWeight = DDGIGetVolumeBlendWeight(WorldPosition, volume);
 	if(blendWeight > 0){
-		DDGIContribution = DDGIGetIrrandianceByWorldPosition(WorldPosition,m_Params.Normal,volume,ddgi_Irrandiance,ddgi_Distance);
+		DDGIContribution = DDGIGetIrrandianceByWorldPosition(WorldPosition,N,volume,ddgi_Irrandiance,ddgi_Distance);
 		DDGIContribution*= blendWeight;
 	}
-    DDGIContribution = (m_Params.Albedo / PI) * DDGIContribution;
+    DDGIContribution = (albedo / PI) * DDGIContribution;
 
 
-	if(GetRenderSetting().onlyIndirectionLight == 1){
+	if(GetRenderSetting().debugDDGI == 1){
 		o_Color = vec4(DDGIContribution,1);
 		return;
-	}else if(GetRenderSetting().onlyIndirectionLight == 2){  // TODO:没有DDGI的情况，这些设置需要统一规划
+	}else if(GetRenderSetting().debugDDGI == 2){  // TODO:没有DDGI的情况，这些设置需要统一规划
 		o_Color = vec4(lightContribution + iblContribution,1);
 		return;
 	}
 	vec3 finalColor = lightContribution + iblContribution + DDGIContribution;
 
 	o_Color = vec4(finalColor,1);
-	// Debug
+
+
+
+
+
+
+	// DebugCSM
 	if(GetShadowSetting().DebugCSM == 1)
 	{
 		vec3 cascadeColor;
-			switch(cascadeIndex) {
-			case 0: cascadeColor = vec3(1.0, 0.0, 0.0); break; // ��ɫ - ����0
-			case 1: cascadeColor = vec3(0.0, 1.0, 0.0); break; // ��ɫ - ����1
-			case 2: cascadeColor = vec3(0.0, 0.0, 1.0); break; // ��ɫ - ����2
-			case 3: cascadeColor = vec3(1.0, 1.0, 0.0); break; // ��ɫ - ����3
-			default: cascadeColor = vec3(1.0, 0.0, 1.0); // ��ɫ - �쳣
+			switch(int(shadowRes.y)) {
+			case 0: cascadeColor = vec3(1.0, 0.0, 0.0); break;
+			case 1: cascadeColor = vec3(0.0, 1.0, 0.0); break;
+			case 2: cascadeColor = vec3(0.0, 0.0, 1.0); break;
+			case 3: cascadeColor = vec3(1.0, 1.0, 0.0); break;
+			default: cascadeColor = vec3(1.0, 0.0, 1.0);
 		}
 		o_Color = vec4(mix(o_Color.xyz,cascadeColor,0.5), 1.0);
 	}

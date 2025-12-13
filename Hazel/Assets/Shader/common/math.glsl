@@ -1,5 +1,163 @@
+#ifndef MATH_GLSL
+#define MATH_GLSL
+
+
+
 #define FLT_EPS 0.0000001
 
+float saturate(float x)
+{
+	return clamp(x, 0.0f, 1.0f);
+}
+
+vec2 saturate(vec2 x)
+{
+	return clamp(x, 0.0f, 1.0f);
+}
+
+vec3 saturate(vec3 x)
+{
+	return clamp(x, 0.0f, 1.0f);
+}
+
+vec4 saturate(vec4 x)
+{
+	return clamp(x, 0.0f, 1.0f);
+}
+
+float lerp(float a, float b, float c)
+{
+    return (1 - c) * a + c * b;
+}
+
+vec2 lerp(vec2 a, vec2 b, float c)
+{
+    return (1 - c) * a + c * b;
+}
+
+vec3 lerp(vec3 a, vec3 b, float c)
+{
+    return (1 - c) * a + c * b;
+}
+
+vec4 lerp(vec4 a, vec4 b, float c)
+{
+    return (1 - c) * a + c * b;
+}
+
+float square( float x )
+{
+	return x*x;
+}
+
+vec2 square( vec2 x )
+{
+	return x*x;
+}
+
+vec3 square( vec3 x )
+{
+	return x*x;
+}
+
+vec4 square( vec4 x )
+{
+	return x*x;
+}
+
+float pow2( float x )
+{
+	return x*x;
+}
+
+vec2 pow2( vec2 x )
+{
+	return x*x;
+}
+
+vec3 pow2( vec3 x )
+{
+	return x*x;
+}
+
+vec4 pow2( vec4 x )
+{
+	return x*x;
+}
+
+float pow3( float x )
+{
+	return x*x*x;
+}
+
+vec2 pow3( vec2 x )
+{
+	return x*x*x;
+}
+
+
+vec3 pow3( vec3 x )
+{
+	return x*x*x;
+}
+
+vec4 pow3( vec4 x )
+{
+	return x*x*x;
+}
+
+float pow4( float x )
+{
+	float xx = x*x;
+	return xx * xx;
+}
+
+vec2 pow4( vec2 x )
+{
+	vec2 xx = x*x;
+	return xx * xx;
+}
+
+vec3 pow4( vec3 x )
+{
+	vec3 xx = x*x;
+	return xx * xx;
+}
+
+vec4 pow4( vec4 x )
+{
+	vec4 xx = x*x;
+	return xx * xx;
+}
+
+float pow5( float x )
+{
+	float xx = x*x;
+	return xx * xx * x;
+}
+
+vec2 pow5( vec2 x )
+{
+	vec2 xx = x*x;
+	return xx * xx * x;
+}
+
+vec3 pow5( vec3 x )
+{
+	vec3 xx = x*x;
+	return xx * xx * x;
+}
+
+vec4 pow5( vec4 x )
+{
+	vec4 xx = x*x;
+	return xx * xx * x;
+}
+float rcp(float x) { return 1 / x;}
+
+float rsqrt(float x) { return 1 / sqrt(x);}
+
+// TODO: 换个位置存放
 vec3 ToneMapping(vec3 x)
 {
     return x / (x + vec3(1.0f)); // Reinhard tonemap
@@ -37,154 +195,4 @@ vec3 YCoCgToRGB(vec3 c)
 
 	return vec3(c.x + c.y - c.z, c.x + c.z, c.x - c.y - c.z);
 }
-
-float Saturate(float x)
-{
-	return clamp(x, 0.0f, 1.0f);
-}
-
-vec2 Saturate(vec2 x)
-{
-	return clamp(x, 0.0f, 1.0f);
-}
-
-vec3 Saturate(vec3 x)
-{
-	return clamp(x, 0.0f, 1.0f);
-}
-
-vec4 Saturate(vec4 x)
-{
-	return clamp(x, 0.0f, 1.0f);
-}
-
-float Lerp(float a, float b, float c)
-{
-    return (1 - c) * a + c * b;
-}
-
-vec2 Lerp(vec2 a, vec2 b, float c)
-{
-    return (1 - c) * a + c * b;
-}
-
-vec3 Lerp(vec3 a, vec3 b, float c)
-{
-    return (1 - c) * a + c * b;
-}
-
-vec4 Lerp(vec4 a, vec4 b, float c)
-{
-    return (1 - c) * a + c * b;
-}
-
-float Square( float x )
-{
-	return x*x;
-}
-
-vec2 Square( vec2 x )
-{
-	return x*x;
-}
-
-vec3 Square( vec3 x )
-{
-	return x*x;
-}
-
-vec4 Square( vec4 x )
-{
-	return x*x;
-}
-
-float Pow2( float x )
-{
-	return x*x;
-}
-
-vec2 Pow2( vec2 x )
-{
-	return x*x;
-}
-
-vec3 Pow2( vec3 x )
-{
-	return x*x;
-}
-
-vec4 Pow2( vec4 x )
-{
-	return x*x;
-}
-
-float Pow3( float x )
-{
-	return x*x*x;
-}
-
-vec2 Pow3( vec2 x )
-{
-	return x*x*x;
-}
-
-
-vec3 Pow3( vec3 x )
-{
-	return x*x*x;
-}
-
-vec4 Pow3( vec4 x )
-{
-	return x*x*x;
-}
-
-float Pow4( float x )
-{
-	float xx = x*x;
-	return xx * xx;
-}
-
-vec2 Pow4( vec2 x )
-{
-	vec2 xx = x*x;
-	return xx * xx;
-}
-
-vec3 Pow4( vec3 x )
-{
-	vec3 xx = x*x;
-	return xx * xx;
-}
-
-vec4 Pow4( vec4 x )
-{
-	vec4 xx = x*x;
-	return xx * xx;
-}
-
-float Pow5( float x )
-{
-	float xx = x*x;
-	return xx * xx * x;
-}
-
-vec2 Pow5( vec2 x )
-{
-	vec2 xx = x*x;
-	return xx * xx * x;
-}
-
-vec3 Pow5( vec3 x )
-{
-	vec3 xx = x*x;
-	return xx * xx * x;
-}
-
-vec4 Pow5( vec4 x )
-{
-	vec4 xx = x*x;
-	return xx * xx * x;
-}
-
-
+#endif

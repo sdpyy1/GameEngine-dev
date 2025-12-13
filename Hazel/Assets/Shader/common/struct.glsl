@@ -49,9 +49,11 @@ struct SpotLight
 { 
     vec3 position;
     float intensity;
+
     float range;
     float falloff;
-    float _padding1[2];
+    uint showDirection;
+    float _padding1;
 
     mat4 view;
     mat4 projection;
@@ -59,6 +61,9 @@ struct SpotLight
 
     vec3 radiance;
     uint showRange;
+
+    vec3 direction;
+    float angle;
 
     BoundingSphere sphere;
 };
@@ -246,7 +251,7 @@ struct DDGISetting {
     BoundingBox box;
 };
 struct RenderSetting {
-    uint onlyIndirectionLight;
+    uint debugDDGI;
     uint _padding[3];
 };
 struct GlobalSettingInfo

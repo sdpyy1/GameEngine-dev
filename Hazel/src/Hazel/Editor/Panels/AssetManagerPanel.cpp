@@ -129,10 +129,12 @@ namespace GameEngine {
 		DrawComponent<SpotLightComponent>("Spot Light", entity, [](auto& component)
 			{
 				ImGui::ColorEdit3("Radiance", &component.Radiance.x, ImGuiColorEditFlags_Float);
-				ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 3.0f, "%.2f");
-				ImGui::DragFloat("Range", &component.range, 0.1f, 0.0f, 20.0f, "%.2f");
-
+				ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 10.0f, "%.2f");
+				ImGui::DragFloat("Range", &component.range, 0.1f, 0.0f, 100.0f, "%.2f");
+				ImGui::DragFloat("Angle", &component.angle, 0.1f, 1.0f, 179.0f, "%.1f");
+				ImGui::DragFloat("Falloff", &component.falloff, 0.01f, 0.0f, 10.0f, "%.2f");
 				ImGui::Checkbox("Show Radius", &component.showRadius);
+				ImGui::Checkbox("Show Direction", &component.showDirection);
 			});
 		DrawComponent<PostProcessingComponent>("PostProcess", entity, [](auto& component)
 			{

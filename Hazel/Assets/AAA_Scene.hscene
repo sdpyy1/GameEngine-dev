@@ -1,6 +1,6 @@
 {
     "Scene": {
-        "EntityCount": 16,
+        "EntityCount": 17,
         "Entity": {
             "HasIDComponent": true,
             "IDComponent": {
@@ -636,25 +636,25 @@
             "HasTransformComponent": true,
             "TransformComponent": {
                 "Translation": {
-                    "x": -7.983739376068115,
-                    "y": 9.80977725982666,
-                    "z": 2.647024393081665
+                    "x": 59.4523811340332,
+                    "y": 13.544337272644043,
+                    "z": 13.309682846069336
                 },
                 "Scale": {
-                    "x": 2.8299922943115236,
-                    "y": 2.8299996852874758,
-                    "z": 2.8299968242645265
+                    "x": 2.829986810684204,
+                    "y": 2.829982280731201,
+                    "z": 2.8299925327301027
                 },
                 "RotationEuler": {
-                    "x": -0.14316248893737794,
-                    "y": 0.6543529033660889,
-                    "z": 0.5905733704566956
+                    "x": -0.04381394386291504,
+                    "y": 0.5711193084716797,
+                    "z": 0.503077507019043
                 },
                 "Rotation": {
-                    "x": -0.1580788493156433,
-                    "y": 0.2869645655155182,
-                    "z": 0.29686081409454348,
-                    "w": 0.8969593048095703
+                    "x": -0.09045211970806122,
+                    "y": 0.26753294467926028,
+                    "z": 0.24473446607589723,
+                    "w": 0.9275502562522888
                 }
             },
             "HasRelationshipComponent": true,
@@ -931,24 +931,24 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 8336934583827790977
+                    "m_UUID": 10143350819304969347
                 }
             },
             "HasTagComponent": true,
             "TagComponent": {
-                "Tag": "Sky Light"
+                "Tag": "Point Light"
             },
             "HasTransformComponent": true,
             "TransformComponent": {
                 "Translation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
+                    "x": -7.0580244064331059,
+                    "y": 10.329402923583985,
+                    "z": -14.749154090881348
                 },
                 "Scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
+                    "x": 0.8399999737739563,
+                    "y": 0.8399999737739563,
+                    "z": 0.8399999737739563
                 },
                 "RotationEuler": {
                     "x": 0.0,
@@ -970,14 +970,82 @@
                 "Children": []
             },
             "HasDirectionalLightComponent": false,
-            "HasPointLightComponent": false,
-            "HasSpotLightComponent": false,
-            "HasSkyComponent": true,
-            "SkyComponent": {
-                "DynamicSky": false,
-                "selectedIBL": 0,
-                "IBLScale": 1.0
+            "HasPointLightComponent": true,
+            "PointLightComponent": {
+                "Intensity": 3.0,
+                "Radiance": {
+                    "x": 0.6988416910171509,
+                    "y": 0.6151965260505676,
+                    "z": 0.6151965260505676
+                },
+                "Radius": 10.899999618530274,
+                "showRadius": false
             },
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 5143519425479494173
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Spot Light"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": -0.09458570182323456,
+                    "y": 7.819545745849609,
+                    "z": -6.886233329772949
+                },
+                "Scale": {
+                    "x": 0.9999986886978149,
+                    "y": 1.0,
+                    "z": 0.9999986886978149
+                },
+                "RotationEuler": {
+                    "x": 4.76837158203125e-7,
+                    "y": 2.9943630695343019,
+                    "z": 4.76837158203125e-7
+                },
+                "Rotation": {
+                    "x": -2.2023758106115566e-7,
+                    "y": 0.9972916841506958,
+                    "z": -2.2023758106115566e-7,
+                    "w": 0.073548324406147
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": true,
+            "SpotLightComponent": {
+                "Intensity": 1.0,
+                "Radiance": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "range": 20.0,
+                "showRadius": false,
+                "angle": 20.799999237060548,
+                "falloff": 1.0
+            },
+            "HasSkyComponent": false,
             "HasPostProcessingComponent": false,
             "HasModelComponent": false,
             "HasSubmeshComponent": false,

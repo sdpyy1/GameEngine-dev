@@ -46,7 +46,7 @@ vec3 RTXGISphericalFibonacci(float sampleIndex, float numSamples)
     const float b = (sqrt(5.f) * 0.5f + 0.5f) - 1.f;
     float phi = TwoPI * fract(sampleIndex * b);
     float cosTheta = 1.f - (2.f * sampleIndex + 1.f) * (1.f / numSamples);
-    float sinTheta = sqrt(Saturate(1.f - (cosTheta * cosTheta)));
+    float sinTheta = sqrt(saturate(1.f - (cosTheta * cosTheta)));
 
     return vec3((cos(phi) * sinTheta), (sin(phi) * sinTheta), cosTheta);
 }
@@ -164,9 +164,9 @@ float DDGIGetVolumeBlendWeight(vec3 worldPosition, DDGISetting volume)
     }
     // Adjust the blend weight for each axis
     float volumeBlendWeight = 1.f;
-    volumeBlendWeight *= (1.f - Saturate(delta.x / volume.gridStep.x));
-    volumeBlendWeight *= (1.f - Saturate(delta.y / volume.gridStep.y));
-    volumeBlendWeight *= (1.f - Saturate(delta.z / volume.gridStep.z));
+    volumeBlendWeight *= (1.f - saturate(delta.x / volume.gridStep.x));
+    volumeBlendWeight *= (1.f - saturate(delta.y / volume.gridStep.y));
+    volumeBlendWeight *= (1.f - saturate(delta.z / volume.gridStep.z));
 
     return volumeBlendWeight;
 }
@@ -257,7 +257,7 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 normal, DDGISett
         // offset at the end reduces the "going to zero" impact.
         {
             vec3 directionToProbe = normalize(probePos - worldPosition);
-            weight *= Square(max(0.0001, (dot(directionToProbe, normal) + 1.0) * 0.5)) + 0.2;  
+            weight *= square(max(0.0001, (dot(directionToProbe, normal) + 1.0) * 0.5)) + 0.2;  
         }
 
         // //切比雪夫系数
@@ -269,10 +269,10 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 normal, DDGISett
         //     vec3 probeTextureUV = DDGIGetProbeUV(int(probeIndex), octantCoords, int(DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR), volume);
         //     vec2 temp = texture(sampler2DArray(distanceTexture,SAMPLER[0]),probeTextureUV).rg;  // 采样距离纹理
         //     float mean      = temp.x;
-        //     float variance  = abs(Square(temp.x) - temp.y);
+        //     float variance  = abs(square(temp.x) - temp.y);
 
-        //     float chebyshev = variance / (variance + Square(max(dist - mean, 0.0)));
-        //     chebyshev       = max(Pow3(chebyshev), 0.0);  //以切比雪夫系数三次方作为权重
+        //     float chebyshev = variance / (variance + square(max(dist - mean, 0.0)));
+        //     chebyshev       = max(pow3(chebyshev), 0.0);  //以切比雪夫系数三次方作为权重
 
         //     weight *= (dist <= mean) ? 1.0 : chebyshev;
         // }
@@ -285,7 +285,7 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 normal, DDGISett
 
             const float crushThreshold = 0.2f;
             if (weight < crushThreshold)
-                weight *= weight * weight * (1.0f / Square(crushThreshold)); 
+                weight *= weight * weight * (1.0f / square(crushThreshold)); 
         }
 
         //三线性插值系数

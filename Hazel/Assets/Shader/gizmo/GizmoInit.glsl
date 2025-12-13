@@ -30,6 +30,9 @@ void main()
         if(spotLight.showRange == 1){
             AddGizmoSphere(spotLight.position, spotLight.range, vec4(1.0, 0.0, 0.0, 1.0));
         }
+        if(spotLight.showDirection == 1){
+           AddGizmoLine(spotLight.position,spotLight.position + (spotLight.direction * 3), vec4(1.0, 0.0, 0.0, 1.0));
+        }
     }
 
     if(gID == 0 && LIGHTINFO.data.dirLightCount != 0)
@@ -42,28 +45,6 @@ void main()
            AddGizmoLine(dirLight.position,dirLight.position + (dirLight.direction * 3), vec4(1.0, 0.0, 0.0, 1.0));
         }
     }
-
-    // 移动到DDGI中
-    // if(gID == 0)
-    // {
-    //     DDGISetting ddgi = GetDDGISetting();
-
-    //     if(ddgi.enable == 0 || ddgi.visulaize == 0) return; 
-    //     vec3 center = ddgi.centerPosition;
-    //     vec3 extent = (ddgi.box.maxBound - ddgi.box.minBound) * 0.5;
-    //     AddGizmoBox(center, extent, vec4(0.0, 1.0, 0.0, 0.5));
-    //     ivec3 probeCount = ivec3(ddgi.probeCount);
-    //     vec3 step = ddgi.gridStep;
-    //     vec3 startPos = center - extent + step * 0.5;
-    //     float radius = 0.1f;
-    //     for(int z = 0; z < probeCount.z; ++z)
-    //     for(int y = 0; y < probeCount.y; ++y)
-    //     for(int x = 0; x < probeCount.x; ++x)
-    //     {
-    //         vec3 probePos = startPos + vec3(x, y, z) * step;
-    //         AddGizmoSphere(probePos, radius, vec4(1.0, 0.0, 0.0, 1.0));
-    //     }
-    // }
 }
 
 #endif

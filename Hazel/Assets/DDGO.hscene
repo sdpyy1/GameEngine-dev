@@ -1,6 +1,6 @@
 {
     "Scene": {
-        "EntityCount": 12,
+        "EntityCount": 14,
         "Entity": {
             "HasIDComponent": true,
             "IDComponent": {
@@ -15,8 +15,8 @@
             "HasTransformComponent": true,
             "TransformComponent": {
                 "Translation": {
-                    "x": -2.6705093383789064,
-                    "y": 0.6220602989196777,
+                    "x": -8.239327430725098,
+                    "y": 0.7504326701164246,
                     "z": -5.498027324676514
                 },
                 "Scale": {
@@ -86,66 +86,6 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 7623763008892506687
-                }
-            },
-            "HasTagComponent": true,
-            "TagComponent": {
-                "Tag": "back"
-            },
-            "HasTransformComponent": true,
-            "TransformComponent": {
-                "Translation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "Scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                },
-                "RotationEuler": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "Rotation": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0,
-                    "w": 1.0
-                }
-            },
-            "HasRelationshipComponent": true,
-            "RelationshipComponent": {
-                "ParentHandle": {
-                    "m_UUID": 3548846629915371034
-                },
-                "Children": []
-            },
-            "HasDirectionalLightComponent": false,
-            "HasPointLightComponent": false,
-            "HasSpotLightComponent": false,
-            "HasSkyComponent": false,
-            "HasPostProcessingComponent": false,
-            "HasModelComponent": false,
-            "HasSubmeshComponent": true,
-            "SubmeshComponent": {
-                "modelID": {
-                    "m_UUID": 13352801462119185615
-                },
-                "SubmeshIndex": 2,
-                "castShadow": true,
-                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\conner\\cornell_box.obj",
-                "Visible": true
-            },
-            "HasLightProbeComponent": false
-        },
-        "Entity": {
-            "HasIDComponent": true,
-            "IDComponent": {
-                "ID": {
                     "m_UUID": 9695507280183189807
                 }
             },
@@ -206,12 +146,12 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 5509979606362436961
+                    "m_UUID": 7623763008892506687
                 }
             },
             "HasTagComponent": true,
             "TagComponent": {
-                "Tag": "short_box"
+                "Tag": "back"
             },
             "HasTransformComponent": true,
             "TransformComponent": {
@@ -255,7 +195,7 @@
                 "modelID": {
                     "m_UUID": 13352801462119185615
                 },
-                "SubmeshIndex": 5,
+                "SubmeshIndex": 2,
                 "castShadow": true,
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\conner\\cornell_box.obj",
                 "Visible": true
@@ -386,12 +326,75 @@
             "HasIDComponent": true,
             "IDComponent": {
                 "ID": {
-                    "m_UUID": 3227222554780955686
+                    "m_UUID": 12710427160413389473
                 }
             },
             "HasTagComponent": true,
             "TagComponent": {
-                "Tag": "tall_box"
+                "Tag": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Basic\\cube.obj"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 10.448933601379395,
+                    "y": -0.6384539604187012,
+                    "z": 26.201770782470704
+                },
+                "Scale": {
+                    "x": 113.59712219238281,
+                    "y": 1.0,
+                    "z": 42.77791213989258
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 0
+                },
+                "Children": [
+                    {
+                        "m_UUID": 8469476387306451378
+                    }
+                ]
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": true,
+            "ModelComponent": {
+                "ModelID": {
+                    "m_UUID": 9746477274535541188
+                },
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Basic\\cube.obj",
+                "Visible": true,
+                "castShadow": true
+            },
+            "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 5509979606362436961
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "short_box"
             },
             "HasTransformComponent": true,
             "TransformComponent": {
@@ -435,7 +438,7 @@
                 "modelID": {
                     "m_UUID": 13352801462119185615
                 },
-                "SubmeshIndex": 6,
+                "SubmeshIndex": 5,
                 "castShadow": true,
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\conner\\cornell_box.obj",
                 "Visible": true
@@ -496,6 +499,66 @@
                     "m_UUID": 13352801462119185615
                 },
                 "SubmeshIndex": 4,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\conner\\cornell_box.obj",
+                "Visible": true
+            },
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 3227222554780955686
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "tall_box"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 3548846629915371034
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 13352801462119185615
+                },
+                "SubmeshIndex": 6,
                 "castShadow": true,
                 "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\conner\\cornell_box.obj",
                 "Visible": true
@@ -673,9 +736,9 @@
                     "z": 8
                 },
                 "gridStep": {
-                    "x": 3.0460000038146974,
-                    "y": 2.928999900817871,
-                    "z": 3.244999885559082
+                    "x": 10.0,
+                    "y": 10.0,
+                    "z": 10.0
                 },
                 "raysPerProbe": 256,
                 "visulaize": true
@@ -741,6 +804,66 @@
             "HasPostProcessingComponent": false,
             "HasModelComponent": false,
             "HasSubmeshComponent": false,
+            "HasLightProbeComponent": false
+        },
+        "Entity": {
+            "HasIDComponent": true,
+            "IDComponent": {
+                "ID": {
+                    "m_UUID": 8469476387306451378
+                }
+            },
+            "HasTagComponent": true,
+            "TagComponent": {
+                "Tag": "Cube"
+            },
+            "HasTransformComponent": true,
+            "TransformComponent": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                },
+                "RotationEuler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                }
+            },
+            "HasRelationshipComponent": true,
+            "RelationshipComponent": {
+                "ParentHandle": {
+                    "m_UUID": 12710427160413389473
+                },
+                "Children": []
+            },
+            "HasDirectionalLightComponent": false,
+            "HasPointLightComponent": false,
+            "HasSpotLightComponent": false,
+            "HasSkyComponent": false,
+            "HasPostProcessingComponent": false,
+            "HasModelComponent": false,
+            "HasSubmeshComponent": true,
+            "SubmeshComponent": {
+                "modelID": {
+                    "m_UUID": 9746477274535541188
+                },
+                "SubmeshIndex": 0,
+                "castShadow": true,
+                "path": "D:/AAA_GameEngine_Dev/Hazel/Assets/Model\\Basic\\cube.obj",
+                "Visible": true
+            },
             "HasLightProbeComponent": false
         }
     }

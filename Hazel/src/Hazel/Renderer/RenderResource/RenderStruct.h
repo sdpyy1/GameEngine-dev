@@ -107,15 +107,22 @@ namespace GameEngine {
 	{
 		glm::vec3 position;
 		float intensity;
+
 		float range;
 		float falloff;
-		float _padding1[2];
+		uint32_t showDirection;
+		float _padding1;
+
 		glm::mat4 view;
 		glm::mat4 projection;
 		glm::mat4 viewProj;
 
 		glm::vec3 radiance;
 		uint32_t showRange;
+
+		glm::vec3 direction;
+		float angle;
+
 
 		BoundingSphere sphere;
 	};
@@ -333,7 +340,7 @@ namespace GameEngine {
 		BoundingBox box;
 	};
 	struct RenderSettingInfo {
-		uint32_t onlyIndirectionLight;
+		uint32_t debugDDGI;
 		uint32_t _padding[3];
 	};
 	struct GlobalSettingInfo

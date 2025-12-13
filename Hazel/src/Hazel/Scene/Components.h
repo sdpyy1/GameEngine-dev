@@ -264,7 +264,7 @@ namespace GameEngine {
 		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
 		float Intensity = 1.0f;
 		ShadowType shadowType = SHADOW_TYPE_PCSS;
-		bool showDirection = false;
+		bool showDirection = true;
 		bool showCSM = false;
         BeginSerailize
 			SerailizeEntry(Intensity)
@@ -279,7 +279,7 @@ namespace GameEngine {
 	{
 		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
 		float Intensity = 1.0f;
-		float Radius = 1.0f;
+		float Radius = 20.0f;
 		bool showRadius = false;
         BeginSerailize
 			SerailizeEntry(Intensity)
@@ -295,11 +295,17 @@ namespace GameEngine {
 		float Intensity = 1.0f;
 		float range = 1.0f;
 		bool showRadius = false;
+		float angle = 60;
+		float falloff = 1.0;
+		bool showDirection = true;
         BeginSerailize
 			SerailizeEntry(Intensity)
 			SerailizeEntry(Radiance)
 			SerailizeEntry(range)
 			SerailizeEntry(showRadius)
+			SerailizeEntry(angle)
+			SerailizeEntry(falloff)
+			SerailizeEntry(showDirection)
 		EndSerailize
 	};
 

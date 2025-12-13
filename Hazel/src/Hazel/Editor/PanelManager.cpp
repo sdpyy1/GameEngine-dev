@@ -112,8 +112,12 @@ namespace GameEngine {
 	{
 		ImGui::Begin("Setting");
 		auto& curScene = APP_SCENEMANAGER->GetActiveScene();
-		ImGui::Checkbox("Show InDirectionLight", &curScene->settings.onlyIndirectionLight);
-		ImGui::Checkbox("NoDDGI", &curScene->settings.noDDGI);
+		if (ImGui::CollapsingHeader("DDGI", ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::Checkbox("Show InDirectionLight", &curScene->settings.onlyIndirectionLight);
+			ImGui::Checkbox("NoDDGI", &curScene->settings.noDDGI);
+		}
+
+
 
 		DebugTexture();
 

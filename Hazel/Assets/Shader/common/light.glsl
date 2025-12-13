@@ -2,6 +2,7 @@
 #define LIGHT_GLSL
 #include "constant.glsl"
 #include "PBR.glsl"
+#include "BRDF.glsl"
 /*
 	漫反射项：Lambert 模型
 	镜面反射项：Cook-Torrance 模型
@@ -9,248 +10,184 @@
 /////////////////////////////////////////////
 // Directional Light
 /////////////////////////////////////////////
-vec3 CalculateDirLights(vec3 F0)
-{
-	vec3 result = vec3(0.0);
+vec3 CalculateDirectionalLight(vec3 albedo, float roughness, float metallic , vec3 N, vec3 V){
 	DirectionLight dirLight = GetDirectionLight();
 	if(dirLight.radiance == vec3(0.0)){
-		return result;
+		return vec3(0.0f);
 	}		
-	vec3 Li = normalize(-dirLight.direction);  // 指向光源
-	vec3 Lh = normalize(Li + m_Params.View); // 半程向量
-	vec3 Lradiance = dirLight.radiance;
+	vec3 L = -normalize(dirLight.direction);    
+	float NoL = saturate(dot(N, L));
+    vec3 radiance = dirLight.radiance * dirLight.intensity;   
 
-	// Calculate angles between surface normal and various light vectors.
-	float cosLi = max(0.0, dot(m_Params.Normal, Li));
-	float cosLh = max(0.0, dot(m_Params.Normal, Lh));
+    vec3 f_r = ResolveBRDF(albedo, roughness, metallic, N, V, L);
 
-	vec3 F = FresnelSchlickRoughness(F0, max(0.0, dot(Lh, m_Params.View)), m_Params.Roughness);
-	float D = NdfGGX(cosLh, m_Params.Roughness);
-	float G = GaSchlickGGX(cosLi, m_Params.NdotV, m_Params.Roughness);
-
-	vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);   
-	vec3 diffuseBRDF = kd/PI * m_Params.Albedo; // TODO: /PI
-
-	// Cook-Torrance
-	vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * m_Params.NdotV);
-	result += (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
-	return result;
+    return max(vec3(0.0f), f_r * radiance * NoL);	
 }
-vec3 CalculateDirLightsOnlyDiffuse(vec3 F0)
-{
-	vec3 result = vec3(0.0);
+vec3 CalculateDirectionalLightOnlyDiffuse(vec3 albedo, float roughness, float metallic , vec3 N, vec3 V){
 	DirectionLight dirLight = GetDirectionLight();
 	if(dirLight.radiance == vec3(0.0)){
-		return result;
+		return vec3(0.0f);
 	}		
-	vec3 Li = normalize(-dirLight.direction);  // 指向光源
-	vec3 Lh = normalize(Li + m_Params.View); // 半程向量
-	vec3 Lradiance = dirLight.radiance;
+	vec3 L = -normalize(dirLight.direction);    
+	float NoL = saturate(dot(N, L));
+    vec3 radiance = dirLight.radiance * dirLight.intensity;   
 
-	// Calculate angles between surface normal and various light vectors.
-	float cosLi = max(0.0, dot(m_Params.Normal, Li));
-	float cosLh = max(0.0, dot(m_Params.Normal, Lh));
+    vec3 f_r = ResolveDiffuseBRDF(albedo, roughness, metallic, N, V, L);
 
-	vec3 F = FresnelSchlickRoughness(F0, max(0.0, dot(Lh, m_Params.View)), m_Params.Roughness);
-
-	vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);   
-	vec3 diffuseBRDF = kd/PI * m_Params.Albedo;
-
-	// Cook-Torrance
-	result += diffuseBRDF * Lradiance * cosLi;
-	return result;
+    return max(vec3(0.0f), f_r * radiance * NoL);	
 }
 
 /////////////////////////////////////////////
 // Point Light
 /////////////////////////////////////////////
-
-vec3 CalculatePointLights(in vec3 F0, vec3 worldPos)
-{
-	vec3 result = vec3(0.0);
-
-	for (uint i = 0; i < GetPointLightCount(); i++)
-	{
-		PointLight light = GetPointLight(i);
-		vec3 Li = normalize(light.position - worldPos);
-		float lightDistance = length(light.position - worldPos);
-		vec3 Lh = normalize(Li + m_Params.View);
-
-		float attenuation = clamp(1.0 - (lightDistance * lightDistance) / (light.sphere.radius * light.sphere.radius), 0.0, 1.0);
-		float falloff = 1.0;   // TODO：参数
-		attenuation *= mix(attenuation, 1.0, falloff);
-
-		vec3 Lradiance = light.radiance  * attenuation;
-
-		// Calculate angles between surface normal and various light vectors.
-		float cosLi = max(0.0, dot(m_Params.Normal, Li));
-		float cosLh = max(0.0, dot(m_Params.Normal, Lh));
-
-		vec3 F = FresnelSchlickRoughness(F0, max(0.0, dot(Lh, m_Params.View)), m_Params.Roughness);
-		float D = NdfGGX(cosLh, m_Params.Roughness);
-		float G = GaSchlickGGX(cosLi, m_Params.NdotV, m_Params.Roughness);
-
-		vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
-		vec3 diffuseBRDF = kd/PI * m_Params.Albedo;
-
-		float pointScale = 1.0;
-		// TODO: 阴影计算简单写在这里,只实现了支持一个阴影
-		if(i==0){
-			vec3 lightToFrag = worldPos.xyz - light.position; 
-			vec3 sampleDir = normalize(lightToFrag);   
-			float actualDepth = length(lightToFrag) / light.sphere.radius;
-			float storedDepth = texture(samplerCube(u_PointShadowMapTexture, SAMPLER[0]), sampleDir).r;
-			float bias = 0.005; 
-			bool inShadow = actualDepth > storedDepth + bias;
-
-			// 5. 阴影系数：在阴影中则为 0，否则为 1
-			pointScale = inShadow ? 0.0f : 1.0f;
-		}
-		// Cook-Torrance
-		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * m_Params.NdotV);
-		specularBRDF = clamp(specularBRDF, vec3(0.0f), vec3(10.0f));
-		result += (diffuseBRDF + specularBRDF) * Lradiance * cosLi * pointScale;
-	}
-	return result;
+float PointLightFalloff(float dist, float radius) 
+{ 
+	float attenuation = clamp(1.0 - (dist * dist) / (radius * radius), 0.0, 1.0);
+	float falloff = 1.0;   // TODO：参数
+	return attenuation *= mix(attenuation, 1.0, falloff);	
 }
-
-vec3 CalculatePointLightsOnlyDiffuse(in vec3 F0, vec3 worldPos)
+vec3 CalculatePointLight(vec3 albedo, float roughness, float metallic,
+    vec3 worldPos, vec3 N, vec3 V, uint lightID)
 {
-	vec3 result = vec3(0.0);
-
-	for (uint i = 0; i < GetPointLightCount(); i++)
-	{
-		PointLight light = GetPointLight(i);
-		vec3 Li = normalize(light.position - worldPos);
-		float lightDistance = length(light.position - worldPos);
-		vec3 Lh = normalize(Li + m_Params.View);
-
-		float attenuation = clamp(1.0 - (lightDistance * lightDistance) / (light.sphere.radius * light.sphere.radius), 0.0, 1.0);
-		float falloff = 1.0;   // TODO：参数
-		attenuation *= mix(attenuation, 1.0, falloff);
-
-		vec3 Lradiance = light.radiance  * attenuation;
-
-		// Calculate angles between surface normal and various light vectors.
-		float cosLi = max(0.0, dot(m_Params.Normal, Li));
-		float cosLh = max(0.0, dot(m_Params.Normal, Lh));
-
-		vec3 F = FresnelSchlickRoughness(F0, max(0.0, dot(Lh, m_Params.View)), m_Params.Roughness);
-
-		vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
-		vec3 diffuseBRDF = kd/PI * m_Params.Albedo;
-		float pointScale = 1.0;
-		if(i==0){
-			vec3 lightToFrag = worldPos.xyz - light.position; 
-			vec3 sampleDir = normalize(lightToFrag);   
-			float actualDepth = length(lightToFrag) / light.sphere.radius;
-			float storedDepth = texture(samplerCube(u_PointShadowMapTexture, SAMPLER[0]), sampleDir).r;
-			float bias = 0.005; 
-			bool inShadow = actualDepth > storedDepth + bias;
-
-			// 5. 阴影系数：在阴影中则为 0，否则为 1
-			pointScale = inShadow ? 0.0f : 1.0f;
-		}
-		result += diffuseBRDF * Lradiance * cosLi * pointScale;
+	if(lightID >= GetPointLightCount()){
+		return vec3(0.0f);
 	}
-	return result;
+	PointLight light = GetPointLight(lightID);
+	float lightDistance = length(light.position - worldPos);
+	vec3 L = normalize(light.position - worldPos.xyz);
+	float NoL = saturate(dot(N, L));
+
+	float attenuation   = PointLightFalloff(lightDistance, light.sphere.radius);
+	vec3 f_r = ResolveBRDF(albedo.xyz, roughness, metallic, N, V, L);
+    vec3 radiance = light.radiance * light.intensity * attenuation;   
+    return max(vec3(0.0f), f_r * radiance * NoL);	
+}
+vec3 CalculatePointLightOnlyDiffuse(vec3 albedo, float roughness, float metallic,
+    vec3 worldPos, vec3 N, vec3 V, uint lightID)
+{
+	if(lightID >= GetPointLightCount()){
+		return vec3(0.0f);
+	}
+	PointLight light = GetPointLight(lightID);
+	float lightDistance = length(light.position - worldPos);
+	vec3 L = normalize(light.position - worldPos.xyz);
+	float NoL = saturate(dot(N, L));
+
+	float attenuation   = PointLightFalloff(lightDistance, light.sphere.radius);
+	vec3 f_r = ResolveDiffuseBRDF(albedo.xyz, roughness, metallic, N, V, L);
+    vec3 radiance = light.radiance * light.intensity * attenuation;   
+    return max(vec3(0.0f), f_r * radiance * NoL);	
 }
 /////////////////////////////////////////////
 // Spot Light
 /////////////////////////////////////////////
 
-vec3 CalculateSpotLights(in vec3 F0, vec3 worldPos)
+
+float CalculateSpotLightAttenuation(SpotLight light,vec3 worldPos,vec3 L,float lightDistance )
 {
-	vec3 result = vec3(0.0);
-	for (uint i = 0; i < GetSpotLightCount(); i++)
-	{
-		float angle = 60; // TODO:参数
-		float falloff = 1.0; // TODO:参数
-		vec3 Direction = vec3(1,0,0); // 参数
-		float AngleAttenuation = 1.0; // TODO:参数
+    float attenuation =
+        clamp(1.0 - (lightDistance * lightDistance) /
+                      (light.range * light.range),
+              0.0, 1.0);
 
-		
-		SpotLight light = GetSpotLight(i);
-		vec3 Li = normalize(light.position - worldPos);
-		float lightDistance = length(light.position - worldPos);
-		float cutoff = cos(radians(angle * 0.5f));
+    attenuation *= mix(attenuation, 1.0, light.falloff);
 
-		float scos = max(dot(Li, Direction), cutoff);
-		float rim = (1.0 - scos) / (1.0 - cutoff);
+    float cutoff = cos(radians(light.angle * 0.5));
+    float scos   = max(dot(L, normalize(-light.direction)), cutoff);
 
-		float attenuation = clamp(1.0 - (lightDistance * lightDistance) / (light.range * light.range), 0.0, 1.0);
+    float rim = (1.0 - scos) / (1.0 - cutoff);
 
-		attenuation *= mix(attenuation, 1.0, falloff);
+    float AngleAttenuation = 1.0; // TODO: 可作为参数
+    attenuation *= 1.0 - pow(max(rim, 0.001), AngleAttenuation);
 
-		attenuation *= 1.0 - pow(max(rim, 0.001), AngleAttenuation);
+    return attenuation;
+}
+vec3 CalculateSpotLight(vec3 albedo,float roughness,float metallic,
+    vec3 worldPos,vec3 N,vec3 V,uint lightID)
+{
+    if (lightID >= GetSpotLightCount())
+        return vec3(0.0);
 
-		vec3 Lradiance = light.radiance  * attenuation;
-		vec3 Lh = normalize(Li + m_Params.View);
+    SpotLight light = GetSpotLight(lightID);
 
-		// Calculate angles between surface normal and various light vectors.
-		float cosLi = max(0.0, dot(m_Params.Normal, Li));
-		float cosLh = max(0.0, dot(m_Params.Normal, Lh));
+    vec3  toLight       = light.position - worldPos;
+    float lightDistance = length(toLight);
+    vec3  L              = toLight / lightDistance;
 
-		vec3 F = FresnelSchlickRoughness(F0, max(0.0, dot(Lh, m_Params.View)), m_Params.Roughness);
-		float D = NdfGGX(cosLh, m_Params.Roughness);
-		float G = GaSchlickGGX(cosLi, m_Params.NdotV, m_Params.Roughness);
+    float NoL = saturate(dot(N, L));
+    if (NoL <= 0.0)
+        return vec3(0.0);
 
-		vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
-		vec3 diffuseBRDF = kd/PI * m_Params.Albedo;
+    float attenuation = CalculateSpotLightAttenuation(light, worldPos, L, lightDistance);
 
-		// Cook-Torrance
-		vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * m_Params.NdotV);
-		specularBRDF = clamp(specularBRDF, vec3(0.0f), vec3(10.0f));
-		result += (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
+    vec3 f_r = ResolveBRDF(albedo, roughness, metallic, N, V, L);
+    vec3 radiance = light.radiance * light.intensity * attenuation;
 
-	}
-	return result;
+    return max(vec3(0.0), f_r * radiance * NoL);
+}
+vec3 CalculateSpotLightOnlyDiffuse(vec3 albedo,float roughness,float metallic,
+    vec3 worldPos,vec3 N,vec3 V,uint lightID)
+{
+    if (lightID >= GetSpotLightCount())
+        return vec3(0.0);
+
+    SpotLight light = GetSpotLight(lightID);
+
+    vec3  toLight       = light.position - worldPos;
+    float lightDistance = length(toLight);
+    vec3  L              = toLight / lightDistance;
+
+    float NoL = saturate(dot(N, L));
+    if (NoL <= 0.0)
+        return vec3(0.0);
+
+    float attenuation =CalculateSpotLightAttenuation(light, worldPos, L, lightDistance);
+
+    vec3 f_r = ResolveDiffuseBRDF(albedo, roughness, metallic, N, V, L);
+    vec3 radiance = light.radiance * light.intensity * attenuation;
+
+    return max(vec3(0.0), f_r * radiance * NoL);
 }
 
+/////////////////////////////////////////////
+// IBL
+/////////////////////////////////////////////
+vec3 CalculateIBLLight(
+    vec3 N,
+    vec3 V,
+    vec3 albedo,
+    float metallic,
+    float roughness,
+    textureCube tex_env_irradiance,
+    textureCube tex_env_radiance,
+    texture2D tex_brdf_lut
+) {
 
-vec3 CalculateSpotLightsOnlyDiffuse(in vec3 F0, vec3 worldPos)
-{
-	vec3 result = vec3(0.0);
-	for (uint i = 0; i < GetSpotLightCount(); i++)
-	{
-		float angle = 60; // TODO:参数
-		float falloff = 1.0; // TODO:参数
-		vec3 Direction = vec3(1,0,0); // 参数
-		float AngleAttenuation = 1.0; // TODO:参数
+	vec3 lr = reflect(-V, N);
 
-		
-		SpotLight light = GetSpotLight(i);
-		vec3 Li = normalize(light.position - worldPos);
-		float lightDistance = length(light.position - worldPos);
-		float cutoff = cos(radians(angle * 0.5f));
 
-		float scos = max(dot(Li, Direction), cutoff);
-		float rim = (1.0 - scos) / (1.0 - cutoff);
+    BxDFContext context;
+    Init(context, N, V, vec3(0));
 
-		float attenuation = clamp(1.0 - (lightDistance * lightDistance) / (light.range * light.range), 0.0, 1.0);
+    vec3 f0 = mix(vec3(0.04), albedo, metallic);
 
-		attenuation *= mix(attenuation, 1.0, falloff);
+    vec3 irradiance = texture(samplerCube(tex_env_irradiance, SAMPLER[0]), N).rgb;
+    vec3 fresnel = F_Schlick(f0, context.NoV, roughness);
+    vec3 kd = (1.0 - fresnel) * (1.0 - metallic);
+    vec3 diffuse_ibl = albedo * irradiance;
 
-		attenuation *= 1.0 - pow(max(rim, 0.001), AngleAttenuation);
+    int env_radiance_tex_levels = textureQueryLevels(tex_env_radiance);
+    vec3 specular_irradiance = textureLod(
+        samplerCube(tex_env_radiance, SAMPLER[0]),
+        lr,
+        roughness * float(env_radiance_tex_levels)
+    ).rgb;
 
-		vec3 Lradiance = light.radiance  * attenuation;
-		vec3 Lh = normalize(Li + m_Params.View);
+    vec2 specular_brdf = texture(sampler2D(tex_brdf_lut, SAMPLER[0]), vec2(context.NoV, roughness)).rg;
+    vec3 specular_ibl = specular_irradiance * (f0 * specular_brdf.x + specular_brdf.y);
 
-		// Calculate angles between surface normal and various light vectors.
-		float cosLi = max(0.0, dot(m_Params.Normal, Li));
-		float cosLh = max(0.0, dot(m_Params.Normal, Lh));
-
-		vec3 F = FresnelSchlickRoughness(F0, max(0.0, dot(Lh, m_Params.View)), m_Params.Roughness);
-
-		vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
-		vec3 diffuseBRDF = kd/PI * m_Params.Albedo;
-		result += diffuseBRDF * Lradiance * cosLi;
-
-	}
-	return result;
+    return kd * diffuse_ibl + specular_ibl;
 }
-
-
 
 
 

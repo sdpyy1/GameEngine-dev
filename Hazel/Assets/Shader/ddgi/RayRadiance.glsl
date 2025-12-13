@@ -137,8 +137,24 @@ void main()
 	const vec3 Fdielectric = vec3(0.04);
 	vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
 
+
+	vec3 albedo = payload.albedo;
+	float roughness = payload.roughness;
+	float metallic = payload.metallic;
+	vec3 N = payload.normal;
+	vec3 V = normalize(probeWorldPosition - payload.worldPosition);
+
 	//直接光应该是只需要计算漫反射分量，不需要镜面反射
-	vec3 diffuse = CalculateDirLightsOnlyDiffuse(F0) * shadowScale + CalculatePointLightsOnlyDiffuse(F0, payload.worldPosition) + CalculateSpotLightsOnlyDiffuse(F0, payload.worldPosition);
+	vec3 directionLightContribution = CalculateDirectionalLight(albedo, roughness, metallic, N, V) * shadowScale;
+	vec3 pointLightContribution = vec3(0);
+	for(int i = 0; i < GetPointLightCount(); i++){
+		pointLightContribution += CalculatePointLightOnlyDiffuse(albedo, roughness, metallic,payload.worldPosition, N, V, i) * PointShadow(u_PointShadowMapTexture,payload.worldPosition,i); 
+	}
+	vec3 spotLightContribution = vec3(0);
+	for(int i = 0; i < GetSpotLightCount(); i++){
+		spotLightContribution += CalculateSpotLightOnlyDiffuse(albedo, roughness, metallic,payload.worldPosition, N, V, i) * SpotShadow(u_PointShadowMapTexture,payload.worldPosition,i); 
+	}
+	vec3 diffuse = directionLightContribution + pointLightContribution + spotLightContribution;
 	
 /////////////////////////////////////////////
 // Indirection Light
@@ -162,7 +178,7 @@ void main()
 		if(payload.hitT < 1e27f){ 
 			uvec3 prebeCoords = DDGIGetProbeCoords(probeIndex,volume);
 			vec3 probePosition = DDGIGetProbeWorldPosition(prebeCoords,volume);
-			AddGizmoLine(probePosition, probePosition + (rayDirection * payload.hitT), vec4(Saturate(radiance),1));
+			AddGizmoLine(probePosition, probePosition + (rayDirection * payload.hitT), vec4(saturate(radiance),1));
 		}
 	}
 	// 最终存储rayData radiance(3) + hitT(1)
