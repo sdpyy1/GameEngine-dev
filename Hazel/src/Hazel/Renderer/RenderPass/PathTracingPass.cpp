@@ -4,6 +4,7 @@
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include <Hazel/Renderer/RenderResource/Shader.h>
+#include "Hazel/Core/Input.h"
 namespace GameEngine { 
 
 	void PathTracingPass::Init()
@@ -21,7 +22,10 @@ namespace GameEngine {
 		RHIRootSignatureInfo rootSignatureInfo = {};
 		rootSignatureInfo.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo())
 			.AddEntry({ 1, 0, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_RW_TEXTURE })
-			.AddEntry({ 1, 1, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_TEXTURE_CUBE });
+			.AddEntry({ 1, 1, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_RW_TEXTURE })
+			.AddEntry({ 1, 2, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_TEXTURE_CUBE })
+			.AddPushConstant({ 128, SHADER_FREQUENCY_RAY_TRACING });
+
 		m_RootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
 
 		RHIRayTracingPipelineInfo pipelineInfo = {};
@@ -49,20 +53,27 @@ namespace GameEngine {
 			.AllowRenderTarget()
 			.AllowReadWrite()
 			.Finish();
-
+		RDGTextureHandle historyTexture = builder.CreateTexture("PathTracingHistory")
+			.Import(m_HistoryTexture, isFirstTick?RESOURCE_STATE_UNDEFINED: RESOURCE_STATE_UNORDERED_ACCESS)
+			.Finish();
 		RDGTextureHandle skyBox = builder.GetTexture("CubeMap");
-
-
+		if(isFirstTick) isFirstTick = false;
 		builder.CreateRayTracingPass(GetName())
 			.RootSignature(m_RootSignature)
 			.ReadWrite(1, 0, 0, rayTexture)
-			.Read(1, 1, 0, skyBox, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR ,0,1,0,6 })
+			.ReadWrite(1, 1, 0, historyTexture)
+			.Read(1, 2, 0, skyBox, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR ,0,1,0,6 })
 			.Execute([&](RDGPassContext context) {
 				auto& [w, h] = APP_WINDOWSIZE;
+				if (APP_SCENE_CAMERA->GetIsMove() || Input::IsKeyDown(KeyCode::R)) {
+					m_Settings.totalNumSamples = 0;  // 相机移动后/手动更新后重新累计
+				}
+				m_Settings.totalNumSamples += m_Settings.numSamples;
 				RHICommandListRef command = context.command;
 				command->SetRayTracingPipeline(m_Pipeline);
 				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
 				command->BindDescriptorSet(context.descriptors[1], 1);
+				command->PushConstants(&m_Settings, sizeof(PathTracingSettings), SHADER_FREQUENCY_RAY_TRACING);
 				command->TraceRays(w, h, 1); 
 			})
 			.Finish();

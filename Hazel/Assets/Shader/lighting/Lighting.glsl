@@ -61,7 +61,7 @@ void main()
 	vec3 lightContribution = directionLightContribution + pointLightContribution + spotLightContribution;
 	
 ///////////////////////////////////////////// IBL /////////////////////////////////////////////
-	vec3 iblContribution = CalculateIBLLight(N, V, albedo, metallic, roughness, u_EnvIrradianceTex, u_EnvRadianceTex, u_BRDFLUTTexture);
+	vec3 iblContribution = CalculateIBLLight(N, V, albedo, metallic, roughness, u_EnvIrradianceTex, u_EnvRadianceTex, u_BRDFLUTTexture) * GetSkySetting().IbLScale; ;
 ///////////////////////////////////////////// DDGI /////////////////////////////////////////////
 	DDGISetting volume = GetDDGISetting();
 	vec3 DDGIContribution = vec3(0);

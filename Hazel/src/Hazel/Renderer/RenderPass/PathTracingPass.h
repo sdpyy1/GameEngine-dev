@@ -18,10 +18,18 @@ namespace GameEngine {
 		RHIShaderRef m_RayGenShader;
 		RHIShaderRef m_ClosestHitShader;
 		RHIShaderRef m_MissShader;
-
+		struct PathTracingSettings
+		{
+			int numSamples = 1;			// 每帧采样数
+			int totalNumSamples = 0;	// 累计采样数
+			int numBounce = 50;			// 光线反射深度
+			int sampleSkyBox = 1;		// 是否采样来自天空盒的光照
+			int indirectOnly = 0;		// 仅间接光照
+		} m_Settings;
 		RHITextureRef m_HistoryTexture;
 		RHIRootSignatureRef m_RootSignature;
 		RHIRayTracingPipelineRef m_Pipeline;
+		bool isFirstTick = true;
 	};
 }
 

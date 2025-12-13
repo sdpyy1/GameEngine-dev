@@ -79,7 +79,7 @@ void main()
 
 	// Miss
 	if(payload.hitT == -1.f){
-		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(vec3(0), 1e27f));
+		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(payload.albedo, 1e27f));
 		return;
 	}
 
@@ -162,12 +162,12 @@ void main()
 	vec3 irradiance = vec3(0);
 	float volumeBlendWeight = DDGIGetVolumeBlendWeight(payload.worldPosition, volume);
 	if (volumeBlendWeight > 0){    // TODO：是否混合间接光需要通过设置infineBounds
-        irradiance = DDGIGetIrrandianceByWorldPosition(
-            payload.worldPosition,
-            payload.normal,
-            volume,
-            ddgi_Irrandiance,ddgi_Distance);
-		irradiance *= volumeBlendWeight;
+        // irradiance = DDGIGetIrrandianceByWorldPosition(
+        //     payload.worldPosition,
+        //     payload.normal,
+        //     volume,
+        //     ddgi_Irrandiance,ddgi_Distance);
+		// irradiance *= volumeBlendWeight;
 	}
 	// Perfectly diffuse reflectors don't exist in the real world.
     // Limit the BRDF albedo to a maximum value to account for the energy loss at each bounce.

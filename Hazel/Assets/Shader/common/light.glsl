@@ -3,10 +3,6 @@
 #include "constant.glsl"
 #include "PBR.glsl"
 #include "BRDF.glsl"
-/*
-	漫反射项：Lambert 模型
-	镜面反射项：Cook-Torrance 模型
-*/
 /////////////////////////////////////////////
 // Directional Light
 /////////////////////////////////////////////

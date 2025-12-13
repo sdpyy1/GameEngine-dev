@@ -117,8 +117,6 @@ namespace GameEngine {
 			ImGui::Checkbox("NoDDGI", &curScene->settings.noDDGI);
 		}
 
-
-
 		DebugTexture();
 
 		ImGui::End();

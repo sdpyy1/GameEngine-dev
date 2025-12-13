@@ -48,12 +48,12 @@ vec3 ACESFilmToneMapping(vec3 color)
     return clamp(color, 0.0, 1.0);
 }
 
-
-
 vec3 GammaCorrect(vec3 color, float gamma)
 {
 	return pow(color, vec3(1.0f / gamma));
 }
+
+
 layout(location = 0) in vec2 in_texCoord;
 layout(location = 0) out vec4 out_color;
 

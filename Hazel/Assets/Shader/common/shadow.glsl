@@ -250,4 +250,75 @@ float PointShadow(textureCube shadowMap, vec3 worldPos, uint lightID)
 float SpotShadow(textureCube shadowMap, vec3 worldPos, uint lightID){
 	return 1.0f; // TODO: 没写
 }
+
+
+
+//////////////////////////////////////////////
+// RayTracing Shadow
+//////////////////////////////////////////////
+#ifdef RAYGEN_SHADER
+
+bool RayQueryVisibility(vec3 from, vec3 to) 
+{
+	float tmin = MIN_RAY_TRACING_DISTANCE;
+    //float tmax = MAX_RAY_TRACING_DISTANCE;  
+	float tmax = length(to - from);
+	vec3 dir = normalize(to - from);
+
+    rayQueryEXT query;
+    rayQueryInitializeEXT(
+        query, 
+        TLAS, 
+        gl_RayFlagsTerminateOnFirstHitEXT, 
+        0xFF, 
+        from, 
+        tmin, 
+        dir, 
+        tmax);
+
+    rayQueryProceedEXT(query);
+
+    float dist = tmax;
+    if (rayQueryGetIntersectionTypeEXT(query, true) != gl_RayQueryCommittedIntersectionNoneEXT)
+    {
+        return true;
+    }
+    return false;
+}
+
+float RT_DirectionShadow(vec3 worldPos, float bias)
+{
+    float dirShadow = 1.0f;
+	DirectionLight dirLight = GetDirectionLight();
+	if(dirLight.radiance == vec3(0)) return dirShadow;
+	vec3 L = -normalize(dirLight.direction);
+	vec3 origin = worldPos.xyz + bias * L;
+	dirShadow = RayQueryVisibility(origin, origin + L * MAX_RAY_TRACING_DISTANCE) ? 0.0f : 1.0f; 
+    return dirShadow;
+}
+
+float RT_PointShadow(uint lightID, vec3 worldPos)
+{
+	PointLight pointLight = GetPointLight(lightID);
+    float pointShadow = RayQueryVisibility(worldPos.xyz, pointLight.position) ? 0.0f : 1.0f; 
+    return pointShadow;
+}
+
+float RT_SpotShadow(uint lightID, vec3 worldPos)
+{
+	SpotLight spotLight = GetSpotLight(lightID);
+    float spotShadow = RayQueryVisibility(worldPos.xyz, spotLight.position) ? 0.0f : 1.0f; 
+    return spotShadow;
+}
+#endif // RAYGEN_SHADER
+
+
+
+
+
+
+
+
+
+
 #endif // SHADOW_GLSL

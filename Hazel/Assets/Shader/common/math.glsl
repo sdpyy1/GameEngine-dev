@@ -195,4 +195,17 @@ vec3 YCoCgToRGB(vec3 c)
 
 	return vec3(c.x + c.y - c.z, c.x + c.z, c.x - c.y - c.z);
 }
+#include "rand.glsl"
+
+vec3 GetRandomCosineDirectionOnHemisphere(vec3 direction,inout Rand seed)
+{
+    // Choose random points on the unit sphere offset along the surface normal
+    // to produce a cosine distribution of random directions.
+    float a = RandFloat(seed) * TwoPI;
+    float z = RandFloat(seed) * 2.f - 1.f;
+    float r = sqrt(1.f - z * z);
+
+    vec3 p = vec3(r * cos(a), r * sin(a), z) + direction;
+    return normalize(p);
+}
 #endif
