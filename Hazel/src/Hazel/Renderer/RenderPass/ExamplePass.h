@@ -2,7 +2,7 @@
 //#include "RenderPass.h"
 //
 //namespace GameEngine {
-//	class xxxxxxxxx : public RenderPassNew
+//	class xxxxxxxxx : public RenderPass
 //	{
 //	public:
 //		xxxxxxxxx() = default;

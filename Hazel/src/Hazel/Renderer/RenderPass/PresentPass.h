@@ -1,7 +1,7 @@
 #pragma once
 #include "RenderPass.h"
 namespace GameEngine {
-	class PresentPass : public RenderPassNew
+	class PresentPass : public RenderPass
 	{
 	public:
 		PresentPass() {};

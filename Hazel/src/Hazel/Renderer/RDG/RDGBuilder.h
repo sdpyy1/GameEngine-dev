@@ -8,7 +8,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-//#define RDG_DEBUG
+#define RDG_DEBUG
 /*
     RDGNode分为PassNode(RenderPass, ComputePass, RayTracingPass, CopyPass, PresentPass)和ResourceNode(TextureNode, BufferNode)
     RDGEdge用于存储 资源->Pass的View，用于在Pass时创建对应的view

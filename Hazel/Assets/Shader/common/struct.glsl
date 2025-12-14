@@ -195,8 +195,6 @@ struct Camera{
     uint totalTick;
 };
 
-
-
 struct IconTextureInfo
 {
     uint dirLightID;
@@ -222,12 +220,33 @@ struct TAASetting
 	float _padding1[2];
 };
 
+struct ColorSetting {
+    float exposure;
+    float saturation;
+    float contrast;
+    uint toneMappingMode;
+};
+struct PathTracingSetting
+{
+    uint enable;
+    int numSamples;
+    int totalNumSamples;
+    int numBounce;
 
-struct PostprocessSetting {
+    int sampleSkyBox;
+    int indirectOnly;
+    uint _padding[2];
+};
+struct BloomSetting {
+    uint enable;
     float bloomScale;
-    float pading[3];
-
+    float pading[2];
+};
+struct PostprocessSetting {
+    BloomSetting bloomSetting;
+    PathTracingSetting pathTracingSetting;
     TAASetting TaaSetting;
+    ColorSetting colorSetting;
 };
 struct SkySetting {
     uint isDynamicSky;
@@ -246,7 +265,9 @@ struct DDGISetting {
     uint visulaize;
 
     uint raysPerProbe;
-    uint _padding[3];
+    uint infineBounds;
+    uint getSkyLight;
+    uint _padding;
 
     BoundingBox box;
 };

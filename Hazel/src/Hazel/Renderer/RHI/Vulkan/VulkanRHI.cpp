@@ -1566,7 +1566,7 @@ namespace GameEngine
 		VkResult result = vkQueueSubmit(CAST<VulkanRHIQueue>(queue)->GetHandle(), 1, &submitInfo, CAST<VulkanRHIFence>(fence)->GetHandle());
 		if (result != VK_SUCCESS)
 		{
-			LOG_ERROR("Failed to submit draw command buffer! {%d}", result);
+			LOG_ERROR("Failed to submit draw command buffer! {}", VulkanUtil::VKResultToString(result));
 		}
 
 		oldHandle = handle;

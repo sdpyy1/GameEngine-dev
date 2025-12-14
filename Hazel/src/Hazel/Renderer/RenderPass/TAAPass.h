@@ -2,7 +2,7 @@
 #include "RenderPass.h"
 
 namespace GameEngine {
-	class TAAPass : public RenderPassNew
+	class TAAPass : public RenderPass
 	{
 	public:
 		TAAPass() = default;

@@ -30,7 +30,7 @@ namespace GameEngine
             if (debugId[APP_FRAMEINDEX]) {
                 ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)debugId[APP_FRAMEINDEX]->RawHandle());
             }
-            RDGTextureHandle viewport = builder.GetTexture("ViewPort");
+            RDGTextureHandle RenderRes = builder.GetTexture("RenderRes");
 
             auto [w, h] = APP_WINDOWSIZE;
 
@@ -44,19 +44,19 @@ namespace GameEngine
 
             RDGRenderPassHandle pass = builder.CreateRenderPass(GetName())
                 .Color(0, UI, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
-                .Read(0,0,0, viewport)  // 只是使用也可以这样防止不创建资源
+                .Read(0,0,0, RenderRes)  // 只是使用也可以这样防止不创建资源
                 .Read(0,0,0, debug)  // 只是使用也可以这样防止不创建资源
                 .Execute([&](RDGPassContext context) {
                         auto [w, h] = APP_WINDOWSIZE;
                         Extent2D windowExtent = { w, h };
                         RHICommandListRef command = context.command;
         
-                        viewportID[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+                        viewportID[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("RenderRes"));
                         if (builder.GetTexture(debugName)!= UINT32_MAX) {
                             debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture(debugName));
                         }
                         else {
-                            debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("ViewPort"));
+                            debugId[APP_FRAMEINDEX] = Texture::GetImGuiID(builder.GetRHITexture("RenderRes"));
                         }
                         ImGui_ImplVulkan_NewFrame();
                         ImGui_ImplGlfw_NewFrame();

@@ -138,24 +138,65 @@ namespace GameEngine {
 			});
 		DrawComponent<PostProcessingComponent>("PostProcess", entity, [](auto& component)
 			{
-				if (ImGui::CollapsingHeader("Bloom Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
-					ImGui::SliderFloat("Bloom Scale", &component.bloomScale, 0.0f, 2.0f);
+				// ===================== Bloom =====================
+				if (ImGui::CollapsingHeader("Bloom", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Checkbox("Enable Bloom", &component.enableBloom);
+					ImGui::BeginDisabled(!component.enableBloom);
+					{
+						ImGui::SliderFloat("Bloom Intensity",&component.bloomScale,0.0f, 2.0f,"%.2f");
+					}
+					ImGui::EndDisabled();
 				}
-				if (ImGui::CollapsingHeader("TAA Settings", ImGuiTreeNodeFlags_DefaultOpen))
+
+				// ===================== TAA =====================
+				if (ImGui::CollapsingHeader("TAA", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					ImGui::Checkbox("Enable TAA", &component.enableTAA);
+
 					ImGui::BeginDisabled(!component.enableTAA);
 					{
-						ImGui::Checkbox("Enable TAA Sharpen", &component.taaSharpen);
+						ImGui::Checkbox("Sharpen", &component.taaSharpen);
 						ImGui::BeginDisabled(!component.taaSharpen);
 						{
-							ImGui::SliderFloat("TAA Sharpen Strength", &component.taaSharpness, 0.0f, 2.0f, "%.2f");
+							ImGui::SliderFloat("Sharpen Strength",&component.taaSharpness,0.0f, 2.0f,"%.2f");
 						}
 						ImGui::EndDisabled();
 					}
 					ImGui::EndDisabled();
 				}
+
+				// ===================== Path Tracing =====================
+				if (ImGui::CollapsingHeader("Path Tracing", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Checkbox("Enable Path Tracing", &component.pathTracingEnable);
+
+					ImGui::BeginDisabled(!component.pathTracingEnable);
+					{
+						ImGui::SliderInt("Samples Per Frame",&component.pathTracingNumSamples,1, 16);
+						ImGui::SliderInt("Max Bounces",&component.pathTracingNumBounce,1, 10);
+						ImGui::Checkbox("Sample Skybox",&component.pathTracingSampleSkyBox);
+						ImGui::Checkbox("Indirect Only",&component.pathTracingIndirectOnly);
+					}
+					ImGui::EndDisabled();
+				}
+
+				// ===================== Color Grading =====================
+				if (ImGui::CollapsingHeader("Color", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::SliderFloat("Exposure",&component.exposure,0.01f, 5.0f,"%.2f");
+					ImGui::SliderFloat("Saturation",&component.saturation,0.0f, 2.0f,"%.2f");
+					ImGui::SliderFloat("Contrast",&component.contrast,0.5f, 2.0f,"%.2f");
+					static const char* toneMappingItems[] = {
+						"CryEngine",
+						"Uncharted",
+						"ACES",
+						"None"
+					};
+					ImGui::Combo("Tone Mapping",reinterpret_cast<int*>(&component.toneMappingMode),toneMappingItems,IM_ARRAYSIZE(toneMappingItems));
+				}
 			});
+
 		DrawComponent<LightProbeComponent>("Light Probes", entity, [](auto& component)
 			{
 				ImGui::Checkbox("Enable", &component.enable);
@@ -165,6 +206,8 @@ namespace GameEngine {
 					ImGui::SliderInt3("Probe Count", reinterpret_cast<int*>(&component.probeCount), 1, 32);
 					ImGui::SliderFloat3("Grid Step", reinterpret_cast<float*>(&component.gridStep), 0.1f, 10.0f);
 					ImGui::SliderInt("Rays Per Probe", reinterpret_cast<int*>(&component.raysPerProbe), 1, 1024);
+					ImGui::Checkbox("InfiniteBounds", &component.infiniteBounds);
+					ImGui::Checkbox("GetSkyLight", &component.getSkyLight);
 					ImGui::Checkbox("Visualize", &component.visulaize);
 				}
 				ImGui::EndDisabled();

@@ -134,6 +134,8 @@ namespace GameEngine {
 		glm::vec3 gridStep = glm::vec3(3.0f, 3.0f, 3.0f);
 		uint32_t raysPerProbe = 256;
 		bool visulaize = false;
+		bool infiniteBounds = true;
+		bool getSkyLight = true;
 
         BeginSerailize
 			SerailizeEntry(enable)
@@ -141,6 +143,8 @@ namespace GameEngine {
 			SerailizeEntry(gridStep)
 			SerailizeEntry(raysPerProbe)
 			SerailizeEntry(visulaize)
+			SerailizeEntry(infiniteBounds)
+			SerailizeEntry(getSkyLight)
         EndSerailize
 	};
 
@@ -311,15 +315,41 @@ namespace GameEngine {
 
 	struct PostProcessingComponent
 	{
+		// Bloom
+		bool enableBloom = true;
 		float bloomScale = 0.3f;
+
+		// TAA
 		bool enableTAA = true;
 		bool taaSharpen = false;
 		float taaSharpness = 1.0f;
+
+		// PathTracing
+		bool pathTracingEnable = true;
+		int pathTracingNumSamples = 1;
+		int pathTracingTotalNumSamples;
+		int pathTracingNumBounce = 5;
+		bool pathTracingSampleSkyBox = true;
+		bool pathTracingIndirectOnly = true;
+
+		// Color
+		float exposure = 0.4;
+		float saturation = 1.f;
+		float contrast = 1.f;
+		uint32_t toneMappingMode = 0;
+
         BeginSerailize
+			SerailizeEntry(enableBloom)
 			SerailizeEntry(bloomScale)
 			SerailizeEntry(enableTAA)
 			SerailizeEntry(taaSharpen)
 			SerailizeEntry(taaSharpness)
+            SerailizeEntry(pathTracingEnable)
+            SerailizeEntry(pathTracingNumSamples)
+            SerailizeEntry(pathTracingNumBounce)
+            SerailizeEntry(pathTracingTotalNumSamples)
+            SerailizeEntry(pathTracingSampleSkyBox)
+            SerailizeEntry(pathTracingIndirectOnly)
 		EndSerailize
 	};
 

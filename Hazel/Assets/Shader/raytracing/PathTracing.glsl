@@ -25,31 +25,25 @@ layout(push_constant) uniform setting {
 } SETTING;
 #ifdef RAYGEN_SHADER
 #include "../common/shadow.glsl"
+#include "../common/postprocess.glsl"
 
 layout(set = 1, binding = 0, rgba32f) uniform image2D OUT_COLOR;
 layout(set = 1, binding = 1, rgba32f) uniform image2D HISTORY_COLOR;
+layout(set = 1, binding = 3) readonly buffer EXPOSURE
+{
+    ExposureSetting setting;     
+    float luminance;                     // 计算得到的平均亮度
+    float adaptedLuminance;              // 多帧渐进的亮度
+    float _padding[2];   
+    uint histogramBuffer[256];           // 直方图数组 
+    uint readBackHistogramBuffer[256];   // 回读用的数组 
+}EXPOSURE_DATA;
 
-vec3 RRTAndODTFit(vec3 v)
-{
-    vec3 a = v * (v + 0.0245786) - 0.000090537;
-    vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081;
-    return a / b;
-}
-vec3 ACESFilmToneMapping(vec3 color)
-{
-    // ACES tone mapping 曲线
-    color = RRTAndODTFit(color);
-    // Clamp 到 [0, 1]
-    return clamp(color, 0.0, 1.0);
-}
-vec3 GammaCorrect(vec3 color, float gamma)
-{
-	return pow(color, vec3(1.0f / gamma));
-}
 layout(location = 0) rayPayloadEXT Payload payload; 
 
 void main() 
 {
+	//PathTracingSetting SETTING = GetPathTracingSetting();
 	ivec2 pixel     = ivec2(gl_LaunchIDEXT.xy);
 	// 为每个像素设置一个随机生成器
 	Rand rand = SeedRand(GetCamera().totalTick, pixel.y * GetCamera().totalTick + pixel.x);
@@ -141,7 +135,23 @@ void main()
 	vec3 accumulatedColor 	= (historyColor + outColor);
 	outColor = accumulatedColor / SETTING.totalNumSamples;
 
-	outColor = ACESFilmToneMapping(outColor);
+	ColorSetting ColorSETTING = GetColorSetting();
+	float finalExposure = ColorSETTING.exposure / EXPOSURE_DATA.adaptedLuminance;
+
+	// Tone Mapping
+	if(ColorSETTING.toneMappingMode == 0) outColor = CEToneMapping(outColor, finalExposure); 
+	else if(ColorSETTING.toneMappingMode == 1) outColor = Uncharted2ToneMapping(outColor, finalExposure); 
+	else if(ColorSETTING.toneMappingMode == 2) outColor = ACESToneMapping(outColor, finalExposure); 
+	
+	//饱和度
+	outColor = SaturationColor(outColor, ColorSETTING.saturation);
+
+	// 对比度
+	outColor = ContrastColor(outColor, ColorSETTING.contrast);
+
+	// TODO: Grading
+
+	// Gamma矫正
 	const float gamma = 2.2;
 	outColor = GammaCorrect(outColor, gamma);
 	imageStore(OUT_COLOR, pixel, vec4(outColor, 1.0f));

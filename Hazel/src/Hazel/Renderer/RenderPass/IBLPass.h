@@ -12,7 +12,7 @@ namespace GameEngine {
 		RHITextureRef PreFilterMap;
 		RHITextureRef CubeMap;
 	};
-	class IBLPass: public RenderPassNew
+	class IBLPass: public RenderPass
 	{
 	public:
 		IBLPass() = default;

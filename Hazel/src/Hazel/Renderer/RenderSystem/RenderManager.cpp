@@ -22,6 +22,7 @@
 #include <Hazel/Renderer/RenderPass/PathTracingPass.h>
 #include <Hazel/Renderer/RenderPass/TAAPass.h>
 #include <Hazel/Renderer/RenderPass/DDGIPass.h>
+#include <Hazel/Renderer/RenderPass/ExposurePass.h>
 
 namespace GameEngine {
 	RenderManager::RenderManager()
@@ -93,6 +94,7 @@ namespace GameEngine {
 		passes[LIGHT_PASS] = std::make_shared<LightPass>();
 		passes[TAA_PASS] = std::make_shared<TAAPass>();
 		passes[BLOOM_PASS] = std::make_shared<BloomPass>();
+		passes[EXPOSURE_PASS] = std::make_shared<ExposurePass>();
 		passes[POST_PROCESS_PASS] = std::make_shared<PostProcessPass>();
 		passes[IMGUI_PASS] = std::make_shared<ImGuiPass>();
 		passes[PRESENT_PASS] = std::make_shared<PresentPass>();

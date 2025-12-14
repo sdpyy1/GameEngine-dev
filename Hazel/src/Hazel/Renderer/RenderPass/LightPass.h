@@ -2,7 +2,7 @@
 #include "RenderPass.h"
 
 namespace GameEngine {
-	class LightPass : public RenderPassNew
+	class LightPass : public RenderPass
 	{
 	public:
 		LightPass() = default;

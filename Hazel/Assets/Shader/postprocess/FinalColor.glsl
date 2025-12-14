@@ -1,5 +1,7 @@
 #version 450 core
 #include "../common/common.glsl"
+#include "../common/postprocess.glsl"
+
 #ifdef VERTEX_SHADER
 vec2 NDC[3] = vec2[](
     vec2(-1.0, -1.0), 
@@ -15,61 +17,47 @@ void main(){
 #endif
 
 #ifdef FRAGMENT_SHADER
-// Based on http://www.oscars.org/science-technology/sci-tech-projects/aces
-vec3 ACESTonemap(vec3 color)
-{
-	mat3 m1 = mat3(
-		0.59719, 0.07600, 0.02840,
-		0.35458, 0.90834, 0.13383,
-		0.04823, 0.01566, 0.83777
-	);
-	mat3 m2 = mat3(
-		1.60475, -0.10208, -0.00327,
-		-0.53108, 1.10813, -0.07276,
-		-0.07367, -0.00605, 1.07602
-	);
-	vec3 v = m1 * color;
-	vec3 a = v * (v + 0.0245786) - 0.000090537;
-	vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081;
-	return clamp(m2 * (a / b), 0.0, 1.0);
-}
-
-vec3 RRTAndODTFit(vec3 v)
-{
-    vec3 a = v * (v + 0.0245786) - 0.000090537;
-    vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081;
-    return a / b;
-}
-vec3 ACESFilmToneMapping(vec3 color)
-{
-    // ACES tone mapping 曲线
-    color = RRTAndODTFit(color);
-    // Clamp 到 [0, 1]
-    return clamp(color, 0.0, 1.0);
-}
-
-vec3 GammaCorrect(vec3 color, float gamma)
-{
-	return pow(color, vec3(1.0f / gamma));
-}
-
-
 layout(location = 0) in vec2 in_texCoord;
 layout(location = 0) out vec4 out_color;
 
 layout(set = 2, binding = 0) uniform texture2D lightRes;
 layout(set = 2, binding = 1) uniform texture2D BloomRes;
+layout(set = 2, binding = 2) readonly buffer EXPOSURE_DATA
+{
+    ExposureSetting setting;     
+    float luminance;                     // 计算得到的平均亮度
+    float adaptedLuminance;              // 多帧渐进的亮度
+    float _padding[2];   
+    uint histogramBuffer[256];           // 直方图数组 
+    uint readBackHistogramBuffer[256];   // 回读用的数组 
+};
 layout(set = 1, binding = 0) uniform sampler SAMPLER[];
+
+
 void main(){
-
-	float BloomScale = GetPostprocessSetting().bloomScale;
-
+	ColorSetting SETTING = GetColorSetting();
+	float BloomScale = GetBloomSetting().enable == 1?GetBloomSetting().bloomScale: 0;
 	vec3 finalColor = texture(sampler2D(lightRes,SAMPLER[0]), in_texCoord).rgb;
+	float finalExposure = SETTING.exposure / adaptedLuminance;
+
+	// Bloom
 	finalColor += texture(sampler2D(BloomRes,SAMPLER[0]), in_texCoord).rgb * BloomScale;
-	finalColor = ACESFilmToneMapping(finalColor);
+	
+	// Tone Mapping
+	if(SETTING.toneMappingMode == 0) finalColor = CEToneMapping(finalColor, finalExposure); 
+	else if(SETTING.toneMappingMode == 1) finalColor = Uncharted2ToneMapping(finalColor, finalExposure); 
+	else if(SETTING.toneMappingMode == 2) finalColor = ACESToneMapping(finalColor, finalExposure); 
+	
+	//饱和度
+	finalColor = SaturationColor(finalColor, SETTING.saturation);
 
+	// 对比度
+	finalColor = ContrastColor(finalColor, SETTING.contrast);
+
+	// TODO: Grading
+
+	// Gamma矫正
 	const float gamma = 2.2;
-
 	finalColor = GammaCorrect(finalColor, gamma);
 	out_color = vec4(finalColor, 1.0);
 }

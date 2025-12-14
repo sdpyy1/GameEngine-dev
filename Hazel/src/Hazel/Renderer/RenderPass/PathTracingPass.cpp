@@ -24,6 +24,7 @@ namespace GameEngine {
 			.AddEntry({ 1, 0, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_RW_TEXTURE })
 			.AddEntry({ 1, 1, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_RW_TEXTURE })
 			.AddEntry({ 1, 2, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_TEXTURE_CUBE })
+			.AddEntry({ 1, 3, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_RW_BUFFER })
 			.AddPushConstant({ 128, SHADER_FREQUENCY_RAY_TRACING });
 
 		m_RootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
@@ -46,7 +47,16 @@ namespace GameEngine {
 
 	void PathTracingPass::Build(RDGBuilder& builder)
 	{
+		PathTracingSetting globalSetting = RENDER_RESOURCEMANAGER->GetGlobalSettingInfo().postprocess.pathTracingSetting;
+		if (globalSetting.enable == 0) {
+			return;
+		}
+		m_Settings.numBounce = globalSetting.numBounce;
+        m_Settings.numSamples = globalSetting.numSamples;
+        m_Settings.sampleSkyBox = globalSetting.sampleSkyBox;
+        m_Settings.indirectOnly = globalSetting.indirectOnly;
 		auto& [w, h] = APP_WINDOWSIZE;
+		RDGBufferHandle exposureData = builder.GetBuffer("ExposureData");
 		RDGTextureHandle rayTexture = builder.CreateTexture("PathTracing")
 			.Exetent({ w, h ,1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
@@ -63,6 +73,7 @@ namespace GameEngine {
 			.ReadWrite(1, 0, 0, rayTexture)
 			.ReadWrite(1, 1, 0, historyTexture)
 			.Read(1, 2, 0, skyBox, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR ,0,1,0,6 })
+			.ReadWrite(1, 3, 0, exposureData)
 			.Execute([&](RDGPassContext context) {
 				auto& [w, h] = APP_WINDOWSIZE;
 				if (APP_SCENE_CAMERA->GetIsMove() || Input::IsKeyDown(KeyCode::R)) {
@@ -73,7 +84,7 @@ namespace GameEngine {
 				command->SetRayTracingPipeline(m_Pipeline);
 				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
 				command->BindDescriptorSet(context.descriptors[1], 1);
-				command->PushConstants(&m_Settings, sizeof(PathTracingSettings), SHADER_FREQUENCY_RAY_TRACING);
+				command->PushConstants(&m_Settings, sizeof(setting), SHADER_FREQUENCY_RAY_TRACING);
 				command->TraceRays(w, h, 1); 
 			})
 			.Finish();

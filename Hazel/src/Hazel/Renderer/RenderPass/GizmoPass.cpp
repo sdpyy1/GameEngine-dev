@@ -164,7 +164,7 @@ void GameEngine::GizmoPass::Build(RDGBuilder& builder)
 
 
 
-	RDGTextureHandle viewport = builder.GetTexture("ViewPort");
+	RDGTextureHandle viewport = builder.GetTexture("RenderRes");
 	RDGTextureHandle depth = builder.GetTexture("Depth");
 
 

@@ -2,7 +2,7 @@
 #include "RenderPass.h"
 
 namespace GameEngine {
-	class SkyPass : public RenderPassNew
+	class SkyPass : public RenderPass
 	{
 	public:
 		SkyPass() = default;

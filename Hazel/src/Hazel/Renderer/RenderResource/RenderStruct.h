@@ -310,11 +310,33 @@ namespace GameEngine {
 		glm::vec2 UVjetter;
 		float _padding1[2];
 	};
-	struct PostprocessSetting {
-		float bloomScale;
-		float pading[3];
+	struct ColorSetting {
+		float exposure = 0.4;
+		float saturation = 1.0;
+		float contrast = 1.0;
+		uint32_t toneMappingMode = 0;
+	};
+	struct PathTracingSetting
+	{
+		uint32_t enable;
+		int numSamples;
+		int totalNumSamples;
+		int numBounce;
 
+		int sampleSkyBox;
+		int indirectOnly;
+		uint32_t _padding[2];
+	};
+	struct BloomSetting {
+		uint32_t enable;
+		float bloomScale;
+		float pading[2];
+	};
+	struct PostprocessSetting {
+		BloomSetting bloomSetting;
+		PathTracingSetting pathTracingSetting;
 		TAASetting TaaSetting;
+		ColorSetting colorSetting;
 	};
 	struct SkySetting {
 		uint32_t isDynamicSky;
@@ -335,7 +357,9 @@ namespace GameEngine {
 		uint32_t visulaize;
 
 		uint32_t raysPerProbe;
-		uint32_t _padding[3];
+		uint32_t infineBounds;
+		uint32_t getSkyLight;
+		uint32_t _padding;
 
 		BoundingBox box;
 	};
@@ -343,6 +367,8 @@ namespace GameEngine {
 		uint32_t debugDDGI;
 		uint32_t _padding[3];
 	};
+
+
 	struct GlobalSettingInfo
 	{
 		RenderSettingInfo renderSetting;

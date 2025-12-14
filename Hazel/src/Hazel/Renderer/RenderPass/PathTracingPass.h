@@ -2,7 +2,7 @@
 #include "RenderPass.h"
 
 namespace GameEngine {
-	class PathTracingPass : public RenderPassNew
+	class PathTracingPass : public RenderPass
 	{
 	public:
 		PathTracingPass() = default;
@@ -18,7 +18,7 @@ namespace GameEngine {
 		RHIShaderRef m_RayGenShader;
 		RHIShaderRef m_ClosestHitShader;
 		RHIShaderRef m_MissShader;
-		struct PathTracingSettings
+		struct setting
 		{
 			int numSamples = 1;			// 每帧采样数
 			int totalNumSamples = 0;	// 累计采样数

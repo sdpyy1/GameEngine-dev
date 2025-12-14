@@ -10,12 +10,13 @@ namespace GameEngine {
 		POINT_SHADOW_PASS,
 		PREDEPTH_PASS,
 		GBUFFER_PASS,
-		PATHTRACING_PASS,
 		DDGI_PASS,
 		LIGHT_PASS,
 		SKY_PASS,
 		TAA_PASS,
 		BLOOM_PASS,
+		EXPOSURE_PASS,
+		PATHTRACING_PASS,
 		POST_PROCESS_PASS,
 		GIZMO_PASS,
 		GRID_PASS,
@@ -32,10 +33,10 @@ namespace GameEngine {
 		MESH_PASS_GBUFFER_PASS,
 		MESH_PASS_TYPE_MAX_CNT,	//
 	};
-	class RenderPassNew {
+	class RenderPass {
 	public:
-		RenderPassNew() = default;
-		~RenderPassNew() {};
+		RenderPass() = default;
+		~RenderPass() {};
 
 		virtual void Init() {};
 		virtual void Build(RDGBuilder& builder) {};

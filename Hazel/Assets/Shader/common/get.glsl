@@ -346,4 +346,20 @@ DDGISetting GetDDGISetting()
 {
     return GLOBAL_SETTING.data.ddgiSetting;
 }
+BloomSetting GetBloomSetting()
+{
+    return GLOBAL_SETTING.data.postprocessSetting.bloomSetting;
+}
+PathTracingSetting GetPathTracingSetting()
+{
+    return GLOBAL_SETTING.data.postprocessSetting.pathTracingSetting;
+}
+TAASetting GetTAASetting()
+{
+    return GLOBAL_SETTING.data.postprocessSetting.TaaSetting;
+}
+ColorSetting GetColorSetting()
+{
+    return GLOBAL_SETTING.data.postprocessSetting.colorSetting;
+}
 #endif // GET_GLSL

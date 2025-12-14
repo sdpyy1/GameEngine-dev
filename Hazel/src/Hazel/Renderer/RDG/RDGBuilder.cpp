@@ -181,7 +181,9 @@ namespace GameEngine {
 				command->PushLabel(prefix, pass->GetLabelColor());
 				currentPrefix = prefix;
 			}
-
+#ifdef RDG_DEBUG
+            LOG_INFO("RDG Pass Begin: [{}]", name);
+#endif
 			// 执行 pass
 			switch (pass->NodeType()) {
 			case RDG_PASS_NODE_TYPE_RENDER:         ExecutePass(dynamic_cast<RDGRenderPassNodeRef>(pass)); break;
@@ -191,7 +193,9 @@ namespace GameEngine {
 			case RDG_PASS_NODE_TYPE_COPY:           ExecutePass(dynamic_cast<RDGCopyPassNodeRef>(pass)); break;
 			default:                                LOG_ERROR("Unsupported RDG pass type!");
 			}
-
+#ifdef RDG_DEBUG
+            LOG_INFO("RDG Pass End: [{}]", name);
+#endif
 			// 检查下一个 pass 前缀，如果变化或者是最后一个 pass，pop
 			size_t nextIndex = i + 1;
 			std::string nextPrefix;

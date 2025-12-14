@@ -121,7 +121,7 @@ namespace GameEngine {
 	};
 	using MeshPassProcessorRef = std::shared_ptr<MeshPassProcessor>;
 
-	class MeshPass : public RenderPassNew
+	class MeshPass : public RenderPass
 	{
 	public:
 		virtual void Init() override { meshPassProcessor->Init(); }

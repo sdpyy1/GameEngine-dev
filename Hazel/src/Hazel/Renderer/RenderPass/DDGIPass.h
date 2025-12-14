@@ -2,7 +2,7 @@
 #include "RenderPass.h"
 
 namespace GameEngine {
-	class DDGIPass : public RenderPassNew
+	class DDGIPass : public RenderPass
 	{
 	public:
 		DDGIPass() = default;

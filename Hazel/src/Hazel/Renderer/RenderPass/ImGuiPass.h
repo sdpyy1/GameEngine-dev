@@ -5,7 +5,7 @@
 
 namespace GameEngine {
 	class PanelManager;
-	class ImGuiPass :public RenderPassNew
+	class ImGuiPass :public RenderPass
 	{
 	public:
 		ImGuiPass() = default;

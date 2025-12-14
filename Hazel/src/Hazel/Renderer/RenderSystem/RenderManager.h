@@ -51,7 +51,7 @@ namespace GameEngine
 			RHIFenceRef fence;
 		};
 		std::array<PerFrameBaseResource, FRAMES_IN_FLIGHT> m_PerFrameBaseResources;
-		std::array<std::shared_ptr<RenderPassNew>, PASS_TYPE_MAX_CNT> passes;
+		std::array<std::shared_ptr<RenderPass>, PASS_TYPE_MAX_CNT> passes;
 		std::array<std::shared_ptr<MeshPass>, MESH_PASS_TYPE_MAX_CNT> meshPasses;
 
 		DependencyGraphRef rdgDependencyGraph;

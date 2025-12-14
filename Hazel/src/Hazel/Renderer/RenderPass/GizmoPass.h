@@ -2,7 +2,7 @@
 #include "RenderPass.h"
 #include "Hazel/Asset/Model.h"
 namespace GameEngine {
-	class GizmoPass : public RenderPassNew
+	class GizmoPass : public RenderPass
 	{
 	public:
 		GizmoPass() = default;

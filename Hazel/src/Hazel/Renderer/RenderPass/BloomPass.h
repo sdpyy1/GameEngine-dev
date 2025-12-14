@@ -2,7 +2,7 @@
 #include "RenderPass.h"
 
 namespace GameEngine {
-	class BloomPass : public RenderPassNew
+	class BloomPass : public RenderPass
 	{
 	public:
 		BloomPass() = default;

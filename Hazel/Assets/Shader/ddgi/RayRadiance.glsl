@@ -79,7 +79,11 @@ void main()
 
 	// Miss
 	if(payload.hitT == -1.f){
-		imageStore(out_RAYDATA, ivec3(outputCoords), vec4(payload.albedo, 1e27f));
+		if(volume.getSkyLight == 1){
+			imageStore(out_RAYDATA, ivec3(outputCoords), vec4(payload.albedo, 1e27f));
+		}else{
+			imageStore(out_RAYDATA, ivec3(outputCoords), vec4(vec3(0), 1e27f));
+		}
 		return;
 	}
 
@@ -128,14 +132,14 @@ void main()
 	}
 
 	// 计算击中点的直接光
-	m_Params.Albedo = payload.albedo;
-	m_Params.Metalness = payload.metallic;
-    m_Params.Roughness = payload.roughness;
-    m_Params.Normal = payload.normal;
-	m_Params.View = normalize(probeWorldPosition - payload.worldPosition); 
-	m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
-	const vec3 Fdielectric = vec3(0.04);
-	vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
+	// m_Params.Albedo = payload.albedo;
+	// m_Params.Metalness = payload.metallic;
+    // m_Params.Roughness = payload.roughness;
+    // m_Params.Normal = payload.normal;
+	// m_Params.View = normalize(probeWorldPosition - payload.worldPosition); 
+	// m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
+	// const vec3 Fdielectric = vec3(0.04);
+	// vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
 
 
 	vec3 albedo = payload.albedo;
@@ -145,7 +149,7 @@ void main()
 	vec3 V = normalize(probeWorldPosition - payload.worldPosition);
 
 	//直接光应该是只需要计算漫反射分量，不需要镜面反射
-	vec3 directionLightContribution = CalculateDirectionalLight(albedo, roughness, metallic, N, V) * shadowScale;
+	vec3 directionLightContribution = CalculateDirectionalLight(albedo, roughness, metallic, N, V) * RT_DirectionShadow(payload.worldPosition,0.0f);
 	vec3 pointLightContribution = vec3(0);
 	for(int i = 0; i < GetPointLightCount(); i++){
 		pointLightContribution += CalculatePointLightOnlyDiffuse(albedo, roughness, metallic,payload.worldPosition, N, V, i) * PointShadow(u_PointShadowMapTexture,payload.worldPosition,i); 
@@ -161,26 +165,22 @@ void main()
 /////////////////////////////////////////////
 	vec3 irradiance = vec3(0);
 	float volumeBlendWeight = DDGIGetVolumeBlendWeight(payload.worldPosition, volume);
-	if (volumeBlendWeight > 0){    // TODO：是否混合间接光需要通过设置infineBounds
-        // irradiance = DDGIGetIrrandianceByWorldPosition(
-        //     payload.worldPosition,
-        //     payload.normal,
-        //     volume,
-        //     ddgi_Irrandiance,ddgi_Distance);
-		// irradiance *= volumeBlendWeight;
+	if (volumeBlendWeight > 0 && volume.infineBounds == 1){
+        irradiance = DDGIGetIrrandianceByWorldPosition(
+            payload.worldPosition,
+            payload.normal,
+            volume,
+            ddgi_Irrandiance,ddgi_Distance);
+		irradiance *= volumeBlendWeight;
 	}
-	// Perfectly diffuse reflectors don't exist in the real world.
-    // Limit the BRDF albedo to a maximum value to account for the energy loss at each bounce.
-    float maxAlbedo = 0.9f;
-	
-    vec3 radiance = diffuse + ((min(payload.albedo, vec3(maxAlbedo)) / PI) * irradiance);
-	if(volume.visulaize == 1 && probeIndex == 164){
-		if(payload.hitT < 1e27f){ 
-			uvec3 prebeCoords = DDGIGetProbeCoords(probeIndex,volume);
-			vec3 probePosition = DDGIGetProbeWorldPosition(prebeCoords,volume);
-			AddGizmoLine(probePosition, probePosition + (rayDirection * payload.hitT), vec4(saturate(radiance),1));
-		}
-	}
+    vec3 radiance = diffuse + ((payload.albedo / PI) * irradiance);
+	// if(volume.visulaize == 1 && probeIndex == 164){
+	// 	if(payload.hitT < 1e27f){ 
+	// 		uvec3 prebeCoords = DDGIGetProbeCoords(probeIndex,volume);
+	// 		vec3 probePosition = DDGIGetProbeWorldPosition(prebeCoords,volume);
+	// 		AddGizmoLine(probePosition, probePosition + (rayDirection * payload.hitT), vec4(saturate(radiance),1));
+	// 	}
+	// }
 	// 最终存储rayData radiance(3) + hitT(1)
 	imageStore(out_RAYDATA, ivec3(outputCoords), vec4(radiance, payload.hitT)); 
 }

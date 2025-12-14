@@ -41,11 +41,31 @@ namespace GameEngine
 		Entity postProcessEntity = Entity{ postprocess ,m_CurrentScene };
 		if (postProcessEntity) {
 			auto& component = postProcessEntity.GetComponent<PostProcessingComponent>();
-			m_SceneInfo.globalSettingInfos.postprocess.bloomScale = component.bloomScale;
+			// Bloom
+			m_SceneInfo.globalSettingInfos.postprocess.bloomSetting.bloomScale = component.bloomScale;
+			m_SceneInfo.globalSettingInfos.postprocess.bloomSetting.enable = component.enableBloom;
+
+			// TAA
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.enable = component.enableTAA;
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.shaper = component.taaSharpen;
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.shaperStrength = component.taaSharpness;
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.UVjetter = HaltonUtils::GetJitter(APP_TICK);
+		
+		
+			// PathTracing
+			m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.enable = component.pathTracingEnable;
+            m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.numSamples = component.pathTracingNumSamples;
+            m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.numBounce = component.pathTracingNumBounce;
+            m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.sampleSkyBox = component.pathTracingSampleSkyBox ? 1 : 0;
+            m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.indirectOnly = component.pathTracingIndirectOnly ? 1 : 0;
+
+		
+			// Color
+            m_SceneInfo.globalSettingInfos.postprocess.colorSetting.exposure = component.exposure;
+            m_SceneInfo.globalSettingInfos.postprocess.colorSetting.saturation = component.saturation;
+            m_SceneInfo.globalSettingInfos.postprocess.colorSetting.contrast = component.contrast;
+            m_SceneInfo.globalSettingInfos.postprocess.colorSetting.toneMappingMode = component.toneMappingMode;
+		
 		}
 		// Ìì¿ÕÉèÖÃ
 		auto skyLight = m_CurrentScene->GetFirstEntityWith<SkyComponent>();
@@ -69,6 +89,10 @@ namespace GameEngine
 			ddgi.probeCount = component.probeCount;
 			ddgi.gridStep = component.gridStep;
 			ddgi.raysPerProbe = component.raysPerProbe;
+
+			ddgi.infineBounds = component.infiniteBounds ? 1 : 0;
+			ddgi.getSkyLight = component.getSkyLight ? 1 : 0;
+
 			ddgi.visulaize = component.visulaize ? 1 : 0;
 			glm::vec3 halfExtent = 0.5f * glm::vec3(component.probeCount) * component.gridStep;
 			ddgi.box.minBound = ddgi.centerPosition - halfExtent;

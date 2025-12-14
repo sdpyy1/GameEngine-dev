@@ -9,8 +9,6 @@
 
 // ÆØ¹â¡¢ ToneMapping ¡¢ ColorGrading
 namespace GameEngine {
-
-
 	void PostProcessPass::Init()
 	{
 		{
@@ -20,7 +18,8 @@ namespace GameEngine {
 			info.AddEntryFromReflect(m_VertShader)
 				.AddEntryFromReflect(m_FragShader)
 				.AddEntry(RENDER_RESOURCEMANAGER->GetSamplerRootSignature()->GetInfo())
-				.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());
+				.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo())
+				.AddPushConstant({ 128, SHADER_FREQUENCY_FRAGMENT });
 			m_RootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
 			RHIGraphicsPipelineInfo pipelineInfo = {};
 			pipelineInfo.rootSignature = m_RootSignature;
@@ -36,15 +35,27 @@ namespace GameEngine {
 
 	void PostProcessPass::Build(RDGBuilder& builder)
 	{
-		RDGTextureHandle viewport = builder.GetTexture("ViewPort");
+		auto [w, h] = APP_WINDOWSIZE;
 
+		RDGTextureHandle RenderRes = builder.CreateTexture("RenderRes")
+			.Exetent({ w, h, 1 })
+			.Format(FORMAT_R32G32B32A32_SFLOAT)
+			.ArrayLayers(1)
+			.MipLevels(1)
+			.MemoryUsage(MEMORY_USAGE_GPU_ONLY)
+			.AllowReadWrite()
+			.AllowRenderTarget()
+			.Finish();
+		RDGTextureHandle viewport = builder.GetTexture("ViewPort");
+		RDGBufferHandle exposureData = builder.GetBuffer("ExposureData");
 		RDGTextureHandle bloomRes = builder.GetTexture("UpBloom");
 
 		builder.CreateRenderPass("PostProcess")
 			.RootSignature(m_RootSignature)
-			.Color(0, viewport,ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE)
+			.Color(0, RenderRes,ATTACHMENT_LOAD_OP_LOAD, ATTACHMENT_STORE_OP_STORE)
 			.Read(2, 0, 0, viewport)
 			.Read(2, 1, 0, bloomRes)
+			.ReadWrite(2, 2, 0, exposureData)
 			.Execute([&](RDGPassContext context) {
 				auto [w, h] = APP_WINDOWSIZE;
 				RHICommandListRef command = context.command;
@@ -55,6 +66,7 @@ namespace GameEngine {
 				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetSamplerDescriptorSet(), 1);
 				command->BindDescriptorSet(context.descriptors[2], 2);
 				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
+				command->PushConstants(&m_Setting, sizeof(PostProcessingSetting), SHADER_FREQUENCY_FRAGMENT);
 				command->Draw(3);
 			})
 			.Finish();

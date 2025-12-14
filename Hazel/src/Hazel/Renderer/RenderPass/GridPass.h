@@ -1,7 +1,7 @@
 #pragma once
 #include "RenderPass.h"
 namespace GameEngine {
-	class GridPass : public RenderPassNew
+	class GridPass : public RenderPass
 	{
 	public:
 		GridPass() = default;

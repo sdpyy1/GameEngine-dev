@@ -174,6 +174,7 @@ namespace GameEngine
 		EnvironmentMap environmentMap;
 		TextureSpec spec;
 		spec.path = iblPath;
+		spec.generateMipmap = false;
 		environmentMap.HDRTexture = std::make_shared<Texture>(spec);
 
 		spec.path = APP_TEXTURE_PATH + "BRDF_LUT.png"; // 这个直接用已经有的就行
