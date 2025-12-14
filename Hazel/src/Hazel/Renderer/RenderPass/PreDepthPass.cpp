@@ -9,7 +9,7 @@
 
 namespace GameEngine { 
 
-	void PreDepthPassProcessor::OnCollectBatch(const DrawBatch& batch)
+	void PreDepthPassProcessor::OnCollectBatch(const MeshBatch& batch)
 	{
 		if (batch.material->RenderPassMask() & PASS_MASK_DEFERRED_PASS) AddBatch(batch);
 	}

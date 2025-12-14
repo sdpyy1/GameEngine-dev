@@ -9,17 +9,16 @@ PrimitiveSceneProxy(场景数据)->FMeshBatch(收集的Mesh数据)->FMeshPassProcessor(每
 
 */
 namespace GameEngine {
-	struct DrawBatch
+	struct MeshBatch   // TODO: 现在设计是一个MeshBatch一个实例，实际上一个MeshBath应该对应材质一致的所有实例（Hazel的做法就是UE的做法，把变换矩阵拆成3个Vec3）
 	{
-		uint32_t objectID;                                          // 物体唯一索引
+		uint32_t objectID;
 
 		VertexBufferRef vertexBuffer;
 		IndexBufferRef indexBuffer;
 
-		MaterialRef material;                                       // 包含了材质数据的内存块，也包含了着色器信息
+		MaterialRef material;
 	};
 
-	// 渲染模型的材质才是决定Pipeline创建的依据
 	struct DrawPipelineState
 	{
 		uint32_t renderQueue;
@@ -97,17 +96,17 @@ namespace GameEngine {
 	class MeshPassProcessor {
 	public:
 		void Init();
-		void Process(const std::vector<DrawBatch>& drawBatches);
+		void Process(const std::vector<MeshBatch>& drawBatches);
 		void Draw(RHICommandListRef command);
-		void AddBatch(const DrawBatch& batch) { m_Batches.push_back(batch); }
+		void AddBatch(const MeshBatch& batch) { m_Batches.push_back(batch); }
 		void AddDrawCommand(const DrawCommand& drawCommand) { drawCommands.push_back(drawCommand); }
 		uint32_t GetDrawCommandCount() { return m_Batches.size(); }
 	protected:
-		virtual void MeshPassProcessor::OnCollectBatch(const DrawBatch& batch) = 0;   // 需要具体的Pass说明这个batch自己需不需要
+		virtual void MeshPassProcessor::OnCollectBatch(const MeshBatch& batch) = 0;   // 需要具体的Pass说明这个batch自己需不需要
 		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& first) = 0;  // 因为创建pipelien需要Shader信息也需要vkRenderPass也就是附件信息，这些需要具体的Pass提供（Shader也可以来自材质）
 
 	private:
-		std::vector<DrawBatch> m_Batches;   // 从场景中收集并处理过的每个SubMesh数据
+		std::vector<MeshBatch> m_Batches;   // 从场景中收集并处理过的每个SubMesh数据
 		std::vector<DrawCommand> drawCommands;
 		std::map<DrawPipelineState, std::vector<DrawGeometryInfo>> m_DrawGeometries; // 把渲染Batch按照PipelineState进行分类
 		std::array<std::shared_ptr<MeshPassIndirectBuffers>, FRAMES_IN_FLIGHT> indirectBuffers;     // 每帧都完全重构的buffer，因此需要每帧一份
@@ -115,7 +114,7 @@ namespace GameEngine {
 		std::vector<IndirectMeshDrawInfo> meshDrawInfos;
 
 		void AddDrawInfo(DrawPipelineState& pipelineState, DrawGeometryInfo info);
-		void OnBuildDrawInfo(DrawBatch& batch);
+		void OnBuildDrawInfo(MeshBatch& batch);
 		void OnBuildDrawCommands(uint32_t pipelineIndex, RHIGraphicsPipelineRef pipeline, std::vector<DrawGeometryInfo>& second);
 		std::shared_ptr<MeshPassIndirectBuffers> GetIndirectBuffers();
 	};

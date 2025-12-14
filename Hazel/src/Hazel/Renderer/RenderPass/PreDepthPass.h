@@ -30,7 +30,7 @@ namespace GameEngine {
 	public:
 		PreDepthPassProcessor(PreDepthPass* pass) { this->pass = pass; }
 
-		virtual void OnCollectBatch(const DrawBatch& batch) override final;
+		virtual void OnCollectBatch(const MeshBatch& batch) override final;
 		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& pipelineState) override final;
 
 	private:

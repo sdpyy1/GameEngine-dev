@@ -18,7 +18,7 @@ namespace GameEngine
 	}
 
 	// drawBatches从场景中收集
-	void MeshPassProcessor::Process(const std::vector<DrawBatch>& drawBatches)
+	void MeshPassProcessor::Process(const std::vector<MeshBatch>& drawBatches)
 	{
 		// 1.处理场景的drawBatch数据，收集到m_Batches中
 		m_Batches.clear();
@@ -85,7 +85,7 @@ namespace GameEngine
 	}
 
 	// 根据材质的管线信息，将DrawBatch分组
-	void MeshPassProcessor::OnBuildDrawInfo(DrawBatch& batch)
+	void MeshPassProcessor::OnBuildDrawInfo(MeshBatch& batch)
 	{
 		// 根据batch的材质，构建管线信息
 		DrawPipelineState pipelineState = {};

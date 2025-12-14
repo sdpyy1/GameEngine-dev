@@ -7,12 +7,19 @@
 #include "Hazel/Renderer/RenderPass/RenderPass.h"
 namespace GameEngine
 {
+/*
+	UE的流程： 
+	1. 从FPrimitiveSceneProxy到FMeshBatch（主要包含顶点工厂 + 材质）
+	2. 从FMeshBatch到FMeshDrawCommand（遍历EMeshPass定义的所有Pass，创建对应的FMeshPassProcessor处理这些FMeshBatch）
+	3. 并行创建这些Pass的绘制命令
+*/
+
 	void GameEngine::MeshCollector::CollectMesh()
 	{
-		std::vector<DrawBatch> batch;
+		std::vector<MeshBatch> batch;
 
 		auto& scene = APP_SCENEMANAGER->GetActiveScene();
-		// 收集SkeletalMesh
+		// 这个遍历在UE相当于从FPrimitiveSceneProxy到FMeshBatch       TODO: CPU端剔除
 		auto& allEntityOwnSubmesh = scene->GetAllEntitiesWith<SubmeshComponent>();
 		for (auto entity : allEntityOwnSubmesh)
 		{
@@ -34,7 +41,7 @@ namespace GameEngine
 			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshComponent.meshInfo, meshComponent.meshInfoID);
 
 			meshComponent.prevModel = transform;
-			DrawBatch drawBatch;
+			MeshBatch drawBatch;
 			drawBatch.indexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).indexBuffer;
 			drawBatch.vertexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).vertexBuffer;
 			drawBatch.objectID = meshComponent.meshInfoID;

@@ -7,7 +7,7 @@
 
 namespace GameEngine
 {
-	void GBufferPassProcessor::OnCollectBatch(const DrawBatch& batch)
+	void GBufferPassProcessor::OnCollectBatch(const MeshBatch& batch)
 	{
 		if (batch.material->RenderPassMask() & PASS_MASK_DEFERRED_PASS) AddBatch(batch);
 	}
