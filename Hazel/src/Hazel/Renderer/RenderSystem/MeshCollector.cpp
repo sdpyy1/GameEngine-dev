@@ -7,13 +7,9 @@
 #include "Hazel/Renderer/RenderPass/RenderPass.h"
 namespace GameEngine
 {
-/*
-	UE的流程： 
-	1. 从FPrimitiveSceneProxy到FMeshBatch（主要包含顶点工厂 + 材质）
-	2. 从FMeshBatch到FMeshDrawCommand（遍历EMeshPass定义的所有Pass，创建对应的FMeshPassProcessor处理这些FMeshBatch）
-	3. 并行创建这些Pass的绘制命令
-*/
-
+	/*
+		这里的收集类似UE的 FScene-> Proxy(并没有做) -> FMeshBatch -> 创建MeshPassProcessor -> 每个Pass定义自己AddBatch()收集自己需要的MeshBatch -> 最终组织成FMeshDrawCommand
+	*/
 	void GameEngine::MeshCollector::CollectMesh()
 	{
 		std::vector<MeshBatch> batch;
@@ -21,30 +17,29 @@ namespace GameEngine
 		auto& scene = APP_SCENEMANAGER->GetActiveScene();
 		// 这个遍历在UE相当于从FPrimitiveSceneProxy到FMeshBatch       TODO: CPU端剔除
 		auto& allEntityOwnSubmesh = scene->GetAllEntitiesWith<SubmeshComponent>();
-		for (auto entity : allEntityOwnSubmesh)
+		for (auto& entity : allEntityOwnSubmesh)
 		{
 			auto& meshComponent = allEntityOwnSubmesh.get<SubmeshComponent>(entity);
-			Entity parent = Entity(entity, scene);
-			if (meshComponent.model == nullptr || !parent.GetParent().GetComponent<ModelComponent>().Visible || !meshComponent.Visible) continue;
+			Entity meshEntity = Entity(entity, scene);
+			if (meshComponent.model == nullptr || !meshEntity.GetParent().GetComponent<ModelComponent>().Visible || !meshComponent.Visible) continue;
 
-			Entity e = Entity(entity, scene.get());
-			glm::mat4 transform = scene->GetWorldSpaceTransformMatrix(e);
+			glm::mat4 transform = scene->GetWorldSpaceTransformMatrix(meshEntity); // 因为SubMesh存的都是Local变换
 			meshComponent.meshInfo.modelMatrix = transform;
 			meshComponent.meshInfo.prevModelMatrix = meshComponent.prevModel;
 			if (meshComponent.meshInfoID == 0) {
-				meshComponent.meshInfoID = RENDER_RESOURCEMANAGER->AllocateMeshInstanceInfoID();
+				meshComponent.meshInfoID = RENDER_RESOURCEMANAGER->AllocateMeshInstanceInfoID(); // 实例信息还没传递到GPU
 			}
-			meshComponent.meshInfo.animationID = 0;
+			meshComponent.meshInfo.animationID = 0; // TODO: 动画
 			meshComponent.meshInfo.indexID = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].indexBuffer->indexID;
 			meshComponent.meshInfo.vertexID = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].vertexBuffer->vertexID;
-			meshComponent.meshInfo.materialID = meshComponent.model->GetMaterials()[meshComponent.SubmeshIndex] ? meshComponent.model->GetMaterials()[meshComponent.SubmeshIndex]->GetMaterialID() : 0;
-			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshComponent.meshInfo, meshComponent.meshInfoID);
+			meshComponent.meshInfo.materialID = meshComponent.material? meshComponent.material->GetMaterialID():0;
+			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshComponent.meshInfo, meshComponent.meshInfoID);  //TODO:目前是一个Mesh一个Mesh上传数据到GPU，需要合并上传，但是涉及到如何合并的问题
 
 			meshComponent.prevModel = transform;
 			MeshBatch drawBatch;
 			drawBatch.indexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).indexBuffer;
 			drawBatch.vertexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).vertexBuffer;
-			drawBatch.objectID = meshComponent.meshInfoID;
+			drawBatch.instanceID = meshComponent.meshInfoID;
 			drawBatch.material = meshComponent.GetMaterial();
 			batch.push_back(drawBatch);
 		}

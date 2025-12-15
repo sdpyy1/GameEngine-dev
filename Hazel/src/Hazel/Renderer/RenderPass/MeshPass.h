@@ -4,14 +4,15 @@
 #include "Hazel/Utils/IndexAllocator.h"
 #include <Hazel/Renderer/RenderResource/RenderBuffer.h>
 /*
-UE的MeshPass:
-PrimitiveSceneProxy(场景数据)->FMeshBatch(收集的Mesh数据)->FMeshPassProcessor(每个MeshPass都有一个Processor来按照自己的规则处理MeshBatch)->每个Pass生成自己的FMeshDrawCommand->RHI
+UE的流程：
+	1. 从FPrimitiveSceneProxy到FMeshBatch（主要包含顶点工厂 + 材质）
+	2. 从FMeshBatch到FMeshDrawCommand（遍历EMeshPass定义的所有Pass，创建对应的FMeshPassProcessor处理这些FMeshBatch）（这些Pass的处理是并行进行的）（DrawCommand中装了PSO、Shader等这个DrawCall需要的信息）
 
 */
 namespace GameEngine {
 	struct MeshBatch   // TODO: 现在设计是一个MeshBatch一个实例，实际上一个MeshBath应该对应材质一致的所有实例（Hazel的做法就是UE的做法，把变换矩阵拆成3个Vec3）
 	{
-		uint32_t objectID;
+		uint32_t instanceID;  // 如果想支持实例化，感觉应该实际成instanceId的合集（每个id内部都存储着他自己的变换矩阵）
 
 		VertexBufferRef vertexBuffer;
 		IndexBufferRef indexBuffer;
@@ -19,6 +20,7 @@ namespace GameEngine {
 		MaterialRef material;
 	};
 
+	// UE的FGraphicsMinimalPipelineStateInitializer
 	struct DrawPipelineState
 	{
 		uint32_t renderQueue;
@@ -68,7 +70,7 @@ namespace GameEngine {
 	};
 	typedef struct DrawGeometryInfo
 	{
-		uint32_t objectID; // meshInfo
+		uint32_t instanceID; // meshInfo
 		uint32_t vertexID; // vertexInfo
 		uint32_t indexID; // indexID
 		uint32_t indexCount; // 索引数量
@@ -102,7 +104,7 @@ namespace GameEngine {
 		void AddDrawCommand(const DrawCommand& drawCommand) { drawCommands.push_back(drawCommand); }
 		uint32_t GetDrawCommandCount() { return m_Batches.size(); }
 	protected:
-		virtual void MeshPassProcessor::OnCollectBatch(const MeshBatch& batch) = 0;   // 需要具体的Pass说明这个batch自己需不需要
+		virtual void MeshPassProcessor::AddMeshBatch(const MeshBatch& batch) = 0;   // 需要具体的Pass说明这个batch自己需不需要
 		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& first) = 0;  // 因为创建pipelien需要Shader信息也需要vkRenderPass也就是附件信息，这些需要具体的Pass提供（Shader也可以来自材质）
 
 	private:

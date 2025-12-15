@@ -7,7 +7,7 @@
 #include "Hazel/Scene/SceneManager.h"
 
 namespace GameEngine {
-	void DirShadowPassProcessor::OnCollectBatch(const MeshBatch& batch)
+	void DirShadowPassProcessor::AddMeshBatch(const MeshBatch& batch)
 	{
 		if (batch.material->CastShadow()) AddBatch(batch);
 	}

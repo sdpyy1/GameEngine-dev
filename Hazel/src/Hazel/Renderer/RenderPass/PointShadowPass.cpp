@@ -7,7 +7,7 @@
 #include "Hazel/Renderer/RenderSystem/LightCollector.h"
 namespace GameEngine {
 	
-	void PointShadowPassProcessor::OnCollectBatch(const MeshBatch& batch)
+	void PointShadowPassProcessor::AddMeshBatch(const MeshBatch& batch)
 	{
 		if (batch.material->CastShadow()) AddBatch(batch);
 	}

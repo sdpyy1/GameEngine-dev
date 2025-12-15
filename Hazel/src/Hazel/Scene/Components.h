@@ -55,14 +55,13 @@ namespace GameEngine {
 		ModelComponent() = default;
 		ModelComponent(UUID uuid, std::filesystem::path filePath)
 			: ModelID(uuid), path(filePath.string()) {
-			model = AssetManager::GetAsset<Model>(uuid);
+			model = AssetManager::GetAsset<Model>(uuid);  // TODO:所有的实例都指向同一个模型信息,如果模型信息被修改（比如材质），那所有实例都变了，这肯定不对（解决：材质在SubMesh中自动拷贝一份）
 		}
 		BeginSerailize
 			SerailizeEntry(ModelID)
 			SerailizeEntry(path)
 			model = AssetManager::GetAsset<Model>(ModelID);
 			if (!model) {
-				// 还没加载
 				model = AssetManager::LoadModel(path, ModelID);
 			}			
 			SerailizeEntry(Visible)
@@ -76,25 +75,28 @@ namespace GameEngine {
 		uint32_t SubmeshIndex = 0;
 		bool Visible = true;
 		bool castShadow = true;
-
+		std::string path;
 		MeshInstanceInfo meshInfo;
+
 		ModelRef model;
+		MaterialRef material;
+
 		glm::mat4 prevModel = glm::mat4(0);
 		uint32_t meshInfoID = 0;
-		std::string path;
 		SubmeshComponent() = default;
 		SubmeshComponent(UUID modelID, uint32_t submeshIndex = 0)
 			: modelID(modelID), SubmeshIndex(submeshIndex)
 		{
 			model = AssetManager::GetAsset<Model>(modelID);
+			auto originalMaterial = model->GetMaterial(SubmeshIndex);
+			material = model->GetMaterial(SubmeshIndex)->Clone(); // 从Model的材质模板中clone一份模板实例
 			path = model->GetPath();
 		}
-
 		MeshRef GetMesh() {
 			return model->GetSubMesh(SubmeshIndex);
 		}
 		MaterialRef GetMaterial() {
-			return model->GetMaterial(SubmeshIndex);
+			return material;
 		}
         BeginSerailize
 			SerailizeEntry(modelID)
@@ -104,9 +106,9 @@ namespace GameEngine {
 			SerailizeEntry(Visible)
 			model = AssetManager::GetAsset<Model>(modelID);	
 			if (!model) {
-				// 还没加载
 				model = AssetManager::LoadModel(path, modelID);
 			}
+			SerailizeEntry(material)
 		EndSerailize
 	};
 

@@ -8,8 +8,7 @@ namespace GameEngine
 { 
 	Material::Material()
 	{
-		materialID = RENDER_RESOURCEMANAGER->AllocateMaterialID();
-		Update();
+		Update(true);
 	}
 
 	Material::Material(bool init)
@@ -28,8 +27,12 @@ namespace GameEngine
 		// if (APP_RENDERSYSTEM && materialID != 0) RENDER_RESOURCEMANAGER->ReleaseMaterialID(materialID);
 	}
 
-	void Material::Update()
+	void Material::Update(bool isCopy)
 	{
+        if (isCopy)
+        { 
+            materialID = RENDER_RESOURCEMANAGER->AllocateMaterialID(); // 拷贝构造后需要重新生成一份新材质
+        }
         materialInfo = {};
         materialInfo.roughness = roughness;
         materialInfo.metallic = metallic;

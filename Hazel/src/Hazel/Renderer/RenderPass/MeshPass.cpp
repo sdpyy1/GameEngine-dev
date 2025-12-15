@@ -17,18 +17,20 @@ namespace GameEngine
 		}
 	}
 
-	// drawBatches从场景中收集
+	// 在UE中各个Pass执行这个过程是并行的
 	void MeshPassProcessor::Process(const std::vector<MeshBatch>& drawBatches)
 	{
-		// 1.处理场景的drawBatch数据，收集到m_Batches中
 		m_Batches.clear();
 		m_DrawGeometries.clear();
 		drawCommands.clear();
 		meshDrawCommands.clear();
 		meshDrawInfos.clear();
+
+
+		// 1. 收集当前Pass需要的MeshBatch
 		for (auto& batch : drawBatches)
 		{
-			OnCollectBatch(batch);  // 具体的Pass重载逻辑
+			AddMeshBatch(batch);
 		}
 
 		// 2. 按管线进行分类
@@ -103,7 +105,7 @@ namespace GameEngine
 		pipelineState.meshRender = !pipelineState.clusterRender;
 
 		DrawGeometryInfo info = {};
-		info.objectID = batch.objectID;
+		info.instanceID = batch.instanceID;
 		info.vertexID = batch.vertexBuffer->vertexID;
 		info.indexID = batch.indexBuffer->indexID;
 		info.indexCount = batch.indexBuffer->IndexNum();
@@ -131,7 +133,7 @@ namespace GameEngine
 		for (auto& geometry : geometries) {
 			IndirectMeshDrawInfo meshDrawInfo;
 
-			meshDrawInfo.objectID = geometry.objectID;
+			meshDrawInfo.instanceID = geometry.instanceID;
 			meshDrawInfo.commandID = (uint32_t)meshDrawCommands.size();
 			meshDrawInfos.push_back(meshDrawInfo);
 
@@ -139,7 +141,7 @@ namespace GameEngine
 			meshDrawCommand.vertexCount = geometry.indexCount;   // 顶点数设置的索引数，在Shader中用gl_VertexIndex来获取对应的索引值，所有这里虽然调用的是DrawIndirect，其实本质是DrawIndexedIndirect
 			meshDrawCommand.instanceCount = 1;                     // TODO 使用同一个顶点和索引缓冲的还能进一步合并？
 			meshDrawCommand.firstVertex = 0;                       // 间接绘制里这样的多个indirect command 有多大的开销？
-			meshDrawCommand.firstInstance = geometry.objectID;   // 渲染时，通过实例索引来拿到对应的MeshInfo
+			meshDrawCommand.firstInstance = geometry.instanceID;   // 渲染时，通过实例索引来拿到对应的MeshInfo
 			meshDrawCommands.push_back(meshDrawCommand);
 			meshCount++;
 		}

@@ -88,6 +88,7 @@ namespace GameEngine {
 		uint32_t AllocateMeshInstanceInfoID() { return m_MultiFrameGlobalResources.meshInfoBuffer.Allocate(); }
 		void ReleaseMesInstancehInfoID(uint32_t id) { m_MultiFrameGlobalResources.meshInfoBuffer.Release(id); }
 		void SetMeshInstanceInfo(const MeshInstanceInfo& meshInfo, uint32_t meshID) { m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfo, meshID); };
+		void SetMeshInstanceInfoBatch(const std::vector<MeshInstanceInfo>& meshInfos) { m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfos); };
 
 		// LightInfo
 		void SetLightInfo(const LightInfo& lightInfo) { m_PerFrameGlobalResources[APP_FRAMEINDEX].lightInfoBuffer.SetData(lightInfo); };

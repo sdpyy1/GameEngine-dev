@@ -176,7 +176,7 @@ namespace GameEngine {
 	} IndirectSetting;
 	typedef struct IndirectMeshDrawInfo
 	{
-		uint32_t objectID = 0;			        // 物体的实例索引
+		uint32_t instanceID = 0;			        // 物体的实例索引
 		uint32_t commandID = 0;				    // 使用的间接绘制指令的下标
 	} IndirectMeshDrawInfo;
 

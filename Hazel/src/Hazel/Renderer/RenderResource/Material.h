@@ -23,6 +23,11 @@ namespace GameEngine {
 		Material();
 		Material(bool init);
 		Material(const Material& other) = default;  // 可以拷贝构造
+		std::shared_ptr<Material> Clone() const {
+			auto & copy = std::make_shared<Material>(*this);
+            copy->Update(true);
+            return copy;
+		}
 		~Material();
 
 		virtual std::string GetAssetTypeName() override { return "Material Asset"; }
@@ -33,7 +38,7 @@ namespace GameEngine {
 
 		uint32_t GetMaterialID() { return materialID; }
 
-		void Update();
+		void Update(bool isCopy = false);
 
 		void SetDiffuse(glm::vec4 diffuse) { this->diffuse = diffuse;      Update(); }
 		void SetDiffuse(TextureRef texture) { textureDiffuse = texture;     Update(); }
@@ -84,7 +89,7 @@ namespace GameEngine {
 		void SetUseForDepthPass(bool use) { useForDepthPass = use; }
 		void SetCastShadow(bool shadow) { castShadow = shadow; }
 
-		uint32_t materialID;
+		uint32_t materialID; // Dynamic
 
 		glm::vec4 diffuse = glm::vec4(1);
 		glm::vec4 emission = glm::vec4(0);
@@ -124,10 +129,30 @@ namespace GameEngine {
 		bool depthTest = true;                                      // 深度测试
 		bool depthWrite = true;                                     // 深度写入
 		CompareFunction depthCompare = COMPARE_FUNCTION_LESS_EQUAL; // 深度测试函数
-		// TODO 是否加入混合信息？
-
 		bool useForDepthPass = true;                                // 是否加入深度pass渲染
 		bool castShadow = true;                                     // 是否加入阴影pass渲染
+
+
+		// TODO:管线信息序列化先等等
+		BeginSerailize
+			SerailizeEntry(diffuse)
+			SerailizeEntry(emission)
+			SerailizeEntry(roughness)
+			SerailizeEntry(metallic)
+			SerailizeEntry(useNormalTexture)
+			SerailizeEntry(textureDiffuse)
+			SerailizeEntry(textureNormal)
+			SerailizeEntry(textureEmission)
+			SerailizeEntry(textureRoughness)
+			SerailizeEntry(textureMetallic)
+			SerailizeEntry(ints)
+			SerailizeEntry(floats)
+			SerailizeEntry(colors)
+			SerailizeEntry(texture2D)
+			SerailizeEntry(textureCube)
+			SerailizeEntry(texture3D)
+			Update(true);
+		EndSerailize
 
 	};
 

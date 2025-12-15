@@ -1,5 +1,6 @@
 #pragma once-
 #include "Hazel/Renderer/RHI/RHI.h"
+#include "Hazel/Utils/Serializable.h"
 namespace GameEngine {
 	enum TextureType {
 		TEXTURE_TYPE_2D,
@@ -25,9 +26,21 @@ namespace GameEngine {
 		RHITextureRef texture;
 		RHITextureViewRef textureView;
 		uint32_t bindlessId;
+
+		BeginSerailize
+            SerailizeEntry(path)
+            SerailizeEntry(type)
+            SerailizeEntry(srgb)
+            SerailizeEntry(mipLevels)
+            SerailizeEntry(arrayLayers)
+            SerailizeEntry(generateMipmap)
+            SerailizeEntry(yFlip)
+            SerailizeEntry(bindless)
+		EndSerailize
 	};
 	class Texture {
 	public:
+		Texture() = default;
 		Texture(TextureSpec& spec);   // 从这里创建的Textue，出去的布局是RESOURCE_STATE_SHADER_RESOURCE
 		void LoadFromFile();
 		void CreateRHITexture();
@@ -42,6 +55,14 @@ namespace GameEngine {
 	private:
 		TextureSpec m_Spec;
 		RHIDescriptorSetRef m_ImGuiIDCache;
+
+		// static std::map<std::string, std::shared_ptr<Texture>> textureCache; // only for Serailize
+		BeginSerailize
+			SerailizeEntry(m_Spec)
+			if (m_Spec.textureID == 0) {
+				LoadFromFile();
+			}
+			EndSerailize
 	};
 	typedef std::shared_ptr<Texture> TextureRef;
 }
