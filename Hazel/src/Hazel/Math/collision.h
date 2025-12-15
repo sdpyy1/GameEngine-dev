@@ -28,7 +28,7 @@ namespace GameEngine {
         glm::vec3 minCorner = glm::vec3(std::numeric_limits<float>::min());
 
     private:
-        BeginSerailize()
+        BeginSerailize
             SerailizeEntry(center)
             SerailizeEntry(halfExtent)
             SerailizeEntry(maxCorner)
@@ -120,7 +120,7 @@ namespace GameEngine {
         BoundingSphere operator+(const BoundingSphere& other);
 
     private:
-        BeginSerailize()
+        BeginSerailize
             SerailizeEntry(center)
             SerailizeEntry(radius)
             EndSerailize

@@ -16,11 +16,23 @@ namespace cereal {
 	template<class Archive> void serialize(Archive& ar, GameEngine::Extent2D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height)); }
 	template<class Archive> void serialize(Archive& ar, GameEngine::Extent3D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height), cereal::make_nvp("depth", e.depth)); }
     template<class Archive> void serialize(Archive& ar, glm::vec3& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z)); }
+    template<class Archive> void serialize(Archive& ar, glm::vec2& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y)); }
     template<class Archive> void serialize(Archive& ar, glm::vec4& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z),cereal::make_nvp("w", e.w)); }
+    template<class Archive> void serialize(Archive& ar, glm::ivec4& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z),cereal::make_nvp("w", e.w)); }
 	template<class Archive> void serialize(Archive& ar, glm::uvec3& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z)); }
 	template<class Archive> void serialize(Archive& ar, glm::ivec3& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z)); }
 	template<class Archive> void serialize(Archive& ar, glm::quat& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z), cereal::make_nvp("w", e.w)); }
 	template<class Archive> void serialize(Archive& ar, std::filesystem::path& e) { ar(cereal::make_nvp("path", e.string())); }
+    template<class Archive>
+    void serialize(Archive& ar, glm::mat4& m)
+    {
+        ar(
+            cereal::make_nvp("c0", m[0]),
+            cereal::make_nvp("c1", m[1]),
+            cereal::make_nvp("c2", m[2]),
+            cereal::make_nvp("c3", m[3])
+        );
+    }
 
 #define BeginSerailize               	\
 friend class cereal::access;            	\
@@ -70,7 +82,11 @@ do { \
     } \
 } while(0)
 
+#define BeginIfSave    if constexpr (Archive::is_saving::value) {
+#define EndIfSave }
 
+#define BeginIfLoad    if constexpr (Archive::is_loading::value) {
+#define EndIfLoad }
 
 #define SerailizeAssetEntry(entry)          \
 ar(cereal::make_nvp(#entry, entry));		\
@@ -79,3 +95,6 @@ if(entry) entry->OnLoadAsset();
 
 #define EndSerailize }
 	}
+
+
+#define SerailizeAssetParent         ar(cereal::base_class<Asset>(this));

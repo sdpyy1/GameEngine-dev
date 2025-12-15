@@ -10,7 +10,7 @@ namespace GameEngine {
 	FolderPreviewPanel::FolderPreviewPanel(const std::filesystem::path& assetsDir)
 		: m_AssetsDir(assetsDir), m_CurrentDir(assetsDir)
 	{
-		ScanAssetsForCategories(assetsDir);
+		ScanAssetsForCategories(APP_SERIALIZE_PATH);
 
 		m_DirectoryIcon.LoadIconData("Assets/Icon/DirectoryIcon.png");
         m_FileIcon.LoadIconData("Assets/Icon/FileIcon.png");
@@ -29,16 +29,17 @@ namespace GameEngine {
 	void FolderPreviewPanel::OnFileOpen(const std::filesystem::path& path)
 	{
 		std::string ext = path.extension().string();
-		std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
 		if (ext == ".scene" || ext == ".hscene")
 		{
 			LOG_WARN("Double-click to open Scene is not yet supported. Please drag the file into the scene to use it.");
 		}
-		else if (ext == ".fbx" || ext == ".gltf" || ext == ".obj" || ext == ".glb")
+		else if (ext == ".fbx" || ext == ".gltf" || ext == ".obj" || ext == ".glb") {
+			LOG_WARN("Please Serialize Model First!");
+		}
+		else if (ext == APP_SERIALIZE_MODEL_EXT)
 		{
 			Application::GetSceneManager()->GetActiveScene()->LoadModel(path.string());
-			
 		}
 		else if (ext == ".png" || ext == ".jpg" || ext == ".jpeg")
 		{
@@ -88,7 +89,16 @@ namespace GameEngine {
 
 		ImGui::End();
 	}
+	static std::string GetDisplayName(const std::string& path)
+	{
+		std::string stem = path;
 
+		size_t pos = path.rfind('_');
+		if (pos != std::string::npos)
+			return path.substr(0, pos);
+
+		return stem;
+	}
 	void FolderPreviewPanel::DrawFileGrid()
 	{
 		const float padding = 12.0f;
@@ -129,9 +139,7 @@ namespace GameEngine {
 			else
 			{
 				std::string ext = path.extension().string();
-				std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-
-				if (ext == ".fbx" || ext == ".obj" || ext == ".gltf")
+				if (ext == ".fbx" || ext == ".obj" || ext == ".gltf" || ext == APP_SERIALIZE_MODEL_EXT || ext == ".glb")
 					icon = m_ModelIcon;
 				else if (ext == ".scene" || ext == ".hscene")
 					icon = m_SceneIcon;
@@ -191,9 +199,16 @@ namespace GameEngine {
 				{
 					OnFileOpen(path);
 				}
-				if (ImGui::MenuItem("Show in Explorer"))
+				if (!std::filesystem::is_directory(path) && ImGui::MenuItem("Serialize"))
 				{
-					// TODO: 平台相关实现
+					std::string ext = path.extension().string();
+					if (ext == ".fbx" || ext == ".obj" || ext == ".gltf" || ext == ".glb"){
+						AssetManager::SerializeAsset<Model>(path);
+						ScanAssetsForCategories(APP_SERIALIZE_PATH);
+					}
+					else {
+						LOG_WARN("Serializing [{}] file is not yet supported.", ext);
+					}
 				}
 				ImGui::EndPopup();
 			}
@@ -351,9 +366,7 @@ namespace GameEngine {
 				continue;
 
 			std::string ext = entry.path().extension().string();
-			std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-
-			if (ext == ".fbx" || ext == ".obj" || ext == ".gltf")
+			if (ext == APP_SERIALIZE_MODEL_EXT)
 				m_ModelFiles.push_back(entry.path());
 			else if (ext == ".png" || ext == ".jpg" || ext == ".jpeg")
 				m_TextureFiles.push_back(entry.path());
@@ -377,7 +390,6 @@ namespace GameEngine {
 
 			bool isCategorySelected = (category.Name == m_SelectedCategory);
 
-			// 图标 + 分类名
 			ImGui::AlignTextToFramePadding();
 			ImGui::Image(m_DirectoryIcon.textureID->RawHandle(), ImVec2(16, 16), ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::SameLine();
@@ -386,7 +398,7 @@ namespace GameEngine {
 			{
 				m_SelectedCategory = category.Name;
 				m_SelectedFile.clear();
-				m_CategoryPreviewFiles = *category.Files; // 立即填充右侧
+				m_CategoryPreviewFiles = *category.Files;
 			}
 
 			ImGui::PopID();

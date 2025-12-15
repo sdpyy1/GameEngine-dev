@@ -151,7 +151,7 @@ namespace GameEngine {
 			SerailizeEntry(texture2D)
 			SerailizeEntry(textureCube)
 			SerailizeEntry(texture3D)
-			Update(true);
+			Update(true); // TODO: 其实只有反序列化才需要True
 		EndSerailize
 
 	};

@@ -38,7 +38,7 @@ namespace GameEngine {
             SerailizeEntry(bindless)
 		EndSerailize
 	};
-	class Texture {
+	class Texture : public std::enable_shared_from_this<Texture> {
 	public:
 		Texture() = default;
 		Texture(TextureSpec& spec);   // 从这里创建的Textue，出去的布局是RESOURCE_STATE_SHADER_RESOURCE
@@ -56,11 +56,17 @@ namespace GameEngine {
 		TextureSpec m_Spec;
 		RHIDescriptorSetRef m_ImGuiIDCache;
 
-		// static std::map<std::string, std::shared_ptr<Texture>> textureCache; // only for Serailize
+		static std::map<std::string, std::shared_ptr<Texture>> textureCache; // only for Serailize
 		BeginSerailize
 			SerailizeEntry(m_Spec)
 			if (m_Spec.textureID == 0) {
-				LoadFromFile();
+				if (textureCache.find(m_Spec.path) != textureCache.end()) {
+					m_Spec = textureCache[m_Spec.path]->m_Spec;
+				}
+				else {
+					LoadFromFile();
+                    textureCache[m_Spec.path] = shared_from_this();
+				}
 			}
 			EndSerailize
 	};

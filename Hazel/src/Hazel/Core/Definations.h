@@ -13,13 +13,23 @@ namespace GameEngine {
 #define APP_TICK Application::GetTotalTick()
 #define APP_SCENE_CAMERA Application::GetSceneManager()->GetEditorCamera()
 
-#define APP_SHADER_PATH std::string("D:/AAA_GameEngine_Dev/Hazel/Assets/Shader/")
-#define APP_HDR_PATH std::string("D:/AAA_GameEngine_Dev/Hazel/Assets/HDR/")
-#define APP_TEXTURE_PATH std::string("D:/AAA_GameEngine_Dev/Hazel/Assets/Texture/")
-#define APP_ICON_PATH std::string("D:/AAA_GameEngine_Dev/Hazel/Assets/Icon/")
-#define APP_MODEL_PATH std::string("D:/AAA_GameEngine_Dev/Hazel/Assets/Model/")
-#define APP_ASSET_PATH std::string("D:/AAA_GameEngine_Dev/Hazel/Assets/")
+
+
+#define APP_WORKING_DIR std::string("D:/AAA_GameEngine_Dev/Hazel/") // TODO: 写死了属于是 应该去Application去拿
+
+#define APP_SHADER_PATH std::string(APP_WORKING_DIR + "Assets/Shader/")
+#define APP_HDR_PATH std::string(APP_WORKING_DIR + "Assets/HDR/")
+#define APP_TEXTURE_PATH std::string(APP_WORKING_DIR + "Assets/Texture/")
+#define APP_ICON_PATH std::string(APP_WORKING_DIR + "Assets/Icon/")
+#define APP_MODEL_PATH std::string(APP_WORKING_DIR + "Assets/Model/")
+#define APP_ASSET_PATH std::string(APP_WORKING_DIR + "Assets/")
+#define APP_SERIALIZE_PATH std::string(APP_WORKING_DIR + "Assets/Serialize/")
+#define APP_SERIALIZE_MODEL_PATH std::string(APP_SERIALIZE_PATH + "model/")
+#define APP_SERIALIZE_MATERIAL_PATH std::string(APP_SERIALIZE_PATH + "material/")
+#define APP_SERIALIZE_SCENE_PATH std::string(APP_SERIALIZE_PATH + "scene/")
 
 
 
+
+#define APP_SERIALIZE_MODEL_EXT std::string(".hModel")
 }

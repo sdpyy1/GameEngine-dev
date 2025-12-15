@@ -283,50 +283,47 @@ namespace GameEngine {
         submeshes[index].mesh = submesh;
 
 
-        LOG_TRACE("  - Vertex Count: {}", submeshes[index].mesh->position.size());
-        LOG_TRACE("  - Index Count: {}", submeshes[index].mesh->index.size());
+        if (m_ModelSpec.uploadGPU) {
+            LOG_TRACE("  - Vertex Count: {}", submeshes[index].mesh->position.size());
+            LOG_TRACE("  - Index Count: {}", submeshes[index].mesh->index.size());
 
-        // 上传到GPU
-        VertexBufferRef vertexBuffer = std::make_shared<VertexBuffer>();
-        vertexBuffer->SetPosition(submesh->position);
-        vertexBuffer->SetNormal(submesh->normal);
-        vertexBuffer->SetTangent(submesh->tangent);
-        vertexBuffer->SetTexCoord(submesh->texCoord);
-        vertexBuffer->SetColor(submesh->color);
-        vertexBuffer->SetBoneIndex(submesh->boneIndex);
-        vertexBuffer->SetBoneWeight(submesh->boneWeight);
-        submeshes[index].vertexBuffer = vertexBuffer;
-        const MeshInfo& vi = vertexBuffer->vertexInfo;
-        LOG_TRACE("  - Vertex Buffer Info:");
-        LOG_TRACE("    positionID:    {}", vi.positionID);
-        LOG_TRACE("    normalID:      {}", vi.normalID);
-        LOG_TRACE("    tangentID:     {}", vi.tangentID);
-        LOG_TRACE("    texCoordID:    {}", vi.texCoordID);
-        LOG_TRACE("    colorID:       {}", vi.colorID);
-        LOG_TRACE("    boneIndexID:   {}", vi.boneIndexID);
-        LOG_TRACE("    boneWeightID:  {}", vi.boneWeightID);
-        IndexBufferRef indexBuffer = std::make_shared<IndexBuffer>();
-        indexBuffer->SetIndex(submeshes[index].mesh->index);
-        submeshes[index].indexBuffer = indexBuffer;
-        LOG_TRACE("    IndexBufferID: {}", indexBuffer->indexID);
+            // 上传到GPU
+            VertexBufferRef vertexBuffer = std::make_shared<VertexBuffer>();
+            vertexBuffer->SetPosition(submesh->position);
+            vertexBuffer->SetNormal(submesh->normal);
+            vertexBuffer->SetTangent(submesh->tangent);
+            vertexBuffer->SetTexCoord(submesh->texCoord);
+            vertexBuffer->SetColor(submesh->color);
+            vertexBuffer->SetBoneIndex(submesh->boneIndex);
+            vertexBuffer->SetBoneWeight(submesh->boneWeight);
+            submeshes[index].vertexBuffer = vertexBuffer;
+            const MeshInfo& vi = vertexBuffer->vertexInfo;
+            LOG_TRACE("  - Vertex Buffer Info:");
+            LOG_TRACE("    positionID:    {}", vi.positionID);
+            LOG_TRACE("    normalID:      {}", vi.normalID);
+            LOG_TRACE("    tangentID:     {}", vi.tangentID);
+            LOG_TRACE("    texCoordID:    {}", vi.texCoordID);
+            LOG_TRACE("    colorID:       {}", vi.colorID);
+            LOG_TRACE("    boneIndexID:   {}", vi.boneIndexID);
+            LOG_TRACE("    boneWeightID:  {}", vi.boneWeightID);
+            IndexBufferRef indexBuffer = std::make_shared<IndexBuffer>();
+            indexBuffer->SetIndex(submeshes[index].mesh->index);
+            submeshes[index].indexBuffer = indexBuffer;
+            LOG_TRACE("    IndexBufferID: {}", indexBuffer->indexID);
 
+            // RayTracing
+            if (m_ModelSpec.genBLAS) { 
+                RHIBottomLevelAccelerationStructureInfo blasInfo = {};
+                blasInfo.vertexBuffer = submeshes[index].vertexBuffer->positionBuffer;
+                blasInfo.indexBuffer = submeshes[index].indexBuffer->buffer;
+                blasInfo.triangleCount = submeshes[index].mesh->TriangleNum();
 
-
-
-        // RayTracing
-        if (m_ModelSpec.genBLAS) { 
-            RHIBottomLevelAccelerationStructureInfo blasInfo = {};
-            blasInfo.vertexBuffer = submeshes[index].vertexBuffer->positionBuffer;
-            blasInfo.indexBuffer = submeshes[index].indexBuffer->buffer;
-            blasInfo.triangleCount = submeshes[index].mesh->TriangleNum();
-
-            blasInfo.vertexStride = sizeof(glm::vec3);
-            blasInfo.indexOffset = 0;
-            blasInfo.vertexOffset = 0;
-            submeshes[index].blas = APP_DYNAMICRHI->CreateBottomLevelAccelerationStructure(blasInfo);
+                blasInfo.vertexStride = sizeof(glm::vec3);
+                blasInfo.indexOffset = 0;
+                blasInfo.vertexOffset = 0;
+                submeshes[index].blas = APP_DYNAMICRHI->CreateBottomLevelAccelerationStructure(blasInfo);
+            }
         }
-
-
 	}
 
 

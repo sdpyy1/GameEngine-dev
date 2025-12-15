@@ -8,6 +8,8 @@
 #include "Hazel/Renderer/RDG/RDGPool.h"
 namespace GameEngine
 {
+	std::map<std::string, std::shared_ptr<Texture>> Texture::textureCache; // only for Serailize
+
 	BindlessSlot TextureTypeToBindlessSlot(TextureType type)
 	{
 		BindlessSlot slot;

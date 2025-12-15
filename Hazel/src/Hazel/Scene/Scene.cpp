@@ -255,8 +255,8 @@ namespace GameEngine {
 
 	void Scene::LoadModel(const std::filesystem::path& path)
 	{
-		ModelRef model = AssetManager::LoadModel(path.string());
-		model->OnLoadAsset();
+		ModelRef model = AssetManager::DeserializeAsset<Model>(path);
+
 		Entity modelEntity = CreateEntity(path.string());
 
 		auto& modelComponent = modelEntity.AddComponent<ModelComponent>(model->GetUUID(), path);

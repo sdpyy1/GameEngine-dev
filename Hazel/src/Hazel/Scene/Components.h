@@ -55,15 +55,12 @@ namespace GameEngine {
 		ModelComponent() = default;
 		ModelComponent(UUID uuid, std::filesystem::path filePath)
 			: ModelID(uuid), path(filePath.string()) {
-			model = AssetManager::GetAsset<Model>(uuid);  // TODO:所有的实例都指向同一个模型信息,如果模型信息被修改（比如材质），那所有实例都变了，这肯定不对（解决：材质在SubMesh中自动拷贝一份）
+			model = AssetManager::GetAsset<Model>(uuid);
 		}
 		BeginSerailize
 			SerailizeEntry(ModelID)
 			SerailizeEntry(path)
-			model = AssetManager::GetAsset<Model>(ModelID);
-			if (!model) {
-				model = AssetManager::LoadModel(path, ModelID);
-			}			
+			model = AssetManager::GetAsset<Model>(ModelID);		
 			SerailizeEntry(Visible)
 			SerailizeEntry(castShadow)
 		EndSerailize
@@ -105,9 +102,6 @@ namespace GameEngine {
 			SerailizeEntry(path)
 			SerailizeEntry(Visible)
 			model = AssetManager::GetAsset<Model>(modelID);	
-			if (!model) {
-				model = AssetManager::LoadModel(path, modelID);
-			}
 			SerailizeEntry(material)
 		EndSerailize
 	};

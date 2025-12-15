@@ -10,11 +10,11 @@ namespace GameEngine {
 		glm::mat4 offset;
 
 	private:
-		BeginSerailize()
+		BeginSerailize
 			SerailizeEntry(name)
 			SerailizeEntry(index)
 			SerailizeEntry(offset)
-			EndSerailize
+		EndSerailize
 
 	} BoneInfo;
 
@@ -50,7 +50,7 @@ namespace GameEngine {
 
 
 	private:
-		BeginSerailize()
+		BeginSerailize
 			SerailizeEntry(name)
 			SerailizeEntry(aabb)
 			SerailizeEntry(sphere)
@@ -64,7 +64,7 @@ namespace GameEngine {
 			SerailizeEntry(boneWeight)
 			SerailizeEntry(index)
 			SerailizeEntry(bone)
-			EndSerailize
+		EndSerailize
 	};
 
 

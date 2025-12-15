@@ -111,6 +111,7 @@ void GameEngine::GizmoPass::Init()
 
 	{
 		ModelSpec m_ModelSpec;
+        m_ModelSpec.uploadGPU = true;
 		cubeWire = std::make_shared<Model>(APP_MODEL_PATH + "Basic/cube_wire.obj", m_ModelSpec);
 		cubeWire->OnLoadAsset();
 		command[0].indexCount = cubeWire->GetIndexBuffer(0)->IndexNum();
