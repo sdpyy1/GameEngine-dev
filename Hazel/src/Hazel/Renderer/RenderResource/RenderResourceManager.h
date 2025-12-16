@@ -29,7 +29,7 @@ namespace GameEngine {
 		// 各种InfoBuffer，存储每个资源在Bindless 中的索引
 		ArrayBuffer<MeshInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> vertexBuffer;
 		ArrayBuffer<MaterialInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> materialBuffer;
-		ArrayBuffer<MeshInstanceInfo, MAX_PER_FRAME_OBJECT_SIZE> meshInfoBuffer;
+		ArrayBuffer<MeshInstanceInfo, MAX_PER_FRAME_INSTANCE_SIZE> meshInfoBuffer;
 
 		// 采样器，其实Set=0里也有，这里单独创建一份Set=1
 		RHIRootSignatureRef samplerRootSignature;

@@ -4,8 +4,9 @@
 
 #define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
 #define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless 单个binding的最大描述符数目
-#define MAX_PER_FRAME_OBJECT_SIZE 10240			    //全局最大支持的物体数目
+#define MAX_PER_FRAME_INSTANCE_SIZE 10240			    //全局最大支持的物体数目
 #define MAX_GIZMO_PRIMITIVE_COUNT 4000
+#define MAX_PER_PASS_PIPELINE_STATE_COUNT 1024
 
 #define MAX_POINT_LIGHT_SIZE 16
 #define MAX_SPOT_LIGHT_SIZE 16
@@ -35,7 +36,7 @@ namespace GameEngine {
 		BINDLESS_SLOT_MAX_ENUM,     //
 	};
 
-	// G-Buffer 资源绑定点  注意Set = 2
+// G-Buffer 资源绑定点  注意Set = 2
 #define GBUFFER_POSITION_BINDING 0
 #define GBUFFER_NORMAL_BINDING 1
 #define GBUFFER_MATERIAL_BINDING 2
@@ -162,35 +163,6 @@ namespace GameEngine {
 		uint32_t indexID;
 	}MeshInstanceInfo;
 
-	// TODO:gpu剔除赶紧搞起来~
-	typedef struct IndirectSetting
-	{
-		uint32_t processSize = 0;               // 本轮需要处理的全部batch/cluster/cluster group数目
-		uint32_t pipelineStateSize = 0;         // 本轮处理的不同管线状态的数目
-		uint32_t _padding0[2];
-
-		uint32_t drawSize = 0;                  // 通过culling实际需要绘制的数目，由GPU端计算写入
-		uint32_t frustumCull = 0;               // 视锥剔除数目，由GPU端计算写入
-		uint32_t occlusionCull = 0;             // 遮蔽剔除数目，由GPU端计算写入
-		uint32_t _padding1;
-	} IndirectSetting;
-	typedef struct IndirectMeshDrawInfo
-	{
-		uint32_t instanceID = 0;			        // 物体的实例索引
-		uint32_t commandID = 0;				    // 使用的间接绘制指令的下标
-	} IndirectMeshDrawInfo;
-
-	typedef struct IndirectMeshDrawDatas        // 提交给GPU的待剔除信息
-	{
-		IndirectSetting setting;
-
-		IndirectMeshDrawInfo draws[MAX_PER_FRAME_OBJECT_SIZE];
-	} DrawClusterGroupDatas;
-
-	typedef struct IndirectMeshDrawCommands     // 提交给GPU的间接绘制指令信息，被剔除的资源会置instanceCount为零；
-	{                                           // 整个buffer再给mesh pass调用绘制
-		RHIIndirectCommand commands[MAX_PER_FRAME_OBJECT_SIZE];
-	} IndirectMeshDrawCommands;
 
 	struct CameraData {
 		glm::mat4 view;

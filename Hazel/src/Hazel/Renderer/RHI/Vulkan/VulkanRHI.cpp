@@ -1400,22 +1400,45 @@ namespace GameEngine
 	void VulkanRHICommandContext::DrawIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount)
 	{
 		/*
-		   void vkCmdDrawIndirect(
+		*	绘制指令参数：
+		   //indexed draw
+			VKAPI_ATTR void VKAPI_CALL vkCmdDrawIndexedIndirect(
 				VkCommandBuffer                             commandBuffer,
-				VkBuffer                                    buffer, // 绘制数据存储的Buffer
-				VkDeviceSize                                offset, // 绘制数据存储的Buffer的偏移
-				uint32_t                                    drawCount, // 绘制次数
-				uint32_t                                    stride // 每个绘制命令结构体的大小（RHIIndirectCommand）
-			);
+				VkBuffer                                    buffer, // 存储绘制参数的Buffer
+				VkDeviceSize                                offset, // Buffer起始偏移 
+				uint32_t                                    drawCount,  // 绘制的次数
+				uint32_t                                    stride); // Buffer中每个绘制指令的大小
 
-			每个绘制Buffer结构：
-			typedef struct RHIIndirectCommand
-			{
-				uint32_t    vertexCount;    // 绘制的顶点数量
-				uint32_t    instanceCount;  // 绘制实例数量
-				uint32_t    firstVertex;     // 绘制的起始顶点索引
-				uint32_t    firstInstance;   // 绘制实例的起始索引
-			} RHIIndirectCommand;
+			//non indexed draw
+			VKAPI_ATTR void VKAPI_CALL vkCmdDrawIndirect(  // 参数与vkCmdDrawIndirect一致
+				VkCommandBuffer                             commandBuffer,
+				VkBuffer                                    buffer,
+				VkDeviceSize                                offset,
+				uint32_t                                    drawCount,
+				uint32_t                                    stride);
+
+			绘制Buffer参数：这个Buffer中存储的参数实际就是直接调用vkCmdDrawIndexed、vkCmdDraw需要的参数
+			//indexed
+			struct VkDrawIndexedIndirectCommand {
+				uint32_t    indexCount;		// 索引数量
+				uint32_t    instanceCount;	// 实例数量
+				uint32_t    firstIndex;		// 索引偏移
+				int32_t     vertexOffset;	// 顶点偏移
+				uint32_t    firstInstance;	// 实例偏移
+			};
+
+			//non indexed
+			typedef struct VkDrawIndirectCommand {
+				uint32_t    vertexCount;   // 顶点数量
+				uint32_t    instanceCount; // 实例数量
+				uint32_t    firstVertex;   // 顶点偏移
+				uint32_t    firstInstance; // 实例偏移
+			} VkDrawIndirectCommand;
+
+
+			Multi Draw：在支持Multi Draw时，Buffer可以存储多个绘制指令，一次性提交
+
+
 
 		*/
 		vkCmdDrawIndirect(handle, CAST<VulkanRHIBuffer>(argumentBuffer)->GetHandle(), offset, drawCount, sizeof(RHIIndirectCommand));

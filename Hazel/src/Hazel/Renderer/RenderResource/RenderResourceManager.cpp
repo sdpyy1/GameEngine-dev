@@ -366,7 +366,7 @@ namespace GameEngine {
 		if (!m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas) {
 			RHITopLevelAccelerationStructureInfo tlasInfo;
 			tlasInfo.instanceInfos = instances;
-			tlasInfo.maxInstance = MAX_PER_FRAME_OBJECT_SIZE;
+			tlasInfo.maxInstance = MAX_PER_FRAME_INSTANCE_SIZE;
 			m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas = APP_DYNAMICRHI->CreateTopLevelAccelerationStructure(tlasInfo);
 			SetTLAS();
 		}

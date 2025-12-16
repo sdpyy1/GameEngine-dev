@@ -15,7 +15,7 @@ namespace GameEngine
 		std::vector<MeshBatch> batch;
 
 		auto& scene = APP_SCENEMANAGER->GetActiveScene();
-		// 这个遍历在UE相当于从FPrimitiveSceneProxy到FMeshBatch       TODO: CPU端剔除
+		// 这个遍历在UE相当于从FPrimitiveSceneProxy到FMeshBatch
 		auto& allEntityOwnSubmesh = scene->GetAllEntitiesWith<SubmeshComponent>();
 		for (auto& entity : allEntityOwnSubmesh)
 		{
@@ -24,6 +24,21 @@ namespace GameEngine
 			if (meshComponent.model == nullptr || !meshEntity.GetParent().GetComponent<ModelComponent>().Visible || !meshComponent.Visible) continue;
 
 			glm::mat4 transform = scene->GetWorldSpaceTransformMatrix(meshEntity); // 因为SubMesh存的都是Local变换
+
+			//////////////////////////////////////////////// TODO: CPU剔除 ////////////////////////////////////////////
+			// 可以做一个Model级剔除，GPU再进行mesh级剔除  这里对Model的剔除可以捎带学习了各种加速结构
+
+			//////////////////////////////////////////////// 收集MeshBatch ////////////////////////////////////////////
+			MeshBatch drawBatch;
+			drawBatch.instanceID = meshComponent.meshInfoID;
+			drawBatch.material = meshComponent.GetMaterial();
+			drawBatch.indexCount = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].indexBuffer->IndexNum();
+			batch.push_back(drawBatch);
+
+			//////////////////////////////////////////////// 更新实例信息 ////////////////////////////////////////////
+			if (transform == meshComponent.prevModel) {
+				continue; // 如果没动就没必要更新实例信息
+			}
 			meshComponent.meshInfo.modelMatrix = transform;
 			meshComponent.meshInfo.prevModelMatrix = meshComponent.prevModel;
 			if (meshComponent.meshInfoID == 0) {
@@ -34,23 +49,12 @@ namespace GameEngine
 			meshComponent.meshInfo.vertexID = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].vertexBuffer->vertexID;
 			meshComponent.meshInfo.materialID = meshComponent.material? meshComponent.material->GetMaterialID():0;
 			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshComponent.meshInfo, meshComponent.meshInfoID);  //TODO:目前是一个Mesh一个Mesh上传数据到GPU，需要合并上传，但是涉及到如何合并的问题
-
 			meshComponent.prevModel = transform;
-			MeshBatch drawBatch;
-			drawBatch.indexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).indexBuffer;
-			drawBatch.vertexBuffer = meshComponent.model->GetSubmeshData(meshComponent.SubmeshIndex).vertexBuffer;
-			drawBatch.instanceID = meshComponent.meshInfoID;
-			drawBatch.material = meshComponent.GetMaterial();
-			batch.push_back(drawBatch);
 		}
 
 		for (auto& meshPass : APP_RENDERSYSTEM->GetMeshPasses()) {
 			if (!meshPass) continue;
-
-			for (auto& processor : meshPass->GetMeshPassProcessors())
-			{
-				processor->Process(batch);
-			}
+			meshPass->GetMeshPassProcessors()->Process(batch);
 		}
 
 		if (RENDER_ENABLE_RAY_TRACING && !batch.empty()) {

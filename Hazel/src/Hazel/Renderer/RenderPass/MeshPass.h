@@ -7,20 +7,31 @@
 UE的流程：
 	1. 从FPrimitiveSceneProxy到FMeshBatch（主要包含顶点工厂 + 材质）
 	2. 从FMeshBatch到FMeshDrawCommand（遍历EMeshPass定义的所有Pass，创建对应的FMeshPassProcessor处理这些FMeshBatch）（这些Pass的处理是并行进行的）（DrawCommand中装了PSO、Shader等这个DrawCall需要的信息）
-
 */
+
+
+/*
+	TODO: 目前实现没有考虑实例化合并，因为这样会使剔除变得复杂，因为剔除不会考虑连续性。中间的实例被剔除，就必须提供额外的手段来处理这种情况。
+
+
+	整体流程:
+	1. 收集MeshBatch
+	2. 缓存需要的PSO，并将MeshBatch根据PSO进行分组
+	3. 每个PSO对应的MeshBatchs组成一个MeshDrawCommand，通过间接渲染接口一口气全部上传（提前进行GPU剔除）
+*/
+
 namespace GameEngine {
-	struct MeshBatch   // TODO: 现在设计是一个MeshBatch一个实例，实际上一个MeshBath应该对应材质一致的所有实例（Hazel的做法就是UE的做法，把变换矩阵拆成3个Vec3）
+	/*
+		MeshBatch：因为所有Mesh信息都使用了Bindless，所以MeshBatch只需要存储实例ID和材质，但是因为DrawCall需要指定渲染顶点数量，所以需要传入Mesh的索引数量（逻辑是让顶点着色器执行索引次数来手动装配三角形）
+	*/
+	struct MeshBatch
 	{
-		uint32_t instanceID;  // 如果想支持实例化，感觉应该实际成instanceId的合集（每个id内部都存储着他自己的变换矩阵）
-
-		VertexBufferRef vertexBuffer;
-		IndexBufferRef indexBuffer;
-
+		uint32_t instanceID;
+		uint32_t indexCount;
 		MaterialRef material;
 	};
 
-	// UE的FGraphicsMinimalPipelineStateInitializer
+	// 用于给Batch按照PSO进行分组
 	struct DrawPipelineState
 	{
 		uint32_t renderQueue;
@@ -68,65 +79,60 @@ namespace GameEngine {
 				(fragmentShader.get() != other.fragmentShader.get()) ? (fragmentShader.get() < other.fragmentShader.get()) : false;
 		}
 	};
-	typedef struct DrawGeometryInfo
-	{
-		uint32_t instanceID; // meshInfo
-		uint32_t vertexID; // vertexInfo
-		uint32_t indexID; // indexID
-		uint32_t indexCount; // 索引数量
-		// IndexRange clusterID = { 0, 0 };
-		// IndexRange clusterGroupID = { 0, 0 };
-	} DrawGeometryInfo;
-	typedef struct MeshPassIndirectBuffers
-	{
-		// 存储渲染需要的信息
-		RenderBuffer<IndirectMeshDrawDatas> meshDrawDataBuffer;
 
-		// 存储间接渲染需要的指令buffer的信息
-		RenderBuffer<IndirectMeshDrawCommands> meshDrawCommandBuffer = RenderBuffer<IndirectMeshDrawCommands>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
-	} MeshPassIndirectBuffers;
+	/*
+		为了方便剔除时拿到详细信息，上传的Buffer不能只包含绘制指令,还需要记录实例数量,如果后续需要更多信息，可以扩展这个结构体
+	*/
+	struct MeshIndirectDrawData {
+		 uint32_t instanceCount;
+		 uint32_t _padding[3];
 
-	struct DrawCommand  // 最终定义一次DrawCall的信息
+		 std::array<RHIIndirectCommand, MAX_PER_FRAME_INSTANCE_SIZE> indirectCommands;
+	};
+
+	/*
+		最终定义一次DrawCall需要的信息
+		1. 使用的PSO
+		2. 间接绘制Buffer的Batch（PSO一致的绘制指令可以一次性全部上传）
+	*/
+	struct MeshDrawCommand
 	{
 		RHIGraphicsPipelineRef pipeline;
 		IndexRange meshCommandRange = { 0, 0 };
-		uint32_t meshCommandOffset = 0;
-		RHIBufferRef indirectMeshCommandBuffer;
 	};
 
-	// 每个MeshPass都有自己的Processor，用于按自己的方式处理MeshBatch
 	class MeshPassProcessor {
 	public:
 		void Init();
 		void Process(const std::vector<MeshBatch>& drawBatches);
 		void Draw(RHICommandListRef command);
-		void AddBatch(const MeshBatch& batch) { m_Batches.push_back(batch); }
-		void AddDrawCommand(const DrawCommand& drawCommand) { drawCommands.push_back(drawCommand); }
-		uint32_t GetDrawCommandCount() { return m_Batches.size(); }
+		void AddBatch(const MeshBatch& batch) { m_MeshBatches.push_back(batch); }
+		void OnBuildDrawCommands(RHIGraphicsPipelineRef pipeline, std::vector<MeshBatch>& meshBatch);
+		uint32_t GetDrawCommandCount() { return m_MeshBatches.size(); }
+		RHIBufferRef GetMeshIndirectDrawDataBuffer() { return m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->GetRHIBuffer(); }
+
 	protected:
-		virtual void MeshPassProcessor::AddMeshBatch(const MeshBatch& batch) = 0;   // 需要具体的Pass说明这个batch自己需不需要
-		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& first) = 0;  // 因为创建pipelien需要Shader信息也需要vkRenderPass也就是附件信息，这些需要具体的Pass提供（Shader也可以来自材质）
-
+		virtual void MeshPassProcessor::AddMeshBatch(const MeshBatch& batch) = 0;
+		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& first) = 0;
 	private:
-		std::vector<MeshBatch> m_Batches;   // 从场景中收集并处理过的每个SubMesh数据
-		std::vector<DrawCommand> drawCommands;
-		std::map<DrawPipelineState, std::vector<DrawGeometryInfo>> m_DrawGeometries; // 把渲染Batch按照PipelineState进行分类
-		std::array<std::shared_ptr<MeshPassIndirectBuffers>, FRAMES_IN_FLIGHT> indirectBuffers;     // 每帧都完全重构的buffer，因此需要每帧一份
-		std::vector<RHIIndirectCommand> meshDrawCommands;
-		std::vector<IndirectMeshDrawInfo> meshDrawInfos;
+		void MapMeshBatches(MeshBatch& batch);
+	private:
+		std::vector<MeshBatch> m_MeshBatches; // 收集当前Pass需要的batch
 
-		void AddDrawInfo(DrawPipelineState& pipelineState, DrawGeometryInfo info);
-		void OnBuildDrawInfo(MeshBatch& batch);
-		void OnBuildDrawCommands(uint32_t pipelineIndex, RHIGraphicsPipelineRef pipeline, std::vector<DrawGeometryInfo>& second);
-		std::shared_ptr<MeshPassIndirectBuffers> GetIndirectBuffers();
+		std::array<std::shared_ptr<RenderBuffer<MeshIndirectDrawData>>, FRAMES_IN_FLIGHT> m_MeshIndirectDrawDataBuffer;
+		std::map<DrawPipelineState, std::vector<MeshBatch>> m_MeshBatchMap;
+		std::vector<MeshDrawCommand> m_MeshDrawCommands;  // 存储这个是为了Draw的时候遍历
+		std::vector<RHIIndirectCommand> m_IndirectCommands; // 存储这个是为了把Commands一口气上传
 	};
 	using MeshPassProcessorRef = std::shared_ptr<MeshPassProcessor>;
+
+
 
 	class MeshPass : public RenderPass
 	{
 	public:
 		virtual void Init() override { meshPassProcessor->Init(); }
-		virtual std::vector<MeshPassProcessorRef> GetMeshPassProcessors() { return { meshPassProcessor }; }
+		virtual MeshPassProcessorRef GetMeshPassProcessors() { return meshPassProcessor; }
 
 	protected:
 		MeshPassProcessorRef meshPassProcessor = nullptr;

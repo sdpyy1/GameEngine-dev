@@ -6,6 +6,7 @@ namespace GameEngine {
 	enum PassType
 	{
 		IBL_PASS,
+		GPUCULLING_PASS,
 		DIR_SHADOW_PASS,
 		POINT_SHADOW_PASS,
 		PREDEPTH_PASS,

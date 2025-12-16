@@ -23,6 +23,7 @@
 #include <Hazel/Renderer/RenderPass/TAAPass.h>
 #include <Hazel/Renderer/RenderPass/DDGIPass.h>
 #include <Hazel/Renderer/RenderPass/ExposurePass.h>
+#include <Hazel/Renderer/RenderPass/GPUCullingPass.h>
 
 namespace GameEngine {
 	RenderManager::RenderManager()
@@ -75,6 +76,7 @@ namespace GameEngine {
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
 
 		passes[IBL_PASS] = std::make_shared<IBLPass>();
+		passes[GPUCULLING_PASS] = std::make_shared<GPUCullingPass>();
 		meshPasses[MESH_PASS_DIRSHADOW_PASS] = std::make_shared<DirShadowPass>();
 		meshPasses[MESH_PASS_POINTSHADOW_PASS] = std::make_shared<PointShadowPass>();
 		meshPasses[MESH_PASS_GBUFFER_PASS] = std::make_shared<GBufferPass>();
@@ -86,7 +88,6 @@ namespace GameEngine {
 			passes[PATHTRACING_PASS] = std::make_shared<PathTracingPass>();
 			passes[DDGI_PASS] = std::make_shared<DDGIPass>();
 		}
-
 		passes[PREDEPTH_PASS] = meshPasses[MESH_PASS_PREDEPTH_PASS];
 		passes[GRID_PASS] = std::make_shared<GridPass>();
 		passes[GIZMO_PASS] = std::make_shared<GizmoPass>();
