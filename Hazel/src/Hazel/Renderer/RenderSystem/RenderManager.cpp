@@ -52,7 +52,7 @@ namespace GameEngine {
 		MeshCollector::CollectMesh();
 		m_RenderResourceManager->Tick();
 		auto& CurResource = m_PerFrameBaseResources[APP_FRAMEINDEX];
-		/// LOG_INFO("RenderManager::Tick");
+		// LOG_INFO("RenderManager::Tick");
 		CurResource.fence->Wait();
 		RHITextureRef CurSwapchainTexture = m_SwapChain->GetNewFrame(nullptr, CurResource.startSemaphore);
 		RHICommandListRef CurCommandList = CurResource.commandList;
@@ -69,6 +69,7 @@ namespace GameEngine {
 		CurCommandList->Execute(CurResource.fence, CurResource.startSemaphore, CurResource.finishSemaphore);
 		m_GPUTimeInfos = CurCommandList->GetGPUTime();
 		m_SwapChain->Present(CurResource.finishSemaphore);
+		m_DynamicRHI->Tick();
 	}
 
 	void RenderManager::InitPasses()

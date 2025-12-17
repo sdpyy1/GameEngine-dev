@@ -71,6 +71,18 @@ namespace GameEngine
 		auto instanceExtentions = VulkanUtil::GetRequiredInstanceExtensions(m_Config.debug);
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(instanceExtentions.size());
 		createInfo.ppEnabledExtensionNames = instanceExtentions.data();
+		//VkValidationFeaturesEXT validationFeatures{};
+		//VkValidationFeatureEnableEXT enables[] = {
+		//	VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT,
+		//	VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,
+		//	VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT
+		//};
+		//validationFeatures.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+		//validationFeatures.enabledValidationFeatureCount = 3;
+		//validationFeatures.pEnabledValidationFeatures = enables;
+		//createInfo.pNext = &validationFeatures;
+
+
 
 		// ´´½¨VulkanÊµÀý
 		VK_CHECK_RESULT(vkCreateInstance(&createInfo, nullptr, &m_Instance));
@@ -611,7 +623,7 @@ namespace GameEngine
 
 		// Upload Fonts
 		io.Fonts->AddFontFromFileTTF("Assets/Font/opensans/OpenSans-SemiBoldItalic.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesChineseFull());
-		RHI_DYNAMICRHI->GetImmediateCommandList(true);
+		RHI_DYNAMICRHI->GetImmediateCommandList();
 		RHI_DYNAMICRHI->GetImmediateCommandList()->UploadImGuiFonts();
 		RHI_DYNAMICRHI->GetImmediateCommandList()->Flush();
 	}
@@ -688,14 +700,10 @@ namespace GameEngine
 		return shader;
 	}
 
-	RHICommandListImmediateRef VulkanDynamicRHI::GetImmediateCommandList(bool start)
+	RHICommandListImmediateRef VulkanDynamicRHI::GetImmediateCommandList()
 	{
-		if (!m_ImmediateCommandList) {
-			CreateImmediateCommand();
-		}
-		if (start) {
-			CAST<VulkanRHICommandContextImmediate>(m_ImmediateCommandContext)->BeginSingleTimeCommand();
-		}
+		if(!m_ImmediateCommandList) CreateImmediateCommand();
+
 		return m_ImmediateCommandList;
 	}
 
@@ -1007,10 +1015,7 @@ namespace GameEngine
 			submitInfo.pSignalSemaphores = &CAST<VulkanRHISemaphore>(signalSemaphore)->GetHandle();
 		}
 
-		if (vkQueueSubmit(CAST<VulkanRHIQueue>(pool->GetQueue())->GetHandle(), 1, &submitInfo, signalFence) != VK_SUCCESS)
-		{
-			LOG_ERROR("Failed to submit command buffer!");
-		}
+		VK_CHECK_RESULT(vkQueueSubmit(CAST<VulkanRHIQueue>(pool->GetQueue())->GetHandle(), 1, &submitInfo, signalFence));
 	}
 
 	void VulkanRHICommandContext::BufferBarrier(const RHIBufferBarrier& barrier)
@@ -1187,11 +1192,12 @@ namespace GameEngine
 		}
 	}
 
-	VulkanRHICommandContextImmediate::VulkanRHICommandContextImmediate()
+	VulkanRHICommandContextImmediate::VulkanRHICommandContextImmediate(): RHICommandContextImmediate()
 	{
 		fence = VULKAN_RHI->CreateFence(true);
 		queue = VULKAN_RHI->GetQueue({ QUEUE_TYPE_GRAPHICS, 0 });
 		commandPool = VULKAN_RHI->CreateCommandPool({ queue });
+		BeginSingleTimeCommand();
 	}
 
 	void VulkanRHICommandContextImmediate::TextureBarrier(const RHITextureBarrier& barrier)
@@ -1547,6 +1553,7 @@ namespace GameEngine
 	void VulkanRHICommandContextImmediate::Flush()
 	{
 		EndSingleTimeCommand();
+		BeginSingleTimeCommand();
 	}
 
 	void VulkanRHICommandContextImmediate::BeginSingleTimeCommand()

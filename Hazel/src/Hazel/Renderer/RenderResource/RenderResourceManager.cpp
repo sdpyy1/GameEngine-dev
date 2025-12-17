@@ -355,8 +355,8 @@ namespace GameEngine {
 			if (i == APP_FRAMEINDEX) {
 				resource.isNeedUpdate = true;
 				resource.updateInfos.push_back(updateInfo);
-			}/*
-			else {
+			}
+			/*else {
 				resource.descriptorSet->UpdateDescriptor(updateInfo);
 			}*/
 		}

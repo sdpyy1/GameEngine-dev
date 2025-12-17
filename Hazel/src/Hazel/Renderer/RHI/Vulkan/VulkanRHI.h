@@ -39,7 +39,7 @@ namespace GameEngine
 		virtual RHIShaderRef CreateShader(const RHIShaderInfo& info) override final;
 		virtual RHIFenceRef CreateFence(bool signaled = false) override final;
 		virtual RHISemaphoreRef CreateSemaphore() override final;
-		virtual RHICommandListImmediateRef GetImmediateCommandList(bool start) override final;
+		virtual RHICommandListImmediateRef GetImmediateCommandList() override final;
 
 	public:
 		inline VkInstance GetInstance() const { return m_Instance; }
@@ -182,7 +182,7 @@ namespace GameEngine
 		RHIFenceRef fence;
 		RHIQueueRef queue;
 		RHICommandPoolRef commandPool;
-		VkCommandBuffer oldHandle = VK_NULL_HANDLE;  // 双缓冲
+		VkCommandBuffer oldHandle = VK_NULL_HANDLE;  // 每次Flush时都需要先等待oldhandle执行完成，并且释放后才执行新的Buffer
 
 		VkCommandBuffer handle;
 		friend class VulkanDynamicRHI;

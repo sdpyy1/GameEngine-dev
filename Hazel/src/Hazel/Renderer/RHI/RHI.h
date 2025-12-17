@@ -52,7 +52,7 @@ namespace GameEngine {
 		// Í¬²½
 		virtual RHIFenceRef CreateFence(bool signaled) = 0;
 		virtual RHISemaphoreRef CreateSemaphore() = 0;
-		virtual RHICommandListImmediateRef GetImmediateCommandList(bool start = false) = 0;
+		virtual RHICommandListImmediateRef GetImmediateCommandList() = 0;
 		void RegisterResource(RHIResourceRef resource) { resourceMap[resource->GetType()].push_back(resource); }
 		RHIConfig& GetConfig() { return m_Config; }
 		bool isEnableRayTracing() { return m_Config.enableRayTracing; }

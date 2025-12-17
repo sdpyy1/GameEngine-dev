@@ -119,7 +119,7 @@ namespace GameEngine
 
 		imageFormat = surfaceFormat.format;  // ´æ´¢extentºÍformat
 		imageExtent = extent;
-		RHI_DYNAMICRHI->GetImmediateCommandList(true);
+		RHI_DYNAMICRHI->GetImmediateCommandList();
 		for (uint32_t i = 0; i < imageCount; i++)
 		{
 			RHITextureInfo info = {};
@@ -363,7 +363,7 @@ namespace GameEngine
 			textures.push_back(texture);
 
 			// ÎÆÀíÆÁÕÏ£º´ÓUNDEFINED¹ý¶Éµ½PRESENT×´Ì¬
-			RHI_DYNAMICRHI->GetImmediateCommandList(true)->TextureBarrier({
+			RHI_DYNAMICRHI->GetImmediateCommandList()->TextureBarrier({
 				texture,
 				RESOURCE_STATE_UNDEFINED,
 				RESOURCE_STATE_PRESENT,
@@ -1619,7 +1619,7 @@ namespace GameEngine
 		buildInfo.scratchData.deviceAddress = VulkanUtil::GetBufferDeviceAddress(CAST<VulkanRHIBuffer>(scratchBuffer)->GetHandle(), VULKAN_DEVICE);
 		const VkAccelerationStructureBuildRangeInfoKHR* pBuildRange = &rangeInfo;
 
-		auto immediateCommandContest = VULKAN_RHI->GetImmediateCommandList(true);
+		auto immediateCommandContest = VULKAN_RHI->GetImmediateCommandList();
 		vkCmdBuildAccelerationStructuresKHR(
 			CAST<VulkanRHICommandContextImmediate>(VULKAN_RHI->GetImmediateCommandContext())->GetHandle(),
 			1,
@@ -1751,7 +1751,7 @@ namespace GameEngine
 			accelerationStructureBuildRangeInfo.transformOffset = 0;
 			std::vector<VkAccelerationStructureBuildRangeInfoKHR*> accelerationBuildStructureRangeInfos = { &accelerationStructureBuildRangeInfo };
 
-			auto immediateCommandContest = VULKAN_RHI->GetImmediateCommandList(true);
+			auto immediateCommandContest = VULKAN_RHI->GetImmediateCommandList();
 			vkCmdBuildAccelerationStructuresKHR(
 				CAST<VulkanRHICommandContextImmediate>(VULKAN_RHI->GetImmediateCommandContext())->GetHandle(),
 				1,

@@ -119,7 +119,7 @@ namespace GameEngine {
 		void OnBuildDrawCommands(RHIGraphicsPipelineRef pipeline, std::vector<MeshBatch>& meshBatch);
 		uint32_t GetDrawCommandCount() { return m_MeshBatches.size(); }
 		RHIBufferRef GetMeshIndirectDrawDataBuffer() { return m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->GetRHIBuffer(); }
-
+		std::vector<MeshBatch>& GetMeshBatches() { return m_MeshBatches; }
 	protected:
 		virtual void MeshPassProcessor::AddMeshBatch(const MeshBatch& batch) = 0;
 		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& first) = 0;

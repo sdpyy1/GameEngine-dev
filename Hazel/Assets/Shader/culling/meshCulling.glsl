@@ -32,7 +32,7 @@ void main()
     BoundingBox aabb = GetOriginBoundingBox(instanceId);    
     aabb = BoundingBoxTransform(aabb,modelMatrix);
 
-    // 摄像机剔除
+    // 摄像机剔除  TODO：用前一帧的HIZ进行遮挡剔除？
     if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_BASE){
 
         Camera camera = GetCamera();

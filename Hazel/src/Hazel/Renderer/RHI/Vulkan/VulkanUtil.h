@@ -59,10 +59,10 @@ namespace GameEngine {
         VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME,
 
         // Required for VK_KHR_ray_tracing_pipeline
-        //VK_KHR_SPIRV_1_4_EXTENSION_NAME,
+        VK_KHR_SPIRV_1_4_EXTENSION_NAME,
 
         // Required by VK_KHR_spirv_1_4
-        //VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME,
+        VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME,
     };
     // 验证层的功能
     static const std::vector<VkValidationFeatureEnableEXT> ENABLED_VALIDATION_FEATURES = {  // 需要时再启用，对帧数影响大
@@ -97,8 +97,8 @@ namespace GameEngine {
         {
             VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {};
             debugCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-            debugCreateInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-            debugCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT;
+            debugCreateInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
+            debugCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT;
             debugCreateInfo.pfnUserCallback =
                 [](VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                     VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -405,7 +405,7 @@ namespace GameEngine {
         {
             if (result != VK_SUCCESS)
             {
-                LOG_ERROR("VkResult is '{0}' in {1}:{2}", VKResultToString(result), file, line);
+                LOG_WARN("VkResult is '{0}' in {1}:{2}", VKResultToString(result), file, line);
                 if (result == VK_ERROR_DEVICE_LOST)
                 {
                     using namespace std::chrono_literals;

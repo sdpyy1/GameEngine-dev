@@ -133,7 +133,7 @@ namespace GameEngine
 		};
 		RHIBufferRef stagingBuffer = APP_DYNAMICRHI->CreateBuffer(bufferInfo);
 		memcpy(stagingBuffer->Map(), imageBuffer.Data, imageBuffer.Size);
-		APP_DYNAMICRHI->GetImmediateCommandList(true)->TextureBarrier(
+		APP_DYNAMICRHI->GetImmediateCommandList()->TextureBarrier(
 			{ m_Spec.texture,
 			RESOURCE_STATE_UNDEFINED, RESOURCE_STATE_TRANSFER_DST,
 			{TEXTURE_ASPECT_COLOR, 0, m_Spec.mipLevels, 0, 1} });
@@ -152,7 +152,7 @@ namespace GameEngine
 						{TEXTURE_ASPECT_COLOR, 0, m_Spec.mipLevels, 0, m_Spec.arrayLayers} });
 		}
 		else { // 也需要转到Shader读取布局
-			APP_DYNAMICRHI->GetImmediateCommandList(true)->TextureBarrier(
+			APP_DYNAMICRHI->GetImmediateCommandList()->TextureBarrier(
 				{ m_Spec.texture,
 				RESOURCE_STATE_TRANSFER_DST, RESOURCE_STATE_SHADER_RESOURCE,
 				{TEXTURE_ASPECT_COLOR, 0, m_Spec.mipLevels, 0, 1} });
