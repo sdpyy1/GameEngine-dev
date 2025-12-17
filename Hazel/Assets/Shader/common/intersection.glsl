@@ -54,4 +54,20 @@ bool FrustumIntersectBox(Frustum frustum, BoundingBox box)
     return true;
 }
 
+
+
+bool SphereIntersectBox(BoundingSphere sphere, BoundingBox box)
+{
+    vec3 closestPoint = clamp(
+        sphere.center,
+        box.minBound,
+        box.maxBound
+    );
+    vec3 delta = closestPoint - sphere.center;
+    float distSq = dot(delta, delta);
+    return distSq <= sphere.radius * sphere.radius;
+}
+
+
+
 #endif

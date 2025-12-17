@@ -29,13 +29,14 @@ void main()
     }
     uint instanceId = ALL_CULLING_BUFFERS[passTypeId].buffers[threadInstanceId].firstInstance;
     mat4 modelMatrix = GetModelMatrix(instanceId);
+    BoundingBox aabb = GetOriginBoundingBox(instanceId);    
+    aabb = BoundingBoxTransform(aabb,modelMatrix);
+
     // 摄像机剔除
     if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_BASE){
 
         Camera camera = GetCamera();
-        BoundingBox aabb = GetOriginBoundingBox(instanceId);    
 
-        aabb = BoundingBoxTransform(aabb,modelMatrix);
         if(GetRenderSetting().renderBoundingBox == 1){
             AddGizmoBoundingBox(aabb, vec4(1,0,0,1));
         }
@@ -46,9 +47,17 @@ void main()
             ALL_CULLING_BUFFERS[passTypeId].buffers[threadInstanceId].instanceCount = 0u;
         }
 
-    }else if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_DIRECTIONLIGHT_SHADOW){ // 定向光剔除
+    }else if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_DIRECTIONLIGHT_SHADOW){ 
+        // TODO: 定向光剔除
 
     }else if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_POINTLIGHT_SHADOW){ // 点光剔除
+
+        BoundingSphere sphere = GetPointLight(0).sphere;
+
+        bool isVisiable = SphereIntersectBox(sphere, aabb);
+        if(!isVisiable){
+            ALL_CULLING_BUFFERS[passTypeId].buffers[threadInstanceId].instanceCount = 0u;
+        }
 
     }
 }
