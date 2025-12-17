@@ -1,5 +1,6 @@
 #ifndef GIZMO_GLSL
 #define GIZMO_GLSL
+#include "struct.glsl"
 void AddGizmoBox(vec3 center, vec3 extent, vec4 color)
 {
     GizmoBoxInfo info;
@@ -10,7 +11,11 @@ void AddGizmoBox(vec3 center, vec3 extent, vec4 color)
     uint offset = atomicAdd(GIZMO_DRAW_DATA.command[0].instanceCount, 1);   // ʵ��������1��ע��atomicAdd���ص��Ǿ�ֵ�����Ǽ�1�Ľ��
     if(offset < MAX_GIZMO_PRIMITIVE_COUNT) GIZMO_DRAW_DATA.boxes[offset] = info;
 }
-
+void AddGizmoBoundingBox(BoundingBox box, vec4 color){
+        vec3 center = (box.maxBound + box.minBound) * 0.5;
+        vec3 extent = (box.maxBound - box.minBound) * 0.5;
+        AddGizmoBox(center, extent, color);
+}
 void AddGizmoSphere(vec3 center, float radious, vec4 color)
 {
     GizmoSphereInfo info;

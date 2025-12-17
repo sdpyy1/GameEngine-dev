@@ -147,10 +147,13 @@ namespace GameEngine {
 		uint32_t normalID = 0;
 		uint32_t tangentID = 0;
 		uint32_t texCoordID = 0;
+
 		uint32_t colorID = 0;
 		uint32_t boneIndexID = 0;
 		uint32_t boneWeightID = 0;
 		uint32_t _padding = 0;
+
+		BoundingBox box;
 	} MeshInfo;
 
 	// Mesh的实例信息
@@ -174,12 +177,16 @@ namespace GameEngine {
 		glm::mat4 prevView;
 		glm::mat4 prevProj;
 		glm::mat4 projNoJetter;
+
 		float Width;
 		float Height;
 		float Near;
 		float Far;
+
 		glm::vec3 Position;
 		uint32_t totalTick;
+
+		Frustum frustumArray;
 	};
 
 	typedef struct MaterialInfo
@@ -315,9 +322,6 @@ namespace GameEngine {
 		float IbLScale;
 		float pading[2];
 	};
-	struct DDGITextureInfo {
-
-	};
 	struct DDGISetting {
 		glm::vec3 centerPosition;
 		uint32_t _padding1;
@@ -337,7 +341,8 @@ namespace GameEngine {
 	};
 	struct RenderSettingInfo {
 		uint32_t debugDDGI;
-		uint32_t _padding[3];
+		uint32_t renderBoundingBox;
+		uint32_t _padding[2];
 	};
 
 

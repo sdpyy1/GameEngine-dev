@@ -6,6 +6,7 @@ namespace GameEngine {
 	struct Settings {
 		bool onlyIndirectionLight = false;
 		bool noDDGI = false;
+		bool renderBoundingBox = false;
 	};
 	class Entity;
 	class Scene : public Asset

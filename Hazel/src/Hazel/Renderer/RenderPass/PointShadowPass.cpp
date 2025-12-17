@@ -20,7 +20,7 @@ namespace GameEngine {
 	void PointShadowPass::Init()
 	{
 		meshPassProcessor = std::make_shared<PointShadowPassProcessor>(this);
-		meshPassProcessor->Init();
+		MeshPass::Init();
 
 		m_VertShader = std::make_shared<Shader>("mesh/shadow/PointShadow", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
         m_GeomShader = std::make_shared<Shader>("mesh/shadow/PointShadow", SHADER_FREQUENCY_GEOMETRY)->GetRHIShader();

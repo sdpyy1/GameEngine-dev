@@ -6,8 +6,9 @@
 
 namespace GameEngine
 {
-	void MeshPassProcessor::Init()
+	void MeshPassProcessor::Init(CullingType PassType)
 	{
+        m_PassType = PassType;
 		for (size_t i = 0; i < FRAMES_IN_FLIGHT; ++i) {
 			m_MeshIndirectDrawDataBuffer[i] = std::make_shared<RenderBuffer<MeshIndirectDrawData>>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
 		}
@@ -50,6 +51,7 @@ namespace GameEngine
 		// 5.将准备好的全部数据提交给GPU端
 		uint32_t instanceCount = (uint32_t)m_MeshBatches.size();
 		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&instanceCount, sizeof(uint32_t),0);
+		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&m_PassType, sizeof(uint32_t), sizeof(uint32_t));
 		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(m_IndirectCommands.data(), instanceCount * sizeof(RHIIndirectCommand), 4*sizeof(uint32_t));
 	}
 	void MeshPassProcessor::Draw(RHICommandListRef command) {
@@ -57,7 +59,7 @@ namespace GameEngine
 		{
 			auto [w, h] = APP_WINDOWSIZE;
 
-			// command->SetGraphicsPipeline(drawCommand.pipeline);
+			command->SetGraphicsPipeline(drawCommand.pipeline);
 
 			if (drawCommand.meshCommandRange.size > 0)
 			{
@@ -105,5 +107,17 @@ namespace GameEngine
 		pipelineState.meshRender = !pipelineState.clusterRender;
 
 		m_MeshBatchMap[pipelineState].push_back(batch);
+	}
+	void MeshPass::Init()
+	{
+		if (GetType() == DIR_SHADOW_PASS) {
+			meshPassProcessor->Init(CULLING_TYPE_DIRECTIONLIGHT_SHADOW);
+		}
+		else if (GetType() == POINT_SHADOW_PASS) {
+			meshPassProcessor->Init(CULLING_TYPE_POINTLIGHT_SHADOW);
+		}
+		else {
+            meshPassProcessor->Init(CULLING_TYPE_BASE);
+		}
 	}
 }

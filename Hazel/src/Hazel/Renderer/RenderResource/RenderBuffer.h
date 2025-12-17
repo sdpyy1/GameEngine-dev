@@ -95,6 +95,7 @@ namespace GameEngine
 		void SetColor(const std::vector<glm::vec3>& color);
 		void SetBoneIndex(const std::vector<glm::ivec4>& boneIndex);
 		void SetBoneWeight(const std::vector<glm::vec4>& boneWeight);
+		void SetBoundingBox(const BoundingBox& box);
 
 		RHIBufferRef positionBuffer;
 		RHIBufferRef normalBuffer;

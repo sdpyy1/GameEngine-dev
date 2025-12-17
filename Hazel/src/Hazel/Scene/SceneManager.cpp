@@ -26,7 +26,7 @@ namespace GameEngine
 		else {
             m_SceneInfo.globalSettingInfos.renderSetting.debugDDGI = 0;
 		}
-
+		m_SceneInfo.globalSettingInfos.renderSetting.renderBoundingBox = settings.renderBoundingBox? 1 : 0;
 		// µÆ¹âÉèÖÃ
 		auto dirLight = m_CurrentScene->GetFirstEntityWith<DirectionalLightComponent>();
 		Entity dirLightEntity = Entity{ dirLight ,m_CurrentScene };

@@ -296,6 +296,8 @@ namespace GameEngine {
             vertexBuffer->SetColor(submesh->color);
             vertexBuffer->SetBoneIndex(submesh->boneIndex);
             vertexBuffer->SetBoneWeight(submesh->boneWeight);
+            vertexBuffer->SetBoundingBox(submesh->box);
+
             submeshes[index].vertexBuffer = vertexBuffer;
             const MeshInfo& vi = vertexBuffer->vertexInfo;
             LOG_TRACE("  - Vertex Buffer Info:");

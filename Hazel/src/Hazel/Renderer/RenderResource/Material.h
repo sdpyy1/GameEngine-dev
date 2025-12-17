@@ -124,7 +124,7 @@ namespace GameEngine {
 		uint32_t renderQueue = 1000;                                // 用于指示渲染顺序
 		RenderPassMasks renderPassMask = PASS_MASK_DEFERRED_PASS;   // 用于指示和标记特定pass，方便对应的mesh pass收集
 
-		RasterizerCullMode cullMode = CULL_MODE_BACK;               // 剔除模式
+		RasterizerCullMode cullMode = CULL_MODE_FRONT;               // 剔除模式
 		RasterizerFillMode fillMode = FILL_MODE_SOLID;              // 填充模式
 		bool depthTest = true;                                      // 深度测试
 		bool depthWrite = true;                                     // 深度写入

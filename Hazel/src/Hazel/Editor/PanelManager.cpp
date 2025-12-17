@@ -116,6 +116,9 @@ namespace GameEngine {
 			ImGui::Checkbox("OnlyDDGI", &curScene->settings.onlyIndirectionLight);
 			ImGui::Checkbox("NoDDGI", &curScene->settings.noDDGI);
 		}
+		if (ImGui::CollapsingHeader("RenderSetting", ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::Checkbox("ShowBoundingBox", &curScene->settings.renderBoundingBox);
+		}
 		DebugTexture();
 		ImGui::End();
 	}

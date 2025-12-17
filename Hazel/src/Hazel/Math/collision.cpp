@@ -221,29 +221,62 @@ namespace GameEngine {
         return sphere;
     }
 
-    Frustum CreateFrustumFromMatrix(glm::mat4 mat,
-        float     x_left,
-        float     x_right,
-        float     y_top,
-        float     y_bottom,
-        float     z_near,
-        float     z_far)
+    Frustum CreateFrustumFromMatrix(const glm::mat4& VP)
     {
         Frustum frustum;
-        glm::mat4 matColumn = glm::transpose(mat);
-        frustum.planeRight = matColumn[0] - matColumn[3] * x_right;
-        frustum.planeLeft = matColumn[3] * x_left - matColumn[0];
-        frustum.planeTop = matColumn[3] * y_top - matColumn[1];
-        frustum.planeBottom = matColumn[1] - matColumn[3] * y_bottom;
-        frustum.planeNear = matColumn[3] * z_near - matColumn[2];
-        frustum.planeFar = matColumn[2] - matColumn[3] * z_far;
+        // 右平面
+        frustum.planeRight = glm::vec4(
+            VP[0][3] - VP[0][0],
+            VP[1][3] - VP[1][0],
+            VP[2][3] - VP[2][0],
+            VP[3][3] - VP[3][0]
+        );
 
-        auto normalizePlane = [](glm::vec4& plane) {
-            glm::vec3 normal(plane.x, plane.y, plane.z);
-            float length = glm::length(normal);
-            if (length > 1e-6f) {
-                plane /= length;
-            }
+        // 左平面
+        frustum.planeLeft = glm::vec4(
+            VP[0][3] + VP[0][0],
+            VP[1][3] + VP[1][0],
+            VP[2][3] + VP[2][0],
+            VP[3][3] + VP[3][0]
+        );
+
+        // 上平面
+        frustum.planeTop = glm::vec4(
+            VP[0][3] - VP[0][1],
+            VP[1][3] - VP[1][1],
+            VP[2][3] - VP[2][1],
+            VP[3][3] - VP[3][1]
+        );
+
+        // 下平面
+        frustum.planeBottom = glm::vec4(
+            VP[0][3] + VP[0][1],
+            VP[1][3] + VP[1][1],
+            VP[2][3] + VP[2][1],
+            VP[3][3] + VP[3][1]
+        );
+
+        // 远平面
+        frustum.planeFar = glm::vec4(
+            VP[0][3] - VP[0][2],
+            VP[1][3] - VP[1][2],
+            VP[2][3] - VP[2][2],
+            VP[3][3] - VP[3][2]
+        );
+
+        // 近平面
+        frustum.planeNear = glm::vec4(
+            VP[0][3] + VP[0][2],
+            VP[1][3] + VP[1][2],
+            VP[2][3] + VP[2][2],
+            VP[3][3] + VP[3][2]
+        );
+
+        // 归一化
+        auto normalizePlane = [](glm::vec4& p)
+            {
+                float len = glm::length(glm::vec3(p));
+                p /= len;
             };
 
         normalizePlane(frustum.planeRight);

@@ -81,6 +81,12 @@ namespace GameEngine {
             BINDLESS_SLOT_BONE_WEIGHT);
     }
 
+    void VertexBuffer::SetBoundingBox(const BoundingBox& box)
+    {
+        vertexInfo.box = box;
+        RENDER_RESOURCEMANAGER->SetMeshInfo(vertexInfo, vertexID);
+    }
+
     void VertexBuffer::SetBufferData(void* data, uint32_t size, RHIBufferRef& buffer, uint32_t& id, uint32_t slot)
     {
         if (size == 0) return;

@@ -79,13 +79,22 @@ namespace GameEngine {
 				(fragmentShader.get() != other.fragmentShader.get()) ? (fragmentShader.get() < other.fragmentShader.get()) : false;
 		}
 	};
+	
+
+	enum CullingType :uint32_t {
+		CULLING_TYPE_BASE,
+		CULLING_TYPE_DIRECTIONLIGHT_SHADOW,
+		CULLING_TYPE_POINTLIGHT_SHADOW,
+		CULLING_TYPE_MAX_CNT
+	};
 
 	/*
 		为了方便剔除时拿到详细信息，上传的Buffer不能只包含绘制指令,还需要记录实例数量,如果后续需要更多信息，可以扩展这个结构体
 	*/
 	struct MeshIndirectDrawData {
 		 uint32_t instanceCount;
-		 uint32_t _padding[3];
+		 CullingType passType;
+		 uint32_t _padding[2];
 
 		 std::array<RHIIndirectCommand, MAX_PER_FRAME_INSTANCE_SIZE> indirectCommands;
 	};
@@ -103,7 +112,7 @@ namespace GameEngine {
 
 	class MeshPassProcessor {
 	public:
-		void Init();
+		void Init(CullingType PassType);
 		void Process(const std::vector<MeshBatch>& drawBatches);
 		void Draw(RHICommandListRef command);
 		void AddBatch(const MeshBatch& batch) { m_MeshBatches.push_back(batch); }
@@ -118,7 +127,7 @@ namespace GameEngine {
 		void MapMeshBatches(MeshBatch& batch);
 	private:
 		std::vector<MeshBatch> m_MeshBatches; // 收集当前Pass需要的batch
-
+		CullingType m_PassType;
 		std::array<std::shared_ptr<RenderBuffer<MeshIndirectDrawData>>, FRAMES_IN_FLIGHT> m_MeshIndirectDrawDataBuffer;
 		std::map<DrawPipelineState, std::vector<MeshBatch>> m_MeshBatchMap;
 		std::vector<MeshDrawCommand> m_MeshDrawCommands;  // 存储这个是为了Draw的时候遍历
@@ -131,7 +140,7 @@ namespace GameEngine {
 	class MeshPass : public RenderPass
 	{
 	public:
-		virtual void Init() override { meshPassProcessor->Init(); }
+		virtual void Init() override;
 		virtual MeshPassProcessorRef GetMeshPassProcessors() { return meshPassProcessor; }
 
 	protected:

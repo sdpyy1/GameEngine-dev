@@ -38,12 +38,19 @@ namespace GameEngine {
 
     struct Frustum
     {
-        glm::vec4 planeRight;
-        glm::vec4 planeLeft;
-        glm::vec4 planeTop;
-        glm::vec4 planeBottom;
-        glm::vec4 planeNear;
-        glm::vec4 planeFar;
+        union
+        {
+            struct
+            {
+                glm::vec4 planeRight;
+                glm::vec4 planeLeft;
+                glm::vec4 planeTop;
+                glm::vec4 planeBottom;
+                glm::vec4 planeNear;
+                glm::vec4 planeFar;
+            };
+            glm::vec4 planes[6];
+        };
     };
 
     struct BoundingBox
@@ -126,13 +133,7 @@ namespace GameEngine {
             EndSerailize
     };
 
-    Frustum CreateFrustumFromMatrix(glm::mat4 mat,
-        float     left,
-        float     right,
-        float     top,
-        float     bottom,
-        float     near,
-        float     far);
+    Frustum CreateFrustumFromMatrix(const glm::mat4& VP);
 
     bool FrustumIntersectBox(const Frustum& frustum, const BoundingBox& box);
 

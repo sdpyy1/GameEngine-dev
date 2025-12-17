@@ -47,6 +47,8 @@ namespace GameEngine {
             vertexBuffer->SetColor(mesh->color);
             vertexBuffer->SetBoneIndex(mesh->boneIndex);
             vertexBuffer->SetBoneWeight(mesh->boneWeight);
+            vertexBuffer->SetBoundingBox(mesh->box);
+
             const MeshInfo& vi = vertexBuffer->vertexInfo;
             LOG_TRACE("  - Vertex Buffer Info:");
             LOG_TRACE("    positionID:    {}", vi.positionID);

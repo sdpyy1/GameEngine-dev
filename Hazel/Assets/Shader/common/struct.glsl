@@ -171,12 +171,18 @@ struct MeshInfo
     uint normalID;
     uint tangentID;
     uint texCoordID;
+
     uint colorID;
     uint boneIndexID;              
     uint boneWeightID;
     uint _padding;
-};
 
+    BoundingBox boundingBox;
+};
+// 视锥
+struct Frustum {
+    vec4 planes[6];
+};
 struct Camera{
     mat4 view;
     mat4 proj;
@@ -187,12 +193,16 @@ struct Camera{
     mat4 prevView;
     mat4 prevProj;
     mat4 projNoJetter;
+
 	float width;
 	float height;
 	float Near;
 	float Far;
+
 	vec3 position;
     uint totalTick;
+
+    Frustum frustum;
 };
 
 struct IconTextureInfo
@@ -273,7 +283,8 @@ struct DDGISetting {
 };
 struct RenderSetting {
     uint debugDDGI;
-    uint _padding[3];
+    uint renderBoundingBox;
+    uint _padding[2];
 };
 struct GlobalSettingInfo
 { 

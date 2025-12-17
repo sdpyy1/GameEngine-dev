@@ -87,6 +87,9 @@ vec4 GetVertexBoneWeight(in uint vertexID, in uint index)
                 BONEWEIGHTS[boneWeightID].boneWeight[4 * index + 2],
                 BONEWEIGHTS[boneWeightID].boneWeight[4 * index + 3]);   
 }
+MeshInstanceInfo GetInstanceInfo(in uint instanceID){
+    return MESHINSTANCEINFO.slot[instanceID];
+}
 mat4 GetModelMatrix(in uint instanceID)
 {
     return MESHINSTANCEINFO.slot[instanceID].model;
@@ -180,7 +183,9 @@ vec4 GetTex3D(in uint slot, in vec3 vector, in float lod) {
 MaterialInfo GetMaterialInfo(in uint instanceID) {
 	return MATERIALINFO.slot[MESHINSTANCEINFO.slot[instanceID].materialInfoID]; 
 }
-
+BoundingBox GetOriginBoundingBox(in uint instanceID) {
+    return MESHINFO.slot[MESHINSTANCEINFO.slot[instanceID].vertexID].boundingBox;
+}
 vec4 GetDiffuse(in MaterialInfo material, in vec2 coord) {
     if(material.textureDiffuse > 0)    
     {

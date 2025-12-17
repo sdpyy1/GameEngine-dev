@@ -36,9 +36,6 @@ namespace GameEngine
 			batch.push_back(drawBatch);
 
 			//////////////////////////////////////////////// 更新实例信息 ////////////////////////////////////////////
-			if (transform == meshComponent.prevModel) {
-				continue; // 如果没动就没必要更新实例信息
-			}
 			meshComponent.meshInfo.modelMatrix = transform;
 			meshComponent.meshInfo.prevModelMatrix = meshComponent.prevModel;
 			if (meshComponent.meshInfoID == 0) {
@@ -48,8 +45,11 @@ namespace GameEngine
 			meshComponent.meshInfo.indexID = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].indexBuffer->indexID;
 			meshComponent.meshInfo.vertexID = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].vertexBuffer->vertexID;
 			meshComponent.meshInfo.materialID = meshComponent.material? meshComponent.material->GetMaterialID():0;
+
 			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshComponent.meshInfo, meshComponent.meshInfoID);  //TODO:目前是一个Mesh一个Mesh上传数据到GPU，需要合并上传，但是涉及到如何合并的问题
 			meshComponent.prevModel = transform;
+
+		
 		}
 
 		for (auto& meshPass : APP_RENDERSYSTEM->GetMeshPasses()) {
