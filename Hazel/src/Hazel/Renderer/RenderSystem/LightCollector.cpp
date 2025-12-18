@@ -37,6 +37,7 @@ namespace GameEngine {
 					lightInfo.dirLights.view[i] = cascades[i].View;
 					lightInfo.dirLights.viewProj[i] = cascades[i].ViewProj;
 					lightInfo.dirLights.SplitDepth[i] = cascades[i].SplitDepth;
+					lightInfo.dirLights.frustum[i] = CreateFrustumFromMatrix(cascades[i].ViewProj);
 				}
 				break; // only one directional light
 			}

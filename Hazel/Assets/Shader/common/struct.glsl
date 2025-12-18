@@ -14,6 +14,9 @@ struct BoundingBox
     vec3 minBound;
     float _padding1;
 };
+struct Frustum {
+    vec4 planes[6];
+};
 struct DirectionLight
 {
     vec3 position;
@@ -27,6 +30,8 @@ struct DirectionLight
     mat4 view[CSM_LEVEL_COUNT];
     mat4 projection[CSM_LEVEL_COUNT];
     mat4 viewProj[CSM_LEVEL_COUNT];
+    Frustum frustum[CSM_LEVEL_COUNT];
+
     float SplitDepth[CSM_LEVEL_COUNT];
 };
 
@@ -180,9 +185,7 @@ struct MeshInfo
     BoundingBox boundingBox;
 };
 // 视锥
-struct Frustum {
-    vec4 planes[6];
-};
+
 struct Camera{
     mat4 view;
     mat4 proj;

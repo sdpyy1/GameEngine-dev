@@ -86,6 +86,8 @@ namespace GameEngine {
 		glm::mat4 view[CSM_LEVEL_COUNT];
 		glm::mat4 projection[CSM_LEVEL_COUNT];
 		glm::mat4 viewProj[CSM_LEVEL_COUNT];
+		Frustum frustum[CSM_LEVEL_COUNT];
+
 		float SplitDepth[CSM_LEVEL_COUNT];
 	};
 
@@ -186,7 +188,7 @@ namespace GameEngine {
 		glm::vec3 Position;
 		uint32_t totalTick;
 
-		Frustum frustumArray;
+		Frustum frustum;
 	};
 
 	typedef struct MaterialInfo

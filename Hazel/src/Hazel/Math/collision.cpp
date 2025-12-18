@@ -221,6 +221,10 @@ namespace GameEngine {
         return sphere;
     }
 
+    /*
+        注意这种内存位置读取，要考虑矩阵的存储是列主序还是行主序， glm的mat4是列主序的
+        这段代码生成的平面方程的法线都指向视锥体内部
+    */
     Frustum CreateFrustumFromMatrix(const glm::mat4& VP)
     {
         Frustum frustum;

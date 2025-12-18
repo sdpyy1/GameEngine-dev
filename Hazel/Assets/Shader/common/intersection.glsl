@@ -33,6 +33,12 @@ BoundingBox BoundingBoxTransform(BoundingBox box, mat4 transform)
 
 	return newBox;
 }
+
+
+/*
+	当前Frustum的6个平面的法向量都指向内部
+	这里的相交判断利用的是SAT（分离轴定理），平面的法向量方向作为分离轴，整个平面在分离轴上就只是一个点，判断AABB盒在分离轴上的范围与这个点的关系来进行相交判断
+*/
 bool FrustumIntersectBox(Frustum frustum, BoundingBox box)
 {
     vec3 center = (box.maxBound + box.minBound) * 0.5;
@@ -42,13 +48,12 @@ bool FrustumIntersectBox(Frustum frustum, BoundingBox box)
     {
         vec4 plane = frustum.planes[i];
 
-        vec3 absN = abs(plane.xyz);
-        float radius = dot(absN, extent);
-
+		// 这段蜜汁代码需要结合记录的博客来看，真的不理解清楚，这代码写的简直是顶级防御性编程
+		vec3 absN = abs(plane.xyz);
+        float radius = dot(absN, extent); // AABB中心到AABB的所有投影位置的最大距离
         float distance = dot(plane.xyz, center) + plane.w;
-
         if (distance < -radius)
-            return false;   // 被该平面完全剔除
+            return false;
     }
 
     return true;

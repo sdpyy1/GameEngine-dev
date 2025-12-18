@@ -208,7 +208,7 @@ namespace GameEngine {
 		tmpdata.Far = camera->GetFarClip();
 		tmpdata.Position = camera->GetPosition();
 		tmpdata.totalTick = APP_TICK;
-		tmpdata.frustumArray = CreateFrustumFromMatrix(tmpdata.projNoJetter * tmpdata.view);
+		tmpdata.frustum = CreateFrustumFromMatrix(tmpdata.projNoJetter * tmpdata.view);
 		m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer.SetData(tmpdata);
 	}
 

@@ -182,7 +182,7 @@ namespace GameEngine
 		RHIFenceRef fence;
 		RHIQueueRef queue;
 		RHICommandPoolRef commandPool;
-		VkCommandBuffer oldHandle = VK_NULL_HANDLE;  // 每次Flush时都需要先等待oldhandle执行完成，并且释放后才执行新的Buffer
+		VkCommandBuffer oldHandle = VK_NULL_HANDLE;  // 每次Flush时都需要先等待oldhandle执行完成，并且释放后才c新的Buffer
 
 		VkCommandBuffer handle;
 		friend class VulkanDynamicRHI;
