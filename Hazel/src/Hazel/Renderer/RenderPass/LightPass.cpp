@@ -59,7 +59,8 @@ namespace GameEngine {
 		RDGTextureHandle ddgi_Distance = builder.GetTexture("DDGI_Distance");
 		RDGTextureHandle ddgi_Irrandiance = builder.GetTexture("DDGI_Irrandiance");
 
-
+		RDGTextureHandle clusterTexture = builder.GetTexture("ClusterLightingInfoTexture");
+		RDGBufferHandle clusterIdBuffer = builder.GetBuffer("ClusterLightingIdBuffer");
 
 		auto& builde = builder.CreateRenderPass(GetName())
 			.RootSignature(m_RootSignature)
@@ -75,6 +76,8 @@ namespace GameEngine {
 			// 注意4是点光源阴影
             .Read(1, 5, 0, ddgi_Irrandiance, VIEW_TYPE_2D_ARRAY,{ TEXTURE_ASPECT_COLOR,0,1,0,ddgi_LaryCount })
             .Read(1, 6, 0, ddgi_Distance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR,0,1,0,ddgi_LaryCount })
+			.ReadWrite(1, 7, 0, clusterTexture, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,LIGHT_CLUSTER_DEPTH })
+			.ReadWrite(1, 8, 0, clusterIdBuffer)
 			.Execute([&](RDGPassContext context)
 				{
 					auto [w, h] = APP_WINDOWSIZE;

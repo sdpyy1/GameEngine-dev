@@ -209,11 +209,18 @@ vec3 GetRandomCosineDirectionOnHemisphere(vec3 direction,inout Rand seed)
     return normalize(p);
 }
 
+float LinearDepthToNonLinear(float linearDepth, Camera camera) {
+    return (linearDepth - camera.Near) / (camera.Far - camera.Near);
+}
+
+float NonLinearDepthToLinear(float nonLinearDepth, Camera camera) {
+    return nonLinearDepth * (camera.Far - camera.Near) + camera.Near;
+}
 
 /*
-	传入的深度是线性深度[near-far]
+	传入自定义深度（线性深度[near-far]）
 */
-vec3 SceenToWorld(vec2 uv, float viewZ, Camera camera)
+vec3 SceenToWorldCustomDepth(vec2 uv, float viewZ, Camera camera)
 {
     vec2 ndcXY = uv * 2.0 - 1.0;
     vec4 ndcPos = vec4(ndcXY, 0.0, 1.0);
@@ -226,6 +233,14 @@ vec3 SceenToWorld(vec2 uv, float viewZ, Camera camera)
     return worldPos.xyz;
 }
 
+vec3 SceenToWorld(vec2 uv, float viewZ, Camera camera)
+{
+    vec2 ndcXY = uv * 2.0 - 1.0;
+    vec4 ndcPos = vec4(ndcXY, viewZ, 1.0);
+    vec4 viewPos = camera.InverseViewProj * ndcPos;
+    viewPos /= viewPos.w;
+    return viewPos.xyz;
+}
 
 vec3 SceenToView(vec2 uv, float depth, Camera camera){
 	vec3 ndc = vec3(uv * 2.0 - 1.0, depth);

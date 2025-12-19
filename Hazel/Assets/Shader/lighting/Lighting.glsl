@@ -30,6 +30,11 @@ layout(set = 1, binding = 3) uniform texture2D u_BRDFLUTTexture;
 layout(set = 1, binding = 4) uniform textureCube u_PointShadowMapTexture;
 layout(set = 1, binding = 5) uniform texture2DArray ddgi_Irrandiance;
 layout(set = 1, binding = 6) uniform texture2DArray ddgi_Distance;
+
+layout(set = 1, binding = 7, rg32ui) uniform  uimage2DArray u_Clusters;   // FORMAT_R32G32_UINT
+layout(set = 1, binding = 8) buffer lightIDs{
+    uint lightID[];
+}u_lightIDs;
 void main()
 {
     vec3 WorldPosition = GetGBufferPosition(TexCoord);
@@ -46,14 +51,23 @@ void main()
 	vec3 V = normalize(CAMERAINFO.position - WorldPosition);
 
 
-	
+
+
+
 ///////////////////////////////////////////// 直接光照 /////////////////////////////////////////////
 	vec2 shadowRes = DirectionShadow(u_DirShadowMapTexture,WorldPosition,N);
 	vec3 directionLightContribution = CalculateDirectionalLight(albedo, roughness, metallic, N, V) *shadowRes.x ;
 	vec3 pointLightContribution = vec3(0);
-	for(int i = 0; i < GetPointLightCount(); i++){
-		pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, i) * PointShadow(u_PointShadowMapTexture,WorldPosition,i); 
+	ivec3 clusterCoord = GetClusterIndex(WorldPosition,CAMERAINFO);
+	uvec2 clusterInfo = imageLoad(u_Clusters, ivec3(clusterCoord)).xy;
+	uint lightCount = clusterInfo.x;
+	uint lightOffset = clusterInfo.y;
+	for(int i = 0; i < lightCount; i++){
+		pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, u_lightIDs.lightID[lightOffset + i]) * PointShadow(u_PointShadowMapTexture,WorldPosition,u_lightIDs.lightID[lightOffset + i]); 
 	}
+	// for(int i = 0; i < GetPointLightCount(); i++){
+	// 	pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, i) * PointShadow(u_PointShadowMapTexture,WorldPosition,i); 
+	// }
 	vec3 spotLightContribution = vec3(0);
 	for(int i = 0; i < GetSpotLightCount(); i++){
 		spotLightContribution += CalculateSpotLight(albedo, roughness, metallic,WorldPosition, N, V, i) * SpotShadow(u_PointShadowMapTexture,WorldPosition,i); 

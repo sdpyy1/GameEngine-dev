@@ -128,6 +128,7 @@ namespace GameEngine
 			.AllowRenderTarget()
 			.Finish();
 
+
 		RDGTextureHandle depth = builder.GetTexture("Depth");
 
 		if (IsEnabled()) {

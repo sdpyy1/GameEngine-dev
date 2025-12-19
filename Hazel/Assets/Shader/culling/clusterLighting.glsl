@@ -35,53 +35,54 @@ void main()
     if (globalID.x >= clusterX || 
         globalID.y >= clusterY || 
         globalID.z >= clusterZ) {
-        imageStore(u_Clusters, ivec3(globalID), uvec4(uvec2(888, 888), 0, 0));
-
         return;
     }
 
-    //////////////////////////////////////// 计算每个簇的世界坐标（先计算平面坐标下8个顶点位置，转到世界空间即可） ///////////////////////////////////////////
-    float pixelMinX = w / clusterX * globalID.x;
-    float pixelMinY = h / clusterY * globalID.y;
-    float pixelMaxX = pixelMinX + w / clusterX;
-    float pixelMaxY = pixelMinY + h / clusterY;
+    //////////////////////////////////////// 计算每个簇的世界坐标（先计算NDC坐标下8个顶点位置，转到世界空间即可） ///////////////////////////////////////////
+    float ndcMinx = float(globalID.x) / float(clusterX) *2 -1;
+    float ndcMiny = float(globalID.y) / float(clusterY) *2 -1;
+    float ndcMaxx = (float(globalID.x) + 1) / float(clusterX) *2 -1;
+    float ndcMaxy = (float(globalID.y) + 1) / float(clusterY) *2 -1;
 
-    // 像素坐标转0~1的归一化UV
-    vec2 uvMin = vec2(pixelMinX / w, pixelMinY / h);
-    vec2 uvMax = vec2(pixelMaxX / w, pixelMaxY / h);
+    // 线性划分
+    float minZ = float(globalID.z) / float(clusterZ);
+    float maxZ = float((globalID.z + 1)) / float(clusterZ);
 
     float near = camera.Near;
     float far = camera.Far;
-	// float minZ 	= (far - near) / LIGHT_CLUSTER_DEPTH * float(globalID.z) + near;
-    // float maxZ 	= (far - near) / LIGHT_CLUSTER_DEPTH * float(globalID.z + 1) + near;
-    float nz0 = float(globalID.z)     / float(LIGHT_CLUSTER_DEPTH);
-    float nz1 = float(globalID.z + 1) / float(LIGHT_CLUSTER_DEPTH);
 
-    float minZ = camera.Near * pow(camera.Far / camera.Near, nz0);
-    float maxZ = camera.Near * pow(camera.Far / camera.Near, nz1);
-    // 近平面4个点
-    vec3 p0 = SceenToWorld(uvMin, minZ, camera);
-    vec3 p1 = SceenToWorld(vec2(uvMax.x, uvMin.y), minZ, camera);
-    vec3 p2 = SceenToWorld(vec2(uvMin.x, uvMax.y), minZ, camera);
-    vec3 p3 = SceenToWorld(uvMax, minZ, camera);
+    // 一长条的簇
+    vec3 p0 = SceenToWorld(vec2(ndcMinx, ndcMiny), 0, camera);
+    vec3 p1 = SceenToWorld(vec2(ndcMinx, ndcMiny), 1, camera);
+    vec3 p2 = SceenToWorld(vec2(ndcMinx, ndcMaxy), 0, camera);
+    vec3 p3 = SceenToWorld(vec2(ndcMinx, ndcMaxy), 1, camera);
+    vec3 p4 = SceenToWorld(vec2(ndcMaxx, ndcMiny), 0, camera);
+    vec3 p5 = SceenToWorld(vec2(ndcMaxx, ndcMiny), 1, camera);
+    vec3 p6 = SceenToWorld(vec2(ndcMaxx, ndcMaxy), 0, camera);
+    vec3 p7 = SceenToWorld(vec2(ndcMaxx, ndcMaxy), 1, camera);
 
-    // 远平面4个点
-    vec3 p4 = SceenToWorld(uvMin, maxZ, camera);
-    vec3 p5 = SceenToWorld(vec2(uvMax.x, uvMin.y), maxZ, camera);
-    vec3 p6 = SceenToWorld(vec2(uvMin.x, uvMax.y), maxZ, camera);
-    vec3 p7 = SceenToWorld(uvMax, maxZ, camera);
-    vec3 clusterCenter = (p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7) / 8.0;
+
+    // 最终簇的顶点坐标
+    vec3 clusterP0 = p0 + minZ * (p1-p0);
+    vec3 clusterP1 = p0 + maxZ * (p1-p0);
+    vec3 clusterP2 = p0 + minZ * (p3-p2);
+    vec3 clusterP3 = p0 + maxZ * (p3-p2);
+    vec3 clusterP4 = p0 + minZ * (p5-p4);
+    vec3 clusterP5 = p0 + maxZ * (p5-p4);
+    vec3 clusterP6 = p0 + minZ * (p7-p6);
+    vec3 clusterP7 = p0 + maxZ * (p7-p6);
+    vec3 clusterCenter = (clusterP0 + clusterP1 + clusterP2 + clusterP3 + clusterP4 + clusterP5 + clusterP6 + clusterP7) / 8;
 
     // 构建视锥
     Frustum frustum;
-    frustum.planes[0] = calculatePlane(p0, p1, p3, clusterCenter); // 近平面
-    frustum.planes[1] = calculatePlane(p4, p6, p5, clusterCenter); // 远平面
-    frustum.planes[2] = calculatePlane(p0, p2, p6, clusterCenter); // 左平面
-    frustum.planes[3] = calculatePlane(p1, p5, p7, clusterCenter); // 右平面
-    frustum.planes[4] = calculatePlane(p0, p1, p5, clusterCenter); // 下平面
-    frustum.planes[5] = calculatePlane(p2, p7, p6, clusterCenter); // 上平面
+    frustum.planes[0] = calculatePlane(clusterP0, clusterP4,clusterP2, clusterCenter); // 近平面
+    frustum.planes[1] = calculatePlane(clusterP1, clusterP3, clusterP5, clusterCenter); // 远平面
+    frustum.planes[2] = calculatePlane(clusterP0, clusterP2, clusterP1, clusterCenter); // 左平面
+    frustum.planes[3] = calculatePlane(clusterP4, clusterP5,clusterP6, clusterCenter); // 右平面
+    frustum.planes[4] = calculatePlane(clusterP0, clusterP1, clusterP4, clusterCenter); // 下平面
+    frustum.planes[5] = calculatePlane(clusterP2, clusterP6, clusterP3, clusterCenter); // 上平面
 
-    // 先缓存所有相交的灯光ID
+    //////////////////////////////////////// 相加测试与记录数据 ///////////////////////////////////////////
 	uint lightIDs[MAX_LIGHTS_PER_CLUSTER];
     uint lightCount = 0;
     for(int i = 0; i < GetPointLightCount(); i++){
@@ -89,7 +90,8 @@ void main()
         bool isVisiable = FrustumIntersectSphere(frustum, sphere);
         if(isVisiable){
             lightIDs[lightCount++] = i;
-            AddGizmoLine(clusterCenter,sphere.center ,vec4(1.0, 0.0, 0.0, 1.0));
+            //DrawFrustumEdges(clusterP1, clusterP3,clusterP5, clusterP7, clusterP2, clusterP4,  clusterP6, clusterP0, vec4(1.0, 0.0, 0.0, 1.0));
+            //AddGizmoLine(clusterCenter,sphere.center ,vec4(1.0, 0.0, 0.0, 1.0));
         }
 	}
 
@@ -98,19 +100,7 @@ void main()
     for(uint i = 0; i < lightCount; i++){
         u_lightIDs.lightID[startOffset + i] = lightIDs[i];
     }
-    if(lightCount > 0){
-        imageStore(u_Clusters, ivec3(globalID), uvec4(uvec2(lightCount, startOffset), 0, 0));
-    }
+    imageStore(u_Clusters, ivec3(globalID), uvec4(uvec2(lightCount, startOffset), 0, 0));
+
 }
-
-
-
-
-
-
-
-
-
-
-
 #endif

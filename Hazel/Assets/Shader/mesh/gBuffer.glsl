@@ -50,7 +50,6 @@ layout (location = 1) out vec4 o_Normal;
 layout (location = 2) out vec4 o_Material;
 layout (location = 3) out vec4 o_Albedo;
 layout (location = 4) out vec2 o_Velocity;
-
 void main()
 {
     MaterialInfo material   = GetMaterialInfo(IN_ID);
