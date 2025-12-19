@@ -8,7 +8,7 @@ void AddGizmoBox(vec3 center, vec3 extent, vec4 color)
     info.extent = extent;
     info.color = color;
 
-    uint offset = atomicAdd(GIZMO_DRAW_DATA.command[0].instanceCount, 1);   // ʵ��������1��ע��atomicAdd���ص��Ǿ�ֵ�����Ǽ�1�Ľ��
+    uint offset = atomicAdd(GIZMO_DRAW_DATA.command[0].instanceCount, 1); 
     if(offset < MAX_GIZMO_PRIMITIVE_COUNT) GIZMO_DRAW_DATA.boxes[offset] = info;
 }
 void AddGizmoBoundingBox(BoundingBox box, vec4 color){
@@ -49,4 +49,25 @@ void AddGizmoBillboard(vec3 center, vec2 extent, uint textureID, vec4 color)
     uint offset = atomicAdd(GIZMO_DRAW_DATA.command[3].instanceCount, 1);
     if(offset < MAX_GIZMO_PRIMITIVE_COUNT) GIZMO_DRAW_DATA.worldBillboards[offset] = info;
 }
+
+void DrawFrustumEdges(vec3 p0, vec3 p1, vec3 p2, vec3 p3, vec3 p4, vec3 p5, vec3 p6, vec3 p7, vec4 color) {
+    // 1. 绘制近平面的4条边（p0-p1, p1-p3, p3-p2, p2-p0）
+    AddGizmoLine(p0, p1, color);
+    AddGizmoLine(p1, p3, color);
+    AddGizmoLine(p3, p2, color);
+    AddGizmoLine(p2, p0, color);
+
+    // 2. 绘制远平面的4条边（p4-p5, p5-p7, p7-p6, p6-p4）
+    AddGizmoLine(p4, p5, color);
+    AddGizmoLine(p5, p7, color);
+    AddGizmoLine(p7, p6, color);
+    AddGizmoLine(p6, p4, color);
+
+    // 3. 绘制连接近远平面的4条边（p0-p4, p1-p5, p2-p6, p3-p7）
+    AddGizmoLine(p0, p4, color);
+    AddGizmoLine(p1, p5, color);
+    AddGizmoLine(p2, p6, color);
+    AddGizmoLine(p3, p7, color);
+}
+
 #endif

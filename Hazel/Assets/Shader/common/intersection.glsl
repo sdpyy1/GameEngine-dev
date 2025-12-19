@@ -1,6 +1,26 @@
 #ifndef INTERSECTION_GLSL
 #define INTERSECTION_GLSL
 #include "struct.glsl"
+
+/*
+	三个点组成一个平面方程，法线方向与innerPoint的方向一致
+*/
+vec4 calculatePlane(vec3 a, vec3 b, vec3 c, vec3 innerPoint) {
+    vec3 ab = b - a;
+    vec3 ac = c - a;
+    vec3 normal = normalize(cross(ab, ac));
+    float d = -dot(normal, a);
+    float distance = dot(normal, innerPoint) + d;
+    if (distance < 0.0) {
+        normal = -normal;
+        d = -d;
+    }
+
+    return vec4(normal, d);
+}
+
+
+
 BoundingBox BoundingBoxTransform(BoundingBox box, mat4 transform)
 {
 	vec3 offsets[8] = {	vec3(-1.0f, -1.0f, 1.0f),
@@ -34,7 +54,9 @@ BoundingBox BoundingBoxTransform(BoundingBox box, mat4 transform)
 	return newBox;
 }
 
-
+float signedDistanceToPlane(vec3 point, vec4 plane) {
+    return dot(plane.xyz, point) + plane.w;
+}
 /*
 	当前Frustum的6个平面的法向量都指向内部
 	这里的相交判断利用的是SAT（分离轴定理），平面的法向量方向作为分离轴，整个平面在分离轴上就只是一个点，判断AABB盒在分离轴上的范围与这个点的关系来进行相交判断
@@ -58,8 +80,19 @@ bool FrustumIntersectBox(Frustum frustum, BoundingBox box)
 
     return true;
 }
-
-
+/*
+	注意法线必须指向视锥内部，才能使用
+*/
+bool FrustumIntersectSphere(Frustum frustum, BoundingSphere sphere)
+{
+    for (int i = 0; i < 6; i++) {
+        float distance = signedDistanceToPlane(sphere.center, frustum.planes[i]);
+        if (distance < -sphere.radius) {
+            return false;
+        }
+    }
+    return true;
+}
 
 bool SphereIntersectBox(BoundingSphere sphere, BoundingBox box)
 {

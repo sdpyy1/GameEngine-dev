@@ -4,9 +4,17 @@
 
 #define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
 #define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless 单个binding的最大描述符数目
-#define MAX_PER_FRAME_INSTANCE_SIZE 10240			    //全局最大支持的物体数目
-#define MAX_GIZMO_PRIMITIVE_COUNT 4000
-#define MAX_PER_PASS_PIPELINE_STATE_COUNT 1024
+#define MAX_PER_FRAME_INSTANCE_SIZE 10240			//全局最大支持的物体数目
+#define MAX_GIZMO_PRIMITIVE_COUNT 4000				// Gizmo
+#define MAX_PER_PASS_PIPELINE_STATE_COUNT 1024      // pipeline缓存数量
+
+
+#define LIGHT_CLUSTER_DEPTH 128						// 视锥分簇深度划分数
+#define LIGHT_CLUSTER_GRID_SIZE 64					// UV方向划分粒度
+#define MAX_LIGHTS_PER_CLUSTER 8					// 每个簇最多支持的灯光数
+
+
+
 
 #define MAX_POINT_LIGHT_SIZE 16
 #define MAX_SPOT_LIGHT_SIZE 16
@@ -72,6 +80,18 @@ namespace GameEngine {
 #define GLORBAL_RESOURCE_BINDING_GIZMO 22
 #define GLORBAL_RESOURCE_BINDING_TLAS 23
 
+	// 每个簇存储的信息
+	struct LightingClusterInfo {
+		uint32_t lightCount;
+		uint32_t firstLightIndex;
+	};
+	// 所有簇的光源信息
+	struct LightingClusterIdInfo {
+		uint32_t lightID;
+	};
+
+
+
 	struct DirectionLight
 	{
 		glm::vec3 position;
@@ -135,7 +155,7 @@ namespace GameEngine {
 		uint32_t directionLightCount = 0;
 		uint32_t pointLightCount = 0;
 		uint32_t spotLightCount = 0;
-		uint32_t _padding0;
+		uint32_t clusterAtomicOffset;   // ClusterLighting统计时使用
 
 		DirectionLight dirLights;
 		PointLight pointLights[MAX_POINT_LIGHT_SIZE];

@@ -20,8 +20,6 @@ namespace GameEngine {
             CULLING_PASS_DIRECTION_SHADOW,
             CULLING_PASS_POINT_SHADOW
 		};
-		
-
 		RHIShaderRef m_Shader;
 		RHIRootSignatureRef m_RootSignature;
 		RHIComputePipelineRef m_Pipeline;

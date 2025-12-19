@@ -32,7 +32,7 @@
 #endif
 
 
-layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO) readonly buffer LightInfoBuffer {
+layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_LIGHTINFO) buffer LightInfoBuffer {
 
     LightInfo data;
 

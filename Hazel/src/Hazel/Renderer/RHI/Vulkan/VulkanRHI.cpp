@@ -287,6 +287,8 @@ namespace GameEngine
 		deviceFeatures.shaderInt64 = VK_TRUE;               //64位支持
 		deviceFeatures.shaderFloat64 = VK_TRUE;
 		deviceFeatures.vertexPipelineStoresAndAtomics = VK_TRUE;
+		deviceFeatures.fragmentStoresAndAtomics = VK_TRUE; // 片段着色器存储和原子支持
+
 		createInfo.pEnabledFeatures = &deviceFeatures;
 
 		VkPhysicalDeviceVulkan12Features vulkan12Features{};                                        //1.2版本的其他支持

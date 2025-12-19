@@ -10,6 +10,10 @@ const float Epsilon = 0.00001;
 #define MAX_PER_FRAME_RESOURCE_SIZE 10240			
 #define MAX_PER_FRAME_INSTANCE_SIZE 10240
 
+#define LIGHT_CLUSTER_DEPTH 128						// 视锥分簇深度划分数
+#define LIGHT_CLUSTER_GRID_SIZE 64					// UV方向划分粒度
+#define MAX_LIGHTS_PER_CLUSTER 8					// 每个簇最多支持的灯光数
+
 
 #define MAX_POINT_LIGHT_SIZE 16
 #define MAX_SPOT_LIGHT_SIZE 16

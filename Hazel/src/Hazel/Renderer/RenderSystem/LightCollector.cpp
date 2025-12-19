@@ -116,6 +116,7 @@ namespace GameEngine {
 				lightInfo.spotLights[0].radiance = { 0.0f, 0.0f, 0.0f }; // 防止切换场景时Buffer还是上个场景的数据
 			}
 		}
+		lightInfo.clusterAtomicOffset = 0; // 初始化原子计数器
 		s_LightInfo = lightInfo;
 		RENDER_RESOURCEMANAGER->SetLightInfo(lightInfo);
 	}

@@ -78,7 +78,7 @@ struct LightInfo
     uint dirLightCount;
     uint pointLightCount;
     uint spotLightCount;
-    uint _padding0;
+    uint clusterAtomicOffset;   // ClusterLighting统计时使用
 
     DirectionLight dirLights;
     PointLight pointLights[MAX_POINT_LIGHT_SIZE];
@@ -206,6 +206,15 @@ struct Camera{
     uint totalTick;
 
     Frustum frustum;
+};
+// 每个簇存储的信息
+struct LightingClusterInfo {
+    uint lightCount;
+    uint firstLightIndex;
+};
+// 所有簇的光源信息
+struct LightingClusterIdInfo {
+    uint lightID;
 };
 
 struct IconTextureInfo

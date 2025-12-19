@@ -208,4 +208,30 @@ vec3 GetRandomCosineDirectionOnHemisphere(vec3 direction,inout Rand seed)
     vec3 p = vec3(r * cos(a), r * sin(a), z) + direction;
     return normalize(p);
 }
+
+
+/*
+	传入的深度是线性深度[near-far]
+*/
+vec3 SceenToWorld(vec2 uv, float viewZ, Camera camera)
+{
+    vec2 ndcXY = uv * 2.0 - 1.0;
+    vec4 ndcPos = vec4(ndcXY, 0.0, 1.0);
+    vec4 viewPos = camera.invProj * ndcPos;
+    viewPos /= viewPos.w;
+    vec3 viewDir = normalize(viewPos.xyz);
+    float t = viewZ / (-viewDir.z);
+    vec3 finalViewPos = viewDir * t;
+    vec4 worldPos = camera.invView * vec4(finalViewPos, 1.0);
+    return worldPos.xyz;
+}
+
+
+vec3 SceenToView(vec2 uv, float depth, Camera camera){
+	vec3 ndc = vec3(uv * 2.0 - 1.0, depth);
+    mat4 VInv = camera.invProj;
+	vec4 world = VInv * vec4(ndc, 1.0);
+	return world.xyz / world.w;
+}
+
 #endif

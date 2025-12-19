@@ -331,10 +331,6 @@ SpotLight GetSpotLight(uint index)
 {
     return LIGHTINFO.data.spotLights[index];
 }
-Camera GetCamera()
-{
-    return CAMERAINFO.data;
-}
 uint GetPointLightCount()
 {
     return LIGHTINFO.data.pointLightCount;
@@ -343,6 +339,11 @@ uint GetSpotLightCount()
 {
     return LIGHTINFO.data.spotLightCount;
 }
+Camera GetCamera()
+{
+    return CAMERAINFO.data;
+}
+
 RenderSetting GetRenderSetting()
 {
     return GLOBAL_SETTING.data.renderSetting;
