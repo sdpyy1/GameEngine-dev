@@ -11,7 +11,8 @@ namespace GameEngine {
 #define APP_WINDOWSIZE Application::Get().GetWindowManager()->GetWindowSize()
 #define APP_SCENEMANAGER Application::GetSceneManager()
 #define APP_TICK Application::GetTotalTick()
-#define APP_SCENE_CAMERA Application::GetSceneManager()->GetEditorCamera()
+#define APP_SCENE_CAMERA Application::GetSceneManager()->GetActiveEditorCamera()
+#define APP_SCENE_DEFAULT_CAMERA Application::GetSceneManager()->GetDefaultEditorCamera()
 
 
 

@@ -57,6 +57,7 @@ namespace GameEngine {
 			DisplayAddComponentEntry<PostProcessingComponent>("PostProcessing");
 			DisplayAddComponentEntry<SpotLightComponent>("SpotLight");
 			DisplayAddComponentEntry<LightProbeComponent>("Light Probe");
+			DisplayAddComponentEntry<CameraComponent>("Camera");
 			ImGui::EndPopup();
 		}
 
@@ -212,6 +213,10 @@ namespace GameEngine {
 				}
 				ImGui::EndDisabled();
 			});
+		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
+			{
+				ImGui::Checkbox("Primary", &component.Primary);
+			});
 
 
 		DrawComponent<SkyComponent>("Sky Light", entity, [](auto& component)
@@ -288,6 +293,8 @@ namespace GameEngine {
 					m_Context->CreateEntity("PostProcess").AddComponent<PostProcessingComponent>();
 				if (ImGui::MenuItem("Create Light Probe"))
 					m_Context->CreateEntity("Light Probe").AddComponent<LightProbeComponent>();
+				if (ImGui::MenuItem("Create Camera"))
+					m_Context->CreateEntity("Camera").AddComponent<CameraComponent>();
 				ImGui::EndPopup();
 			}
 		}

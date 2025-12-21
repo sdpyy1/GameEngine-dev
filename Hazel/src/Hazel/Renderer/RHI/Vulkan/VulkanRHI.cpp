@@ -1610,7 +1610,7 @@ namespace GameEngine
 
 		VkImageSubresourceRange transition = {};
 		transition.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-			transition.baseMipLevel = 0;
+		transition.baseMipLevel = 0;
 		transition.levelCount = 1;
 		transition.baseArrayLayer = 0;
 		transition.layerCount = 1;

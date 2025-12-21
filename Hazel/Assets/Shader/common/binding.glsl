@@ -43,10 +43,8 @@ layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_SETTING) readonly buffer glob
 
 } GLOBAL_SETTING;
 layout(set = 0,binding = GLORBAL_RESOURCE_BINDING_CAMERA) readonly buffer CameraDataUniform{
-
     Camera data;
-
-} CAMERAINFO;
+} CAMERAINFO[2];
 
 
 layout(set = 0, binding = GLORBAL_RESOURCE_BINDING_MATERIALINFO) readonly buffer MaterialInfos { 

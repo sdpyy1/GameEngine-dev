@@ -19,7 +19,7 @@ layout(location = 0) out vec3 nearPoint;
 layout(location = 1) out vec3 farPoint; 
 vec3 deprojectNDC2World(vec2 pos, float z) 
 {
-    vec4 worldH = inverse(CAMERAINFO.data.viewProj) * vec4(pos, z, 1.0);
+    vec4 worldH = inverse(GetCamera().viewProj) * vec4(pos, z, 1.0);
     return worldH.xyz / worldH.w;
 }
 void main()
@@ -89,7 +89,7 @@ vec4 grid(vec3 fragPos3D)
 
 float computeDepth(vec3 pos) 
 {
-    vec4 posH = CAMERAINFO.data.proj * CAMERAINFO.data.view * vec4(pos, 1.0);
+    vec4 posH = GetCamera().proj * GetCamera().view * vec4(pos, 1.0);
     float deviceZ = posH.z / posH.w;
     return clamp(deviceZ, 0.0, 1.0);
 }
@@ -108,10 +108,10 @@ vec4 getColor(vec3 fragPos3D, float t)
 {
     float deviceZ = computeDepth(fragPos3D);
 
-    vec2 uv = gl_FragCoord.xy / vec2(CAMERAINFO.data.width, CAMERAINFO.data.height);
+    vec2 uv = gl_FragCoord.xy / vec2(GetCamera().width, GetCamera().height);
     float sceneZ = texture(sampler2D(depthTexture, depthSampler[0]),uv).r;
 
-    float linearDepth = linearizeDepth(deviceZ,CAMERAINFO.data.Near,CAMERAINFO.data.Far);
+    float linearDepth = linearizeDepth(deviceZ,GetCamera().Near,GetCamera().Far);
 
     float fading = exp2(-linearDepth * 0.05);
 

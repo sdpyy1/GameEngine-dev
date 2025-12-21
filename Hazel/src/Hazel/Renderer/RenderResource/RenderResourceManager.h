@@ -17,7 +17,9 @@ namespace GameEngine {
 		// 光追
 		RHITopLevelAccelerationStructureRef tlas;
 		RHIDescriptorSetRef descriptorSet;
-		RenderBuffer<CameraData> cameraDataBuffer;
+		// 默认摄像机来自SceneManager自带，激活摄像机可以来自摄像机组件或者默认摄像机
+		RenderBuffer<CameraData> activeCameraDataBuffer;
+		RenderBuffer<CameraData> defalutCameraDataBuffer;
 		RenderBuffer<LightInfo> lightInfoBuffer;
 		RenderBuffer<GizmoDrawData> gizmoBuffer = RenderBuffer<GizmoDrawData>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
 	};
@@ -95,7 +97,7 @@ namespace GameEngine {
 
 		// 各种Buffer数据
 		void RenderResourceManager::UpdateCameraInfo();
-		RenderBuffer<CameraData>& GetCameraDataBuffer() { return m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer; }
+		RenderBuffer<CameraData>& GetCameraDataBuffer() { return m_PerFrameGlobalResources[APP_FRAMEINDEX].activeCameraDataBuffer; }
 
 		// Gizmo
 		void SetGizmoDataCommand(void* data, int size);
@@ -113,6 +115,8 @@ namespace GameEngine {
 	private:
 		TextureRef LoadTextureFromFile(std::string filePath);
 		uint32_t LoadIconFromFile(std::string filePath);
+		CameraData BuildCameraUpdateData(EditorCameraRef camera);
+
 		void LoadDefaultTexture();
 	private:
 		// 每个飞行帧一份

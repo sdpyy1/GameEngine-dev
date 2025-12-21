@@ -11,7 +11,7 @@ namespace GameEngine
 	{
 		m_CurrentScene = std::make_shared<Scene>();
 
-		m_EditorCamera = std::make_shared<EditorCamera>(45.0f, Application::Get().GetWindowManager()->GetWindowSize().first, Application::Get().GetWindowManager()->GetWindowSize().second, 0.1f, 1000.0f);
+		m_DefaultEditorCamera = std::make_shared<EditorCamera>(45.0f, Application::Get().GetWindowManager()->GetWindowSize().first, Application::Get().GetWindowManager()->GetWindowSize().second, 0.1f, 1000.0f);
 	}
 
 	void SceneManager::PackSettingForRender() {
@@ -27,6 +27,23 @@ namespace GameEngine
             m_SceneInfo.globalSettingInfos.renderSetting.debugDDGI = 0;
 		}
 		m_SceneInfo.globalSettingInfos.renderSetting.renderBoundingBox = settings.renderBoundingBox? 1 : 0;
+
+		// ActiveCamera设置
+		auto activeCamera = m_CurrentScene->GetFirstEntityWith<CameraComponent>(); // TODO: 临时，这样写的话，只会判断第一个摄像机组件，不支持多个摄像机
+		Entity cameraEntity = Entity{ activeCamera ,m_CurrentScene };
+        if (cameraEntity) {
+			auto& component = cameraEntity.GetComponent<CameraComponent>();
+			if (component.Primary) {
+				m_ActiveEditorCamera = component.CameraRef;
+			}
+			else {
+				m_ActiveEditorCamera = m_DefaultEditorCamera;
+			}
+		}
+		else {
+			m_ActiveEditorCamera = m_DefaultEditorCamera;
+		}
+
 		// 灯光设置
 		auto dirLight = m_CurrentScene->GetFirstEntityWith<DirectionalLightComponent>();
 		Entity dirLightEntity = Entity{ dirLight ,m_CurrentScene };
@@ -103,13 +120,17 @@ namespace GameEngine
 
 	void SceneManager::PackInfo() {
 		m_SceneInfo = {};
-		m_SceneInfo.camera = m_EditorCamera;
 		PackSettingForRender();
+		m_SceneInfo.camera = m_ActiveEditorCamera;
+		m_SceneInfo.defaultCamera = m_DefaultEditorCamera;
 	};
 
 	void SceneManager::Tick(Timestep ts)
 	{
-		m_EditorCamera->OnUpdate(ts);
+		if (m_ActiveEditorCamera) {
+			m_ActiveEditorCamera->OnUpdate(ts);
+		}
+		// m_DefaultEditorCamera->OnUpdate(ts);
 		PackInfo();
 	}
 
@@ -190,6 +211,6 @@ namespace GameEngine
 
 	std::pair<unsigned int, unsigned int> SceneManager::GetViewportSize()
 	{
-		return { m_EditorCamera->GetViewportWidth(),m_EditorCamera->GetViewportHeight() };
+		return { m_DefaultEditorCamera->GetViewportWidth(),m_DefaultEditorCamera->GetViewportHeight() };
 	}
 }

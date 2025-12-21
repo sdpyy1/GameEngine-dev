@@ -361,6 +361,12 @@ namespace GameEngine {
 		EndSerailize
 	};
 
+	// TODO: 这个没有序列化，因为摄像机的序列化还没写
+	struct CameraComponent
+	{ 
+		bool Primary = false;
+		EditorCameraRef CameraRef;
+	};
 
 	template<typename... Components>
 	struct ComponentGroup {};
@@ -377,6 +383,7 @@ namespace GameEngine {
 		DirectionalLightComponent,
 		SubmeshComponent,
 		PostProcessingComponent,
-		LightProbeComponent
+		LightProbeComponent,
+		CameraComponent
 	>;
 }

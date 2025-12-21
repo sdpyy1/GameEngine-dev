@@ -31,7 +31,7 @@ void main()
     OUT_TANGENT         = worldTangent;
     OUT_ID              = objectID;
 
-    gl_Position = CAMERAINFO.data.viewProj * model * pos;
+    gl_Position = GetCamera().viewProj * model * pos;
 }
 
 #endif

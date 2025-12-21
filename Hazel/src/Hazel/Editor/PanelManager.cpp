@@ -79,8 +79,8 @@ namespace GameEngine {
 		float width = m_ViewportBounds[1].x - m_ViewportBounds[0].x;
 		float height = m_ViewportBounds[1].y - m_ViewportBounds[0].y;
 		ImGuizmo::SetRect(x, y, width, height);
-		const glm::mat4& cameraProjection = Application::GetSceneManager()->GetEditorCamera()->GetProjectionMatrix();
-		glm::mat4 cameraView = Application::GetSceneManager()->GetEditorCamera()->GetViewMatrix();
+		const glm::mat4& cameraProjection = Application::GetSceneManager()->GetActiveEditorCamera()->GetProjectionMatrix();
+		glm::mat4 cameraView = Application::GetSceneManager()->GetActiveEditorCamera()->GetViewMatrix();
 		auto& tc = m_SelectedEntity.GetComponent<TransformComponent>();
 		glm::mat4 transform = APP_SCENEMANAGER->GetActiveScene()->GetWorldSpaceTransformMatrix(m_SelectedEntity);
 		bool snap = Input::IsKeyDown(Key::LeftControl);
@@ -331,11 +331,11 @@ namespace GameEngine {
 
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		m_ViewportBounds[1] = ImVec2(m_ViewportBounds[0].x + viewportSize.x, m_ViewportBounds[0].y + viewportSize.y);
-		Application::GetSceneManager()->GetEditorCamera()->SetViewportSize(viewportSize.x, viewportSize.y);
+		Application::GetSceneManager()->GetActiveEditorCamera()->SetViewportSize(viewportSize.x, viewportSize.y);
 		Application::GetSceneManager()->GetActiveScene()->SetViewprotSize(viewportSize.x, viewportSize.y);
 		ImVec2 mousePos = ImGui::GetIO().MousePos;
 		isMouseInViewport = mousePos.x >= m_ViewportBounds[0].x && mousePos.x <= m_ViewportBounds[1].x && mousePos.y >= m_ViewportBounds[0].y && mousePos.y <= m_ViewportBounds[1].y;
-		Application::GetSceneManager()->GetEditorCamera()->SetIsMouseInViewPort(isMouseInViewport);
+		Application::GetSceneManager()->GetActiveEditorCamera()->SetIsMouseInViewPort(isMouseInViewport);
 	}
 	void PanelManager::GlobalWindow()
 	{

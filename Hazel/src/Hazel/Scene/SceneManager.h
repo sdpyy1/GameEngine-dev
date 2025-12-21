@@ -15,6 +15,7 @@ namespace GameEngine
 		GlobalSettingInfo globalSettingInfos;
 		CPURenderSetting cpuRenderSetting;
 		std::shared_ptr<EditorCamera> camera;
+		std::shared_ptr<EditorCamera> defaultCamera;
 	};
 	class SceneManager
 	{
@@ -22,8 +23,9 @@ namespace GameEngine
 		SceneManager();
 		void Tick(Timestep ts);
 
-		const std::shared_ptr<EditorCamera> GetEditorCamera() { return m_EditorCamera; };
-		std::pair<unsigned int, unsigned int> GetViewportSize();;
+		const std::shared_ptr<EditorCamera> GetActiveEditorCamera() { return m_ActiveEditorCamera; };
+		const std::shared_ptr<EditorCamera> GetDefaultEditorCamera() { return m_DefaultEditorCamera; };
+		std::pair<unsigned int, unsigned int> GetViewportSize();
 		std::shared_ptr<Scene> GetActiveScene() { return m_CurrentScene; };
 		void SetActiveScene(std::shared_ptr<Scene> scene) { m_CurrentScene = scene; m_CurrentSceneFilePath = ""; };
 		SceneInfo GetSceneInfo(){return m_SceneInfo;}
@@ -34,7 +36,6 @@ namespace GameEngine
 		void SetDebugImageName(std::string name) {DebugImageName = name;};
         std::string GetDebugImageName() { return DebugImageName; };
 	public:
-
 		bool HasDirLight();
 	private:
 		void PackInfo();
@@ -42,7 +43,8 @@ namespace GameEngine
 
 		SceneInfo m_SceneInfo;
 		std::shared_ptr<Scene> m_CurrentScene;
-		std::shared_ptr<EditorCamera> m_EditorCamera;
+		std::shared_ptr<EditorCamera> m_DefaultEditorCamera;
+		std::shared_ptr<EditorCamera> m_ActiveEditorCamera;
 		std::string m_CurrentSceneFilePath;
 		std::string DebugImageName;
 	};

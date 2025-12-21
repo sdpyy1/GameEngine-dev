@@ -30,10 +30,10 @@ void main()
 	const vec2 inUV = pixelCenter / vec2(gl_LaunchSizeEXT.xy);  // UV坐标
 	vec2 ndc = inUV * 2.0 - 1.0; // 屏幕坐标转NDC[-1,1]
 	// 2. Ray参数
-	vec3 origin = CAMERAINFO.data.position;  // 相机位置
-	vec4 target = CAMERAINFO.data.invProj * vec4(ndc.x, ndc.y, 0, 1) ; // 射线终点， 设置在像素NDC坐标，深度最近的位置  并转到View空间
+	vec3 origin = GetCamera().position;  // 相机位置
+	vec4 target = GetCamera().invProj * vec4(ndc.x, ndc.y, 0, 1) ; // 射线终点， 设置在像素NDC坐标，深度最近的位置  并转到View空间
 	target /= target.w;   // 透视除法
-	target = CAMERAINFO.data.invView * target;
+	target = GetCamera().invView * target;
 	vec3 direction = normalize(target.xyz - origin.xyz);
 
 	payload.color = vec3(0.0);
@@ -101,10 +101,10 @@ void main()
 	const vec2 inUV = pixelCenter / vec2(gl_LaunchSizeEXT.xy);  // UV坐标
 	vec2 ndc = inUV * 2.0 - 1.0; // 屏幕坐标转NDC[-1,1]
 	// 2. Ray参数
-	vec3 origin = CAMERAINFO.data.position;  // 相机位置
-	vec4 target = CAMERAINFO.data.invProj * vec4(ndc.x, ndc.y, 0, 1) ; // 射线终点， 设置在像素NDC坐标，深度最近的位置  并转到View空间
+	vec3 origin = GetCamera().position;  // 相机位置
+	vec4 target = GetCamera().invProj * vec4(ndc.x, ndc.y, 0, 1) ; // 射线终点， 设置在像素NDC坐标，深度最近的位置  并转到View空间
 	target /= target.w;   // 透视除法
-	target = CAMERAINFO.data.invView * target;
+	target = GetCamera().invView * target;
 	vec3 direction = normalize(target.xyz - origin.xyz);
     payload.color = texture(samplerCube(skyCube,SAMPLER[0]),direction).rgb;
 }

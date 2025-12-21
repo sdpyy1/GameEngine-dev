@@ -225,6 +225,11 @@ namespace GameEngine {
 	{
 	}
 	template<>
+	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+		component.CameraRef = std::make_shared<EditorCamera>(*APP_SCENE_DEFAULT_CAMERA); // 创建一个与当前相机一模一样的相机
+	}
+	template<>
 	void Scene::OnComponentAdded<LightProbeComponent>(Entity entity, LightProbeComponent& component)
 	{
 	}

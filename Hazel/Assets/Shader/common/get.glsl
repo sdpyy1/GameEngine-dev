@@ -398,11 +398,13 @@ uint GetSpotLightCount()
 {
     return LIGHTINFO.data.spotLightCount;
 }
-Camera GetCamera()
+Camera GetCamera() // 当前激活的摄像机
 {
-    return CAMERAINFO.data;
+    return CAMERAINFO[0].data;
 }
-
+Camera GetDefaultCamera(){ // 默认摄像机
+    return CAMERAINFO[1].data;
+}
 RenderSetting GetRenderSetting()
 {
     return GLOBAL_SETTING.data.renderSetting;

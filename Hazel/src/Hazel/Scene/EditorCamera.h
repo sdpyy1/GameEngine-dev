@@ -55,6 +55,7 @@ namespace GameEngine {
 	public:
 		EditorCamera() = default;
 		EditorCamera(const float degFov, const float width, const float height, const float nearP, const float farP);
+
 		void Init();
 		bool GetIsMove(){return isMove;}
 		void Focus(const glm::vec3& focusPoint);

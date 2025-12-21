@@ -45,7 +45,7 @@ namespace GameEngine {
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MESHINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_SETTING, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_CAMERA, 2, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_LIGHTINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_GIZMO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		if (RENDER_ENABLE_RAY_TRACING) {
@@ -59,11 +59,16 @@ namespace GameEngine {
 		for (auto& resource : m_PerFrameGlobalResources) {
 			// camera
 			{
+				// 0号位是当前摄像机， 1号位存储Scene自带的默认摄像机
 				RHIDescriptorUpdateInfo cameraUpdateInfo = {};
 				cameraUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
-				cameraUpdateInfo.buffer = resource.cameraDataBuffer.GetRHIBuffer();
+				cameraUpdateInfo.buffer = resource.activeCameraDataBuffer.GetRHIBuffer();
 				cameraUpdateInfo.index = 0;
 				cameraUpdateInfo.binding = GLORBAL_RESOURCE_BINDING_CAMERA;
+				resource.descriptorSet->UpdateDescriptor(cameraUpdateInfo);
+
+				cameraUpdateInfo.buffer = resource.defalutCameraDataBuffer.GetRHIBuffer();
+				cameraUpdateInfo.index = 1;
 				resource.descriptorSet->UpdateDescriptor(cameraUpdateInfo);
 			}
 
@@ -182,17 +187,13 @@ namespace GameEngine {
 
 		UpdateCameraInfo();
 	}
-
-	void RenderResourceManager::UpdateCameraInfo()
-	{
+	CameraData RenderResourceManager::BuildCameraUpdateData(EditorCameraRef camera) {
 		CameraData tmpdata;
-		EditorCameraRef camera = APP_SCENEMANAGER->GetSceneInfo().camera;
-
 		if (m_GlobalSettingInfo.postprocess.TaaSetting.enable) {
 			tmpdata.proj = HaltonUtils::JitterProjection(camera->GetProjectionMatrix(), APP_TICK, APP_WINDOWSIZE.first, APP_WINDOWSIZE.second);
 		}
 		else {
-            tmpdata.proj = camera->GetProjectionMatrix();
+			tmpdata.proj = camera->GetProjectionMatrix();
 		}
 		tmpdata.view = camera->GetViewMatrix();
 		tmpdata.invProj = glm::inverse(tmpdata.proj);
@@ -209,7 +210,14 @@ namespace GameEngine {
 		tmpdata.Position = camera->GetPosition();
 		tmpdata.totalTick = APP_TICK;
 		tmpdata.frustum = CreateFrustumFromMatrix(tmpdata.projNoJetter * tmpdata.view);
-		m_PerFrameGlobalResources[APP_FRAMEINDEX].cameraDataBuffer.SetData(tmpdata);
+		return tmpdata;
+	}
+	void RenderResourceManager::UpdateCameraInfo()
+	{
+		EditorCameraRef camera = APP_SCENEMANAGER->GetSceneInfo().camera;
+		m_PerFrameGlobalResources[APP_FRAMEINDEX].activeCameraDataBuffer.SetData(BuildCameraUpdateData(camera));
+		EditorCameraRef defaultCamera = APP_SCENEMANAGER->GetSceneInfo().defaultCamera;
+        m_PerFrameGlobalResources[APP_FRAMEINDEX].defalutCameraDataBuffer.SetData(BuildCameraUpdateData(defaultCamera));
 	}
 
 	uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot)
