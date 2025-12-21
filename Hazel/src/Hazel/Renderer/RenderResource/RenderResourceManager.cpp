@@ -181,6 +181,7 @@ namespace GameEngine {
 		setting.iconTextures.dirLightID = m_GlobalSettingInfo.iconTextures.dirLightID;
 		setting.iconTextures.pointLightID = m_GlobalSettingInfo.iconTextures.pointLightID;
 		setting.iconTextures.spotLightID = m_GlobalSettingInfo.iconTextures.spotLightID;
+		setting.iconTextures.cameraLightID = m_GlobalSettingInfo.iconTextures.cameraLightID;
 		SetGlobalSettingInfo(setting);
 		m_GlobalSettingInfo = setting;
 		cpuRenderSetting = APP_SCENEMANAGER->GetSceneInfo().cpuRenderSetting;
@@ -340,10 +341,12 @@ namespace GameEngine {
 		uint32_t pointlightIcon = LoadIconFromFile(APP_ICON_PATH + "pointLight.png");
 		uint32_t SpotlightIcon = LoadIconFromFile(APP_ICON_PATH + "Spotlight.png");
 		uint32_t directionlightIcon = LoadIconFromFile(APP_ICON_PATH + "sun.png");
+		uint32_t cameraIcon = LoadIconFromFile(APP_ICON_PATH + "camera.png");
 
 		m_GlobalSettingInfo.iconTextures.pointLightID = pointlightIcon;
 		m_GlobalSettingInfo.iconTextures.spotLightID = SpotlightIcon;
 		m_GlobalSettingInfo.iconTextures.dirLightID = directionlightIcon;
+		m_GlobalSettingInfo.iconTextures.cameraLightID = cameraIcon;
 		SetGlobalSettingInfo();
 
 		m_MultiFrameGlobalResources.whiteTexture = LoadTextureFromFile(APP_TEXTURE_PATH + "white.jpg");

@@ -26,6 +26,7 @@ namespace GameEngine {
 		IconData m_PointLightIcon;
 		IconData m_PostprocesstIcon;
 		IconData m_ProbeIcon;
+		IconData m_CameraIcon;
 		template<typename T, typename UIFunction>
 		void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction);
 		template<typename T>

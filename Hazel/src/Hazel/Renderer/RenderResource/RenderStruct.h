@@ -284,7 +284,7 @@ namespace GameEngine {
 		uint32_t dirLightID;
 		uint32_t pointLightID;
 		uint32_t spotLightID;
-		uint32_t _padding;
+		uint32_t cameraLightID;
 	};
 	enum ShadowType : uint32_t
 	{

@@ -222,7 +222,7 @@ struct IconTextureInfo
     uint dirLightID;
     uint pointLightID;
     uint spotLightID;
-    uint _padding;
+    uint cameraID;
 };
 
 struct ShadowSetting

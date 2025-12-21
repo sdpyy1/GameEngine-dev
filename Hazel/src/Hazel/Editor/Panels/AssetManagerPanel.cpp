@@ -26,6 +26,7 @@ namespace GameEngine {
 		m_SkyLightIcon.LoadIconData("Assets/Icon/img.png", false);
 		m_PostprocesstIcon.LoadIconData("Assets/Icon/post.png", false);
 		m_ProbeIcon.LoadIconData("Assets/Icon/probe.png", false);
+		m_CameraIcon.LoadIconData("Assets/Icon/camera.png", false);
 	}
 
 	void AssetManagerPanel::DrawComponents(Entity entity)
@@ -349,6 +350,8 @@ namespace GameEngine {
 			icon = m_PostprocesstIcon;
         if (entity.HasComponent<LightProbeComponent>())
 			icon = m_ProbeIcon;
+        if (entity.HasComponent<CameraComponent>())
+			icon = m_CameraIcon;
 		ImGui::Image(icon.textureID->RawHandle(), { iconSize, iconSize });
 
 		ImGui::SameLine(0.0f, iconSpacing);
