@@ -53,6 +53,8 @@ void main()
         Camera camera = GetCamera();
         if(camera.position != defaultCam.position){
             AddGizmoBillboard(defaultCam.position, vec2(0.5f), GLOBAL_SETTING.data.iconTextures.cameraID, vec4(1,1,1,1));
+            AddGizmoLine(defaultCam.position,defaultCam.position + (defaultCam.forward * 3), vec4(1.0, 0.0, 0.0, 1.0));
+
         }
     }
 }

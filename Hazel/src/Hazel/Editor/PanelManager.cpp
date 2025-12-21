@@ -118,6 +118,7 @@ namespace GameEngine {
 		}
 		if (ImGui::CollapsingHeader("RenderSetting", ImGuiTreeNodeFlags_DefaultOpen)) {
 			ImGui::Checkbox("ShowBoundingBox", &curScene->settings.renderBoundingBox);
+			ImGui::Checkbox("FrustumDebug", &curScene->settings.ClusterLightFrustumDebug);
 		}
 		DebugTexture();
 		ImGui::End();

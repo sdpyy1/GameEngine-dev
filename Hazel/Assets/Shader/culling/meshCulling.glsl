@@ -35,7 +35,12 @@ void main()
     // 摄像机剔除  TODO：用前一帧的HIZ进行遮挡剔除？
     if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_BASE){
 
-        Camera camera = GetCamera();
+        Camera camera;
+        if(GetRenderSetting().ClusterLightFrustum == 1){ 
+            camera = GetDefaultCamera();
+        }else{
+            camera = GetCamera();
+        }
 
         if(GetRenderSetting().renderBoundingBox == 1){
             AddGizmoBoundingBox(aabb, vec4(1,0,0,1));

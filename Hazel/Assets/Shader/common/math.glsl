@@ -248,5 +248,10 @@ vec3 SceenToView(vec2 uv, float depth, Camera camera){
 	vec4 world = VInv * vec4(ndc, 1.0);
 	return world.xyz / world.w;
 }
-
+vec3 worldToView(vec3 worldPos, Camera camera){
+    return (camera.view * vec4(worldPos, 1.0)).xyz;
+}
+vec3 viewToWorld(vec3 viewPos, Camera camera){
+    return (camera.invView * vec4(viewPos, 1.0)).xyz;
+}
 #endif

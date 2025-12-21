@@ -334,53 +334,34 @@ SpotLight GetSpotLight(uint index)
 
 ivec3 GetClusterIndex(vec3 worldPos,Camera camera)
 {
-    // -------------------------------
-    // 1. 世界空间 → 视空间
-    // -------------------------------
     vec3 viewPos = (camera.view * vec4(worldPos, 1.0)).xyz;
 
-    // 约定：相机看向 -Z
     float zView = -viewPos.z;
 
-    // 在近平面前或远平面外，直接 clamp
     if (zView <= camera.Near)
         zView = camera.Near;
     if (zView >= camera.Far)
         zView = camera.Far;
 
-    // -------------------------------
-    // 2. 视空间 → 裁剪空间 → NDC
-    // -------------------------------
+
     vec4 clipPos = camera.proj * vec4(viewPos, 1.0);
     vec3 ndcPos  = clipPos.xyz / clipPos.w;   // [-1, 1]
 
-    // -------------------------------
-    // 3. NDC → 屏幕像素坐标
-    // -------------------------------
     vec2 screenUV = ndcPos.xy * 0.5 + 0.5;     // [0, 1]
     vec2 pixelPos = screenUV * vec2(camera.width, camera.height);
 
-    // -------------------------------
-    // 4. 计算 cluster 尺寸
-    // -------------------------------
     uint clusterX = uint((camera.width  + LIGHT_CLUSTER_GRID_SIZE - 1)
                           / LIGHT_CLUSTER_GRID_SIZE);
     uint clusterY = uint((camera.height + LIGHT_CLUSTER_GRID_SIZE - 1)
                           / LIGHT_CLUSTER_GRID_SIZE);
     uint clusterZ = LIGHT_CLUSTER_DEPTH;
 
-    // -------------------------------
-    // 5. X / Y 索引（屏幕空间）
-    // -------------------------------
     uint x = uint(pixelPos.x / LIGHT_CLUSTER_GRID_SIZE);
     uint y = uint(pixelPos.y / LIGHT_CLUSTER_GRID_SIZE);
 
     x = clamp(x, 0u, clusterX - 1);
     y = clamp(y, 0u, clusterY - 1);
 
-    // -------------------------------
-    // 6. Z 索引（线性深度，对齐 compute）
-    // -------------------------------
     float zNorm = (zView - camera.Near) / (camera.Far - camera.Near);
     uint  z     = uint(zNorm * float(clusterZ));
 

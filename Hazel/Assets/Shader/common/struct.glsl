@@ -205,6 +205,10 @@ struct Camera{
 	vec3 position;
     uint totalTick;
 
+
+    vec3 forward;
+    uint _padding;
+
     Frustum frustum;
 };
 // 每个簇存储的信息
@@ -296,7 +300,9 @@ struct DDGISetting {
 struct RenderSetting {
     uint debugDDGI;
     uint renderBoundingBox;
-    uint _padding[2];
+    uint ClusterLightFrustum;
+
+    uint _padding[1];
 };
 struct GlobalSettingInfo
 { 

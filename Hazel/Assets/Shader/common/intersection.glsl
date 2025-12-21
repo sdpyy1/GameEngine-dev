@@ -6,12 +6,15 @@
 	三个点组成一个平面方程，法线方向与innerPoint的方向一致
 */
 vec4 calculatePlane(vec3 a, vec3 b, vec3 c, vec3 innerPoint) {
+    // 构建平面
     vec3 ab = b - a;
     vec3 ac = c - a;
     vec3 normal = normalize(cross(ab, ac));
     float d = -dot(normal, a);
-    float distance = dot(normal, innerPoint) + d;
-    if (distance < 0.0) {
+
+    // 确保法向量指向视锥内部
+    float distance = dot(normal, innerPoint) + d;   // 点到平面距离（signed）
+    if (distance < 0.0) {  // 说明innerPoint在法线的相反方向，应该把法线反向
         normal = -normal;
         d = -d;
     }
@@ -54,9 +57,7 @@ BoundingBox BoundingBoxTransform(BoundingBox box, mat4 transform)
 	return newBox;
 }
 
-float signedDistanceToPlane(vec3 point, vec4 plane) {
-    return dot(plane.xyz, point) + plane.w;
-}
+
 /*
 	当前Frustum的6个平面的法向量都指向内部
 	这里的相交判断利用的是SAT（分离轴定理），平面的法向量方向作为分离轴，整个平面在分离轴上就只是一个点，判断AABB盒在分离轴上的范围与这个点的关系来进行相交判断
@@ -80,8 +81,13 @@ bool FrustumIntersectBox(Frustum frustum, BoundingBox box)
 
     return true;
 }
+
+float signedDistanceToPlane(vec3 point, vec4 plane) {
+    return dot(plane.xyz, point) + plane.w;
+}
 /*
 	注意法线必须指向视锥内部，才能使用
+    这里处理就是如果球的位置在法线相反方向（也就是平面外侧），并且距离大于球的半径，那整个球都在视锥平面外
 */
 bool FrustumIntersectSphere(Frustum frustum, BoundingSphere sphere)
 {

@@ -27,6 +27,7 @@ namespace GameEngine
             m_SceneInfo.globalSettingInfos.renderSetting.debugDDGI = 0;
 		}
 		m_SceneInfo.globalSettingInfos.renderSetting.renderBoundingBox = settings.renderBoundingBox? 1 : 0;
+		m_SceneInfo.globalSettingInfos.renderSetting.ClusterLightFrustumDebug = settings.ClusterLightFrustumDebug ? 1 : 0;
 
 		// ActiveCamera设置
 		auto activeCamera = m_CurrentScene->GetFirstEntityWith<CameraComponent>(); // TODO: 临时，这样写的话，只会判断第一个摄像机组件，不支持多个摄像机
@@ -68,7 +69,6 @@ namespace GameEngine
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.shaperStrength = component.taaSharpness;
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.UVjetter = HaltonUtils::GetJitter(APP_TICK);
 		
-		
 			// PathTracing
 			m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.enable = component.pathTracingEnable;
             m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.numSamples = component.pathTracingNumSamples;
@@ -76,7 +76,6 @@ namespace GameEngine
             m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.sampleSkyBox = component.pathTracingSampleSkyBox ? 1 : 0;
             m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.indirectOnly = component.pathTracingIndirectOnly ? 1 : 0;
 
-		
 			// Color
             m_SceneInfo.globalSettingInfos.postprocess.colorSetting.exposure = component.exposure;
             m_SceneInfo.globalSettingInfos.postprocess.colorSetting.saturation = component.saturation;

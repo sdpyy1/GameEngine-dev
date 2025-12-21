@@ -210,6 +210,7 @@ namespace GameEngine {
 		tmpdata.Far = camera->GetFarClip();
 		tmpdata.Position = camera->GetPosition();
 		tmpdata.totalTick = APP_TICK;
+		tmpdata.forward = camera->GetForwardDirection();
 		tmpdata.frustum = CreateFrustumFromMatrix(tmpdata.projNoJetter * tmpdata.view);
 		return tmpdata;
 	}

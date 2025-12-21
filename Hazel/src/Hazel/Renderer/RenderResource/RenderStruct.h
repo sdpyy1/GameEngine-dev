@@ -5,7 +5,7 @@
 #define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
 #define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless 单个binding的最大描述符数目
 #define MAX_PER_FRAME_INSTANCE_SIZE 10240			//全局最大支持的物体数目
-#define MAX_GIZMO_PRIMITIVE_COUNT 4000				// Gizmo
+#define MAX_GIZMO_PRIMITIVE_COUNT 102400				// Gizmo
 #define MAX_PER_PASS_PIPELINE_STATE_COUNT 1024      // pipeline缓存数量
 
 
@@ -208,6 +208,9 @@ namespace GameEngine {
 		glm::vec3 Position;
 		uint32_t totalTick;
 
+		glm::vec3 forward;
+		uint32_t _padding;
+
 		Frustum frustum;
 	};
 
@@ -364,7 +367,8 @@ namespace GameEngine {
 	struct RenderSettingInfo {
 		uint32_t debugDDGI;
 		uint32_t renderBoundingBox;
-		uint32_t _padding[2];
+		uint32_t ClusterLightFrustumDebug;
+		uint32_t _padding[1];
 	};
 
 

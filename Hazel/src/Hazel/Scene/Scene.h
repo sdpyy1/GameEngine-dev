@@ -7,6 +7,7 @@ namespace GameEngine {
 		bool onlyIndirectionLight = false;
 		bool noDDGI = false;
 		bool renderBoundingBox = false;
+		bool ClusterLightFrustumDebug = false;
 	};
 	class Entity;
 	class Scene : public Asset
