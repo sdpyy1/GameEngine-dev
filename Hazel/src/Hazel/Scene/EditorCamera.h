@@ -100,12 +100,12 @@ namespace GameEngine {
 		glm::mat4 GetPrevView(const glm::mat4 curView)
 		{
 			if (m_PrevView != curView) {
+
 				isMove = true;
 			}
 			else {
 				isMove = false;
 			}
-
 			glm::mat4 res = m_PrevView;
 			if (res == glm::mat4(0)) res = curView;
 			m_PrevView = curView;

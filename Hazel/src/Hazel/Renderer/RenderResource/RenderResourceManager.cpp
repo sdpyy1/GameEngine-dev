@@ -217,9 +217,16 @@ namespace GameEngine {
 	void RenderResourceManager::UpdateCameraInfo()
 	{
 		EditorCameraRef camera = APP_SCENEMANAGER->GetSceneInfo().camera;
-		m_PerFrameGlobalResources[APP_FRAMEINDEX].activeCameraDataBuffer.SetData(BuildCameraUpdateData(camera));
+		auto& activeCameraData = BuildCameraUpdateData(camera);
+		m_PerFrameGlobalResources[APP_FRAMEINDEX].activeCameraDataBuffer.SetData(activeCameraData);
+
 		EditorCameraRef defaultCamera = APP_SCENEMANAGER->GetSceneInfo().defaultCamera;
-        m_PerFrameGlobalResources[APP_FRAMEINDEX].defalutCameraDataBuffer.SetData(BuildCameraUpdateData(defaultCamera));
+		if (camera == defaultCamera) {
+			m_PerFrameGlobalResources[APP_FRAMEINDEX].defalutCameraDataBuffer.SetData(activeCameraData);  // 因为Build时会改变Camera的Preview，不能让默认摄像机再执行一次
+		}
+		else {
+			m_PerFrameGlobalResources[APP_FRAMEINDEX].defalutCameraDataBuffer.SetData(BuildCameraUpdateData(defaultCamera));
+		}
 	}
 
 	uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot)

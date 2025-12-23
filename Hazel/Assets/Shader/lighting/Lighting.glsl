@@ -84,13 +84,13 @@ void main()
 		DDGIContribution = DDGIGetIrrandianceByWorldPosition(WorldPosition,N,volume,ddgi_Irrandiance,ddgi_Distance);
 		DDGIContribution*= blendWeight;
 	}
-    DDGIContribution = (albedo / PI) * DDGIContribution;
+    DDGIContribution = (albedo / PI) * DDGIContribution;  // TODO: 漫反射太强了，有问题
 
 
 	if(GetRenderSetting().debugDDGI == 1){
 		o_Color = vec4(DDGIContribution,1);
 		return;
-	}else if(GetRenderSetting().debugDDGI == 2){  // TODO:没有DDGI的情况，这些设置需要统一规划
+	}else if(GetRenderSetting().debugDDGI == 2){
 		o_Color = vec4(lightContribution + iblContribution,1);
 		return;
 	}
