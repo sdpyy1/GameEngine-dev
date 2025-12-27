@@ -327,7 +327,7 @@ namespace GameEngine {
 		int pathTracingNumBounce = 5;
 		bool pathTracingSampleSkyBox = true;
 		bool pathTracingIndirectOnly = true;
-		bool pathTracingHistoryActive = true;
+		bool pathTracingHistoryActive = false;
 
 		// Color
 		float exposure = 0.4;
@@ -347,6 +347,7 @@ namespace GameEngine {
             SerailizeEntry(pathTracingTotalNumSamples)
             SerailizeEntry(pathTracingSampleSkyBox)
             SerailizeEntry(pathTracingIndirectOnly)
+            //SerailizeEntry(pathTracingHistoryActive)  TODO:有一些逻辑问题导致新添加字段后报错了，可能原因是添加新字段后保存了一次场景，但没写序列化逻辑
 		EndSerailize
 	};
 

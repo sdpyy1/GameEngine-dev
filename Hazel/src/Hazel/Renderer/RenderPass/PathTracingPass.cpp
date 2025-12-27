@@ -9,9 +9,9 @@ namespace GameEngine {
 
 	void PathTracingPass::Init()
 	{
-		m_RayGenShader = std::make_shared<Shader>("raytracing/PathTracing", SHADER_FREQUENCY_RAY_GEN)->GetRHIShader();
-        m_MissShader = std::make_shared<Shader>("raytracing/PathTracing", SHADER_FREQUENCY_RAY_MISS)->GetRHIShader();
-        m_ClosestHitShader = std::make_shared<Shader>("raytracing/PathTracing", SHADER_FREQUENCY_CLOSEST_HIT)->GetRHIShader();
+		m_RayGenShader = std::make_shared<Shader>("raytracing/PathTracingForSVGF", SHADER_FREQUENCY_RAY_GEN)->GetRHIShader();
+        m_MissShader = std::make_shared<Shader>("raytracing/PathTracingForSVGF", SHADER_FREQUENCY_RAY_MISS)->GetRHIShader();
+        m_ClosestHitShader = std::make_shared<Shader>("raytracing/PathTracingForSVGF", SHADER_FREQUENCY_CLOSEST_HIT)->GetRHIShader();
 
 		RHIShaderBindingTableInfo sbtInfo = {};
 		sbtInfo.AddRayGenGroup(m_RayGenShader);
@@ -25,6 +25,8 @@ namespace GameEngine {
 			.AddEntry({ 1, 1, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_RW_TEXTURE })
 			.AddEntry({ 1, 2, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_TEXTURE_CUBE })
 			.AddEntry({ 1, 3, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_RW_BUFFER })
+			.AddEntry({ 1, 4, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_RW_TEXTURE })
+			.AddEntry({ 1, 5, 1, SHADER_FREQUENCY_RAY_TRACING, RESOURCE_TYPE_RW_TEXTURE })
 			.AddPushConstant({ 128, SHADER_FREQUENCY_RAY_TRACING });
 
 		m_RootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
@@ -42,6 +44,8 @@ namespace GameEngine {
         textureInfo.arrayLayers = 1;
 		textureInfo.type = RESOURCE_TYPE_RW_TEXTURE | RESOURCE_TYPE_TEXTURE;
 		m_HistoryTexture = APP_DYNAMICRHI->CreateTexture(textureInfo);
+		m_DirectTexture = APP_DYNAMICRHI->CreateTexture(textureInfo);
+		m_InDirectTexture = APP_DYNAMICRHI->CreateTexture(textureInfo);
 
 	}
 
@@ -67,6 +71,12 @@ namespace GameEngine {
 		RDGTextureHandle historyTexture = builder.CreateTexture("PathTracingHistory")
 			.Import(m_HistoryTexture, isFirstTick?RESOURCE_STATE_UNDEFINED: RESOURCE_STATE_UNORDERED_ACCESS)
 			.Finish();
+		RDGTextureHandle directResTexture = builder.CreateTexture("PathTracingdirectRes")
+			.Import(m_DirectTexture, isFirstTick?RESOURCE_STATE_UNDEFINED: RESOURCE_STATE_UNDEFINED)
+			.Finish();
+		RDGTextureHandle indirectResTexture = builder.CreateTexture("PathTracingIndirectRes")
+			.Import(m_InDirectTexture, isFirstTick?RESOURCE_STATE_UNDEFINED: RESOURCE_STATE_UNDEFINED)
+			.Finish();
 		RDGTextureHandle skyBox = builder.GetTexture("CubeMap");
 		if(isFirstTick) isFirstTick = false;
 		builder.CreateRayTracingPass(GetName())
@@ -75,6 +85,8 @@ namespace GameEngine {
 			.ReadWrite(1, 1, 0, historyTexture)
 			.Read(1, 2, 0, skyBox, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR ,0,1,0,6 })
 			.ReadWrite(1, 3, 0, exposureData)
+			.ReadWrite(1, 4, 0, directResTexture)
+			.ReadWrite(1, 5, 0, indirectResTexture)
 			.Execute([&](RDGPassContext context) {
 				auto& [w, h] = APP_WINDOWSIZE;
 				if (APP_SCENE_CAMERA->GetIsMove() || Input::IsKeyDown(KeyCode::R)) {

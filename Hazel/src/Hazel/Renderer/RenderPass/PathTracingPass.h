@@ -28,6 +28,8 @@ namespace GameEngine {
 			int historyActive = 1;		//  «∑Ò ±”Ú¿€ª˝
 		} m_Settings;
 		RHITextureRef m_HistoryTexture;
+		RHITextureRef m_DirectTexture;
+		RHITextureRef m_InDirectTexture;
 		RHIRootSignatureRef m_RootSignature;
 		RHIRayTracingPipelineRef m_Pipeline;
 		bool isFirstTick = true;

@@ -316,7 +316,7 @@ vec3 ResolveBRDF(vec3 albedo, float roughness, float metallic, vec3 N, vec3 V, v
     //vec3 F              = F_Schlick(F0, context.VoH );      
     vec3 F              = F_Schlick(F0, context.VoH,roughness);      
 
-	vec3 f_diffuse      = Diffuse_Burley(albedo, roughness, context.NoV, context.NoL, context.VoH );
+	vec3 f_diffuse      = Diffuse_Lambert(albedo);
 	vec3 f_specular     = D * Vis * F;                                                                                  //BRDF反射函数，镜面反射项
 
 	vec3 k_specular     = F;                                                                                            //镜面反射率，也就是菲涅尔项
@@ -339,7 +339,7 @@ vec3 ResolveDiffuseBRDF(vec3 albedo, float roughness, float metallic, vec3 N, ve
 	vec3 F0 			= mix(vec3(0.04f), albedo, metallic);   
     //vec3 F              = F_Schlick(F0, context.VoH );      
     vec3 F              = F_Schlick(F0, context.VoH,roughness);    
-	vec3 f_diffuse      = Diffuse_Burley(albedo, roughness, context.NoV, context.NoL, context.VoH ); 
+	vec3 f_diffuse      = Diffuse_Lambert(albedo); 
 	vec3 k_diffuse      = (vec3(1.0f) - F);                                                                 
 
 	vec3 f_r            = (1.0 - metallic) * k_diffuse * f_diffuse;
