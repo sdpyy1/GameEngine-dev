@@ -55,10 +55,10 @@ namespace GameEngine {
 
     struct BoundingBox
     {
-        glm::vec3 maxBound = glm::vec3(std::numeric_limits<float>::max());
-        float _padding0 = 0.0f;     // GPU¶ËµÄÄÚ´æ¶ÔÆë
+        glm::vec3 maxBound = glm::vec3(std::numeric_limits<float>::min());
+        float _padding0 = 0.0f;
 
-        glm::vec3 minBound = glm::vec3(std::numeric_limits<float>::min());
+        glm::vec3 minBound = glm::vec3(std::numeric_limits<float>::max());
         float _padding1 = 0.0f;
 
         BoundingBox() {}

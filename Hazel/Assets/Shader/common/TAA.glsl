@@ -1,3 +1,6 @@
+/*
+    根据当前帧的位置与上一帧的世界位置差，计算每个像素的内容上一帧的偏移
+*/
 vec2 CalculateVelocity(vec4 pos, vec4 prevPos){
     vec4 curNDC  = GetCamera().projNoJetter * GetCamera().view * pos;
     curNDC /= curNDC.w;

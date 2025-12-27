@@ -25,6 +25,7 @@ namespace GameEngine {
 			int numBounce = 50;			// 光线反射深度
 			int sampleSkyBox = 1;		// 是否采样来自天空盒的光照
 			int indirectOnly = 0;		// 仅间接光照
+			int historyActive = 1;		// 是否时域累积
 		} m_Settings;
 		RHITextureRef m_HistoryTexture;
 		RHIRootSignatureRef m_RootSignature;

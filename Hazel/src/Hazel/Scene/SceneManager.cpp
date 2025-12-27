@@ -75,6 +75,7 @@ namespace GameEngine
             m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.numBounce = component.pathTracingNumBounce;
             m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.sampleSkyBox = component.pathTracingSampleSkyBox ? 1 : 0;
             m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.indirectOnly = component.pathTracingIndirectOnly ? 1 : 0;
+            m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.historyActive = component.pathTracingHistoryActive ? 1 : 0;
 
 			// Color
             m_SceneInfo.globalSettingInfos.postprocess.colorSetting.exposure = component.exposure;

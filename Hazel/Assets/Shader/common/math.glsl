@@ -209,6 +209,32 @@ vec3 GetRandomCosineDirectionOnHemisphere(vec3 direction,inout Rand seed)
     return normalize(p);
 }
 
+// GGX波瓣的重要性采样
+// E.x 圆周角
+// E.y 仰角，[90, 0] 对应 [0, 1]
+// PDF = D * NoH / (4 * VoH)
+// 根据样本生成一个采样用的半程向量
+vec4 ImportanceSampleGGX( vec2 E, float a2 )
+{
+	float Phi = 2 * PI * E.x;
+	float CosTheta = sqrt( (1 - E.y) / ( 1 + (a2 - 1) * E.y ) );
+	float SinTheta = sqrt( 1 - CosTheta * CosTheta );
+
+	vec3 H;
+	H.x = SinTheta * cos( Phi );
+	H.y = SinTheta * sin( Phi );
+	H.z = CosTheta;
+	
+	float d = ( CosTheta * a2 - CosTheta ) * CosTheta + 1;
+	float D = a2 / ( PI*d*d );
+	float PDF = D * CosTheta;	// 用法线分布来对环境光照进行采样时的使用的概率密度函数，按法线分布函数的定义，D * CosTheta半球积分就是1
+
+	return vec4( H, PDF );	// 这里的PDF是半程向量的，反射向量的需要用下面的函数转一遍
+}
+
+
+
+
 float LinearDepthToNonLinear(float linearDepth, Camera camera) {
     return (linearDepth - camera.Near) / (camera.Far - camera.Near);
 }

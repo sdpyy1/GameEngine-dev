@@ -55,6 +55,7 @@ namespace GameEngine {
         m_Settings.numSamples = globalSetting.numSamples;
         m_Settings.sampleSkyBox = globalSetting.sampleSkyBox;
         m_Settings.indirectOnly = globalSetting.indirectOnly;
+        m_Settings.historyActive = globalSetting.historyActive;
 		auto& [w, h] = APP_WINDOWSIZE;
 		RDGBufferHandle exposureData = builder.GetBuffer("ExposureData");
 		RDGTextureHandle rayTexture = builder.CreateTexture("PathTracing")

@@ -323,13 +323,14 @@ namespace GameEngine {
 	struct PathTracingSetting
 	{
 		uint32_t enable;
-		int numSamples;
-		int totalNumSamples;
-		int numBounce;
+		uint32_t numSamples;
+		uint32_t totalNumSamples;
+		uint32_t numBounce;
 
-		int sampleSkyBox;
-		int indirectOnly;
-		uint32_t _padding[2];
+		uint32_t sampleSkyBox;
+		uint32_t indirectOnly;
+		uint32_t historyActive;
+		uint32_t _padding[1];
 	};
 	struct BloomSetting {
 		uint32_t enable;

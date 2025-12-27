@@ -17,11 +17,12 @@ struct Payload {
 	float hitT;
 };
 layout(push_constant) uniform setting {
-    int numSamples;
-    int totalNumSamples;
-    int numBounce;
-    int sampleSkyBox;
-    int indirectOnly;
+    uint numSamples;
+    uint totalNumSamples;
+    uint numBounce;
+    uint sampleSkyBox;
+    uint indirectOnly;
+	uint historyActive;
 } SETTING;
 #ifdef RAYGEN_SHADER
 #include "../common/shadow.glsl"
@@ -108,17 +109,15 @@ void main()
 			
 
 			/////////////////////////////////////////////// 开赌 ///////////////////////////////////////////////
-
 			if (b >= 3){	
 				float p = max(throughput.x, max(throughput.y, throughput.z));
 				if (RandFloat(rand) > p) break;
 				throughput *= 1 / p;
 			}
-
 			/////////////////////////////////////////////// 更新光线 ///////////////////////////////////////////////
 			origin = worldPosition;
 			// Select random directions on the hemisphere with a cos(theta) distribution and then compute throughput
-        	direction = GetRandomCosineDirectionOnHemisphere(N, rand);
+        	direction = GetRandomCosineDirectionOnHemisphere(N, rand);   // 在镜面场景下，余弦重要性采样收敛慢
 
 			/////////////////////////////////////////////// 更新throughput ///////////////////////////////////////////////
 			vec3 f_r = ResolveBRDF(albedo, roughness, metallic, N, V, direction);
@@ -130,10 +129,12 @@ void main()
 	}
 	if(any(isnan(outColor))) outColor = vec3(0.0f);
 
-	bool accumulateHistory 	= SETTING.numSamples < SETTING.totalNumSamples;
+	bool accumulateHistory 	= SETTING.numSamples < SETTING.totalNumSamples && SETTING.historyActive == 1;
 	vec3 historyColor 		= accumulateHistory ? imageLoad(HISTORY_COLOR, pixel).xyz : vec3(0.0f);
 	vec3 accumulatedColor 	= (historyColor + outColor);
-	outColor = accumulatedColor / SETTING.totalNumSamples;
+	if(SETTING.historyActive == 1){
+		outColor = accumulatedColor / SETTING.totalNumSamples;
+	}
 
 	ColorSetting ColorSETTING = GetColorSetting();
 	float finalExposure = ColorSETTING.exposure / EXPOSURE_DATA.adaptedLuminance;

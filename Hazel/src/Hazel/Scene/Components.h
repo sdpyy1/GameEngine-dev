@@ -327,6 +327,7 @@ namespace GameEngine {
 		int pathTracingNumBounce = 5;
 		bool pathTracingSampleSkyBox = true;
 		bool pathTracingIndirectOnly = true;
+		bool pathTracingHistoryActive = true;
 
 		// Color
 		float exposure = 0.4;

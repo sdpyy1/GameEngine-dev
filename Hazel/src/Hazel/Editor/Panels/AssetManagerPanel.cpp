@@ -179,6 +179,7 @@ namespace GameEngine {
 						ImGui::SliderInt("Max Bounces",&component.pathTracingNumBounce,1, 10);
 						ImGui::Checkbox("Sample Skybox",&component.pathTracingSampleSkyBox);
 						ImGui::Checkbox("Indirect Only",&component.pathTracingIndirectOnly);
+						ImGui::Checkbox("Active History",&component.pathTracingHistoryActive);
 					}
 					ImGui::EndDisabled();
 				}

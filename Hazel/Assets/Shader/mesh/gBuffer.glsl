@@ -15,7 +15,7 @@ void main()
     uint indexOffset    = gl_VertexIndex;
 
     mat4 model          = GetModelMatrix(objectID);
-    mat4 prevModel      = GetPrevModelMatrix(objectID);
+    mat4 prevModel      = GetPrevModelMatrix(objectID);  // 实例存储上一帧的Model矩阵
     uint index          = GetIndex(objectID, indexOffset);
     vec4 pos            = GetPosition(objectID, index);
     vec3 worldNormal    = GetWorldNormal(GetNormal(objectID, index), model);
@@ -24,7 +24,7 @@ void main()
     vec2 texCoord       = GetTexCoord(objectID, index);      
 
     OUT_POSITION        = model * pos;
-    OUT_PREV_POSITION   = prevModel * pos;
+    OUT_PREV_POSITION   = prevModel * pos;   // 计算上一帧模型的世界空间位置
     OUT_COLOR           = color;
     OUT_TEXCOORD        = texCoord;
     OUT_NORMAL          = worldNormal;

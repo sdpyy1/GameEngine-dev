@@ -255,13 +255,14 @@ struct ColorSetting {
 struct PathTracingSetting
 {
     uint enable;
-    int numSamples;
-    int totalNumSamples;
-    int numBounce;
+    uint numSamples;
+    uint totalNumSamples;
+    uint numBounce;
 
-    int sampleSkyBox;
-    int indirectOnly;
-    uint _padding[2];
+    uint sampleSkyBox;
+    uint indirectOnly;
+    uint historyActive;
+    uint _padding[1];
 };
 struct BloomSetting {
     uint enable;
