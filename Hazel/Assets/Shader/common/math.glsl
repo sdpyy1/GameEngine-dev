@@ -208,7 +208,10 @@ vec3 GetRandomCosineDirectionOnHemisphere(vec3 direction,inout Rand seed)
     vec3 p = vec3(r * cos(a), r * sin(a), z) + direction;
     return normalize(p);
 }
-
+float RGBtoLuminance(vec3 c)
+{
+    return dot(c, vec3(0.2125, 0.7154, 0.0721)); 
+}
 // GGX波瓣的重要性采样
 // E.x 圆周角
 // E.y 仰角，[90, 0] 对应 [0, 1]
@@ -242,6 +245,33 @@ float LinearDepthToNonLinear(float linearDepth, Camera camera) {
 float NonLinearDepthToLinear(float nonLinearDepth, Camera camera) {
     return nonLinearDepth * (camera.Far - camera.Near) + camera.Near;
 }
+
+
+// 取离对应UV最近的整像素坐标
+ivec2 UVToNearestScreenPix(vec2 uv)  
+{
+    Camera camera = GetCamera();
+    ivec2 totalPixels = ivec2(camera.width,camera.height);
+    vec2 pixel = uv * totalPixels - vec2(0.5f);
+    pixel = floor(pixel) + ceil(fract(pixel));    // 四舍五入
+
+    return ivec2(pixel);
+}
+// 左上角[0, 0]，右下角[1, 1]
+vec2 ScreenPixToUV(vec2 pixel){
+    Camera camera = GetCamera();
+    ivec2 totalPixels = ivec2(camera.width,camera.height);
+    return (pixel + vec2(0.5f)) / vec2(totalPixels);
+}
+
+
+
+
+
+
+
+
+
 
 /*
 	传入自定义深度（线性深度[near-far]）

@@ -15,13 +15,24 @@ namespace GameEngine {
 		virtual std::string GetName() { return "SVGFPass"; }
 		virtual PassType GetType() override final { return SVGF_PASS; }
 	private:
-		RHIShaderRef m_Shader;
-		RHIRootSignatureRef m_RootSignature;
-		RHIComputePipelineRef m_Pipeline;
+		RHIShaderRef m_AtrousShader;
+		RHIShaderRef m_VarianceShader;
+		RHIShaderRef m_CombineShader;
+		RHIShaderRef m_MixHistoryShader;
+		RHIRootSignatureRef m_AtrousRootSignature;
+		RHIRootSignatureRef m_VarianceRootSignature;
+		RHIRootSignatureRef m_CombineRootSignature;
+		RHIRootSignatureRef m_MixHistoryRootSignature;
+		RHIComputePipelineRef m_AtrousPipeline;
+		RHIComputePipelineRef m_CombinePipeline;
+		RHIComputePipelineRef m_VariancePipeline;
+		RHIComputePipelineRef m_MixHistoryPipeline;
 
-		RHITextureRef m_directFilterHistory;
-		RHITextureRef m_indirectFilterHistory;
-
+		RHITextureRef m_DirVarianceHistory;
+		RHITextureRef m_InDirVarianceHistory;
+		RHITextureRef m_DirectHistory;
+		RHITextureRef m_IndirectHistory;
+		bool isFirstTick = true;
 	};
 }
 

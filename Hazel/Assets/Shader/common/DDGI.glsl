@@ -135,10 +135,7 @@ vec3 DDGIGetOctahedralDirection(vec2 coords)
     return normalize(direction);
 }
 
-float RGBtoLuminance(vec3 c)
-{
-    return dot(c, vec3(0.2125, 0.7154, 0.0721)); 
-}
+
 float RTXGIMaxComponent(vec3 a)
 {
     return max(a.x, max(a.y, a.z));

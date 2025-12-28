@@ -31,6 +31,7 @@ namespace GameEngine {
 	{
 		auto& [w, h] = APP_WINDOWSIZE;
 		RDGTextureHandle Viewport = builder.GetTexture("ViewPort");
+		if (Viewport.ID() == UINT32_MAX) { return; }
 		RDGTextureHandle velocity = builder.GetTexture("GBufferVelocity");
 		RDGTextureHandle depth = builder.GetTexture("Depth");
 		RDGTextureHandle history = isFirstTick ? builder.CreateTexture("TAA History").Import(historyTexture, RESOURCE_STATE_UNDEFINED).Finish()

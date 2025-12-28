@@ -96,15 +96,15 @@ void main()
 			/////////////////////////////////////////////// 直接光（先做只有漫反射的SVGF） ///////////////////////////////////////////////
 			if(SETTING.indirectOnly == 0 || b > 0) 			// 本轮的光照
 			{
-				vec3 directionLightContribution = CalculateDirectionalLightOnlyDiffuse(albedo, roughness, metallic, N, V) * RT_DirectionShadow(worldPosition,0.0f);
+				vec3 directionLightContribution = CalculateDirectionalLight(albedo, roughness, metallic, N, V) * RT_DirectionShadow(worldPosition,0.0f);
 
 				vec3 pointLightContribution = vec3(0);
 				for(uint i = 0; i < GetPointLightCount(); i++){
-					pointLightContribution += CalculatePointLightOnlyDiffuse(albedo, roughness, metallic,worldPosition, N, V, i) * RT_PointShadow(i,worldPosition); 
+					pointLightContribution += CalculatePointLight(albedo, roughness, metallic,worldPosition, N, V, i) * RT_PointShadow(i,worldPosition); 
 				}
 				vec3 spotLightContribution = vec3(0);
 				for(uint i = 0; i < GetSpotLightCount(); i++){
-					spotLightContribution += CalculateSpotLightOnlyDiffuse(albedo, roughness, metallic,worldPosition, N, V, i) * RT_SpotShadow(i,worldPosition); 
+					spotLightContribution += CalculateSpotLight(albedo, roughness, metallic,worldPosition, N, V, i) * RT_SpotShadow(i,worldPosition); 
 				}
 				outColor += (directionLightContribution + pointLightContribution + spotLightContribution) * throughput;
 			}		
@@ -143,9 +143,9 @@ void main()
 	}
 
 	// SVGF
-	imageStore(DIRECT_COLOR, pixel, vec4(outDirectColor/max(SVGFNeedAlbedo, 1e-4), 1.0f));
+	imageStore(DIRECT_COLOR, pixel, vec4(any(isnan(SVGFNeedAlbedo))?vec3(0):outDirectColor/max(SVGFNeedAlbedo, 1e-4), 1.0f));
 	outInDirectColor = outColor - outDirectColor;
-	imageStore(IN_DIRECT_COLOR, pixel, vec4(outInDirectColor/max(SVGFNeedAlbedo, 1e-4), 1.0f));
+	imageStore(IN_DIRECT_COLOR, pixel, vec4(any(isnan(SVGFNeedAlbedo))?vec3(0):outInDirectColor/max(SVGFNeedAlbedo, 1e-4), 1.0f));
 
 
 	ColorSetting ColorSETTING = GetColorSetting();
