@@ -229,11 +229,6 @@ namespace GameEngine {
 			.Finish();
 
 
-
-
-
-
-
 		//// ·½²î¸üÐÂ
 		//builder.CreateComputePass(GetName() + "_VarianceUpdate")
 		//	.RootSignature(m_AtrousRootSignature)
