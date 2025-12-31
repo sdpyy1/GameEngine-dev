@@ -113,7 +113,7 @@ namespace GameEngine {
 
 	class MeshPassProcessor {
 	public:
-		void Init(CullingType PassType);
+		void Init(CullingType PassType, uint32_t index);
 		void Process(const std::vector<MeshBatch>& drawBatches);
 		void Draw(RHICommandListRef command);
 		void AddBatch(const MeshBatch& batch) { m_MeshBatches.push_back(batch); }
@@ -128,7 +128,7 @@ namespace GameEngine {
 		void MapMeshBatches(MeshBatch& batch);
 	private: // culling时用来判断这是什么pass的信息
 		CullingType m_PassType;
-		uint32_t index; // 定向光表示CSM，点光源表示id
+		uint32_t m_Index;
 	private:
 		std::vector<MeshBatch> m_MeshBatches; // 收集当前Pass需要的batch
 		std::array<std::shared_ptr<RenderBuffer<MeshIndirectDrawData>>, FRAMES_IN_FLIGHT> m_MeshIndirectDrawDataBuffer;
@@ -144,9 +144,11 @@ namespace GameEngine {
 	{
 	public:
 		virtual void Init() override;
-		virtual MeshPassProcessorRef GetMeshPassProcessors() { return meshPassProcessor; }
+		virtual std::vector<MeshPassProcessorRef> GetMeshPassProcessors() { return meshPassProcessors; }
 
 	protected:
-		MeshPassProcessorRef meshPassProcessor = nullptr; // 每个MeshPass用自己继承的MeshPassProcessor来初始化这个指针
+		// 每个MeshPass用自己继承的MeshPassProcessor来初始化这个指针
+		// MeshPassProcessorRef meshPassProcessor = nullptr;
+		std::vector<MeshPassProcessorRef> meshPassProcessors;
 	};
 }

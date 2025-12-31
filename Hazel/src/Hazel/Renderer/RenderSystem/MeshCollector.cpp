@@ -54,7 +54,9 @@ namespace GameEngine
 
 		for (auto& meshPass : APP_RENDERSYSTEM->GetMeshPasses()) {
 			if (!meshPass) continue;
-			meshPass->GetMeshPassProcessors()->Process(batch);
+			for(auto& processor : meshPass->GetMeshPassProcessors()){
+				processor->Process(batch);
+			}
 		}
 
 		if (RENDER_ENABLE_RAY_TRACING && !batch.empty()) {

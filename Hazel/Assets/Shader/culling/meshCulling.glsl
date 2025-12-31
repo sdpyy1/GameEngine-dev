@@ -19,7 +19,7 @@ layout(set = 1, binding = 0) buffer drawbuffer{
     uint index;  
     uint _padding;
     RHIIndirectCommand buffers[MAX_PER_FRAME_INSTANCE_SIZE];
-} ALL_CULLING_BUFFERS[4];
+} ALL_CULLING_BUFFERS[];
 layout(local_size_x = LOCAL_X, local_size_y = LOCAL_Y, local_size_z = LOCAL_Z) in;
 void main()
 { 
@@ -53,18 +53,18 @@ void main()
             ALL_CULLING_BUFFERS[passTypeId].buffers[threadInstanceId].instanceCount = 0u;
         }
 
-    }else if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_DIRECTIONLIGHT_SHADOW){ 
+    }else if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_DIRECTIONLIGHT_SHADOW){  // CSM剔除
         DirectionLight light = GetDirectionLight();
         
-        bool isVisiable = FrustumIntersectBox(light.frustum[0], aabb);   // TODO: 现在只考虑一个级联的剔除（导致现在只有CSM=0距离内有阴影），也就是后三个级联的剔除用的第一个视锥，这是错的！！！解决需要想办法把当前是处理第几个级联的信息传递进来~现在架构不够灵活，还不太好传递呢~
+        bool isVisiable = FrustumIntersectBox(light.frustum[ALL_CULLING_BUFFERS[passTypeId].index], aabb);  
         if(!isVisiable){
             ALL_CULLING_BUFFERS[passTypeId].buffers[threadInstanceId].instanceCount = 0u;
         }
-
-
     }else if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_POINTLIGHT_SHADOW){ // 点光剔除
-
-        BoundingSphere sphere = GetPointLight(0).sphere;  // 只做了一个灯光的
+        if(ALL_CULLING_BUFFERS[passTypeId].index >= GetPointLightCount()){
+            return;
+        }
+        BoundingSphere sphere = GetPointLight(ALL_CULLING_BUFFERS[passTypeId].index).sphere;
 
         bool isVisiable = SphereIntersectBox(sphere, aabb);
         if(!isVisiable){

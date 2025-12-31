@@ -95,8 +95,10 @@ namespace GameEngine {
 		LightInfo& lightInfo = LightCollector::GetLightInfo();
 		if (lightInfo.pointLightCount > 0) {
 			for (int i = 0; i < lightInfo.pointLightCount; i++) {
-				RDGTextureHandle pointShadowMap = builder.GetTexture("Point Shadow Color[" + std::to_string(i) + "]");
-				builde.Read(1, 4, i, pointShadowMap, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR,0,1,0,6 });
+				if(i < MAX_POINT_SHADOW_COUNT){
+					RDGTextureHandle pointShadowMap = builder.GetTexture("Point Shadow Color[" + std::to_string(i) + "]");
+					builde.Read(1, 4, i, pointShadowMap, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR,0,1,0,6 });
+				}
 			}
 			
 		}

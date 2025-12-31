@@ -19,7 +19,9 @@ namespace GameEngine {
 
 	void PointShadowPass::Init()
 	{
-		meshPassProcessor = std::make_shared<PointShadowPassProcessor>(this);
+		for(int i = 0;i< MAX_POINT_SHADOW_COUNT;i++){
+			meshPassProcessors.emplace_back(std::make_shared<PointShadowPassProcessor>(this));
+		}
 		MeshPass::Init();
 
 		m_VertShader = std::make_shared<Shader>("mesh/shadow/PointShadow", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
@@ -54,6 +56,9 @@ namespace GameEngine {
 	{
 		LightInfo& lightInfo = LightCollector::GetLightInfo();
 		for (int i = 0; i < lightInfo.pointLightCount; i++) {
+			if (i >= MAX_POINT_SHADOW_COUNT) {
+				return;
+			}
 			auto& CurPointLight = lightInfo.pointLights[i];
 			RDGTextureHandle color = builder.CreateTexture("Point Shadow Color[" + std::to_string(i) + "]")
 				.Exetent({ PointShadowResolution, PointShadowResolution, 1 })
@@ -88,13 +93,11 @@ namespace GameEngine {
 				command->SetDepthBias(0.005,0.0,0.0f);  // TODO: 这个东西怎么用的？
 				command->PushConstants(&pointLightID, sizeof(uint32_t), SHADER_FREQUENCY_GRAPHICS);
 				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(),0);
-				meshPassProcessor->Draw(command);
+				meshPassProcessors[context.passIndex[0]]->Draw(command);
 					})
 				.OutputRead(depth)
 				.OutputRead(color)  // 手动屏障
 				.Finish();
-
-
 		}
 	}
 

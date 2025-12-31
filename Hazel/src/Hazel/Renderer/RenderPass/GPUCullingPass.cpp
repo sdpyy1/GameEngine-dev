@@ -28,20 +28,39 @@ namespace GameEngine {
 			.RootSignature(m_RootSignature);
 		uint32_t passIndex = 0;
 		for (auto& meshPass : APP_RENDERSYSTEM->GetMeshPasses()) {
-			if (meshPass->GetMeshPassProcessors()->GetDrawCommandCount() > 0) {
+			if (meshPass->GetMeshPassProcessors()[0]->GetDrawCommandCount() > 0) {
 
-				//if(meshPass->GetType() == DIR_SHADOW_PASS)
-
-
-
-
-				auto& commandBuffer = meshPass->GetMeshPassProcessors()->GetMeshIndirectDrawDataBuffer();
-				RDGBufferHandle MeshIndirectDrawDataBuffer = builder.CreateBuffer("MeshIndirectDrawDataBuffer" + std::to_string(passIndex))
-					.Import(commandBuffer, RESOURCE_STATE_UNDEFINED)
-					.Finish();
-				passbuilder.ReadWrite(1, 0, passIndex, MeshIndirectDrawDataBuffer)
-					.OutputIndirectDraw(MeshIndirectDrawDataBuffer);
-				passIndex++;
+				if (meshPass->GetType() == DIR_SHADOW_PASS) {
+					for (int i = 0; i < CSM_LEVEL_COUNT; i++) {
+						auto& commandBuffer = meshPass->GetMeshPassProcessors()[i]->GetMeshIndirectDrawDataBuffer();
+						RDGBufferHandle MeshIndirectDrawDataBuffer = builder.CreateBuffer("MeshIndirectDrawDataBuffer" + std::to_string(passIndex))
+							.Import(commandBuffer, RESOURCE_STATE_UNDEFINED)
+							.Finish();
+						passbuilder.ReadWrite(1, 0, passIndex, MeshIndirectDrawDataBuffer)
+							.OutputIndirectDraw(MeshIndirectDrawDataBuffer);
+						passIndex++;
+					}
+				}
+				else if (meshPass->GetType() == POINT_SHADOW_PASS) {
+					for (int i = 0; i < MAX_POINT_SHADOW_COUNT; i++) {
+						auto& commandBuffer = meshPass->GetMeshPassProcessors()[i]->GetMeshIndirectDrawDataBuffer();
+						RDGBufferHandle MeshIndirectDrawDataBuffer = builder.CreateBuffer("MeshIndirectDrawDataBuffer" + std::to_string(passIndex))
+							.Import(commandBuffer, RESOURCE_STATE_UNDEFINED)
+							.Finish();
+						passbuilder.ReadWrite(1, 0, passIndex, MeshIndirectDrawDataBuffer)
+							.OutputIndirectDraw(MeshIndirectDrawDataBuffer);
+						passIndex++;
+					}
+				}
+				else {
+					auto& commandBuffer = meshPass->GetMeshPassProcessors()[0]->GetMeshIndirectDrawDataBuffer();
+					RDGBufferHandle MeshIndirectDrawDataBuffer = builder.CreateBuffer("MeshIndirectDrawDataBuffer" + std::to_string(passIndex))
+						.Import(commandBuffer, RESOURCE_STATE_UNDEFINED)
+						.Finish();
+					passbuilder.ReadWrite(1, 0, passIndex, MeshIndirectDrawDataBuffer)
+						.OutputIndirectDraw(MeshIndirectDrawDataBuffer);
+					passIndex++;
+				}			
 			}
 		}
 

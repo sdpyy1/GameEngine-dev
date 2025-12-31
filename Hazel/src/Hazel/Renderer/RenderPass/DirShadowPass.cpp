@@ -18,7 +18,9 @@ namespace GameEngine {
 	}
 	void DirShadowPass::Init()
 	{
-		meshPassProcessor = std::make_shared<DirShadowPassProcessor>(this);
+		for (int i = 0; i < CSM_LEVEL_COUNT; i++) {
+			meshPassProcessors.emplace_back(std::make_shared<DirShadowPassProcessor>(this));
+		}
 		MeshPass::Init();
 		m_VertShader = std::make_shared<Shader>("mesh/shadow/DirShadowMap", SHADER_FREQUENCY_VERTEX);
 		m_FragShader = std::make_shared<Shader>("mesh/shadow/DirShadowMap", SHADER_FREQUENCY_FRAGMENT);
@@ -36,7 +38,6 @@ namespace GameEngine {
 		pipelineInfo.depthStencilState = { COMPARE_FUNCTION_LESS_EQUAL, true, true };
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
 		m_Pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
-
 	}
 
 	void DirShadowPass::Build(RDGBuilder& builder)
@@ -63,7 +64,7 @@ namespace GameEngine {
 						command->BindDescriptorSet(Application::GetRenderSystem()->GetRenderResourceManager()->GetGlobalResourcePerFrameDescriptorSet(), 0);
 						uint32_t csmIndex = context.passIndex[0];
 						command->PushConstants(&csmIndex, sizeof(uint32_t), SHADER_FREQUENCY_VERTEX);
-						meshPassProcessor->Draw(command);
+						meshPassProcessors[csmIndex]->Draw(command);
 					})
 					.OutputRead(depth, { TEXTURE_ASPECT_DEPTH,0,1,(uint32_t)i,1 })
 					.Finish();

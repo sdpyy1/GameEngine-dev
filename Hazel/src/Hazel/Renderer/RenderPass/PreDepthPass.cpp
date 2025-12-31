@@ -21,7 +21,7 @@ namespace GameEngine {
 
 	void PreDepthPass::Init()
 	{
-		meshPassProcessor = std::make_shared<PreDepthPassProcessor>(this);
+		meshPassProcessors.emplace_back(std::make_shared<PreDepthPassProcessor>(this));
 		MeshPass::Init();
 		m_VertShader = std::make_shared<Shader>("mesh/PreDepth", SHADER_FREQUENCY_VERTEX)->GetRHIShader();
 		m_FragShader = std::make_shared<Shader>("mesh/PreDepth", SHADER_FREQUENCY_FRAGMENT)->GetRHIShader();
@@ -59,7 +59,7 @@ namespace GameEngine {
 					command->SetScissor({ 0, 0 }, { w,h });
 					command->SetDepthBias(0.0f, 0.0f, 0.0f);
 					command->BindDescriptorSet(Application::GetRenderSystem()->GetRenderResourceManager()->GetGlobalResourcePerFrameDescriptorSet(), 0);
-					meshPassProcessor->Draw(command);
+					meshPassProcessors[0]->Draw(command);
 				})
 			.Finish();
 	}

@@ -6,9 +6,10 @@
 
 namespace GameEngine
 {
-	void MeshPassProcessor::Init(CullingType PassType)
+	void MeshPassProcessor::Init(CullingType PassType,uint32_t index)
 	{
         m_PassType = PassType;
+		m_Index = index;
 		for (size_t i = 0; i < FRAMES_IN_FLIGHT; ++i) {
 			m_MeshIndirectDrawDataBuffer[i] = std::make_shared<RenderBuffer<MeshIndirectDrawData>>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
 		}
@@ -52,7 +53,7 @@ namespace GameEngine
 		uint32_t instanceCount = (uint32_t)m_MeshBatches.size();
 		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&instanceCount, sizeof(uint32_t),0);
 		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&m_PassType, sizeof(uint32_t), sizeof(uint32_t));
-		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&index, sizeof(uint32_t), 2*sizeof(uint32_t));
+		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&m_Index, sizeof(uint32_t), 2*sizeof(uint32_t));
 		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(m_IndirectCommands.data(), instanceCount * sizeof(RHIIndirectCommand), 4*sizeof(uint32_t));
 	}
 	void MeshPassProcessor::Draw(RHICommandListRef command) {
@@ -111,14 +112,19 @@ namespace GameEngine
 	}
 	void MeshPass::Init()
 	{
+		int index = 0;
 		if (GetType() == DIR_SHADOW_PASS) {
-			meshPassProcessor->Init(CULLING_TYPE_DIRECTIONLIGHT_SHADOW);
+			for (auto& processsor : meshPassProcessors) {
+				processsor->Init(CULLING_TYPE_DIRECTIONLIGHT_SHADOW,index++);
+			}
 		}
 		else if (GetType() == POINT_SHADOW_PASS) {
-			meshPassProcessor->Init(CULLING_TYPE_POINTLIGHT_SHADOW);
+			for (auto& processsor : meshPassProcessors) {
+				processsor->Init(CULLING_TYPE_POINTLIGHT_SHADOW, index++);
+			}
 		}
 		else {
-            meshPassProcessor->Init(CULLING_TYPE_BASE);
+            meshPassProcessors[0]->Init(CULLING_TYPE_BASE,0); // 普通的只需要一个就行
 		}
 	}
 }

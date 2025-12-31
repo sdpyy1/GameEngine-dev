@@ -7,7 +7,7 @@
 #define MAX_PER_FRAME_INSTANCE_SIZE 10240			//全局最大支持的物体数目
 #define MAX_GIZMO_PRIMITIVE_COUNT 102400				// Gizmo
 #define MAX_PER_PASS_PIPELINE_STATE_COUNT 1024      // pipeline缓存数量
-
+#define MAX_POINT_SHADOW_COUNT 4
 
 #define LIGHT_CLUSTER_DEPTH 128						// 视锥分簇深度划分数
 #define LIGHT_CLUSTER_GRID_SIZE 64					// UV方向划分粒度

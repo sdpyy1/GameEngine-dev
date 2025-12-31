@@ -63,7 +63,11 @@ void main()
 	uint lightCount = clusterInfo.x;
 	uint lightOffset = clusterInfo.y;
 	for(int i = 0; i < lightCount; i++){
-		pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, u_lightIDs.lightID[lightOffset + i]) * PointShadow(u_PointShadowMapTexture[u_lightIDs.lightID[lightOffset + i]],WorldPosition,u_lightIDs.lightID[lightOffset + i]); 
+		if(i < MAX_POINT_SHADOW_COUNT){
+			pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, u_lightIDs.lightID[lightOffset + i]) * PointShadow(u_PointShadowMapTexture[u_lightIDs.lightID[lightOffset + i]],WorldPosition,u_lightIDs.lightID[lightOffset + i]); 
+		}else{
+			pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, u_lightIDs.lightID[lightOffset + i]);
+		}
 	}
 	// for(int i = 0; i < GetPointLightCount(); i++){
 	// 	pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, i) * PointShadow(u_PointShadowMapTexture,WorldPosition,i); 

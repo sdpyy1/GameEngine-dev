@@ -49,7 +49,7 @@ namespace GameEngine
 
 	void GBufferPass::Init()
 	{
-		meshPassProcessor = std::make_shared<GBufferPassProcessor>(this);
+		meshPassProcessors.emplace_back(std::make_shared<GBufferPassProcessor>(this));
 		MeshPass::Init();
 
 		vertexShader = std::make_shared<Shader>("mesh/Gbuffer", SHADER_FREQUENCY_VERTEX);
@@ -147,8 +147,8 @@ namespace GameEngine
 				command->SetScissor({ 0, 0 }, { w,h });
 				command->SetDepthBias(0.0f, 0.0f, 0.0f);
 				command->BindDescriptorSet(Application::GetRenderSystem()->GetRenderResourceManager()->GetGlobalResourcePerFrameDescriptorSet(), 0);
-				APP_RENDERSYSTEM->SetDrawMeshCount(meshPassProcessor->GetDrawCommandCount());
-				meshPassProcessor->Draw(command);
+				APP_RENDERSYSTEM->SetDrawMeshCount(meshPassProcessors[0]->GetDrawCommandCount());
+				meshPassProcessors[0]->Draw(command);
 					})
 				.Finish();
 		}
