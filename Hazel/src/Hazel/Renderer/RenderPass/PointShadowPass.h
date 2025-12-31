@@ -24,7 +24,9 @@ namespace GameEngine {
 
 		uint32_t PointShadowResolution = 512;
 
-
+		RHIShaderRef m_FilterShader;
+		RHIComputePipelineRef m_FilterPipeline;
+		RHIRootSignatureRef m_FilterSignature;
 
 		friend class PointShadowPassProcessor;
 	};

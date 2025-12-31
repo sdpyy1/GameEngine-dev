@@ -92,7 +92,18 @@ void main()
 {
     PointLight light = GetPointLight(push_LIGHTID.lightID);
     float depth = length(IN_POS.xyz - light.position) / light.sphere.radius;
-    OUT_COLOR = vec4(depth, 0.0, 0.0, 1.0);
+
+    uint shadowType = GetShadowSetting().PointShadowType;
+	if(shadowType == 5){   // EVSM
+        OUT_COLOR.r = exp(5 * depth);
+        OUT_COLOR.g = OUT_COLOR.r * OUT_COLOR.r;
+        OUT_COLOR.b = exp(-0.5 * depth);
+        OUT_COLOR.a = OUT_COLOR.b * OUT_COLOR.b;
+        return;
+	}
+
+    OUT_COLOR = vec4(depth, depth*depth, 0.0, 1.0);
+
 
 }
 

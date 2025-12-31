@@ -49,7 +49,17 @@ namespace GameEngine {
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
 		m_Pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
 
-
+		{
+			m_FilterShader = std::make_shared<Shader>("mesh/shadow/VSMFilter", SHADER_FREQUENCY_COMPUTE)->GetRHIShader();
+			RHIRootSignatureInfo rootSignatureInfo = {};
+			rootSignatureInfo.AddEntryFromReflect(m_FilterShader)
+				.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());
+			m_FilterSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
+			RHIComputePipelineInfo pipelineInfo = {};
+			pipelineInfo.computeShader = m_FilterShader;
+			pipelineInfo.rootSignature = m_FilterSignature;
+			m_FilterPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
+		}
 	}
 
 	void PointShadowPass::Build(RDGBuilder& builder)
@@ -65,6 +75,15 @@ namespace GameEngine {
 				.Format(FORMAT_R32G32B32A32_SFLOAT)
 				.ArrayLayers(6)  // 存储六个面
 				.MipLevels(1)
+				.AllowRenderTarget()
+				.CubeMap()
+				.Finish();
+			RDGTextureHandle colorfiltered = builder.CreateTexture("Point Shadow Color Filtered [" + std::to_string(i) + "]")
+				.Exetent({ PointShadowResolution, PointShadowResolution, 1 })
+				.Format(FORMAT_R32G32B32A32_SFLOAT)
+				.ArrayLayers(6)  // 存储六个面
+				.MipLevels(1)
+				.AllowReadWrite()
 				.AllowRenderTarget()
 				.CubeMap()
 				.Finish();
@@ -98,6 +117,39 @@ namespace GameEngine {
 				.OutputRead(depth)
 				.OutputRead(color)  // 手动屏障
 				.Finish();
+
+			if (RENDER_RESOURCEMANAGER->GetGlobalSettingInfo().shadowSetting.PointShadowType == SHADOW_TYPE_VSM || RENDER_RESOURCEMANAGER->GetGlobalSettingInfo().shadowSetting.PointShadowType == SHADOW_TYPE_EVSM) {
+
+				RDGComputePassHandle filterPass = builder.CreateComputePass(GetName() + " Filter" + std::to_string(i))
+					.RootSignature(m_FilterSignature)
+					.Read(1, 0, 0, color, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 0, 1 })
+					.Read(1, 0, 1, color, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 1, 1 })
+					.Read(1, 0, 2, color, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 2, 1 })
+					.Read(1, 0, 3, color, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 3, 1 })
+					.Read(1, 0, 4, color, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 4, 1 })
+					.Read(1, 0, 5, color, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 5, 1 })
+					.ReadWrite(1, 1, 0, colorfiltered, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 0, 1 })
+					.ReadWrite(1, 1, 1, colorfiltered, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 1, 1 })
+					.ReadWrite(1, 1, 2, colorfiltered, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 2, 1 })
+					.ReadWrite(1, 1, 3, colorfiltered, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 3, 1 })
+					.ReadWrite(1, 1, 4, colorfiltered, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 4, 1 })
+					.ReadWrite(1, 1, 5, colorfiltered, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR, 0, 1, 5, 1 })
+					.Execute([&](RDGPassContext context) {
+
+					RHICommandListRef command = context.command;
+					command->SetComputePipeline(m_FilterPipeline);
+					command->BindDescriptorSet(context.descriptors[1], 1);
+					command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
+					command->Dispatch(PointShadowResolution / 16, PointShadowResolution / 16, 6);
+						})
+					.OutputRead(colorfiltered)
+					.Finish();
+			}
+			
+		
+
+
+
 		}
 	}
 

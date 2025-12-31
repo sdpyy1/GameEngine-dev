@@ -120,6 +120,32 @@ namespace GameEngine {
 			ImGui::Checkbox("ShowBoundingBox", &curScene->settings.renderBoundingBox);
 			ImGui::Checkbox("FrustumDebug", &curScene->settings.ClusterLightFrustumDebug);
 		}
+		if (ImGui::CollapsingHeader("ShadowSetting", ImGuiTreeNodeFlags_DefaultOpen)) {
+			const char* dirShadowTypeNames[] = {
+					"None",
+					"Hard Shadow",
+					"PCF",
+					"PCSS"
+			};
+			int currentDirShadowType = static_cast<int>(curScene->settings.DirShadowType);
+			if (ImGui::Combo("Direction Shadow Type", &currentDirShadowType, dirShadowTypeNames, IM_ARRAYSIZE(dirShadowTypeNames))) {
+				curScene->settings.DirShadowType = static_cast<ShadowType>(currentDirShadowType);
+			}
+
+
+			const char* pointShadowTypeNames[] = {
+				"None",
+				"Hard Shadow",
+				"PCF(No Impl)",
+				"PCSS(No Impl)",
+				"VSM",
+				"EVSM"
+			};
+			int currentPointShadowType = static_cast<int>(curScene->settings.PointShadowType);
+			if (ImGui::Combo("Point Shadow Type", &currentPointShadowType, pointShadowTypeNames, IM_ARRAYSIZE(pointShadowTypeNames))) {
+				curScene->settings.PointShadowType = static_cast<ShadowType>(currentPointShadowType);
+			}
+		}
 		DebugTexture();
 		ImGui::End();
 	}

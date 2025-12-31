@@ -211,21 +211,63 @@ vec2 DirectionShadow(texture2DArray shadowMap,vec3 WorldPosition,vec3 N){
 /////////////////////////////////////////////
 // Point Shadows
 /////////////////////////////////////////////
+float VSM(vec4 moments, float depth){
+    float mean = moments.x; 
+    float moment = moments.y;
+	float depth_variance = max(moment - pow(mean, 2), 0.0001);
+    
+    float depth_diff = depth - mean;
+
+    float shadow_factor = depth_variance / (depth_variance + pow(depth_diff, 2));
+    if (depth_diff <= 0.0) {
+        shadow_factor = 1.0;
+    }
+
+    return shadow_factor;
+}
+float EVSM(vec4 moments, float depth, float c1, float c2)
+{
+	float x = exp(c1 * depth);
+	float variance_x = max(moments.y - pow(moments.x, 2), 0.0001);
+	float d_x = x - moments.x;  
+
+	float p_x = variance_x / (variance_x + pow(d_x, 2)); 
+
+	float y = exp(-c2 * depth);
+	float variance_y = max(moments.w - pow(moments.z, 2), 0.0001);
+	float d_y = y - moments.z;
+
+	float p_y = variance_y / (variance_y + pow(d_y, 2));
+
+	return min(p_x, p_y);
+}
 float PointShadow(textureCube shadowMap, vec3 worldPos, uint lightID)
 {
-	// if(lightID >= 1){  // TODO: 只支持一个点光源阴影
-	// 	return 1.0f;
-	// }
 	PointLight light = GetPointLight(lightID);
     vec3 lightToFrag = worldPos - light.position;
     vec3 sampleDir = normalize(lightToFrag);
     float actualDepth = length(lightToFrag) / light.sphere.radius;
-    float storedDepth = texture(samplerCube(shadowMap, SAMPLER[0]), sampleDir).r;
-    float bias = 0.005;
-    bool inShadow = actualDepth > storedDepth + bias;
-    return inShadow ? 0.0 : 1.0;
-}
+	uint shadowType = GetShadowSetting().PointShadowType;
+	if(shadowType == 0){   // 无阴影
+		return 1;
+	}else if(shadowType == 1){  // 硬阴影
+		float storedDepth = texture(samplerCube(shadowMap, SAMPLER[0]), sampleDir).r;
+    	float bias = 0.005;
+    	bool inShadow = actualDepth > storedDepth + bias;
+    	return inShadow ? 0.0 : 1.0;
+	}else if(shadowType == 4){   // VSM
+		vec4 moments = texture(samplerCube(shadowMap, SAMPLER[0]), sampleDir);
+		float pointShadow = VSM(moments, actualDepth);
+		return pointShadow;
+	}else if(shadowType == 5){   // EVSM
+		vec4 moments = texture(samplerCube(shadowMap, SAMPLER[0]), sampleDir);
+		float pointShadow = EVSM(moments, actualDepth,5,0.5);
+		pointShadow = smoothstep(0.0f, 1.0f, min(1.0, pointShadow / 0.8));  // 不重映射阴影周围会有一个大白边
+		return pointShadow;
+	}
+	return 1;
 
+}
 
 
 /////////////////////////////////////////////

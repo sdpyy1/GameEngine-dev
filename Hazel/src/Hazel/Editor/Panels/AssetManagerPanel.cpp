@@ -106,18 +106,7 @@ namespace GameEngine {
 			{
 				ImGui::ColorEdit3("Radiance", &component.Radiance.x, ImGuiColorEditFlags_Float);
 				ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 100.0f, "%.2f");
-				const char* shadowTypeNames[] = {
-					"None",
-					"Hard Shadow",
-					"PCF",
-					"PCSS",
-					"VSM"
-				};
-				int currentShadowType = static_cast<int>(component.shadowType);
-				if (ImGui::Combo("Shadow Type", &currentShadowType, shadowTypeNames, IM_ARRAYSIZE(shadowTypeNames))) {
-					component.shadowType = static_cast<ShadowType>(currentShadowType);
-					LOG_INFO("Directional Light Shadow Type Changed To {0} {1}", shadowTypeNames[currentShadowType], component.shadowType);
-				}
+				
 				ImGui::Checkbox("Show Direction", &component.showDirection);
 				ImGui::Checkbox("Show CSM", &component.showCSM);
 			});

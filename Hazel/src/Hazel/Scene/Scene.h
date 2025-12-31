@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "entt.hpp"
 #include "Hazel/Asset/Asset.h"
+#include "Hazel/Renderer/RenderResource/RenderStruct.h"
 namespace GameEngine {
 	// 这里存放非组件类型的设置
 	struct Settings {
@@ -8,6 +9,8 @@ namespace GameEngine {
 		bool noDDGI = false;
 		bool renderBoundingBox = false;
 		bool ClusterLightFrustumDebug = false;
+		ShadowType DirShadowType = SHADOW_TYPE_PCSS;
+		ShadowType PointShadowType = SHADOW_TYPE_VSM;
 	};
 	class Entity;
 	class Scene : public Asset

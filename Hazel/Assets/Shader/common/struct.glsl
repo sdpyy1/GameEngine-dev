@@ -233,7 +233,8 @@ struct ShadowSetting
 {
     uint DebugCSM;
     uint ShadowType;
-    uint _padding[2];
+    uint PointShadowType;
+    uint _padding;
 };
 struct TAASetting
 {

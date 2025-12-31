@@ -50,7 +50,8 @@ namespace GameEngine
 		Entity dirLightEntity = Entity{ dirLight ,m_CurrentScene };
 		if (dirLightEntity) {
 			auto& component = dirLightEntity.GetComponent<DirectionalLightComponent>();
-			m_SceneInfo.globalSettingInfos.shadowSetting.ShadowType = component.shadowType;
+			m_SceneInfo.globalSettingInfos.shadowSetting.ShadowType = settings.DirShadowType;
+			m_SceneInfo.globalSettingInfos.shadowSetting.PointShadowType = settings.PointShadowType;
 			m_SceneInfo.globalSettingInfos.shadowSetting.DebugCSM = component.showCSM;
 		}
 
