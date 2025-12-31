@@ -29,6 +29,12 @@ namespace GameEngine {
 		uint32_t passIndex = 0;
 		for (auto& meshPass : APP_RENDERSYSTEM->GetMeshPasses()) {
 			if (meshPass->GetMeshPassProcessors()->GetDrawCommandCount() > 0) {
+
+				//if(meshPass->GetType() == DIR_SHADOW_PASS)
+
+
+
+
 				auto& commandBuffer = meshPass->GetMeshPassProcessors()->GetMeshIndirectDrawDataBuffer();
 				RDGBufferHandle MeshIndirectDrawDataBuffer = builder.CreateBuffer("MeshIndirectDrawDataBuffer" + std::to_string(passIndex))
 					.Import(commandBuffer, RESOURCE_STATE_UNDEFINED)

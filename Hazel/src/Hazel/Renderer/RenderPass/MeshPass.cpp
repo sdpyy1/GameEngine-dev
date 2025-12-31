@@ -52,6 +52,7 @@ namespace GameEngine
 		uint32_t instanceCount = (uint32_t)m_MeshBatches.size();
 		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&instanceCount, sizeof(uint32_t),0);
 		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&m_PassType, sizeof(uint32_t), sizeof(uint32_t));
+		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&index, sizeof(uint32_t), 2*sizeof(uint32_t));
 		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(m_IndirectCommands.data(), instanceCount * sizeof(RHIIndirectCommand), 4*sizeof(uint32_t));
 	}
 	void MeshPassProcessor::Draw(RHICommandListRef command) {

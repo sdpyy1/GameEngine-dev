@@ -16,7 +16,8 @@ const uint MESH_PASS_TYPE_POINTLIGHT_SHADOW = 2u;
 layout(set = 1, binding = 0) buffer drawbuffer{
     uint instanceCount;
     uint passType;
-    uint _padding[2];
+    uint index;  
+    uint _padding;
     RHIIndirectCommand buffers[MAX_PER_FRAME_INSTANCE_SIZE];
 } ALL_CULLING_BUFFERS[4];
 layout(local_size_x = LOCAL_X, local_size_y = LOCAL_Y, local_size_z = LOCAL_Z) in;
@@ -63,7 +64,7 @@ void main()
 
     }else if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_POINTLIGHT_SHADOW){ // 点光剔除
 
-        BoundingSphere sphere = GetPointLight(0).sphere;
+        BoundingSphere sphere = GetPointLight(0).sphere;  // 只做了一个灯光的
 
         bool isVisiable = SphereIntersectBox(sphere, aabb);
         if(!isVisiable){

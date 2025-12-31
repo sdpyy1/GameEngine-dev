@@ -27,7 +27,7 @@ layout(set = 1, binding = 0) uniform texture2DArray u_DirShadowMapTexture;
 layout(set = 1, binding = 1) uniform textureCube u_EnvRadianceTex;
 layout(set = 1, binding = 2) uniform textureCube u_EnvIrradianceTex;
 layout(set = 1, binding = 3) uniform texture2D u_BRDFLUTTexture;
-layout(set = 1, binding = 4) uniform textureCube u_PointShadowMapTexture;
+layout(set = 1, binding = 4) uniform textureCube u_PointShadowMapTexture[];
 layout(set = 1, binding = 5) uniform texture2DArray ddgi_Irrandiance;
 layout(set = 1, binding = 6) uniform texture2DArray ddgi_Distance;
 
@@ -63,14 +63,14 @@ void main()
 	uint lightCount = clusterInfo.x;
 	uint lightOffset = clusterInfo.y;
 	for(int i = 0; i < lightCount; i++){
-		pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, u_lightIDs.lightID[lightOffset + i]) * PointShadow(u_PointShadowMapTexture,WorldPosition,u_lightIDs.lightID[lightOffset + i]); 
+		pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, u_lightIDs.lightID[lightOffset + i]) * PointShadow(u_PointShadowMapTexture[u_lightIDs.lightID[lightOffset + i]],WorldPosition,u_lightIDs.lightID[lightOffset + i]); 
 	}
 	// for(int i = 0; i < GetPointLightCount(); i++){
 	// 	pointLightContribution += CalculatePointLight(albedo, roughness, metallic,WorldPosition, N, V, i) * PointShadow(u_PointShadowMapTexture,WorldPosition,i); 
 	// }
 	vec3 spotLightContribution = vec3(0);
 	for(int i = 0; i < GetSpotLightCount(); i++){
-		spotLightContribution += CalculateSpotLight(albedo, roughness, metallic,WorldPosition, N, V, i) * SpotShadow(u_PointShadowMapTexture,WorldPosition,i); 
+		spotLightContribution += CalculateSpotLight(albedo, roughness, metallic,WorldPosition, N, V, i) * SpotShadow(u_PointShadowMapTexture[0],WorldPosition,i); 
 	}
 	vec3 lightContribution = directionLightContribution + pointLightContribution + spotLightContribution;
 	

@@ -213,9 +213,9 @@ vec2 DirectionShadow(texture2DArray shadowMap,vec3 WorldPosition,vec3 N){
 /////////////////////////////////////////////
 float PointShadow(textureCube shadowMap, vec3 worldPos, uint lightID)
 {
-	if(lightID >= 1){  // TODO: 只支持一个点光源阴影
-		return 1.0f;
-	}
+	// if(lightID >= 1){  // TODO: 只支持一个点光源阴影
+	// 	return 1.0f;
+	// }
 	PointLight light = GetPointLight(lightID);
     vec3 lightToFrag = worldPos - light.position;
     vec3 sampleDir = normalize(lightToFrag);

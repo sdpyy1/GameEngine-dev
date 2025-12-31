@@ -94,7 +94,8 @@ namespace GameEngine {
 	struct MeshIndirectDrawData {
 		 uint32_t instanceCount;
 		 CullingType passType;
-		 uint32_t _padding[2];
+		 uint32_t index;  // 定向光表示CSM，点光源表示id
+		 uint32_t _padding;
 
 		 std::array<RHIIndirectCommand, MAX_PER_FRAME_INSTANCE_SIZE> indirectCommands;
 	};
@@ -125,9 +126,11 @@ namespace GameEngine {
 		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& first) = 0;
 	private:
 		void MapMeshBatches(MeshBatch& batch);
+	private: // culling时用来判断这是什么pass的信息
+		CullingType m_PassType;
+		uint32_t index; // 定向光表示CSM，点光源表示id
 	private:
 		std::vector<MeshBatch> m_MeshBatches; // 收集当前Pass需要的batch
-		CullingType m_PassType;
 		std::array<std::shared_ptr<RenderBuffer<MeshIndirectDrawData>>, FRAMES_IN_FLIGHT> m_MeshIndirectDrawDataBuffer;
 		std::map<DrawPipelineState, std::vector<MeshBatch>> m_MeshBatchMap;
 		std::vector<MeshDrawCommand> m_MeshDrawCommands;  // 存储这个是为了Draw的时候遍历
@@ -144,6 +147,6 @@ namespace GameEngine {
 		virtual MeshPassProcessorRef GetMeshPassProcessors() { return meshPassProcessor; }
 
 	protected:
-		MeshPassProcessorRef meshPassProcessor = nullptr;
+		MeshPassProcessorRef meshPassProcessor = nullptr; // 每个MeshPass用自己继承的MeshPassProcessor来初始化这个指针
 	};
 }
