@@ -6,7 +6,7 @@
 /////////////////////////////////////////////
 float GetDirShadowBias(vec3 N)
 {
-	const float MINIMUM_SHADOW_BIAS = 0.002;
+	const float MINIMUM_SHADOW_BIAS = 0.0001;
 	float bias = max(MINIMUM_SHADOW_BIAS * (1.0 - dot(N, GetDirectionLight().direction)), MINIMUM_SHADOW_BIAS);
 	return bias;
 }
@@ -19,11 +19,10 @@ float SearchWidth(float uvLightSize, float receiverDistance)
 	return uvLightSize * (receiverDistance - NEAR) / GetCamera().position.z;
 }
 
-float SearchRegionRadiusUV(float zWorld)
+float SearchRegionRadiusUV(float uvLightSize,float zWorld)
 {
-	const float light_zNear = 0.0; // 0.01 gives artifacts? maybe because of ortho proj?
-	const float lightRadiusUV = 0.05;
-	return lightRadiusUV * (zWorld - light_zNear) / zWorld;
+	const float light_zNear = 0.1;
+	return uvLightSize * (zWorld - light_zNear) / zWorld;
 }
 
 vec2 PoissonDistribution[64] ={
@@ -126,6 +125,21 @@ float DirectionShadow_Hard(texture2DArray shadowMap, uint cascade, vec3 shadowCo
 	float shadowMapDepth = texture(sampler2DArray(shadowMap,SAMPLER[0]), vec3(shadowCoords.xy * 0.5 + 0.5, cascade)).x;
 	return step(shadowCoords.z, shadowMapDepth + bias);
 }
+
+float DirectionShadow_PCF(texture2DArray shadowMap, uint cascade, vec3 shadowCoords, float uvRadius,vec3 N)
+{
+	float bias = GetDirShadowBias(N);
+	int numPCFSamples = 64;
+
+	float sum = 0;
+	for (int i = 0; i < numPCFSamples; i++)
+	{
+		vec2 offset = SamplePoisson(i) * uvRadius;
+		float z = textureLod(sampler2DArray(shadowMap,SAMPLER[0]), vec3((shadowCoords.xy * 0.5 + 0.5) + offset, cascade), 0).r;
+		sum += step(shadowCoords.z, z + bias);
+	}
+	return sum / numPCFSamples;
+}	
 float FindBlockerDistance_DirectionalLight(texture2DArray shadowMap, uint cascade, vec3 shadowCoords, float uvLightSize,vec3 N)
 {
 	float bias = GetDirShadowBias(N);
@@ -134,7 +148,7 @@ float FindBlockerDistance_DirectionalLight(texture2DArray shadowMap, uint cascad
 	int blockers = 0;
 	float avgBlockerDistance = 0;
 
-	float searchWidth = SearchRegionRadiusUV(shadowCoords.z);
+	float searchWidth = SearchRegionRadiusUV(uvLightSize,shadowCoords.z);
 	for (int i = 0; i < numBlockerSearchSamples; i++)
 	{
 		float z = textureLod(sampler2DArray(shadowMap,SAMPLER[0]), vec3((shadowCoords.xy * 0.5 + 0.5) + SamplePoisson(i) * searchWidth, cascade), 0).r;
@@ -151,46 +165,16 @@ float FindBlockerDistance_DirectionalLight(texture2DArray shadowMap, uint cascad
 	return -1;
 } 
 
-float DirectionShadow_PCF(texture2DArray shadowMap, uint cascade, vec3 shadowCoords, float uvRadius,vec3 N)
-{
-	float bias = GetDirShadowBias(N);
-	int numPCFSamples = 64;
-
-	float sum = 0;
-	for (int i = 0; i < numPCFSamples; i++)
-	{
-		vec2 offset = SamplePoisson(i) * uvRadius;
-		float z = textureLod(sampler2DArray(shadowMap,SAMPLER[0]), vec3((shadowCoords.xy * 0.5 + 0.5) + offset, cascade), 0).r;
-		sum += step(shadowCoords.z - bias, z);
-	}
-	return sum / numPCFSamples;
-}
-
-float NV_DirectionShadow_PCF(texture2DArray shadowMap, uint cascade, vec3 shadowCoords, float uvRadius,vec3 N)
-{
-	float bias = GetDirShadowBias(N);
-
-	float sum = 0;
-	for (int i = 0; i < 16; i++)
-	{
-		vec2 offset = poissonDisk[i] * uvRadius;
-		float z = textureLod(sampler2DArray(shadowMap,SAMPLER[0]), vec3((shadowCoords.xy * 0.5 + 0.5) + offset, cascade), 0).r;
-		sum += step(shadowCoords.z - bias, z);
-	}
-	return sum / 16.0f;
-}
-	
-
 float DirectionShadow_PCSS(texture2DArray shadowMap, uint cascade, vec3 shadowCoords, float uvLightSize,vec3 N)
 {
 	float blockerDistance = FindBlockerDistance_DirectionalLight(shadowMap, cascade, shadowCoords, uvLightSize,N);
 	if (blockerDistance == -1) // No occlusion
 		return 1.0f;
 
-	float penumbraWidth = (shadowCoords.z - blockerDistance) / blockerDistance;
+	float penumbraWidth = (shadowCoords.z - blockerDistance) / blockerDistance * uvLightSize;
 
-	float NEAR = 0.01; // Should this value be tweakable?
-	float uvRadius = penumbraWidth * uvLightSize * NEAR / shadowCoords.z; // Do we need to divide by shadowCoords.z?
+	float NEAR = 0.1;
+	float uvRadius = penumbraWidth * NEAR / shadowCoords.z;
 	uvRadius = min(uvRadius, 0.002f);
 	return DirectionShadow_PCF(shadowMap, cascade, shadowCoords, uvRadius,N);
 } 
@@ -219,8 +203,8 @@ vec2 DirectionShadow(texture2DArray shadowMap,vec3 WorldPosition,vec3 N){
 		
 
 		if(GetShadowSetting().ShadowType == 1) shadowScale = DirectionShadow_Hard(shadowMap, cascadeIndex, shadowMapCoords,N);
-		else if(GetShadowSetting().ShadowType == 2) shadowScale = DirectionShadow_PCF(shadowMap, cascadeIndex, shadowMapCoords,0.5,N);
-		else if(GetShadowSetting().ShadowType == 3) shadowScale = DirectionShadow_PCSS(shadowMap, cascadeIndex, shadowMapCoords, 0.5,N);
+		else if(GetShadowSetting().ShadowType == 2) shadowScale = DirectionShadow_PCF(shadowMap, cascadeIndex, shadowMapCoords,10/4096,N);
+		else if(GetShadowSetting().ShadowType == 3) shadowScale = DirectionShadow_PCSS(shadowMap, cascadeIndex, shadowMapCoords, 0.1,N);
 	}
 	return vec2(shadowScale, cascadeIndex);
 }

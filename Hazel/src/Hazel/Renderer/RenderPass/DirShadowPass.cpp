@@ -32,7 +32,7 @@ namespace GameEngine {
         pipelineInfo.vertexShader = m_VertShader->GetRHIShader();
         pipelineInfo.fragmentShader = m_FragShader->GetRHIShader();
 		pipelineInfo.primitiveType = PRIMITIVE_TYPE_TRIANGLE_LIST;
-		pipelineInfo.rasterizerState = { FILL_MODE_SOLID, CULL_MODE_NONE, DEPTH_CLIP, 0.0f, 0.0f };
+		pipelineInfo.rasterizerState = { FILL_MODE_SOLID, CULL_MODE_FRONT, DEPTH_CLIP, 0.0f, 0.0f };
 		pipelineInfo.depthStencilState = { COMPARE_FUNCTION_LESS_EQUAL, true, true };
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
 		m_Pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;

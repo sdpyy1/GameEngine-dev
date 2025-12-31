@@ -90,7 +90,7 @@ namespace GameEngine {
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
 		if (RENDER_ENABLE_RAY_TRACING) {
 			passes[PATHTRACING_PASS] = std::make_shared<PathTracingPass>();
-			passes[SVGF_PASS] = std::make_shared<SVGFPass>();
+			// passes[SVGF_PASS] = std::make_shared<SVGFPass>();
 			passes[DDGI_PASS] = std::make_shared<DDGIPass>();
 		}
 		passes[PREDEPTH_PASS] = meshPasses[MESH_PASS_PREDEPTH_PASS];

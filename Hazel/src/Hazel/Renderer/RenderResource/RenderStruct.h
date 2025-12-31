@@ -369,7 +369,7 @@ namespace GameEngine {
 		uint32_t debugDDGI;
 		uint32_t renderBoundingBox;
 		uint32_t ClusterLightFrustumDebug;
-		uint32_t _padding[1];
+		uint32_t _padding;
 	};
 
 
@@ -381,6 +381,5 @@ namespace GameEngine {
 		ShadowSetting shadowSetting;
 		IconTextureInfo iconTextures;
 		DDGISetting ddgiSetting;
-
 	};
 }

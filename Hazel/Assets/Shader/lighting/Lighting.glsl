@@ -100,9 +100,6 @@ void main()
 
 
 
-
-
-
 	// DebugCSM
 	if(GetShadowSetting().DebugCSM == 1)
 	{

@@ -55,10 +55,10 @@ void main()
     }else if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_DIRECTIONLIGHT_SHADOW){ 
         DirectionLight light = GetDirectionLight();
         
-        // bool isVisiable = FrustumIntersectBox(light.frustum[0], aabb);   // TODO: 现在只考虑一个级联的剔除（导致现在只有CSM=0距离内有阴影），也就是后三个级联的剔除用的第一个视锥，这是错的！！！解决需要想办法把当前是处理第几个级联的信息传递进来~现在架构不够灵活，还不太好传递呢~
-        // if(!isVisiable){
-        //     ALL_CULLING_BUFFERS[passTypeId].buffers[threadInstanceId].instanceCount = 0u;
-        // }
+        bool isVisiable = FrustumIntersectBox(light.frustum[0], aabb);   // TODO: 现在只考虑一个级联的剔除（导致现在只有CSM=0距离内有阴影），也就是后三个级联的剔除用的第一个视锥，这是错的！！！解决需要想办法把当前是处理第几个级联的信息传递进来~现在架构不够灵活，还不太好传递呢~
+        if(!isVisiable){
+            ALL_CULLING_BUFFERS[passTypeId].buffers[threadInstanceId].instanceCount = 0u;
+        }
 
 
     }else if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_POINTLIGHT_SHADOW){ // 点光剔除

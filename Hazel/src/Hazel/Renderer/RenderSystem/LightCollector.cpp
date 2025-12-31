@@ -194,7 +194,7 @@ namespace GameEngine {
 			radius = std::ceil(radius * 16.0f) / 16.0f;
 
 			glm::mat4 lightViewMatrix = glm::lookAt(frustumCenter - lightDirection * radius, frustumCenter, glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 lightOrthoMatrix = glm::ortho(-radius, radius, -radius, radius, 0.0f + nearOffset, radius * 2 + farOffset);
+			glm::mat4 lightOrthoMatrix = glm::ortho(-radius, radius, -radius, radius, 0.1f + nearOffset, radius * 2 + farOffset);
 
 			// Offset to texel space to avoid shimmering (from https://stackoverflow.com/questions/33499053/cascaded-shadow-map-shimmering)
 			glm::mat4 shadowMatrix = lightOrthoMatrix * lightViewMatrix;

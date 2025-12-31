@@ -25,7 +25,7 @@ void main()
 #ifdef GEOMETRY_SHADER
 
 layout(triangles) in;
-layout(triangle_strip, max_vertices = 18) out;   // ģ�͵�ÿ�������ζ�Ͷ�䵽6������
+layout(triangle_strip, max_vertices = 18) out;
 
 layout(location = 0) in vec4 IN_POS[];
 layout(location = 1) in vec2 IN_TEXCOORD[];
@@ -35,14 +35,13 @@ layout(location = 1) out int OUT_INDEX;
 layout(location = 2) out vec2 OUT_TEXCOORD;
 layout(location = 3) out uint OUT_ID;
 
-// ����ÿ�����㶼ʹ�ò�ͬ�Ĺ�ԴView���൱�ڰѵ��Դ���������������6���涼����һ��ͼƬ
 void Emit(  in int index, 
             in PointLight light, 
             in vec4 pos[3], 
             in vec2 coord[3], 
             in uint id[3])
 {
-    gl_Layer = index;  // ���ͼƬһ����Ⱦ
+    gl_Layer = index;
 
     gl_Position = light.proj * light.view[index] * pos[0];
     OUT_POS         = pos[0];
@@ -82,7 +81,6 @@ void main()
 
 #endif
 #ifdef FRAGMENT_SHADER
-// ע�⣺flat��ʾ����Ҫ��ֵ�����ڴ���ID
 layout(location = 0) in vec4 IN_POS;
 layout(location = 1) in flat int IN_INDEX;
 layout(location = 2) in vec2 IN_TEXCOORD;
@@ -93,8 +91,8 @@ layout(location = 0) out vec4 OUT_COLOR;
 void main()
 {
     PointLight light = GetPointLight(push_LIGHTID.lightID);
-    float depth = length(IN_POS.xyz - light.position) / light.sphere.radius;  // ģ�͵����Դ���룬ѹ����0-1������1��ʾģ���ڵ��Դ��
-    OUT_COLOR = vec4(depth, 0.0, 0.0, 1.0); //������Ϊ���
+    float depth = length(IN_POS.xyz - light.position) / light.sphere.radius;
+    OUT_COLOR = vec4(depth, 0.0, 0.0, 1.0);
 
 }
 

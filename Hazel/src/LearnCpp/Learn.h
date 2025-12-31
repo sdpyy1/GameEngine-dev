@@ -1,6 +1,6 @@
 #pragma once
 struct LearnClass {
 	public:
-		bool isLearning = true;
+		bool isLearning = false;
 		void LearnEntryPoit();
 };
