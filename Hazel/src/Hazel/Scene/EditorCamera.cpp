@@ -59,10 +59,9 @@ namespace GameEngine {
 	void EditorCamera::OnUpdate(const Timestep ts)
 	{
 		bool isMouseInViewport = m_IsMouseInViewport;
-
-		// LOG_INFO("{0}", isMouseInViewport);
 		bool isButtonPressed = Input::IsMouseButtonDown(MouseButton::Right) || Input::IsMouseButtonDown(MouseButton::Middle) || (Input::IsMouseButtonDown(MouseButton::Left) && Input::IsKeyDown(KeyCode::LeftAlt));
-		// 如果用户按下按钮，开始捕获
+
+		// 鼠标开始控制的第一帧，初始化Delta资源
 		if (isButtonPressed && isMouseInViewport && !m_IsCapturing) {
 			m_IsCapturing = true;
 			m_InitialMousePosition = { Input::GetMouseX(), Input::GetMouseY() };
@@ -71,31 +70,26 @@ namespace GameEngine {
 			m_PositionDelta = glm::vec3(0.0f);
 		}
 
-		// 释放按钮则停止捕获
+		// 结束鼠标控制
 		if (!isButtonPressed)
 			m_IsCapturing = false;
+
+
 		if (!m_IsCapturing)
 		{
 			EnableMouse();
-		}
-		else {
+		}else {
+			// 鼠标控制中的一帧
 			const glm::vec2 mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			const glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.002f;
-			if (!m_IsActive)
-			{
-				auto& io = ImGui::GetIO();
-				io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
-				io.ConfigFlags &= ~ImGuiConfigFlags_NavNoCaptureKeyboard;
-			}
-
 			if (Input::IsMouseButtonDown(MouseButton::Right) && !Input::IsKeyDown(KeyCode::LeftAlt))
 			{
 				m_CameraMode = CameraMode::FLYCAM;
 				DisableMouse();
+
 				const float yawSign = GetUpDirection().y < 0 ? -1.0f : 1.0f;
-
 				const float speed = GetCameraSpeed();
-
+				// 位置调整 Position
 				if (Input::IsKeyDown(KeyCode::Q))
 					m_PositionDelta -= ts.GetMilliseconds() * speed * glm::vec3{ 0.f, yawSign, 0.f };
 				if (Input::IsKeyDown(KeyCode::E))
@@ -109,15 +103,14 @@ namespace GameEngine {
 				if (Input::IsKeyDown(KeyCode::D))
 					m_PositionDelta += ts.GetMilliseconds() * speed * m_RightDirection;
 
+				// 旋转调整Direction
 				constexpr float maxRate{ 0.12f };
+				// Yaw * yawSign是为了相机倒置的时候，偏航角和鼠标的移动还是一致的
 				m_YawDelta += glm::clamp(yawSign * delta.x * RotationSpeed(), -maxRate, maxRate);
 				m_PitchDelta += glm::clamp(delta.y * RotationSpeed(), -maxRate, maxRate);
-
 				m_RightDirection = glm::cross(m_Direction, glm::vec3{ 0.f, yawSign, 0.f });
 
-				m_Direction = glm::rotate(glm::normalize(glm::cross(glm::angleAxis(-m_PitchDelta, m_RightDirection),
-					glm::angleAxis(-m_YawDelta, glm::vec3{ 0.f, yawSign, 0.f }))), m_Direction);
-
+				// 重新调整焦点
 				const float distance = glm::distance(m_FocalPoint, m_Position);
 				m_FocalPoint = m_Position + GetForwardDirection() * distance;
 				m_Distance = distance;
@@ -156,11 +149,8 @@ namespace GameEngine {
 
 			if (m_CameraMode == CameraMode::ARCBALL)
 				m_Position = CalculatePosition();
-
 			UpdateCameraView();
 		}
-
-
 	}
 
 	float EditorCamera::GetCameraSpeed() const
@@ -283,7 +273,7 @@ namespace GameEngine {
 
 	glm::vec3 EditorCamera::GetUpDirection() const
 	{
-		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 1.0f, 0.0f));    // TODO:现在图片渲染出来是反的。。等模型渲染后再看怎么调整
+		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	glm::vec3 EditorCamera::GetRightDirection() const
@@ -293,6 +283,7 @@ namespace GameEngine {
 
 	glm::vec3 EditorCamera::GetForwardDirection() const
 	{
+		// 默认方向是看向—z，通过GetOrientation()来修改朝向
 		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, -1.0f));
 	}
 
@@ -303,6 +294,7 @@ namespace GameEngine {
 
 	glm::quat EditorCamera::GetOrientation() const
 	{
+		// 如果不用负号，鼠标操作会反向
 		return glm::quat(glm::vec3(-m_Pitch - m_PitchDelta, -m_Yaw - m_YawDelta, 0.0f));
 	}
 }

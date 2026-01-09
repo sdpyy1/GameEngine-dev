@@ -116,6 +116,9 @@ namespace GameEngine {
 
 		const glm::vec3& GetPosition() const { return m_Position; }
 
+		/*
+			获得相机的姿态（四元数表达）
+		*/
 		glm::quat GetOrientation() const;
 
 		[[nodiscard]] float GetVerticalFOV() const { return m_VerticalFOV; }
@@ -153,7 +156,11 @@ namespace GameEngine {
 
 		float m_Distance;
 		float m_NormalSpeed{ 0.002f };
-
+		/*
+			pitch -> X
+            yaw -> Y
+            roll -> Z
+		*/
 		float m_Pitch, m_Yaw;
 		float m_PitchDelta{}, m_YawDelta{};
 		glm::vec3 m_PositionDelta{};
@@ -168,6 +175,7 @@ namespace GameEngine {
 		constexpr static float MIN_SPEED{ 0.0005f }, MAX_SPEED{ 2.0f };
 		friend class EditorLayer;
 
+		// m_IsCapturing = true时开始监听鼠标的移动
 		bool m_IsCapturing = false;
 		bool m_IsMouseInViewport = true;
 

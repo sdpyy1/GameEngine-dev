@@ -8,7 +8,6 @@ namespace GameEngine {
 	* 上下文相关的操作，定义在RHICommandContext的虚函数，创建RHICommandContext对象时，底层会创建一个上下文handle，比如Vulkan会创建一个VkCommandBuffer
 	* 需要立即执行的命令，比如转换图片布局，定义在RHICommandContextImmediate，它需要上下文，但是需要Flush立即执行，底层也会创建一个上下文并且需要Fence控制并发
 	*/
-
 	class DynamicRHI {
 	private:
 		static DynamicRHIRef s_DynamicRHI;
@@ -40,14 +39,6 @@ namespace GameEngine {
 		virtual RHIGraphicsPipelineRef CreateGraphicsPipeline(const RHIGraphicsPipelineInfo& info) = 0;
 		virtual RHIRenderPassRef CreateRenderPass(const RHIRenderPassInfo& info) = 0;
 		virtual RHIRootSignatureRef CreateRootSignature(const RHIRootSignatureInfo& info) = 0;
-
-		// RayTracing
-
-
-
-
-
-
 
 		// 同步
 		virtual RHIFenceRef CreateFence(bool signaled) = 0;

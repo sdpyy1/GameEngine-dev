@@ -274,7 +274,7 @@ namespace GameEngine {
 			SerailizeEntry(shadowType)
 			SerailizeEntry(showDirection)
 			SerailizeEntry(showCSM)
-			SerailizeEntry(CSMSmooth)
+			//SerailizeEntry(CSMSmooth)  TODO: 目前序列化如果序列之前的场景，不及时保存新的字段，再次启动会报错，待修复
 		EndSerailize
 	};
 
