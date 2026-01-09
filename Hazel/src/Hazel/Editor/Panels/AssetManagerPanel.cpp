@@ -108,6 +108,7 @@ namespace GameEngine {
 				ImGui::DragFloat("Intensity", &component.Intensity, 0.1f, 0.0f, 100.0f, "%.2f");
 				
 				ImGui::Checkbox("Show Direction", &component.showDirection);
+				ImGui::Checkbox("CSM Smooth", &component.CSMSmooth);
 				ImGui::Checkbox("Show CSM", &component.showCSM);
 			});
 		DrawComponent<PointLightComponent>("Point Light", entity, [](auto& component)

@@ -100,10 +100,8 @@ namespace GameEngine {
 			auto newLocalTrans = APP_SCENEMANAGER->GetActiveScene()->GetLocalTransformMatrix(m_SelectedEntity, transform);
 			glm::vec3 translation, rotation, scale;
 			Math::DecomposeTransform(newLocalTrans, translation, rotation, scale);
-
-			glm::vec3 deltaRotation = rotation - tc.GetRotationEuler();
 			tc.Translation = translation;
-			tc.SetRotation(tc.GetRotationEuler() += deltaRotation);
+			tc.SetRotation(rotation);
 			tc.Scale = scale;
 		}
 	}

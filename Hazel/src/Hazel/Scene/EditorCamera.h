@@ -6,6 +6,9 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE   // 把深度值范围设置为[0, 1]，而不是OpenGL的[-1, 1]
 #include <glm/glm.hpp>
 namespace GameEngine {
+	/*
+		Camera类只负责投影矩阵
+	*/
 	class Camera
 	{
 	public:
@@ -31,20 +34,18 @@ namespace GameEngine {
 
 		void SetOrthoProjectionMatrix(const float width, const float height, const float nearP, const float farP)
 		{
-			//TODO(Karim): Make sure this is correct.
 			m_ProjectionMatrix = glm::ortho(-width * 0.5f, width * 0.5f, -height * 0.5f, height * 0.5f, nearP, farP);
 			m_UnReversedProjectionMatrix = glm::ortho(-width * 0.5f, width * 0.5f, -height * 0.5f, height * 0.5f, nearP, farP);
 		}
-
-		float GetExposure() const { return m_Exposure; }
-		float& GetExposure() { return m_Exposure; }
-	protected:
-		float m_Exposure = 0.8f;
 	private:
 		glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
 		//Currently only needed for shadow maps and ImGuizmo
 		glm::mat4 m_UnReversedProjectionMatrix = glm::mat4(1.0f);
 	};
+	/*
+		FLYCAM: FPS模式
+		ARCBALL:轨迹球模式
+	*/
 	enum class CameraMode
 	{
 		NONE, FLYCAM, ARCBALL
@@ -97,6 +98,7 @@ namespace GameEngine {
 			return res;
 		}
 
+		// TODO: 这种代码写的非常垃圾，一个Get函数居然会改变内部状态，多次执行Get，程序会出问题
 		glm::mat4 GetPrevView(const glm::mat4 curView)
 		{
 			if (m_PrevView != curView) {
@@ -157,7 +159,7 @@ namespace GameEngine {
 		glm::vec3 m_PositionDelta{};
 		glm::vec3 m_RightDirection{};
 
-		CameraMode m_CameraMode{ CameraMode::ARCBALL };
+		CameraMode m_CameraMode{ CameraMode::FLYCAM };
 
 		float m_MinFocusDistance{ 100.0f };
 

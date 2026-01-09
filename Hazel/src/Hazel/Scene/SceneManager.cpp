@@ -53,6 +53,7 @@ namespace GameEngine
 			m_SceneInfo.globalSettingInfos.shadowSetting.ShadowType = settings.DirShadowType;
 			m_SceneInfo.globalSettingInfos.shadowSetting.PointShadowType = settings.PointShadowType;
 			m_SceneInfo.globalSettingInfos.shadowSetting.DebugCSM = component.showCSM;
+			m_SceneInfo.globalSettingInfos.shadowSetting.CSMSmooth = component.CSMSmooth;
 		}
 
 		// 后处理设置

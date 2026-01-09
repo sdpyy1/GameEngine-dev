@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "Learn.h"
 #include <map>
+#include <functional>
 #define print(content) do { std::cout << content << std::endl; } while(0)
 ////////////////////////////////////////////////////// MISC //////////////////////////////////////////////////////
 void arrayTest(int arr[])
@@ -249,6 +250,7 @@ public:
 		// funcNeedProduct(10);   比如这里需要product但是传入10，隐式转换就会走这个构造，添加了explicit就不行了
 
 	}
+	// Person p(10);
 };
 template<typename... Args>
 std::unique_ptr<Product> createProduct(Args&&... args) {
@@ -277,9 +279,167 @@ void volatileUseFunc() {
 	t.join();
 	flag = false;
 }
+////////////////////////////////////////////////////// New //////////////////////////////////////////////////////
+void NewFunc() {
+	try {
+		char* p = new char[10e11];
+	}
+	catch (std::bad_alloc & ex)
+	{
+		print(ex.what());
+	}
 
+	try {
+		char* p = new(std::nothrow) char[10e11];
+	}
+	catch (std::bad_alloc & ex)
+	{
+		print(ex.what());
+	}
+	
+	void* someP = malloc(sizeof(100));
+	Person* aPerson = new(someP) Person;
+	// delete aPerson;
+	aPerson->~Person();
+
+}
+
+////////////////////////////////////////////////////// exception //////////////////////////////////////////////////////
+void ExceptionFunc() throw(int){
+	int m = 1;
+	int n = 0;
+	try {
+		if (n == 0) {
+			throw 0.1;
+		}
+		int a = m / n;
+	}
+	catch (double a) {
+		print("double");
+	}
+	catch (...) {
+		print("other");
+	}
+
+	throw 0.1;
+
+}
+////////////////////////////////////////////////////// 强制转换 //////////////////////////////////////////////////////
+void CastFunc() {
+	int num = 0x12345678;
+	char* p_char = reinterpret_cast<char*>(&num);
+
+	//std::cout <<"因为是小端，所以地址低位为0x12345678的最后一个字节：" << std::hex << (int)*p_char << std::endl; // 输出：78
+
+	int num1 = 100;
+	const int* ptr = &num1;
+	//&ptr = 11; //  不可以 因为是常量指针
+	int* non_const_ptr = const_cast<int*>(ptr);  // 转成普通指针后就行了
+	*non_const_ptr = 200;
+	print(num1);
+
+}
+
+
+void arrFunc(int arr[]) {  // 注意：传递数组时会被退化为指针，所以修改会影响原数组
+	arr[0] = 100;
+}
+
+#pragma pack(4)  // 最大对齐不超过 4 字节
+struct S {
+	int x;
+	char y;
+	int z;
+	double a;
+};
+#pragma pack()
+
+void offsetFunc() {
+	S s;
+	print(offsetof(S, x));
+	print(offsetof(S, y));
+	print(offsetof(S, z));
+	print(offsetof(S, a));
+}
+
+
+float calc(float x, float y) {
+	return x + y;
+}
+
+////////////////////////////////////////////////////// 函数指针 //////////////////////////////////////////////////////
+
+int add(int a, int b) {
+	return a + b;
+}
+
+
+void someF(int(*funcPtr)(int, int)) {  // 函数指针作为参数，调用时直接写入函数名即可
+	print(funcPtr(1, 2));
+}
+
+void someF1(std::function<int(int, int)> a) {  // 这样也行
+
+	print(a(1, 2));
+}
+
+// 方式1：typedef定义函数指针别名
+typedef int (*CalcFunc)(int, int);
+
+// 方式2：C++11 using（更直观，推荐）
+using CalcFuncAlias = int (*)(int, int);
+
+
+////////////////////////////////////////////////////// 模板 //////////////////////////////////////////////////////
+template<typename T>
+int tAdd(T a, T b) {
+	return a + b;
+}
+
+using namespace std;
 void LearnClass::LearnEntryPoit()
 {
+	//someF1(add);  // 函数指针作为参数
+	char a[3] = { '1','2','\0' };
+	printf("%s", a);
+	std::string str = "abc";
+	str += "def";
+
+	//// 用double类型，精度更高，误差更易体现
+	//float a = 1.1;
+	//float b = 0.0;
+	//for (int i = 0; i < 11; ++i) {	
+	//	b += 0.1; // 累加11次0.1，理论上=1.1，实际有精度误差
+	//}
+
+	//// 显示20位有效数字，暴露差异
+	//cout.precision(20);
+	//cout << "a = " << a << endl;
+	//cout << "b = " << b << endl;
+	//cout << "a == b ? " << boolalpha << (a == b) << endl;
+
+	//// 正确的比较方式：判断差值小于阈值（double用1e-9）
+	//const double EPSILON = 1e-5;
+	//cout << "a ≈ b ? " << boolalpha << (fabs(a - b) < EPSILON) << endl;
+
+	//offsetFunc();
+	//int arr[10];
+	//arr[0] = 1;
+	//print(arr[0]);
+	//arrFunc(arr);
+ //   print(arr[0]);
+
+
+
+
+	//CastFunc();
+	//try {
+	//	ExceptionFunc();
+	//}
+	//catch (int a) {
+	//	print("other");
+	//}
+	//NewFunc();
 
 	/*std::cout << sizeof(structD) << std::endl;
 	std::cout << alignof(structD) << std::endl;*/

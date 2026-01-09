@@ -31,7 +31,7 @@ namespace GameEngine
 		pipelineInfo.colorAttachmentFormats[2] = FORMAT_R32G32B32A32_SFLOAT;
 		pipelineInfo.colorAttachmentFormats[3] = FORMAT_R32G32B32A32_SFLOAT;
 		pipelineInfo.colorAttachmentFormats[4] = FORMAT_R32G32_SFLOAT;
-		pipelineInfo.depthStencilState = { COMPARE_FUNCTION_LESS_EQUAL, true, false };
+		pipelineInfo.depthStencilState = { COMPARE_FUNCTION_EQUAL, true, false };
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
 
 		// TODO: 如果材质自带了Shader，可以直接在这里就创建管线并返回，否则就是当前Pass自带的Shader信息

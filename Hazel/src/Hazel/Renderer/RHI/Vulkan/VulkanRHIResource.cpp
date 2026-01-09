@@ -546,8 +546,8 @@ namespace GameEngine
 	VulkanRHISampler::VulkanRHISampler(const RHISamplerInfo& info) : RHISampler(info)
 	{
 		/*
-			magFilter：放大滤波，当纹理分辨率小，放大观看 较近时使用
-			minFilter：缩小滤波，当纹理分辨率大，缩小观看 较远时使用
+			magFilter：放大滤波，当纹理分辨率小，放大观看 较近时使用（因为模型一下块地方就占据了很多个屏幕像素，纹理的像素就不够了）
+			minFilter：缩小滤波，当纹理分辨率大，缩小观看 较远时使用（模型很多位置只占了几个像素，原纹理的像素过多了）
 			mipmapMode：mipmap模式，可以选择线性插值还是最近邻插值
 			anisotropyEnable：各向异性过滤启用，用于改善纹理在倾斜视角下的拉伸和模糊问题
 			maxAnisotropy：设置各向异性过滤的强度，值越高，质量越好，但性能开销越大

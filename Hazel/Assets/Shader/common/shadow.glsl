@@ -6,7 +6,7 @@
 /////////////////////////////////////////////
 float GetDirShadowBias(vec3 N)
 {
-	const float MINIMUM_SHADOW_BIAS = 0.0001;
+	const float MINIMUM_SHADOW_BIAS = 0.001;
 	float bias = max(MINIMUM_SHADOW_BIAS * (1.0 - dot(N, GetDirectionLight().direction)), MINIMUM_SHADOW_BIAS);
 	return bias;
 }
@@ -184,6 +184,7 @@ float DirectionShadow_PCSS(texture2DArray shadowMap, uint cascade, vec3 shadowCo
 /////////////////////////////////////////////
 vec2 DirectionShadow(texture2DArray shadowMap,vec3 WorldPosition,vec3 N){
 	float shadowScale = 1.0;
+	float preShadowScale = 1.0;
 	uint cascadeIndex = 0;
 	DirectionLight dirLight = GetDirectionLight();
 	if(dirLight.radiance != vec3(0.0)){
@@ -197,14 +198,27 @@ vec2 DirectionShadow(texture2DArray shadowMap,vec3 WorldPosition,vec3 N){
 				break;
 			}
 		}
+
+
 		vec4 shadowCoords = dirLight.viewProj[cascadeIndex] * vec4(WorldPosition, 1.0);
 		vec3 shadowTex = shadowCoords.xyz / shadowCoords.w;
 		vec3 shadowMapCoords = shadowTex;
-		
 
 		if(GetShadowSetting().ShadowType == 1) shadowScale = DirectionShadow_Hard(shadowMap, cascadeIndex, shadowMapCoords,N);
 		else if(GetShadowSetting().ShadowType == 2) shadowScale = DirectionShadow_PCF(shadowMap, cascadeIndex, shadowMapCoords,10/4096,N);
 		else if(GetShadowSetting().ShadowType == 3) shadowScale = DirectionShadow_PCSS(shadowMap, cascadeIndex, shadowMapCoords, 0.1,N);
+
+		if(shadowScale != 1.0 &&  shadowScale != 0.0 && GetShadowSetting().CSMSmooth == 1){
+			uint preCascadeIndex = cascadeIndex == 0 ? 0:cascadeIndex - 1;
+			float smoothScale = smoothstep(dirLight.SplitDepth[preCascadeIndex], dirLight.SplitDepth[cascadeIndex],dis);
+			shadowCoords = dirLight.viewProj[preCascadeIndex] * vec4(WorldPosition, 1.0);
+			shadowTex = shadowCoords.xyz / shadowCoords.w;
+			shadowMapCoords = shadowTex;
+			if(GetShadowSetting().ShadowType == 1) preShadowScale = DirectionShadow_Hard(shadowMap, preCascadeIndex, shadowMapCoords,N);
+			else if(GetShadowSetting().ShadowType == 2) preShadowScale = DirectionShadow_PCF(shadowMap, preCascadeIndex, shadowMapCoords,10/4096,N);
+			else if(GetShadowSetting().ShadowType == 3) preShadowScale = DirectionShadow_PCSS(shadowMap, preCascadeIndex, shadowMapCoords, 0.1,N);
+			shadowScale = mix(preShadowScale, shadowScale, smoothScale);
+		}
 	}
 	return vec2(shadowScale, cascadeIndex);
 }

@@ -303,7 +303,7 @@ namespace GameEngine {
 		uint32_t DebugCSM;
 		uint32_t ShadowType = SHADOW_TYPE_PCSS;
 		uint32_t PointShadowType = SHADOW_TYPE_VSM;
-        uint32_t _padding;
+        uint32_t CSMSmooth;
 	};
 
 	struct TAASetting

@@ -169,6 +169,7 @@ namespace GameEngine {
 		{
 		}
 
+		// Ëõ·Å-> Ðý×ª-> Æ½ÒÆ
 		glm::mat4 GetTransform() const
 		{
 			return glm::translate(glm::mat4(1.0f), Translation)
@@ -266,12 +267,14 @@ namespace GameEngine {
 		ShadowType shadowType = SHADOW_TYPE_PCSS;
 		bool showDirection = true;
 		bool showCSM = false;
+		bool CSMSmooth = false;
         BeginSerailize
 			SerailizeEntry(Intensity)
 			SerailizeEntry(Radiance)
 			SerailizeEntry(shadowType)
 			SerailizeEntry(showDirection)
 			SerailizeEntry(showCSM)
+			SerailizeEntry(CSMSmooth)
 		EndSerailize
 	};
 
