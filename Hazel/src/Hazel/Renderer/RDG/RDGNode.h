@@ -31,12 +31,11 @@ namespace GameEngine {
         RHICommandListRef command;
         RDGBuilder* builder;
         std::array<RHIDescriptorSetRef, MAX_DESCRIPTOR_SETS> descriptors;
-
         uint32_t passIndex[3] = { 0, 0, 0 };
-
     } RDGPassContext;
 
     typedef std::function<void(RDGPassContext)> RDGPassExecuteFunc;
+
     class RDGNode : public DependencyGraph::Node
     {
     public:

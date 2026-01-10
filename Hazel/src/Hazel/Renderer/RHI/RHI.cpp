@@ -23,6 +23,7 @@ namespace GameEngine {
 	{
         for (auto& resources : resourceMap)
         {
+            bool needClean = false;
             for (RHIResourceRef& resource : resources)
             {
                 if (resource)
@@ -32,17 +33,21 @@ namespace GameEngine {
 
                     if (resource->lastUseTick > 6)  //析构资源6帧后销毁
                     {
-                        // if(resource->GetType() != RHI_RENDER_PASS && backendInfo.enableDebug) 
-                        //     std::cout << "RHI resource [" << resource.get() << "] of type [" << resource->GetType() << "] destroied" << std::endl;
-
+                        needClean = true;
+                         //if(resource->GetType() != RHI_RENDER_PASS) 
+                             // std::cout << "RHI resource [" << resource.get() << "] of type [" << resource->GetType() << "] destroied" << std::endl;
                         resource->Destroy();
                         resource = nullptr;
                     }
                 }
             }
-            resources.erase(std::remove_if(resources.begin(), resources.end(), [](RHIResourceRef x) {
-                return x == nullptr;
-                }), resources.end());
+
+            // 删除空指针
+            if (needClean) {
+                resources.erase(std::remove_if(resources.begin(), resources.end(), [](RHIResourceRef x) {
+                    return x == nullptr;
+                    }), resources.end());
+            }
         }
 	}
 

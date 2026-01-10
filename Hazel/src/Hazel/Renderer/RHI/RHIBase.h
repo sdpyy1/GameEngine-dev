@@ -47,37 +47,38 @@ namespace GameEngine {
 		DirectX,
 		NoneAPI
 	};
+
 	struct RHIConfig {
 		API api = NoneAPI;
 		bool debug = false;
 		bool enableRayTracing = false;
 	};
-	typedef struct Color3 {
-		float r = 0.0f;
-		float g = 0.0f;
-		float b = 0.0f;
-	} Color3;
+
 	enum RHIResourceType : uint32_t
 	{
+		// 基础资源
 		RHI_BUFFER = 0,
 		RHI_TEXTURE,
 		RHI_TEXTURE_VIEW,
 		RHI_SAMPLER,
 		RHI_SHADER,
 
-		// RayTracing
+		// 光追
 		RHI_SHADER_BINDING_TABLE,
 		RHI_TOP_LEVEL_ACCELERATION_STRUCTURE,
 		RHI_BOTTOM_LEVEL_ACCELERATION_STRUCTURE,
 
+		// 资源描述符
 		RHI_ROOT_SIGNATURE,
 		RHI_DESCRIPTOR_SET,
 
+		// 渲染Pass
 		RHI_RENDER_PASS,
 		RHI_GRAPHICS_PIPELINE,
 		RHI_COMPUTE_PIPELINE,
 		RHI_RAY_TRACING_PIPELINE,
 
+		// 底层相关
 		RHI_QUEUE,
 		RHI_SURFACE,
 		RHI_SWAPCHAIN,
@@ -86,11 +87,20 @@ namespace GameEngine {
 		RHI_COMMAND_CONTEXT,
 		RHI_COMMAND_CONTEXT_IMMEDIATE,
 
+		// 同步
 		RHI_FENCE,
 		RHI_SEMAPHORE,
 
 		RHI_RESOURCE_TYPE_MAX_CNT,	//
 	};
+
+
+	typedef struct Color3 {
+		float r = 0.0f;
+		float g = 0.0f;
+		float b = 0.0f;
+	} Color3;
+	
 	const char* RHIResourceTypeToString(RHIResourceType type);
 
 	enum QueueType : uint32_t

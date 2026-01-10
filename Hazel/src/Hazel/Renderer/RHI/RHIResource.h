@@ -69,8 +69,6 @@ namespace GameEngine {
 		RHISwapchainInfo info;
 	};
 
-
-
 	class RHICommandPool : public RHIResource, public std::enable_shared_from_this<RHICommandPool>
 	{
 	public:

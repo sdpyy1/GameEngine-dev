@@ -73,5 +73,4 @@ namespace GameEngine {
     public:
         RDGBufferHandle(NodeID id) : RDGResoruceHandle(id) {};
     };
-
 }

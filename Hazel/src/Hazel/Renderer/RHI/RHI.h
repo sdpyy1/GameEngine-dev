@@ -112,8 +112,6 @@ namespace GameEngine {
 		RHICommandPoolRef pool;
 	};
 
-
-
 	class RHICommandContextImmediate : public RHIResource
 	{
 	public:
@@ -122,25 +120,9 @@ namespace GameEngine {
 		virtual void Flush() = 0;
 		virtual void GenerateMips(RHITextureRef src) = 0;
 		virtual void TextureBarrier(const RHITextureBarrier& barrier) = 0;
-
 		virtual void CopyBufferToTexture(RHIBufferRef src, uint64_t srcOffset, RHITextureRef dst, TextureSubresourceLayers dstSubresource) = 0;
-
-
-
 		virtual void ImGuiUploadFonts() = 0;
-
 	};
-
-
-
-
-
-
-
-
-
-
-
 
 
 	

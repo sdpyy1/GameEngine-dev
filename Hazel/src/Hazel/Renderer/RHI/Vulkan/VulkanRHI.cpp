@@ -1155,8 +1155,8 @@ namespace GameEngine
 		uint32_t mipLevels = src->GetInfo().mipLevels;
 
 		VkImageSubresourceRange transition = {};
-		transition.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-			transition.baseMipLevel = 0;
+		transition.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		transition.baseMipLevel = 0;
 		transition.levelCount = 1;
 		transition.baseArrayLayer = 0;
 		transition.layerCount = 1;

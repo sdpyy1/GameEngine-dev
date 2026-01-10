@@ -956,7 +956,7 @@ namespace GameEngine
 		handle = aSet;
 	}
 
-	GameEngine::RHIDescriptorSet& VulkanRHIDescriptorSet::UpdateDescriptor(const RHIDescriptorUpdateInfo& descriptorUpdateInfo)
+	RHIDescriptorSet& VulkanRHIDescriptorSet::UpdateDescriptor(const RHIDescriptorUpdateInfo& descriptorUpdateInfo)
 	{
 		//更新写入信息
 		VkWriteDescriptorSet descriptorWrite = {};

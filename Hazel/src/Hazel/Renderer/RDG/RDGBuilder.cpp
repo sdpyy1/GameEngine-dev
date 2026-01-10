@@ -313,7 +313,7 @@ namespace GameEngine {
 	void RDGBuilder::PrepareDescriptorSet(RDGPassNodeRef pass)
 	{
 		pass->ForEachTexture([&](RDGTextureEdgeRef edge, RDGTextureNodeRef texture) {
-			if (edge->IsOutput()) return;    // 作为output声明时不需要view  TODO:???
+			if (edge->IsOutput()) return;
 
 			RHITextureViewInfo info;
 			info.texture = Resolve(texture);
@@ -372,7 +372,7 @@ namespace GameEngine {
 	{
 		//TODO:其实可以ForEachTexture时直接区分各种asXxxx
 		pass->ForEachTexture([&](RDGTextureEdgeRef edge, RDGTextureNodeRef texture) {
-			if (edge->IsOutput()) return;  // ??
+			if (edge->IsOutput()) return;
 			if (!(edge->asColor || edge->asDepthStencil)) return;
 			RHITextureViewInfo info;
 			info.texture = Resolve(texture);
