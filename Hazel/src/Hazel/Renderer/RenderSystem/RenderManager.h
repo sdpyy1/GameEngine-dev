@@ -46,6 +46,7 @@ namespace GameEngine
 #ifdef RTDEBUG
 			queue.m_DebugInfos.push_back({ file, line, function });
 #endif
+			// 把传入的函数指针或lambda统一封装为一个参数为void*的lambda
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();

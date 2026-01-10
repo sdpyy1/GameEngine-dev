@@ -11,7 +11,7 @@ namespace GameEngine {
 	class RenderCommandQueue
 	{
 	public:
-		typedef void(*RenderCommandFn)(void*);
+		using RenderCommandFn = void(*)(void*);
 
 		RenderCommandQueue();
 		~RenderCommandQueue();

@@ -41,9 +41,10 @@ namespace GameEngine {
 		void Pump();
 		static uint32_t RT_GetFrameIndex();
 		static bool IsCurrentThreadRT();
+		ThreadingPolicy m_ThreadingPolicy;
+
 	private:
 		RenderThreadData* m_Data;
-		ThreadingPolicy m_ThreadingPolicy;
 
 		Thread m_RenderThread;
 

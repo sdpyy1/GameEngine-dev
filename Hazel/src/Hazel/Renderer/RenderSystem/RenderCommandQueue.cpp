@@ -19,10 +19,6 @@ namespace GameEngine {
     // ª∫¥Ê√¸¡Ó∫Õ ˝æ›
     void* RenderCommandQueue::Allocate(RenderCommandFn fn, uint32_t size)
     {
-        // NOTE(Yan): for debugging
-        // VERIFY(!RenderThread::IsCurrentThreadRT());
-
-        // TODO: alignment
         *(RenderCommandFn*)m_CommandBufferPtr = fn;
         m_CommandBufferPtr += sizeof(RenderCommandFn);
 

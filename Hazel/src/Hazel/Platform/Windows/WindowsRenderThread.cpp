@@ -74,14 +74,21 @@ namespace GameEngine {
 	{
 		if (m_ThreadingPolicy == ThreadingPolicy::SingleThreaded)
 			return;
-
+		// 进入临界区
 		EnterCriticalSection(&m_Data->m_CriticalSection);
+
+		// 等待waitForState信号
 		while (m_Data->m_State != waitForState)
 		{
+			// 让当前线程暂时释放临界区锁，然后进入 “休眠阻塞状态”（不耗 CPU）
 			SleepConditionVariableCS(&m_Data->m_ConditionVariable, &m_Data->m_CriticalSection, INFINITE);
 		}
+
+		// 设置新状态
 		m_Data->m_State = setToState;
 		WakeAllConditionVariable(&m_Data->m_ConditionVariable);
+
+		// 离开临界区
 		LeaveCriticalSection(&m_Data->m_CriticalSection);
 	}
 
