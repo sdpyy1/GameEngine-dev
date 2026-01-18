@@ -28,11 +28,12 @@ namespace GameEngine
 		virtual RHIRootSignatureRef CreateRootSignature(const RHIRootSignatureInfo& info) override final;
 		virtual RHIGraphicsPipelineRef CreateGraphicsPipeline(const RHIGraphicsPipelineInfo& info) override final;
 		virtual RHIComputePipelineRef CreateComputePipeline(const RHIComputePipelineInfo& info) override final;
+
+		virtual RHIBottomLevelAccelerationStructureRef CreateBottomLevelAccelerationStructure(const RHIBottomLevelAccelerationStructureInfo& info) override final;
 		virtual RHITopLevelAccelerationStructureRef CreateTopLevelAccelerationStructure(const RHITopLevelAccelerationStructureInfo& info) override final;
 		virtual RHIRayTracingPipelineRef CreateRayTracingPipeline(const RHIRayTracingPipelineInfo& info) override final;
 		virtual RHIShaderBindingTableRef CreateShaderBindingTable(const RHIShaderBindingTableInfo& info) override final;
 
-		virtual RHIBottomLevelAccelerationStructureRef CreateBottomLevelAccelerationStructure(const RHIBottomLevelAccelerationStructureInfo& info) override final;
 		virtual RHIRenderPassRef CreateRenderPass(const RHIRenderPassInfo& info) override final;
 
 		virtual RHISamplerRef CreateSampler(const RHISamplerInfo& info) override final;

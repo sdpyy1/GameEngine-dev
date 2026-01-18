@@ -266,7 +266,7 @@ vec3 DDGIGetIrrandianceByWorldPosition(vec3 worldPosition, vec3 normal, DDGISett
         //     vec3 probeTextureUV = DDGIGetProbeUV(int(probeIndex), octantCoords, int(DDGI_PROBE_NUM_TEXELS_DISTANCE_INTERIOR), volume);
         //     vec2 temp = texture(sampler2DArray(distanceTexture,SAMPLER[0]),probeTextureUV).rg;  // 采样距离纹理
         //     float mean      = temp.x;
-        //     float variance  = abs(square(temp.x) - temp.y);
+        //     float variance  = abs(temp.y - square(temp.x));
 
         //     float chebyshev = variance / (variance + square(max(dist - mean, 0.0)));
         //     chebyshev       = max(pow3(chebyshev), 0.0);  //以切比雪夫系数三次方作为权重

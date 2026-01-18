@@ -1545,16 +1545,19 @@ namespace GameEngine
 		VkDeviceOrHostAddressConstKHR indexBufferDeviceAddress{};
 		indexBufferDeviceAddress.deviceAddress = VulkanUtil::GetBufferDeviceAddress(CAST<VulkanRHIBuffer>(info.indexBuffer)->GetHandle(), VULKAN_DEVICE);
 
+
+
 		// 定义顶点/索引数据（设备地址）的读取位置及数据解释方式（格式、步长等
 		VkAccelerationStructureGeometryTrianglesDataKHR triangles = {};
 		triangles.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
 		triangles.vertexFormat = VK_FORMAT_R32G32B32_SFLOAT;
 		triangles.vertexData = vertexBufferDeviceAddress;
 		triangles.vertexStride = info.vertexStride;
-		// triangles.maxVertex = 3;   // TODO:这对么？
-		triangles.maxVertex = info.vertexCount - 1;
+		triangles.maxVertex = info.vertexCount;
 		triangles.indexType = VK_INDEX_TYPE_UINT32;
 		triangles.indexData = indexBufferDeviceAddress;
+		triangles.transformData.deviceAddress = 0;
+		triangles.transformData.hostAddress = nullptr;
 
 		// 指定几何体类型（三角形、实例、AABB）及构建标志的包装器
 		VkAccelerationStructureGeometryKHR geometry = {};
@@ -1567,7 +1570,7 @@ namespace GameEngine
 		VkAccelerationStructureBuildRangeInfoKHR rangeInfo = {};
 		rangeInfo.primitiveCount = info.triangleCount;
 		rangeInfo.primitiveOffset = info.indexOffset;
-		rangeInfo.firstVertex = info.vertexOffset / info.vertexStride;    //所有index将加上该值来索引vertex信息
+		rangeInfo.firstVertex = info.vertexOffset / info.vertexStride;
 		rangeInfo.transformOffset = 0;
 
 		VkAccelerationStructureBuildGeometryInfoKHR buildInfo = {};
@@ -1627,7 +1630,7 @@ namespace GameEngine
 			&pBuildRange);
 
 		immediateCommandContest->Flush();
-		// scratchBuffer->Destroy();
+		//scratchBuffer->Destroy();  会自动清理
 	}
 
 	void VulkanRHIBottomLevelAccelerationStructure::Destroy()
@@ -1649,7 +1652,6 @@ namespace GameEngine
 	void VulkanRHITopLevelAccelerationStructure::Update(const std::vector<RHIAccelerationStructureInstanceInfo>& instanceInfos)
 	{
 		bool update = (handle == VK_NULL_HANDLE) ? false : true;
-
 		std::vector<VkAccelerationStructureInstanceKHR> blasInstances;
 		for (int i = 0; i < instanceInfos.size(); i++)
 		{
@@ -1684,7 +1686,7 @@ namespace GameEngine
 		VkAccelerationStructureBuildSizesInfoKHR buildSize = {};
 		buildSize.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR;
 		{
-			uint32_t primitiveCount = update ? instanceInfos.size() : info.maxInstance;
+			uint32_t primitiveCount = info.maxInstance;
 
 			//获取buffer尺寸，在下面进行分配
 			vkGetAccelerationStructureBuildSizesKHR(
@@ -1744,8 +1746,7 @@ namespace GameEngine
 
 			// 构建
 			VkAccelerationStructureBuildRangeInfoKHR accelerationStructureBuildRangeInfo = {};
-			accelerationStructureBuildRangeInfo.primitiveCount = instanceInfos.size();
-			//accelerationStructureBuildRangeInfo.primitiveCount = 0;
+			accelerationStructureBuildRangeInfo.primitiveCount = info.maxInstance;
 			accelerationStructureBuildRangeInfo.primitiveOffset = 0;
 			accelerationStructureBuildRangeInfo.firstVertex = 0;
 			accelerationStructureBuildRangeInfo.transformOffset = 0;

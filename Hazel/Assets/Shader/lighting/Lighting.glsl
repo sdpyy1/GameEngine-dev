@@ -88,7 +88,7 @@ void main()
 		DDGIContribution = DDGIGetIrrandianceByWorldPosition(WorldPosition,N,volume,ddgi_Irrandiance,ddgi_Distance);
 		DDGIContribution*= blendWeight;
 	}
-    DDGIContribution = (albedo / PI) * DDGIContribution;  // TODO: 漫反射太强了，有问题
+    DDGIContribution = (albedo / PI) * DDGIContribution;
 
 
 	if(GetRenderSetting().debugDDGI == 1){

@@ -391,7 +391,9 @@ namespace GameEngine {
 			SetTLAS();
 		}
 		else {
+			// TODO: Update目前存在一些问题，导致动态更新Model时会出现原模型被覆盖的问题，如需更改场景并作用光线追踪，需要保存场景后重新启动程序
 			m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas->Update(instances);
+ 
 		}
 	}
 }

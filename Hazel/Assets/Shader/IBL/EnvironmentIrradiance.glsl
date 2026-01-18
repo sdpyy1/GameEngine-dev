@@ -16,6 +16,9 @@ layout(push_constant) uniform Uniforms
 // so turning this on online will cause poor performance
 // Compute Van der Corput radical inverse
 // See: http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
+/*
+	实现 Van der Corput 激进逆变换，生成 [0,1) 范围内的低差异伪随机数
+*/
 float RadicalInverse_VdC(uint bits)
 {
 	bits = (bits << 16u) | (bits >> 16u);
@@ -26,6 +29,9 @@ float RadicalInverse_VdC(uint bits)
 	return float(bits) * 2.3283064365386963e-10; // / 0x100000000
 }
 // Compute orthonormal basis for converting from tanget/shading space to world space.
+/*
+	输入法向量 N，输出与 N 正交的两个向量 S、T，构成标准正交基
+*/
 void ComputeBasisVectors(const vec3 N, out vec3 S, out vec3 T)
 {
 	// Branchless select non-degenerate T.
@@ -73,8 +79,10 @@ vec3 SampleHemisphere(float u1, float u2)
 layout(local_size_x=32, local_size_y=32, local_size_z=1) in;
 void main()
 {
+	// 当前像素代表的法线方向
 	vec3 N = GetCubeMapTexCoord(vec2(imageSize(o_IrradianceMap)));
 	
+	// 用法线方向构建一个标准正交基
 	vec3 S, T;
 	ComputeBasisVectors(N, S, T);
 

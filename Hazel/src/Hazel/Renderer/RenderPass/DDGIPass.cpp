@@ -141,7 +141,7 @@ namespace GameEngine
 			RDGTextureHandle skyBox = builder.GetTexture("CubeMap");
 
 			// VolumeTrace
-			{
+			{ //TODO: 阴影不需要载入，直接用RT阴影即可
 				auto& build = builder.CreateRayTracingPass(GetName() + "_VolumeTrace")
 					.PassIndex(raysPerProbe, probeCountPreLayer, volumeLayerCount)
 					.RootSignature(m_VolumeTraceRootSignature)

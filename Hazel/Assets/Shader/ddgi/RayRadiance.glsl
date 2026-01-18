@@ -152,11 +152,11 @@ void main()
 	vec3 directionLightContribution = CalculateDirectionalLight(albedo, roughness, metallic, N, V) * RT_DirectionShadow(payload.worldPosition,0.0f);
 	vec3 pointLightContribution = vec3(0);
 	for(int i = 0; i < GetPointLightCount(); i++){
-		pointLightContribution += CalculatePointLightOnlyDiffuse(albedo, roughness, metallic,payload.worldPosition, N, V, i) * PointShadow(u_PointShadowMapTexture,payload.worldPosition,i); 
+		pointLightContribution += CalculatePointLightOnlyDiffuse(albedo, roughness, metallic,payload.worldPosition, N, V, i) * RT_PointShadow(i,payload.worldPosition); 
 	}
 	vec3 spotLightContribution = vec3(0);
 	for(int i = 0; i < GetSpotLightCount(); i++){
-		spotLightContribution += CalculateSpotLightOnlyDiffuse(albedo, roughness, metallic,payload.worldPosition, N, V, i) * SpotShadow(u_PointShadowMapTexture,payload.worldPosition,i); 
+		spotLightContribution += CalculateSpotLightOnlyDiffuse(albedo, roughness, metallic,payload.worldPosition, N, V, i) * RT_SpotShadow(i,payload.worldPosition); 
 	}
 	vec3 diffuse = directionLightContribution + pointLightContribution + spotLightContribution;
 	

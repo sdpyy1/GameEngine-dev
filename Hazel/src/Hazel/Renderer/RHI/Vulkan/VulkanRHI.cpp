@@ -1129,6 +1129,8 @@ namespace GameEngine
 		uint32_t dstMip = dstSubresource.mipLevel;
 
 		VkImageBlit blit = {};
+
+		// offset表示源图像的区域范围和目标图像的区域范围
 		blit.srcOffsets[0] = { 0, 0, 0 }; //TODO offset
 		blit.srcOffsets[1] = { (int32_t)(src->GetInfo().extent.width / pow(2, srcMip)),
 								(int32_t)(src->GetInfo().extent.height / pow(2, srcMip)), 1 };
@@ -1166,7 +1168,7 @@ namespace GameEngine
 			transition.baseMipLevel = 0;
 			transition.baseArrayLayer = i;
 
-			// 先将后面的层全设置到dst
+			// 1. 先将后面的层全设置到dst
 			TextureBarrier(
 				{ src,
 				RESOURCE_STATE_TRANSFER_SRC, RESOURCE_STATE_TRANSFER_DST,

@@ -182,8 +182,8 @@ vec3 CalculateIBLLight(
     vec2 specular_brdf = texture(sampler2D(tex_brdf_lut, SAMPLER[0]), vec2(context.NoV, roughness)).rg;
     vec3 specular_ibl = specular_irradiance * (f0 * specular_brdf.x + specular_brdf.y);
 
-   // return specular_ibl; // 间接漫反射由DDGI提供
-    return kd * diffuse_ibl + specular_ibl;
+    return specular_ibl; // 间接漫反射由DDGI提供
+    //return kd * diffuse_ibl + specular_ibl;
 }
 
 

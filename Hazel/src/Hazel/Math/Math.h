@@ -22,7 +22,9 @@ namespace GameEngine::Math {
 		};
 	}
 
-
+	/*
+		因为最后一行肯定是0001，所以可以忽略
+	*/
 	static void ConvertGlmMat4To3x4Transform(const glm::mat4& mat, float* outTransform)
 	{
 		memset(outTransform, 0, sizeof(float) * 3 * 4);

@@ -1188,9 +1188,6 @@ namespace GameEngine {
 		}
 	}
 	struct RHIBottomLevelAccelerationStructureInfo {
-		/*
-			每个Mesh一个BLAS,BLAS创建Info需要提供Mesh的Buffer信息
-		*/
 		RHIBufferRef vertexBuffer;  // 其实只需要位置信息？
 		RHIBufferRef indexBuffer;
 		uint32_t vertexCount;

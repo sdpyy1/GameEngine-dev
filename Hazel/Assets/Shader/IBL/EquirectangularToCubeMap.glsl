@@ -9,7 +9,7 @@ layout(set = 1, binding = 0) uniform sampler u_Samplers[];
 vec3 GetCubeMapTexCoord(vec2 imageSize)
 {
     vec2 st = gl_GlobalInvocationID.xy / imageSize;
-    vec2 uv = 2.0 * vec2(st.x, 1.0 - st.y) - vec2(1.0);
+    vec2 uv = 2.0 * vec2(st.x, 1.0 - st.y) - vec2(1.0);   // Y-反转
 
     vec3 ret;
     if (gl_GlobalInvocationID.z == 0)      ret = vec3(  1.0, uv.y, -uv.x);

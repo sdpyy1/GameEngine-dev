@@ -68,7 +68,6 @@ namespace GameEngine {
                 blasInfo.vertexBuffer = vertexBuffer->positionBuffer;
                 blasInfo.indexBuffer = indexBuffer->buffer;
                 blasInfo.triangleCount = mesh->TriangleNum();
-
                 blasInfo.vertexStride = sizeof(glm::vec3);
                 blasInfo.indexOffset = 0;
                 blasInfo.vertexOffset = 0;

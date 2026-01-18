@@ -65,6 +65,10 @@ namespace GameEngine
 			RENDER_RESOURCEMANAGER->UpdateTLAS(instances);
 		}
 	}
+
+	/*
+		收集所有Mesh的BLAS和ModelMatrix，用于更新TLAS
+	*/
 	void MeshCollector::Collect4TLAS(std::vector<RHIAccelerationStructureInstanceInfo>& instances)
 	{
 		RHIBottomLevelAccelerationStructureRef blas;  // TODO: 其实和光栅无关的结构不应该放这

@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include "Hazel/Scene/EditorCamera.h"
 #include "collision.h"
+#include <glm/gtx/component_wise.hpp>
 
 namespace GameEngine {
 
@@ -34,24 +35,16 @@ namespace GameEngine {
 		}
 		bool IntersectsAABB(const AxisAlignedBox& aabb, float& t) const
 		{
-			glm::vec3 dirfrac;
-			// r.dir is unit direction vector of ray
-			dirfrac.x = 1.0f / Direction.x;
-			dirfrac.y = 1.0f / Direction.y;
-			dirfrac.z = 1.0f / Direction.z;
-			// lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
-			// r.org is origin of ray
-			const glm::vec3& lb = aabb.GetMinCorner();
-			const glm::vec3& rt = aabb.GetMaxCorner();
-			float t1 = (lb.x - Origin.x) * dirfrac.x;
-			float t2 = (rt.x - Origin.x) * dirfrac.x;
-			float t3 = (lb.y - Origin.y) * dirfrac.y;
-			float t4 = (rt.y - Origin.y) * dirfrac.y;
-			float t5 = (lb.z - Origin.z) * dirfrac.z;
-			float t6 = (rt.z - Origin.z) * dirfrac.z;
+			glm::vec3 invD = 1.0f / Direction;
 
-			float tmin = glm::max(glm::max(glm::min(t1, t2), glm::min(t3, t4)), glm::min(t5, t6));
-			float tmax = glm::min(glm::min(glm::max(t1, t2), glm::max(t3, t4)), glm::max(t5, t6));
+			glm::vec3 t0 = (aabb.GetMinCorner() - Origin) * invD;
+			glm::vec3 t1 = (aabb.GetMaxCorner() - Origin) * invD;
+
+			glm::vec3 tmin3 = glm::min(t0, t1);
+			glm::vec3 tmax3 = glm::max(t0, t1);
+
+			float tmin = glm::compMax(tmin3);
+			float tmax = glm::compMin(tmax3);
 
 			// if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
 			if (tmax < 0)
