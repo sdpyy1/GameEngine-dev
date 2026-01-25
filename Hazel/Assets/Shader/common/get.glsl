@@ -406,6 +406,10 @@ TAASetting GetTAASetting()
 {
     return GLOBAL_SETTING.data.postprocessSetting.TaaSetting;
 }
+FXAASetting GetFXAASetting()
+{
+    return GLOBAL_SETTING.data.postprocessSetting.FXAASetting;
+}
 ColorSetting GetColorSetting()
 {
     return GLOBAL_SETTING.data.postprocessSetting.colorSetting;

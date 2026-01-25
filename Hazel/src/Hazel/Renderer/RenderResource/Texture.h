@@ -56,7 +56,7 @@ namespace GameEngine {
 		TextureSpec m_Spec;
 		RHIDescriptorSetRef m_ImGuiIDCache;
 
-		static std::map<std::string, std::shared_ptr<Texture>> textureCache; // only for Serailize
+		static std::map<std::string, std::shared_ptr<Texture>> textureCache;
 		BeginSerailize
 			SerailizeEntry(m_Spec)
 			if (m_Spec.textureID == 0) {

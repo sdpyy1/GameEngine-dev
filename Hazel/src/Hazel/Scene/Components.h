@@ -322,6 +322,9 @@ namespace GameEngine {
 		bool enableTAA = true;
 		bool taaSharpen = false;
 		float taaSharpness = 1.0f;
+		// FXAA
+		bool enableFXAA = false;
+		bool showEdge = false;
 
 		// PathTracing
 		bool pathTracingEnable = true;
@@ -342,6 +345,8 @@ namespace GameEngine {
 			SerailizeEntry(enableBloom)
 			SerailizeEntry(bloomScale)
 			SerailizeEntry(enableTAA)
+			// SerailizeEntry(enableFXAA)
+			// SerailizeEntry(showEdge)
 			SerailizeEntry(taaSharpen)
 			SerailizeEntry(taaSharpness)
             SerailizeEntry(pathTracingEnable)

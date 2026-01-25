@@ -9,7 +9,7 @@
 
 namespace GameEngine
 {
-	VulkanRHISurface::VulkanRHISurface(GLFWwindow* window)
+	VulkanRHISurface::VulkanRHISurface(GLFWwindow* window) : RHISurface()
 	{
 		int width, height;
 		glfwGetWindowSize(window, &width, &height);
@@ -456,10 +456,15 @@ namespace GameEngine
 		vkCreateFence(VULKAN_DEVICE, &fenceInfo, nullptr, &handle);
 	}
 
-	void VulkanRHIFence::Wait()
+	void VulkanRHIFence::WaitAndReset()
 	{
-		vkWaitForFences(VULKAN_DEVICE, 1, &handle, VK_TRUE, UINT64_MAX);    //TODO 设置超时时间
+		vkWaitForFences(VULKAN_DEVICE, 1, &handle, VK_TRUE, UINT64_MAX); 
 		vkResetFences(VULKAN_DEVICE, 1, &handle);
+	}
+
+	bool VulkanRHIFence::GetStatus()
+	{
+		return vkGetFenceStatus(VULKAN_DEVICE, handle) == VK_SUCCESS;
 	}
 
 	void VulkanRHIFence::Destroy()

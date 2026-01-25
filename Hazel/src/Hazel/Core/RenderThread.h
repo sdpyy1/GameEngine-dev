@@ -31,7 +31,7 @@ namespace GameEngine {
 		bool IsRunning() const { return m_IsRunning; }
 		void Terminate();
 
-		void Wait(State waitForState);
+		void WaitAndReset(State waitForState);
 		void WaitAndSet(State waitForState, State setToState);
 		void Set(State setToState);
 

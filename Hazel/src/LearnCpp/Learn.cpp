@@ -403,55 +403,125 @@
 
 
 ////////////////////////////////////////////////////// 智能指针 //////////////////////////////////////////////////////
-class Person {
+//class Person {
+//public:
+//	Person(int age, std::string name) :age(age), name(name) {
+//		print("Person构造");
+//	}
+//	Person(Person& other):age(other.age),name(other.name) {
+//        print("Person拷贝构造");
+//	}
+//    Person(Person&& other) :age(other.age), name(other.name) {
+//        print("Person移动构造");
+//    }
+//	~Person() {
+//		print("Person析构");
+//	}
+//	Person& operator=(const Person& other) {
+//		print("Person赋值") ;
+//		if (this != &other) {
+//			age = other.age;
+//			name = other.name;
+//		}
+//		return *this;
+//	}
+//	int age;
+//	std::string name;
+//};
+//void SmartPointerFunc() { 
+//	//std::unique_ptr<Person> p1 = std::make_unique<Person>(10, "haha");
+// //   // std::unique_ptr<Person> p2 = p1;  // unique_ptr类删除了拷贝构造
+// //   std::unique_ptr<Person> p2 = std::move(p1); // 移动构造
+//	//print(p2);
+//
+//
+//
+//	std::shared_ptr<Person> p3 = std::make_shared<Person>(10, "shaderd_haha");
+//	print(p3.use_count());
+//    std::shared_ptr<Person> p4 = p3;
+//	print(p3.use_count());
+//	print(p4.use_count());
+//
+//    std::weak_ptr<Person> p5 = p3;
+//    print(p5.use_count());
+//}
+
+////////////////////////////////////////////////////// 虚函数 //////////////////////////////////////////////////////
+
+class Animal {
 public:
-	Person(int age, std::string name) :age(age), name(name) {
-		print("Person构造");
+	Animal() {
+		print("Animal构造");
 	}
-	Person(Person& other):age(other.age),name(other.name) {
-        print("Person拷贝构造");
+	virtual void makeSound() {
+		print("The animal makes a sound.\n");
 	}
-    Person(Person&& other) :age(other.age), name(other.name) {
-        print("Person移动构造");
-    }
-	~Person() {
-		print("Person析构");
+	virtual ~Animal() {
+		print("Animal析构");
 	}
-	Person& operator=(const Person& other) {
-		print("Person赋值") ;
-		if (this != &other) {
-			age = other.age;
-			name = other.name;
-		}
-		return *this;
-	}
-	int age;
-	std::string name;
 };
-void SmartPointerFunc() { 
-	//std::unique_ptr<Person> p1 = std::make_unique<Person>(10, "haha");
- //   // std::unique_ptr<Person> p2 = p1;  // unique_ptr类删除了拷贝构造
- //   std::unique_ptr<Person> p2 = std::move(p1); // 移动构造
-	//print(p2);
 
+class Cat : public Animal {
+public:
 
+    Cat() {
+        print("Cat构造");
+    }
+    Cat(const Cat& other) {
+        print("Cat拷贝构造");
+    }
+    Cat(Cat&& other) {
+        print("Cat移动构造");
+    }
+	void makeSound() {
+		print("Meow!");
+	}
+    ~Cat() {
+        print("Cat析构");
+    }
 
-	std::shared_ptr<Person> p3 = std::make_shared<Person>(10, "shaderd_haha");
-	print(p3.use_count());
-    std::shared_ptr<Person> p4 = p3;
-	print(p3.use_count());
-	print(p4.use_count());
+};
 
-    std::weak_ptr<Person> p5 = p3;
-    print(p5.use_count());
+class Dog : public Animal {
+public:
+	Dog() {
+        print("Dog构造");
+    }
+	Dog(int i) {
+        print("Dog构造");
+    }
+	Dog(const Dog& other) {
+		print("Dog拷贝构造");
+	}
+	Dog(Dog&& other) {
+        print("Dog移动构造");
+    }
+	void makeSound() {
+        print("Woof!\n");
+	}
+	~Dog() {
+        print("Dog析构");
+    }
+};
+
+void STLLearn() {
+	Animal* ptr = new Dog();
+	delete ptr;
 }
+ 
+
 
 
 
 using namespace std;
 void LearnClass::LearnEntryPoit()
 {
-	SmartPointerFunc();
+	STLLearn();
+	/*Animal * animal = new Cat();
+    animal->makeSound();
+	size_t animalSize = sizeof(animal);
+	delete animal;*/
+	//SmartPointerFunc();
 	//const int a = 10;
 	//decltype(a) b = a;
 	//decltype(a) c = 1;

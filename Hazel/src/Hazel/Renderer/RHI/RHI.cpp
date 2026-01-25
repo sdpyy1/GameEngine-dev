@@ -51,19 +51,16 @@ namespace GameEngine {
         }
 	}
 
-	void DynamicRHI::Destroy()
+	DynamicRHI::~DynamicRHI()
 	{
-        for (int32_t i = resourceMap.size() - 1; i >= 0; i--)   // µ¹ÐòÎö¹¹
+        for (int32_t i = resourceMap.size() - 1; i >= 0; i--)
         {
             auto& resources = resourceMap[i];
             for (RHIResourceRef& resource : resources)
             {
                 if (resource)
                 {
-                    // if(resource->GetType() != RHI_RENDER_PASS && backendInfo.enableDebug) 
-                    //     std::cout << "RHI resource [" << resource.get() << "] of type [" << resource->GetType() << "] destroied" << std::endl;
-
-                    resource->Destroy();
+                   // resource->Destroy();
                 }
             }
         }

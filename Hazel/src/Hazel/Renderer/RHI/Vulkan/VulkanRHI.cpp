@@ -1579,7 +1579,7 @@ namespace GameEngine
 	void VulkanRHICommandContextImmediate::EndSingleTimeCommand()
 	{
 		// 等待前一次flush执行完成
-		fence->Wait();
+		fence->WaitAndReset();
 		if (oldHandle != VK_NULL_HANDLE) vkFreeCommandBuffers(VULKAN_DEVICE, CAST<VulkanRHICommandPool>(commandPool)->GetHandle(), 1, &oldHandle);
 
 		// 提交最新一次的flush

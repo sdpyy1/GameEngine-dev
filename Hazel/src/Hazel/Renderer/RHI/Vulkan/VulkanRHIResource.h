@@ -14,6 +14,8 @@ namespace GameEngine {
 		virtual void* RawHandle() override final { return handle; };
 		const VkQueue& GetHandle() { return handle; }
 		uint32_t GetQueueFamilyIndex() { return queueFamilyIndex; }
+		virtual void Destroy() override final {};
+
 	private:
 		VkQueue handle;
 		uint32_t queueFamilyIndex;
@@ -380,8 +382,8 @@ namespace GameEngine {
 	{
 	public:
 		VulkanRHIFence(bool signaled);
-
-		virtual void Wait() override final;
+		virtual void WaitAndReset() override final;
+		virtual bool GetStatus() override final;
 
 		const VkFence& GetHandle() { return handle; }
 

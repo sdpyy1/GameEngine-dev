@@ -93,6 +93,7 @@ namespace GameEngine {
 
 		RHI_RESOURCE_TYPE_MAX_CNT,	//
 	};
+	const char* RHIResourceTypeToString(RHIResourceType type);
 
 
 	typedef struct Color3 {
@@ -101,7 +102,6 @@ namespace GameEngine {
 		float b = 0.0f;
 	} Color3;
 	
-	const char* RHIResourceTypeToString(RHIResourceType type);
 
 	enum QueueType : uint32_t
 	{

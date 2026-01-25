@@ -166,7 +166,7 @@ namespace GameEngine
         }
 
     private:
-        std::vector<EdgeRef> edges; // 所有的顶点和边列表，remove后可能为空
+        std::vector<EdgeRef> edges;
         std::vector<NodeRef> nodes;
 
         std::unordered_map<NodeID, std::set<EdgeID>> outEdges;

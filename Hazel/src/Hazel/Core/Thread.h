@@ -36,7 +36,7 @@ namespace GameEngine {
 		// manualReset: true表示手动重置，false表示自动重置 false表示一次放行一个
 		ThreadSignal(const std::string& name, bool manualReset = false);
 
-		void Wait();
+		void WaitAndReset();
 		void Signal();
 		void Reset();
 	private:

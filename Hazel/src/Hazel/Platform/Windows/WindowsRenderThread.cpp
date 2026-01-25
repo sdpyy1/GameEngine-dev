@@ -55,7 +55,7 @@ namespace GameEngine {
 		s_RenderThreadID = std::thread::id();
 	}
 
-	void RenderThread::Wait(State waitForState)
+	void RenderThread::WaitAndReset(State waitForState)
 	{
 		if (m_ThreadingPolicy == ThreadingPolicy::SingleThreaded)
 			return;
@@ -106,7 +106,7 @@ namespace GameEngine {
 		if (m_ThreadingPolicy == ThreadingPolicy::SingleThreaded)
 			return;
 
-		Wait(State::Idle);
+		WaitAndReset(State::Idle);
 	}
 
 	void RenderThread::Kick()

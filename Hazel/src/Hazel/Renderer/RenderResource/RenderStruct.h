@@ -339,10 +339,16 @@ namespace GameEngine {
 		float bloomScale;
 		float pading[2];
 	};
+	struct FXAASetting {
+		uint32_t enable;
+		uint32_t showEdge;
+		float pading[2];
+	};
 	struct PostprocessSetting {
 		BloomSetting bloomSetting;
 		PathTracingSetting pathTracingSetting;
 		TAASetting TaaSetting;
+		FXAASetting FXAASetting;
 		ColorSetting colorSetting;
 	};
 	struct SkySetting {

@@ -20,7 +20,7 @@ namespace GameEngine {
                 else
                 {
                     if ((oldEntry.size == 0 || entry.size == 0) && (oldEntry.size == 1 || entry.size == 1))  oldEntry.size = 0;
-                    else oldEntry.size = std::max(oldEntry.size, entry.size);        //反射得到的bindless数组的数量是0，把0当最大值吧
+                    else oldEntry.size = std::max(oldEntry.size, entry.size);
 
                     oldEntry.frequency |= entry.frequency;
                     return *this;

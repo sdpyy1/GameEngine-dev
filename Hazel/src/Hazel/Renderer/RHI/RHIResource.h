@@ -2,23 +2,25 @@
 #include "RHIBase.h"
 #include <queue>
 namespace GameEngine {
+	/** 
+		The base type of RHI resources.
+		用来维护RHIResourceType和tick次数
+	*/
 	class RHIResource
 	{
 	public:
 		RHIResource() = delete;
 		RHIResource(RHIResourceType resourceType) : resourceType(resourceType) {};
-		virtual ~RHIResource() {};
-
+		~RHIResource() = default;
+		virtual void Destroy() = 0;
+	public:
 		inline RHIResourceType GetType() { return resourceType; }
-
-		virtual void* RawHandle() { return nullptr; };		// 底层资源的裸指针，仅debug时使用
+		virtual void* RawHandle() { return nullptr; };
 		void printRawHandle();
+
 	private:
 		RHIResourceType resourceType;
 		uint32_t lastUseTick = 0;
-
-		virtual void Destroy() {};
-
 		friend class DynamicRHI;
 	};
 
@@ -287,20 +289,22 @@ namespace GameEngine {
 	};
 
 
-
-
-
-
-
 	// ------------------------------------------------------------------------ 同步 ------------------------------------------------------------------------
+	/*
+		Fence 用于同步CPU和GPU， 只有置位（singaled）和未置位（unsingaled）两种状态
+	*/
 	class RHIFence : public RHIResource
 	{
 	public:
 		RHIFence(): RHIResource(RHI_FENCE){}
 
-		virtual void Wait() = 0;
+		virtual void WaitAndReset() = 0;
+		virtual bool GetStatus() = 0;
 	};
 
+	/*
+		二值信号量，只有置位（singaled）和未置位（unsingaled）两种状态，用于在队列间同步(比如呈现需要等待GPU执行完毕)
+	*/
 	class RHISemaphore : public RHIResource
 	{
 	public:

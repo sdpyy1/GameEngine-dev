@@ -270,10 +270,16 @@ struct BloomSetting {
     float bloomScale;
     float pading[2];
 };
+struct FXAASetting {
+    uint enable;
+    uint showEdge;
+    float pading[2];
+};
 struct PostprocessSetting {
     BloomSetting bloomSetting;
     PathTracingSetting pathTracingSetting;
     TAASetting TaaSetting;
+    FXAASetting FXAASetting;
     ColorSetting colorSetting;
 };
 struct SkySetting {

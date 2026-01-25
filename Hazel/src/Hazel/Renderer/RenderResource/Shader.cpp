@@ -41,7 +41,7 @@ namespace GameEngine{
 
 	Shader::Shader(const std::string& path, ShaderFrequency frequency, const std::string& entry) : m_Path(path), m_Entry(entry), m_Frequency(frequency)
 	{
-		auto fullPath = BuildShaderPath(APP_SHADER_PATH, path, frequency);
+		auto& fullPath = BuildShaderPath(APP_SHADER_PATH, path, frequency);
 		std::vector<uint8_t> m_Data;
 		FileSystem::LoadBinary(fullPath, m_Data);
 		RHIShaderInfo info;

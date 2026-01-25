@@ -51,10 +51,11 @@ namespace GameEngine {
 
     void VkFramebufferCache::Clear()
     {
+        if (cachedFramebuffers.empty()) return;
         for (auto iter : cachedFramebuffers)
         {
-            // vkDestroyFramebuffer(VULKAN_DEVICE, iter.second.frameBuffer, nullptr); TODO:关闭APP时这里会报错
+            // vkDestroyFramebuffer(VULKAN_DEVICE, iter.second.frameBuffer, nullptr); //TODO:关闭APP时这里会报错
         }
-        cachedFramebuffers.clear();
+        //cachedFramebuffers.clear();
     }
 }

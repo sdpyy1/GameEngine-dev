@@ -32,7 +32,7 @@ namespace GameEngine {
 		m_SignalHandle = CreateEvent(NULL, (BOOL)manualReset, FALSE, str.c_str());
 	}
 
-	void ThreadSignal::Wait()
+	void ThreadSignal::WaitAndReset()
 	{
 		WaitForSingleObject(m_SignalHandle, INFINITE); // 阻塞直到事件触发
 	}

@@ -70,7 +70,11 @@ namespace GameEngine
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.shaper = component.taaSharpen;
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.shaperStrength = component.taaSharpness;
 			m_SceneInfo.globalSettingInfos.postprocess.TaaSetting.UVjetter = HaltonUtils::GetJitter(APP_TICK);
-		
+			
+			// FXAA
+            m_SceneInfo.globalSettingInfos.postprocess.FXAASetting.enable = component.enableFXAA;
+            m_SceneInfo.globalSettingInfos.postprocess.FXAASetting.showEdge = component.showEdge;
+
 			// PathTracing
 			m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.enable = component.pathTracingEnable;
             m_SceneInfo.globalSettingInfos.postprocess.pathTracingSetting.numSamples = component.pathTracingNumSamples;

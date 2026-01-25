@@ -143,6 +143,7 @@ namespace GameEngine
 		virtual void DrawIndexedIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount) override final;
 		virtual void ImGuiRenderDrawData() override final;
 		virtual std::vector<RHIGPUTimeInfo> GetGPUTime() override final;
+		virtual void Destroy() override final {};
 
 		virtual void* RawHandle() override final { return handle; }
 
@@ -168,6 +169,7 @@ namespace GameEngine
 	{
 	public:
 		VulkanRHICommandContextImmediate();
+		virtual void Destroy() override {};
 
 		virtual void Flush() override final;
 		virtual void GenerateMips(RHITextureRef src) override final;

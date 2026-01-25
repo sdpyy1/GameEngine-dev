@@ -26,14 +26,12 @@
 #include <Hazel/Renderer/RenderPass/GPUCullingPass.h>
 #include <Hazel/Renderer/RenderPass/ClusterLightingPass.h>
 #include <Hazel/Renderer/RenderPass/SVGFPass.h>
+#include <Hazel/Renderer/RenderPass/FXAAPass.h>
 
 namespace GameEngine {
 	RenderManager::RenderManager()
 	{
-		RHIConfig config;
-		config.debug = true;
-		config.enableRayTracing = true;
-		config.api = API_Vulkan;
+		RHIConfig config{ API_Vulkan,false,true, };
 		m_RHIConfig = config;
 		m_DynamicRHI = DynamicRHI::Init(config);
 		m_Surface = m_DynamicRHI->CreateSurface(APP_GLFWWINDOW);
@@ -41,7 +39,7 @@ namespace GameEngine {
 		m_SwapChain = m_DynamicRHI->CreateSwapChain({ m_Surface, m_GraphicsQueue, FRAMES_IN_FLIGHT, m_Surface->GetExetent(), SWAPCHAIN_COLOR_FORMAT });
 		m_CommandPool = m_DynamicRHI->CreateCommandPool({ m_GraphicsQueue });
 		for (int i = 0; i < FRAMES_IN_FLIGHT; i++) {
-			m_PerFrameBaseResources[i].commandList = m_CommandPool->CreateCommandList(true);
+			m_PerFrameBaseResources[i].commandList = m_CommandPool->CreateCommandList(false);
 			m_PerFrameBaseResources[i].startSemaphore = m_DynamicRHI->CreateSemaphore();
 			m_PerFrameBaseResources[i].finishSemaphore = m_DynamicRHI->CreateSemaphore();
 			m_PerFrameBaseResources[i].fence = m_DynamicRHI->CreateFence(true);
@@ -54,8 +52,8 @@ namespace GameEngine {
 		MeshCollector::CollectMesh();
 		m_RenderResourceManager->Tick();
 		auto& CurResource = m_PerFrameBaseResources[APP_FRAMEINDEX];
-		// LOG_INFO("RenderManager::Tick");
-		CurResource.fence->Wait();
+		CurResource.fence->WaitAndReset();
+
 		RHITextureRef CurSwapchainTexture = m_SwapChain->GetNewFrame(nullptr, CurResource.startSemaphore);
 		RHICommandListRef CurCommandList = CurResource.commandList;
 		CurCommandList->BeginCommand();
@@ -69,9 +67,11 @@ namespace GameEngine {
 		m_DrawCallCount = CurCommandList->GetDrawCallCount();
 		CurCommandList->EndCommand();
 		CurCommandList->Execute(CurResource.fence, CurResource.startSemaphore, CurResource.finishSemaphore);
+
 		m_GPUTimeInfos = CurCommandList->GetGPUTime();
 		m_SwapChain->Present(CurResource.finishSemaphore);
 		m_DynamicRHI->Tick();
+
 	}
 
 	void RenderManager::InitPasses()
@@ -99,6 +99,7 @@ namespace GameEngine {
 		passes[SKY_PASS] = std::make_shared<SkyPass>();
 		passes[LIGHT_PASS] = std::make_shared<LightPass>();
 		passes[TAA_PASS] = std::make_shared<TAAPass>();
+		passes[FXAA_PASS] = std::make_shared<FXAAPass>();
 		passes[BLOOM_PASS] = std::make_shared<BloomPass>();
 		passes[EXPOSURE_PASS] = std::make_shared<ExposurePass>();
 		passes[POST_PROCESS_PASS] = std::make_shared<PostProcessPass>();

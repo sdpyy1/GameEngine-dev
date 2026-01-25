@@ -158,6 +158,18 @@ namespace GameEngine {
 					ImGui::EndDisabled();
 				}
 
+                // ===================== FXAA =====================
+				if (ImGui::CollapsingHeader("FXAA", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Checkbox("Enable FXAA", &component.enableFXAA);
+
+					ImGui::BeginDisabled(!component.enableFXAA);
+					{
+						ImGui::Checkbox("show Edge", &component.showEdge);
+					}
+					ImGui::EndDisabled();
+				}
+
 				// ===================== Path Tracing =====================
 				if (ImGui::CollapsingHeader("Path Tracing", ImGuiTreeNodeFlags_DefaultOpen))
 				{

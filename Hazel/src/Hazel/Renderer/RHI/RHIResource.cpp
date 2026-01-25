@@ -28,7 +28,6 @@ namespace GameEngine {
 
     void RHIResource::printRawHandle()
     {
-        // 转成 uint64_t 更通用：可打印指针、Vulkan 句柄、D3D12 句柄
         uint64_t handle = reinterpret_cast<uint64_t>(RawHandle());
         LOG_INFO("RawHandle({}) = 0x{:x}", RHIResourceTypeToString(GetType()),handle);
     }
