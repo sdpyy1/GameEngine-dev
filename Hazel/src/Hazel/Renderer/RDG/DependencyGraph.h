@@ -169,7 +169,8 @@ namespace GameEngine
         std::vector<EdgeRef> edges;
         std::vector<NodeRef> nodes;
 
-        std::unordered_map<NodeID, std::set<EdgeID>> outEdges;
+        // 记录每个Node的出边和入边，用于遍历
+        std::unordered_map<NodeID, std::set<EdgeID>> outEdges;   
         std::unordered_map<NodeID, std::set<EdgeID>> inEdges;
     };
     typedef std::shared_ptr<DependencyGraph> DependencyGraphRef;

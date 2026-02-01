@@ -453,6 +453,12 @@ public:
 	Animal() {
 		print("Animal构造");
 	}
+    Animal(const Animal& other) {
+        print("Animal拷贝构造");
+    }
+    Animal(Animal&& other) {
+        print("Animal移动构造");
+    }
 	virtual void makeSound() {
 		print("The animal makes a sound.\n");
 	}
@@ -493,7 +499,7 @@ public:
 	Dog(const Dog& other) {
 		print("Dog拷贝构造");
 	}
-	Dog(Dog&& other) {
+	Dog(Dog&& other):Animal(other) {  // 这样写，父类会调用拷贝，因为other退化为左值，需要用std::move来转右值
         print("Dog移动构造");
     }
 	void makeSound() {
@@ -505,18 +511,21 @@ public:
 };
 
 void STLLearn() {
-	Animal* ptr = new Dog();
-	delete ptr;
+	std::vector<Dog> vec;
+	//Dog d;
+	print("--------------------------------------------------");
+    vec.emplace_back(Dog());
+	print("--------------------------------------------------");
+
+	// vec.emplace_back();
 }
- 
-
-
-
 
 using namespace std;
 void LearnClass::LearnEntryPoit()
 {
 	STLLearn();
+	/*Dog* memory = static_cast<Dog*>(malloc(sizeof(Dog)));
+	memory->makeSound();*/
 	/*Animal * animal = new Cat();
     animal->makeSound();
 	size_t animalSize = sizeof(animal);

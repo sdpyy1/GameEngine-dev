@@ -309,7 +309,7 @@ vec3 ResolveBRDF(vec3 albedo, float roughness, float metallic, vec3 N, vec3 V, v
     roughness = clamp(roughness, 0.04, 1.0);// 否则实测会出现INF高光点
 
 	float a2 			= pow4(roughness);  
-	vec3 F0 			= mix(vec3(0.04f), albedo, metallic);                                        
+	vec3 F0 			= mix(vec3(0.04f), albedo, metallic);             // FO表示一个材质垂直看时的反射率，电介质接近0.04 金属很高，所以用金属度来调和                            
 
 	float D             = D_GGX(a2, context.NoH);        
     float Vis           = Vis_Smith(a2, context.NoV, context.NoL ); 

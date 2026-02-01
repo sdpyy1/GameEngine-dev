@@ -103,8 +103,6 @@ void main()
 	}
 
     OUT_COLOR = vec4(depth, depth*depth, 0.0, 1.0);
-
-
 }
 
 
