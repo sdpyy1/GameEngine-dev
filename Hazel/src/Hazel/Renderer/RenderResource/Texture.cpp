@@ -104,7 +104,10 @@ namespace GameEngine
 			imageBuffer.Size = width * height * 4 * sizeof(float);
 		}
 		else {
-			imageBuffer.Data = stbi_load(m_Spec.path.c_str(), &width, &height, &channels, 4);
+			imageBuffer.Data = stbi_load(m_Spec.path.c_str(), &width, &height, &channels, 4);  // TODO:不支持dds格式
+			if (!imageBuffer.Data) {
+				LOG_ERROR("Image Load Fail! [{}]", m_Spec.path);
+			}
 			imageBuffer.Size = width * height * 4;
 			if (m_Spec.srgb) {
 				m_Spec.format = RHIFormat::FORMAT_R8G8B8A8_SRGB;

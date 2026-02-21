@@ -99,6 +99,18 @@ namespace GameEngine {
             maxBound = glm::max(maxBound, point);
         }
 
+        /*
+            是否完全包含B
+        */
+        bool IsContains(BoundingBox& B) {
+            return this->minBound.x <= B.minBound.x &&
+                this->minBound.y <= B.minBound.y &&
+                this->minBound.z <= B.minBound.z &&
+                this->maxBound.x >= B.maxBound.x &&
+                this->maxBound.y >= B.maxBound.y &&
+                this->maxBound.z >= B.maxBound.z;
+        }
+
     private:
         BeginSerailize
             SerailizeEntry(maxBound)

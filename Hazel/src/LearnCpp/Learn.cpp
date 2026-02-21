@@ -448,82 +448,115 @@
 
 ////////////////////////////////////////////////////// 虚函数 //////////////////////////////////////////////////////
 
-class Animal {
+//class Animal {
+//public:
+//	Animal() {
+//		print("Animal构造");
+//	}
+//    Animal(const Animal& other) {
+//        print("Animal拷贝构造");
+//    }
+//    Animal(Animal&& other) {
+//        print("Animal移动构造");
+//    }
+//	virtual void makeSound() {
+//		print("The animal makes a sound.\n");
+//	}
+//	virtual ~Animal() {
+//		print("Animal析构");
+//	}
+//};
+//
+//class Cat : public Animal {
+//public:
+//
+//    Cat() {
+//        print("Cat构造");
+//    }
+//    Cat(const Cat& other) {
+//        print("Cat拷贝构造");
+//    }
+//    Cat(Cat&& other) {
+//        print("Cat移动构造");
+//    }
+//	void makeSound() {
+//		print("Meow!");
+//	}
+//    ~Cat() {
+//        print("Cat析构");
+//    }
+//
+//};
+//
+//class Dog : public Animal {
+//public:
+//	Dog() {
+//        print("Dog构造");
+//    }
+//	Dog(int i) {
+//        print("Dog构造");
+//    }
+//	Dog(const Dog& other) {
+//		print("Dog拷贝构造");
+//	}
+//	Dog(Dog&& other):Animal(other) {  // 这样写，父类会调用拷贝，因为other退化为左值，需要用std::move来转右值
+//        print("Dog移动构造");
+//    }
+//	void makeSound() {
+//        print("Woof!\n");
+//	}
+//	~Dog() {
+//        print("Dog析构");
+//    }
+//};
+//
+//void STLLearn() {
+//	std::vector<Dog> vec;
+//	//Dog d;
+//	print("--------------------------------------------------");
+//    vec.emplace_back(Dog());
+//	print("--------------------------------------------------");
+//
+//	// vec.emplace_back();
+//}
+
+class base {
 public:
-	Animal() {
-		print("Animal构造");
+	base() {
+		print("base构造");
 	}
-    Animal(const Animal& other) {
-        print("Animal拷贝构造");
-    }
-    Animal(Animal&& other) {
-        print("Animal移动构造");
-    }
-	virtual void makeSound() {
-		print("The animal makes a sound.\n");
+	virtual void f2() {
+		print("base::f2");
+		delete this;
 	}
-	virtual ~Animal() {
-		print("Animal析构");
+
+	~base() {
+		print("base析构");
 	}
 };
 
-class Cat : public Animal {
+class sub : public base {
 public:
+	sub() {
+		print("sub构造");
 
-    Cat() {
-        print("Cat构造");
-    }
-    Cat(const Cat& other) {
-        print("Cat拷贝构造");
-    }
-    Cat(Cat&& other) {
-        print("Cat移动构造");
-    }
-	void makeSound() {
-		print("Meow!");
 	}
-    ~Cat() {
-        print("Cat析构");
-    }
+	~sub() {
+		print("sub析构");
+
+	}
 
 };
-
-class Dog : public Animal {
-public:
-	Dog() {
-        print("Dog构造");
-    }
-	Dog(int i) {
-        print("Dog构造");
-    }
-	Dog(const Dog& other) {
-		print("Dog拷贝构造");
-	}
-	Dog(Dog&& other):Animal(other) {  // 这样写，父类会调用拷贝，因为other退化为左值，需要用std::move来转右值
-        print("Dog移动构造");
-    }
-	void makeSound() {
-        print("Woof!\n");
-	}
-	~Dog() {
-        print("Dog析构");
-    }
-};
-
-void STLLearn() {
-	std::vector<Dog> vec;
-	//Dog d;
-	print("--------------------------------------------------");
-    vec.emplace_back(Dog());
-	print("--------------------------------------------------");
-
-	// vec.emplace_back();
-}
-
-using namespace std;
 void LearnClass::LearnEntryPoit()
 {
-	STLLearn();
+
+	print("0------------------");
+	//clas a = function_object{10};
+	//int(*f)(int,int)  = function_object::warrper;
+	//
+	//print(f(1, 2));
+	
+	//STLLearn();
 	/*Dog* memory = static_cast<Dog*>(malloc(sizeof(Dog)));
 	memory->makeSound();*/
 	/*Animal * animal = new Cat();

@@ -31,6 +31,13 @@ namespace GameEngine {
 		bool HasDirLight();
 		glm::mat4 GetLocalTransformMatrix(Entity entity, const glm::mat4& worldMatrix);
 
+	/* 场景加速结构 */
+	public:
+
+
+
+
+	/* Entity */
 	public:
 		Entity GetSelectedEntity();
 		void SetSelectedEntity(Entity entity);
