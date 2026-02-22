@@ -31,7 +31,7 @@
 namespace GameEngine {
 	RenderManager::RenderManager()
 	{
-		RHIConfig config{ API_Vulkan,false,true, };
+		RHIConfig config{ API_Vulkan,true,true, };
 		m_RHIConfig = config;
 		m_DynamicRHI = DynamicRHI::Init(config);
 		m_Surface = m_DynamicRHI->CreateSurface(APP_GLFWWINDOW);
