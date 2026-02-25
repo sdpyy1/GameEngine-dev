@@ -20,6 +20,9 @@ layout(set = 1, binding = 0) buffer drawbuffer{
     uint _padding;
     RHIIndirectCommand buffers[MAX_PER_FRAME_INSTANCE_SIZE];
 } ALL_CULLING_BUFFERS[];
+layout(set = 1, binding = 1, r32f) uniform readonly image2D HZB;
+
+
 layout(local_size_x = LOCAL_X, local_size_y = LOCAL_Y, local_size_z = LOCAL_Z) in;
 void main()
 { 
@@ -51,6 +54,10 @@ void main()
 
         if(!isVisiable){
             ALL_CULLING_BUFFERS[passTypeId].buffers[threadInstanceId].instanceCount = 0u;
+        }else{
+            // 视锥内进行遮挡剔除
+            // 1. 
+            // 2. 
         }
 
     }else if(ALL_CULLING_BUFFERS[passTypeId].passType == MESH_PASS_TYPE_DIRECTIONLIGHT_SHADOW){  // CSM剔除

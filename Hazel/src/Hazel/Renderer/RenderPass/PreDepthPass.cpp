@@ -60,12 +60,12 @@ namespace GameEngine {
 			.Format(FORMAT_D32_SFLOAT)
 			.AllowDepthStencil()
 			.Finish();
+
 		RDGTextureHandle HZB = builder.CreateTexture("HZB")
-			.Exetent({ w, h, 1 })
-			.MipLevels(0)
-			.Format(FORMAT_D32_SFLOAT)
-			.AllowReadWrite()
+			.Import(RENDER_RESOURCEMANAGER->GetHZB(), RESOURCE_STATE_UNDEFINED)
 			.Finish();
+
+
 		builder.CreateRenderPass(GetName())
 			.DepthStencil(depth, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, 1.0f, 0)
 			.RootSignature(m_RootSignature)

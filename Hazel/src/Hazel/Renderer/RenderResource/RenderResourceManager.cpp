@@ -304,6 +304,15 @@ namespace GameEngine {
 				m_MultiFrameGlobalResources.samplerDescriptorSet->UpdateDescriptor(updateInfo);
 			}
 		}
+		auto [w, h] = APP_WINDOWSIZE;
+		RHITextureInfo info;
+		info.format = FORMAT_D32_SFLOAT;
+        info.memoryUsage = MEMORY_USAGE_GPU_ONLY;
+		info.type = RESOURCE_TYPE_RW_TEXTURE;
+        info.extent = { w, h, 1 };
+		info.mipLevels = info.extent.MipSize();
+
+		m_MultiFrameGlobalResources.HZB = APP_DYNAMICRHI->CreateTexture(info);
 	}
 
 	void RenderResourceManager::SetGizmoDataCommand(void* data, int size)

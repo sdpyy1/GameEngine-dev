@@ -41,6 +41,9 @@ namespace GameEngine {
 		// 一些有用的资源
 		TextureRef whiteTexture;
 		TextureRef blackTexture;
+
+		// 非一帧资源
+		RHITextureRef HZB;
 	};
 
 	typedef struct BindlessResourceInfo
@@ -66,7 +69,7 @@ namespace GameEngine {
 		RHIDescriptorSetRef GetSamplerDescriptorSet() { return m_MultiFrameGlobalResources.samplerDescriptorSet; }
 		RHIRootSignatureRef GetGlobalResourcePreFrameRootSignature() { return m_GlobalResourcePreFrameRootSignature; }
 		RHIDescriptorSetRef GetGlobalResourcePerFrameDescriptorSet();
-
+		RHITextureRef GetHZB() { return m_MultiFrameGlobalResources.HZB; };
 		// 把资源挂载到Bindless中（就是更新对应的资源描述符对应binding的index）
 		uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot);
 		void ReleaseBindlessID(uint32_t id, BindlessSlot slot);

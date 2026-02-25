@@ -63,9 +63,16 @@ namespace GameEngine {
 				}			
 			}
 		}
+		RDGTextureHandle HZB = builder.CreateTexture("HZB")
+			.Import(RENDER_RESOURCEMANAGER->GetHZB(), RESOURCE_STATE_UNDEFINED)
+			.Finish();
 
+		auto [w, h] = APP_WINDOWSIZE;
+		Extent3D extent = { w,h,1 };
+		uint32_t mipLevels = extent.MipSize();
 		passbuilder.RootSignature(m_RootSignature)
 			.PassIndex(passIndex)
+			.ReadWrite(1, 1, 0, HZB, VIEW_TYPE_2D, { TEXTURE_ASPECT_DEPTH ,0,mipLevels,0,1 })
 			.Execute([&](RDGPassContext context) {
 				if (context.passIndex[0] == 0) {
 					return;

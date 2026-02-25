@@ -27,6 +27,7 @@
 #include <Hazel/Renderer/RenderPass/ClusterLightingPass.h>
 #include <Hazel/Renderer/RenderPass/SVGFPass.h>
 #include <Hazel/Renderer/RenderPass/FXAAPass.h>
+#include <Hazel/Renderer/RenderPass/SSSRPass.h>
 
 namespace GameEngine {
 	RenderManager::RenderManager()
@@ -105,6 +106,7 @@ namespace GameEngine {
 		passes[POST_PROCESS_PASS] = std::make_shared<PostProcessPass>();
 		passes[IMGUI_PASS] = std::make_shared<ImGuiPass>();
 		passes[PRESENT_PASS] = std::make_shared<PresentPass>();
+		passes[SSSR_PASS] = std::make_shared<SSSRPass>();
 
 		for (auto& pass : passes) {
 			if (pass) {
