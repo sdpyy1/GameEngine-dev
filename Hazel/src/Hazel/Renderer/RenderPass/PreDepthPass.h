@@ -20,6 +20,12 @@ namespace GameEngine {
 		RHIShaderRef m_FragShader;
 		RHIRootSignatureRef m_RootSignature;
 		RHIGraphicsPipelineRef m_Pipeline;
+
+		RHIShaderRef  m_HZBShader;
+		RHIRootSignatureRef m_HZBSignature;
+		RHIComputePipelineRef m_HZBPipeline;
+
+
 		friend class PreDepthPassProcessor;
 	};
 
