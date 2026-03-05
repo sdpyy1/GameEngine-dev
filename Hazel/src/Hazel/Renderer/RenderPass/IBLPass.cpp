@@ -107,7 +107,9 @@ namespace GameEngine
 					.OutputRead(cubeMap)
 					.OutputReadWrite(prefilterMap)
 					.Finish();
-
+				/*
+					32*32*6的cubemap，对每个法线方向上，在半球上进行采样，进行蒙特卡洛积分，计算的就是半球上的irrandiance值
+				*/
 				builder.CreateComputePass(GetName() + "/IrradianceMap")
 					.Read(0, 1, 0, cubeMap, VIEW_TYPE_CUBE)
 					.ReadWrite(0, 0, 0, irradianceMap, VIEW_TYPE_CUBE)
@@ -124,6 +126,9 @@ namespace GameEngine
 						})
 					.Finish();
 
+				/*
+					0层Mip对应粗糙度0，最大Mip对应粗糙度1，中间平均分
+				*/
 				uint32_t mipLevels = (uint32_t)(std::floor(std::log2(std::max(1024, 1024)))) + 1;
 				static const float deltaRoughness = 1.0f / glm::max((float)mipLevels - 1.0f, 1.0f);
 				for (uint32_t i = 1, size = 1024; i < mipLevels; i++, size /= 2) {
@@ -142,7 +147,7 @@ namespace GameEngine
 
 								uint32_t numGroups = glm::max(1u, context.passIndex[0] / 32);
 								float roughness = context.passIndex[1] * deltaRoughness;
-								command->PushConstants(&roughness, sizeof(float), SHADER_FREQUENCY_COMPUTE);
+								command->PushConstants(&roughness, sizeof(float), SHADER_FREQUENCY_COMPUTE); // 传入当前Mip代表的粗糙度
 								command->Dispatch(numGroups, numGroups, 6);
 							})
 						.Finish();

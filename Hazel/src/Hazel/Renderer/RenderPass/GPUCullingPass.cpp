@@ -72,7 +72,7 @@ namespace GameEngine {
 		uint32_t mipLevels = extent.MipSize();
 		passbuilder.RootSignature(m_RootSignature)
 			.PassIndex(passIndex)
-			.ReadWrite(1, 1, 0, HZB, VIEW_TYPE_2D, { TEXTURE_ASPECT_DEPTH ,0,mipLevels,0,1 })
+			.Read(1, 1, 0, HZB, VIEW_TYPE_2D, { TEXTURE_ASPECT_DEPTH ,0,mipLevels,0,1 })
 			.Execute([&](RDGPassContext context) {
 				if (context.passIndex[0] == 0) {
 					return;

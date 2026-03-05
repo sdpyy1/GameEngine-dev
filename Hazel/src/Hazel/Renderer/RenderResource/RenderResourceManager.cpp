@@ -308,7 +308,7 @@ namespace GameEngine {
 		RHITextureInfo info;
 		info.format = FORMAT_D32_SFLOAT;
         info.memoryUsage = MEMORY_USAGE_GPU_ONLY;
-		info.type = RESOURCE_TYPE_RW_TEXTURE;
+		info.type = RESOURCE_TYPE_RW_TEXTURE| RESOURCE_TYPE_TEXTURE;
         info.extent = { w, h, 1 };
 		info.mipLevels = info.extent.MipSize();
 

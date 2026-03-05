@@ -60,7 +60,7 @@ void main()
 		vec2 jetterUV = jetterPiexl / vec2(imageSize);
 		vec2 ndc = jetterUV * 2.0 - 1.0;
 		vec3 origin = GetCamera().position;
-		vec4 target = inverse(GetCamera().projNoJetter) * vec4(ndc.x, ndc.y, 1, 1);
+		vec4 target = inverse(GetCamera().projNoJetter) * vec4(ndc.x, ndc.y, 0, 1);
 		vec3 direction = normalize(GetCamera().invView * vec4(normalize(target.xyz), 0)).xyz;
 		float tmin = MIN_RAY_TRACING_DISTANCE;
 		float tmax = MAX_RAY_TRACING_DISTANCE;

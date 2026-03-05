@@ -547,9 +547,66 @@ public:
 	}
 
 };
+
+
+//class Singleton {
+//public:
+//	static Singleton& Get() {
+//		static Singleton instance;
+//		return instance;
+//	}
+//	int data = 10;
+//
+//private:
+//	Singleton() = default;
+//	~Singleton() = default;
+//	Singleton(Singleton& other) = delete;
+//	Singleton(Singleton&& other) = delete;
+//	void operator =(const Singleton&) = delete;
+//};
+//
+//class A {
+//public:
+//	virtual void func() {
+//
+//	};
+//
+//};
+//class B:virtual public A {
+//	virtual void func() {
+//
+//	};
+//};
+//class C :virtual public A {
+//	virtual void func() {
+//
+//	};
+//};
+//
+//class D :public B, C {
+//	virtual void func() {
+//
+//	};
+//};
+void test() {
+	std::vector<int> arr;
+	for (int i = 0; i < 10; i++) {
+		int num;
+		std::cin >> num;
+		arr.push_back(num);
+	}
+	for (auto& a : arr) {
+		print(a);
+	}
+	std::list<int> a;
+}
+
 void LearnClass::LearnEntryPoit()
 {
-
+	test();
+	std::atomic<int> concurrentInt = 0;
+	concurrentInt.store(10);
+	concurrentInt++;
 	print("0------------------");
 	//clas a = function_object{10};
 	//int(*f)(int,int)  = function_object::warrper;

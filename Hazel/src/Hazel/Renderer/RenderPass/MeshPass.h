@@ -12,12 +12,10 @@ UE的流程：
 
 /*
 	TODO: 目前实现没有考虑实例化合并，因为这样会使剔除变得复杂，因为剔除不会考虑连续性。中间的实例被剔除，就必须提供额外的手段来处理这种情况。
-
-
 	整体流程:
 	1. 收集MeshBatch
 	2. 缓存需要的PSO，并将MeshBatch根据PSO进行分组
-	3. 每个PSO对应的MeshBatchs组成一个MeshDrawCommand，通过间接渲染接口一口气全部上传（提前进行GPU剔除）
+	3. 每个PSO对应的MeshBatchs组成一个MeshDrawCommand，通过间接渲染接口一口气全部上传（提前进行GPU剔除）(也就是说一口气上传了这个Pass需要的所有DrawCall,并记录了每个PSO的范围，后续执行间接渲染时，只需要根据范围就有找到对应的DrawCall)
 */
 
 namespace GameEngine {

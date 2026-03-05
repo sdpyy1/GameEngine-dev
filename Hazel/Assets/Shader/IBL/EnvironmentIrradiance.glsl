@@ -75,7 +75,20 @@ vec3 SampleHemisphere(float u1, float u2)
 	const float u1p = sqrt(max(0.0, 1.0 - u1*u1));
 	return vec3(cos(TwoPI*u2) * u1p, sin(TwoPI*u2) * u1p, u1);
 }
-
+vec3 SampleCosineHemisphere(float u1, float u2)
+{
+    // 关键修改：余弦采样的核心映射
+    const float cos_theta = sqrt(1.0 - u1); // z轴分量，与cos(theta)成正比
+    const float sin_theta = sqrt(u1);      // 等价于 sqrt(1 - cos_theta*cos_theta)
+    
+    // 方位角计算（与原代码一致）
+    const float phi = TwoPI * u2;
+    const float cos_phi = cos(phi);
+    const float sin_phi = sin(phi);
+    
+    // 笛卡尔坐标输出
+    return vec3(cos_phi * sin_theta, sin_phi * sin_theta, cos_theta);
+}
 layout(local_size_x=32, local_size_y=32, local_size_z=1) in;
 void main()
 {

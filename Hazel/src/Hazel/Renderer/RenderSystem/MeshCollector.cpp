@@ -48,8 +48,6 @@ namespace GameEngine
 
 			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshComponent.meshInfo, meshComponent.meshInfoID);  //TODO:目前是一个Mesh一个Mesh上传数据到GPU，需要合并上传，但是涉及到如何合并的问题
 			meshComponent.prevModel = transform;
-
-		
 		}
 
 		for (auto& meshPass : APP_RENDERSYSTEM->GetMeshPasses()) {
