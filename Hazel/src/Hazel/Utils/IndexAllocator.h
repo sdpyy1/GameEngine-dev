@@ -22,7 +22,7 @@ namespace GameEngine {
         uint32_t maxIndex;
         uint32_t nextIndex;
 
-        std::list<IndexRange> unusedIndex;  // 双向链表，管理释放的索引，再次分配时会再这里找可用的
+        std::list<IndexRange> unusedIndex;  // 双向链表，分配ID时，遍历List，如果有range可以满足，就用pool中的，否则就创建新的，等释放时再放回来
 	};
 
 

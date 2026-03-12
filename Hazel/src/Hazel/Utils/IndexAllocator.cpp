@@ -5,7 +5,7 @@ namespace GameEngine
 {
 	IndexAllocator::IndexAllocator(uint32_t maxIndex) : maxIndex(maxIndex), nextIndex(1)
 	{
-
+       
 	}
 
 	uint32_t IndexAllocator::Allocate()
@@ -42,6 +42,7 @@ namespace GameEngine
         Release({ index, 1 });
     }
 
+    // TODO：这个实现有点捞
     void IndexAllocator::Release(IndexRange range)
     {
         uint32_t end = range.begin + range.size;

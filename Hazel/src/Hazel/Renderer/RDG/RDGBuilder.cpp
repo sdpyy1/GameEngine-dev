@@ -231,11 +231,14 @@ namespace GameEngine {
 		pass->ForEachTexture([&](RDGTextureEdgeRef edge, RDGTextureNodeRef texture) {
 			if (edge->IsOutput()) return;
 			RHIResourceState previousState = PreviousState(texture, pass, edge->subresource, false);
-			//if(previousState != edge->state)  // 状态一样也加屏障？ 比如连续两个UAV读写的情况？
+			if (previousState == edge->state && previousState == RESOURCE_STATE_SHADER_RESOURCE) return;
 #ifdef RDG_DEBUG
 			LOG_TRACE_TAG("RDG", "Texture[{2}]: CreateInputBarriers: {0} -> {1}", RHIResourceStateToString(previousState), RHIResourceStateToString(edge->state), blackBoard.TextureName(texture));
 #endif
 			{
+				/*
+					把某个资源从A状态转换为B状态
+				*/
 				RHITextureBarrier barrier = {
 					Resolve(texture),        // 第一个成员: texture
 					previousState,           // 第二个成员: srcState
@@ -249,7 +252,6 @@ namespace GameEngine {
 		pass->ForEachBuffer([&](RDGBufferEdgeRef edge, RDGBufferNodeRef buffer) {
 			if (edge->IsOutput()) return;
 			RHIResourceState previousState = PreviousState(buffer, pass, false);
-			//if(previousState != edge->state)  // 状态一样也加屏障？ 比如连续两个UAV读写的情况？
 #ifdef RDG_DEBUG
 			LOG_TRACE_TAG("RDG", "Buffer[{2}]: CreateInputBarriers: {0} -> {1}", RHIResourceStateToString(previousState), RHIResourceStateToString(edge->state), blackBoard.BufferName(buffer));
 #endif
@@ -273,7 +275,6 @@ namespace GameEngine {
 		pass->ForEachTexture([&](RDGTextureEdgeRef edge, RDGTextureNodeRef texture) {
 			if (!edge->IsOutput()) return;
 			RHIResourceState previousState = PreviousState(texture, pass, edge->subresource, true);
-			//if(previousState != edge->state)  // 状态一样也加屏障？ 比如连续两个UAV读写的情况？
 #ifdef RDG_DEBUG
 			LOG_TRACE_TAG("RDG", "Texture[{2}]: CreateOutputBarriers: {0} -> {1}", RHIResourceStateToString(previousState), RHIResourceStateToString(edge->state), blackBoard.TextureName(texture));
 #endif
@@ -291,7 +292,6 @@ namespace GameEngine {
 		pass->ForEachBuffer([&](RDGBufferEdgeRef edge, RDGBufferNodeRef buffer) {
 			if (!edge->IsOutput()) return;
 			RHIResourceState previousState = PreviousState(buffer, pass, true);
-			//if(previousState != edge->state)  // 状态一样也加屏障？ 比如连续两个UAV读写的情况？
 #ifdef RDG_DEBUG
 			LOG_TRACE_TAG("RDG", "Buffer[{2}]: CreateOutputBarriers: {0} -> {1}", RHIResourceStateToString(previousState), RHIResourceStateToString(edge->state), blackBoard.BufferName(buffer));
 #endif

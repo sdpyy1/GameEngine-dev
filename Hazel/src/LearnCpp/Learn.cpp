@@ -588,25 +588,39 @@ public:
 //
 //	};
 //};
+class A {
+public:
+	A() {
+
+	}
+	~A() {
+		print("析构");
+		throw 1;  // 在调用链上执行栈展开时，会触发变量的析构，析构中又抛出异常，就会双重异常直接结束程序
+	}
+};
 void test() {
-	std::vector<int> arr;
-	for (int i = 0; i < 10; i++) {
-		int num;
-		std::cin >> num;
-		arr.push_back(num);
-	}
-	for (auto& a : arr) {
-		print(a);
-	}
-	std::list<int> a;
+	A a;
+	print("test");
+	throw 2;
 }
+
+void test1() {
+	try {
+		test();
+	}
+	catch (int i) {
+		print(i);
+	}
+}
+
 
 void LearnClass::LearnEntryPoit()
 {
-	test();
-	std::atomic<int> concurrentInt = 0;
-	concurrentInt.store(10);
-	concurrentInt++;
+	test1();
+	//test();
+	//std::atomic<int> concurrentInt = 0;
+	//concurrentInt.store(10);
+	//concurrentInt++;
 	print("0------------------");
 	//clas a = function_object{10};
 	//int(*f)(int,int)  = function_object::warrper;

@@ -4,7 +4,9 @@
 #extension GL_EXT_samplerless_texture_functions : require
 // Pre-filters environment cube map using GGX NDF importance sampling.
 // Part of specular IBL split-sum approximation.
-
+/*
+	预计算了 当我手动把三个方向角都挪到反射方向时，发现lobe变化不大，所以就用这个情况来模拟任何角度入射的情况
+*/
 
 const uint NumSamples = 1024;
 const float InvNumSamples = 1.0 / float(NumSamples);

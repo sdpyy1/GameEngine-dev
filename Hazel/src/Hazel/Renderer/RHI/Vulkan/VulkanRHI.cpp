@@ -1262,7 +1262,9 @@ namespace GameEngine
 
 		vkCmdPipelineBarrier(
 			handle,
-			srcStage, dstStage, 0,
+			srcStage,
+			dstStage, 
+			0,
 			0, nullptr,
 			0, nullptr,
 			1, &memoryBarrier);
