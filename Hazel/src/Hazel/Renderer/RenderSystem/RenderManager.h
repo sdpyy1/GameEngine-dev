@@ -18,6 +18,7 @@ namespace GameEngine
 	{
 	public:
 		RenderManager();
+		~RenderManager();
 		void InitPasses();
 		void Tick(float timestep);
 		RHISwapchainRef GetSwapChain() { return m_SwapChain; }
@@ -33,11 +34,12 @@ namespace GameEngine
 		void SetDrawMeshCount(uint32_t count) { m_DrawMeshCount = count; }
 		uint32_t GetDrawMeshCount() { return m_DrawMeshCount; }
 	private:
+		// 渲染资源（注意声明顺序：m_DynamicRHI 必须在 m_RenderResourceManager 之前，
+		// 以保证析构成员时 device 仍有效，加速结构等资源的 Destroy 才能安全访问 VULKAN_DEVICE）
+		DynamicRHIRef m_DynamicRHI;
 		// 处理器
 		std::shared_ptr<RenderResourceManager> m_RenderResourceManager;
 		std::shared_ptr<PanelManager> m_PanelManager;
-		// 渲染资源
-		DynamicRHIRef m_DynamicRHI;
 		RHISurfaceRef m_Surface;
 		RHIQueueRef m_GraphicsQueue;
 		RHISwapchainRef m_SwapChain;

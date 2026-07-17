@@ -49,8 +49,16 @@ namespace GameEngine {
 
 	}
 
-	void PathTracingPass::Build(RDGBuilder& builder)
+		void PathTracingPass::Build(RDGBuilder& builder)
 	{
+		// 场景切换后路径追踪的 history 累积纹理里仍是旧场景的收敛结果，必须重置
+		uint32_t curSceneVersion = APP_SCENEMANAGER->GetSceneVersion();
+		if (m_LastSceneVersion != curSceneVersion) {
+			m_LastSceneVersion = curSceneVersion;
+			isFirstTick = true;
+			m_Settings.totalNumSamples = 0;
+		}
+
 		PathTracingSetting globalSetting = RENDER_RESOURCEMANAGER->GetGlobalSettingInfo().postprocess.pathTracingSetting;
 		if (globalSetting.enable == 0) {
 			return;

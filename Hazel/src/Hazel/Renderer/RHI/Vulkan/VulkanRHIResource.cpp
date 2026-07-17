@@ -1640,7 +1640,11 @@ namespace GameEngine
 
 	void VulkanRHIBottomLevelAccelerationStructure::Destroy()
 	{
+		// 幂等：引擎的资源延迟回收（DynamicRHI::Tick）与显式销毁可能都调用 Destroy，
+		// 销毁后必须将 handle 置空，避免对同一加速结构重复 vkDestroy 触发校验层报错。
+		if (handle == VK_NULL_HANDLE) return;
 		vkDestroyAccelerationStructureKHR(VULKAN_DEVICE, handle, nullptr);
+		handle = VK_NULL_HANDLE;
 	}
 
 	VulkanRHITopLevelAccelerationStructure::VulkanRHITopLevelAccelerationStructure(const RHITopLevelAccelerationStructureInfo& info) : RHITopLevelAccelerationStructure(info)
@@ -1691,7 +1695,10 @@ namespace GameEngine
 		VkAccelerationStructureBuildSizesInfoKHR buildSize = {};
 		buildSize.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR;
 		{
-			uint32_t primitiveCount = info.maxInstance;
+			// 必须用实际实例数，而不是 info.maxInstance（最大上限）。
+			// 否则会按上限去 build 大量未初始化的 instance（其 BLAS 地址为 0/垃圾），
+			// 引用无效加速结构导致 VK_ERROR_DEVICE_LOST。
+			uint32_t primitiveCount = (uint32_t)instanceInfos.size();
 
 			//获取buffer尺寸，在下面进行分配
 			vkGetAccelerationStructureBuildSizesKHR(
@@ -1751,7 +1758,7 @@ namespace GameEngine
 
 			// 构建
 			VkAccelerationStructureBuildRangeInfoKHR accelerationStructureBuildRangeInfo = {};
-			accelerationStructureBuildRangeInfo.primitiveCount = info.maxInstance;
+			accelerationStructureBuildRangeInfo.primitiveCount = (uint32_t)instanceInfos.size();
 			accelerationStructureBuildRangeInfo.primitiveOffset = 0;
 			accelerationStructureBuildRangeInfo.firstVertex = 0;
 			accelerationStructureBuildRangeInfo.transformOffset = 0;
@@ -1772,7 +1779,10 @@ namespace GameEngine
 
 	void VulkanRHITopLevelAccelerationStructure::Destroy()
 	{
+		// 幂等：同上，避免 DynamicRHI::Tick 延迟回收与显式销毁对同一 TLAS 重复 vkDestroy。
+		if (handle == VK_NULL_HANDLE) return;
 		vkDestroyAccelerationStructureKHR(VULKAN_DEVICE, handle, nullptr);
+		handle = VK_NULL_HANDLE;
 	}
 
 	VulkanRHIShaderBindingTable::VulkanRHIShaderBindingTable(const RHIShaderBindingTableInfo& info) : RHIShaderBindingTable(info)

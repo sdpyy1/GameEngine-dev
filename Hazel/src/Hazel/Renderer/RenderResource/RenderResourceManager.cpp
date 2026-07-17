@@ -4,6 +4,8 @@
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Math/Halton.h"
+#include "Hazel/Renderer/RHI/Vulkan/VulkanRHI.h"
+#include "Hazel/Renderer/RHI/Vulkan/VulkanUtil.h"
 
 namespace GameEngine {
 	static uint32_t BindlessSlotToPerFrameBinding(BindlessSlot slot) { return slot + (uint32_t)GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION; }
@@ -372,37 +374,54 @@ namespace GameEngine {
 
 	void RenderResourceManager::SetTLAS()
 	{
+		// TLAS 为单一共享资源：所有飞行帧的 descriptor set 都绑定同一份，
+		// 避免 per-frame 各自持有一份导致切换场景时部分帧 descriptor set 悬空。
+		if (!m_SharedTLAS) {
+			return;
+		}
 		RHIDescriptorUpdateInfo updateInfo = {};
 		updateInfo.binding = GLORBAL_RESOURCE_BINDING_TLAS;
 		updateInfo.index = 0;
 		updateInfo.resourceType = RESOURCE_TYPE_RAY_TRACING;
-		updateInfo.tlas = m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas;
+		updateInfo.tlas = m_SharedTLAS;
 
 		for (size_t i = 0; i < m_PerFrameGlobalResources.size(); ++i) {
-			auto& resource = m_PerFrameGlobalResources[i];
-			if (i == APP_FRAMEINDEX) {
-				resource.isNeedUpdate = true;
-				resource.updateInfos.push_back(updateInfo);
-			}
-			/*else {
-				resource.descriptorSet->UpdateDescriptor(updateInfo);
-			}*/
+			m_PerFrameGlobalResources[i].descriptorSet->UpdateDescriptor(updateInfo);
 		}
 	}
 
 	void RenderResourceManager::UpdateTLAS(std::vector<RHIAccelerationStructureInstanceInfo>& instances)
 	{
-		if (!m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas) {
+		// 场景切换后，旧 TLAS 中的实例（及其引用的 BLAS）已失效，且 TLAS::Update 不会移除旧实例，
+		// 必须销毁旧 TLAS 强制重建，否则路径追踪会命中旧场景的几何。
+		uint32_t curSceneVersion = APP_SCENEMANAGER->GetSceneVersion();
+		if (m_LastBuiltSceneVersion != curSceneVersion || m_LastBuiltInstanceCount != (uint32_t)instances.size()) {
+			m_LastBuiltSceneVersion = curSceneVersion;
+			m_LastBuiltInstanceCount = (uint32_t)instances.size();
+			m_NeedRebuildTLAS = true;
+		}
+
+		if (m_NeedRebuildTLAS) {
+			// 关键：必须等所有 in-flight 帧在 GPU 上真正执行完毕、不再引用旧 TLAS 后，才能销毁重建。
+			// 否则在 FRAMES_IN_FLIGHT 重叠提交期间销毁正在被引用的加速结构，会导致 VK_ERROR_DEVICE_LOST
+			// （表现为 "Failed to get query pool results! -4" 后进程崩溃）。
+			vkDeviceWaitIdle(VULKAN_DEVICE);
+			if (m_SharedTLAS) {
+				m_SharedTLAS->Destroy();
+				m_SharedTLAS = nullptr;
+			}
+			m_NeedRebuildTLAS = false;
+		}
+
+		if (!m_SharedTLAS) {
 			RHITopLevelAccelerationStructureInfo tlasInfo;
 			tlasInfo.instanceInfos = instances;
 			tlasInfo.maxInstance = MAX_PER_FRAME_INSTANCE_SIZE;
-			m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas = APP_DYNAMICRHI->CreateTopLevelAccelerationStructure(tlasInfo);
-			SetTLAS();
+			m_SharedTLAS = APP_DYNAMICRHI->CreateTopLevelAccelerationStructure(tlasInfo);
+			SetTLAS(); // 重建后同步刷新所有飞行帧的 descriptor set
 		}
 		else {
-			// TODO: Update目前存在一些问题，导致动态更新Model时会出现原模型被覆盖的问题，如需更改场景并作用光线追踪，需要保存场景后重新启动程序
-			m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas->Update(instances);
- 
+			m_SharedTLAS->Update(instances);
 		}
 	}
 }

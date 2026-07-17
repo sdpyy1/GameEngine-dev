@@ -1,6 +1,7 @@
 ﻿#include "hzpch.h"
 #include "SceneManager.h"
 #include "Hazel/Utils/FileSystem.h"
+#include "Hazel/Renderer/RHI/Vulkan/VulkanRHI.h"
 #include "SceneSerializer.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/Entity.h"
@@ -169,12 +170,18 @@ namespace GameEngine
 		m_CurrentSceneFilePath = filepath.string();
 		std::replace(m_CurrentSceneFilePath.begin(), m_CurrentSceneFilePath.end(), '\\', '/');
 		*/
+		// 关键：释放旧场景会销毁其持有的 BLAS 与几何 buffer（shared_ptr 引用归零即 vkDestroy）。
+		// 在此之前必须等 GPU 所有 in-flight 帧执行完毕，否则正在做路径追踪的帧仍引用这些资源，
+		// 销毁会导致 VK_ERROR_DEVICE_LOST（表现为 "Failed to get query pool results! -4" 崩溃）。
+		vkDeviceWaitIdle(std::static_pointer_cast<VulkanDynamicRHI>(APP_DYNAMICRHI)->GetDevice());
 		m_CurrentScene = std::make_shared<Scene>(); 
 		SceneSerializer serializer(m_CurrentScene);
         serializer.Deserialize(filepath.string());
 		std::filesystem::path path = filepath;
 		m_CurrentSceneFilePath = filepath.string();
 		std::replace(m_CurrentSceneFilePath.begin(), m_CurrentSceneFilePath.end(), '\\', '/');
+
+		m_SceneVersion++; // 通知渲染侧重建光追结构(TLAS)并重置路径追踪累积
 
 		return true;
 	}

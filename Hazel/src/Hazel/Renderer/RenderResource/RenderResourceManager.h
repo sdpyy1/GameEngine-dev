@@ -14,8 +14,6 @@ namespace GameEngine {
 		bool isNeedUpdate = false; // 当某个实时资源更新时，其他帧也得在自己帧执行时更新好
 		std::vector<RHIDescriptorUpdateInfo> updateInfos;  // 只在isNeedUpdate=true时生效
 
-		// 光追
-		RHITopLevelAccelerationStructureRef tlas;
 		RHIDescriptorSetRef descriptorSet;
 		// 默认摄像机来自SceneManager自带，激活摄像机可以来自摄像机组件或者默认摄像机
 		RenderBuffer<CameraData> activeCameraDataBuffer;
@@ -106,9 +104,9 @@ namespace GameEngine {
 		void SetGizmoDataCommand(void* data, int size);
 		RHIBufferRef GetGizmoDataBuffer();
 
-		// TLAS
+		// TLAS（单一共享资源，所有飞行帧的 descriptor set 都绑定同一份）
 		void SetTLAS();
-		RHITopLevelAccelerationStructureRef GetTLAS() { return m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas; };
+		RHITopLevelAccelerationStructureRef GetTLAS() { return m_SharedTLAS; };
 		void UpdateTLAS(std::vector<RHIAccelerationStructureInstanceInfo>& instances);
 
 	public:
@@ -134,5 +132,15 @@ namespace GameEngine {
 		GlobalSettingInfo m_GlobalSettingInfo;
 
 		CPURenderSetting cpuRenderSetting; // 从场景传递过来的一些渲染参数，只在CPU使用
+
+		// 记录上次构建 TLAS 时的场景版本；场景切换后版本变化，需销毁旧 TLAS 强制重建
+		uint32_t m_LastBuiltSceneVersion = UINT32_MAX;
+		// 记录上次构建时的实例数量。TLAS 的 UPDATE 模式要求 primitiveCount 与首次 BUILD 时一致，
+		// 因此实例数变化时也必须走 BUILD（销毁重建）而非 UPDATE，否则会违反规范导致 VK_ERROR_DEVICE_LOST。
+		uint32_t m_LastBuiltInstanceCount = UINT32_MAX;
+		// 标记 TLAS 需要重建（场景切换或实例数变化时置位，真正重建前会先等待 GPU 空闲，避免销毁正在被 in-flight 帧引用的加速结构）
+		bool m_NeedRebuildTLAS = false;
+		// 光追顶层加速结构，作为单一共享资源（不随飞行帧复制，避免部分帧 descriptor set 悬空）
+		RHITopLevelAccelerationStructureRef m_SharedTLAS;
 	};
 }

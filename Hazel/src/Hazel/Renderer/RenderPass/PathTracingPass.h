@@ -33,6 +33,7 @@ namespace GameEngine {
 		RHIRootSignatureRef m_RootSignature;
 		RHIRayTracingPipelineRef m_Pipeline;
 		bool isFirstTick = true;
+		uint32_t m_LastSceneVersion = UINT32_MAX; // 用于检测场景切换以重置路径追踪累积
 	};
 }
 

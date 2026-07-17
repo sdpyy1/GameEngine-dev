@@ -1,6 +1,7 @@
 ﻿#include "hzpch.h"
 #include "RenderManager.h"
 #include "Hazel/Core/Application.h"
+#include "Hazel/Renderer/RHI/Vulkan/VulkanRHI.h"
 #include "Hazel/Editor/PanelManager.h"
 #include "Hazel/Renderer/RenderPass/GridPass.h"
 #include <Hazel/Renderer/RenderPass/ImGuiPass.h>
@@ -44,6 +45,16 @@ namespace GameEngine {
 			m_PerFrameBaseResources[i].startSemaphore = m_DynamicRHI->CreateSemaphore();
 			m_PerFrameBaseResources[i].finishSemaphore = m_DynamicRHI->CreateSemaphore();
 			m_PerFrameBaseResources[i].fence = m_DynamicRHI->CreateFence(true);
+		}
+	}
+
+	RenderManager::~RenderManager()
+	{
+		// Graceful shutdown：析构成员资源前，先确保 GPU 上所有 in-flight 命令执行完毕。
+		// 否则正在引用 swapchain/buffer/加速结构等的在途帧会在资源被销毁时触发
+		// VK_ERROR_DEVICE_LOST 或访问违规，表现为退出码 0xC0000409（栈缓冲区溢出）的延迟崩溃。
+		if (m_DynamicRHI) {
+			vkDeviceWaitIdle(std::static_pointer_cast<VulkanDynamicRHI>(m_DynamicRHI)->GetDevice());
 		}
 	}
 
