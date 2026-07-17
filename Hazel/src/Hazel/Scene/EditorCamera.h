@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Core/TimeStep.h"
 #include "Hazel/Core/Events/KeyEvent.h"
 #include "Hazel/Core/Events/MouseEvent.h"
 #define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE   // °ÑÉî¶ÈÖµ·¶Î§ÉèÖÃÎª[0, 1]£¬¶ø²»ÊÇOpenGLµÄ[-1, 1]
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE   // æŠŠæ·±åº¦å€¼èŒƒå›´è®¾ç½®ä¸º[0, 1]ï¼Œè€Œä¸æ˜¯OpenGLçš„[-1, 1]
 #include <glm/glm.hpp>
 namespace GameEngine {
 	/*
-		CameraÀàÖ»¸ºÔğÍ¶Ó°¾ØÕó
+		Cameraç±»åªè´Ÿè´£æŠ•å½±çŸ©é˜µ
 	*/
 	class Camera
 	{
@@ -43,8 +43,8 @@ namespace GameEngine {
 		glm::mat4 m_UnReversedProjectionMatrix = glm::mat4(1.0f);
 	};
 	/*
-		FLYCAM: FPSÄ£Ê½
-		ARCBALL:¹ì¼£ÇòÄ£Ê½
+		FLYCAM: FPSæ¨¡å¼
+		ARCBALL:è½¨è¿¹çƒæ¨¡å¼
 	*/
 	enum class CameraMode
 	{
@@ -98,7 +98,7 @@ namespace GameEngine {
 			return res;
 		}
 
-		// TODO: ÕâÖÖ´úÂëĞ´µÄ·Ç³£À¬»ø£¬Ò»¸öGetº¯Êı¾ÓÈ»»á¸Ä±äÄÚ²¿×´Ì¬£¬¶à´ÎÖ´ĞĞGet£¬³ÌĞò»á³öÎÊÌâ
+		// TODO: è¿™ç§ä»£ç å†™çš„éå¸¸åƒåœ¾ï¼Œä¸€ä¸ªGetå‡½æ•°å±…ç„¶ä¼šæ”¹å˜å†…éƒ¨çŠ¶æ€ï¼Œå¤šæ¬¡æ‰§è¡ŒGetï¼Œç¨‹åºä¼šå‡ºé—®é¢˜
 		glm::mat4 GetPrevView(const glm::mat4 curView)
 		{
 			if (m_PrevView != curView) {
@@ -117,7 +117,7 @@ namespace GameEngine {
 		const glm::vec3& GetPosition() const { return m_Position; }
 
 		/*
-			»ñµÃÏà»úµÄ×ËÌ¬£¨ËÄÔªÊı±í´ï£©
+			è·å¾—ç›¸æœºçš„å§¿æ€ï¼ˆå››å…ƒæ•°è¡¨è¾¾ï¼‰
 		*/
 		glm::quat GetOrientation() const;
 
@@ -175,7 +175,7 @@ namespace GameEngine {
 		constexpr static float MIN_SPEED{ 0.0005f }, MAX_SPEED{ 2.0f };
 		friend class EditorLayer;
 
-		// m_IsCapturing = trueÊ±¿ªÊ¼¼àÌıÊó±êµÄÒÆ¶¯
+		// m_IsCapturing = trueæ—¶å¼€å§‹ç›‘å¬é¼ æ ‡çš„ç§»åŠ¨
 		bool m_IsCapturing = false;
 		bool m_IsMouseInViewport = true;
 

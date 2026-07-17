@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "FXAAPass.h"
 #include <Hazel/Renderer/RenderResource/Shader.h>
 #include <Hazel/Renderer/RenderSystem/RenderManager.h>
@@ -40,7 +40,7 @@ void GameEngine::FXAAPass::Build(RDGBuilder& builder)
 		auto& [w, h] = APP_WINDOWSIZE;
 		uint32_t groupSizeX = 16;
 		uint32_t groupSizeY = 16;
-		// ÕâÑù¼ÆËã¶ø²»ÊÇÓÃceilµÄÄ¿µÄÊÇ·ÀÖ¹ceilÇ°ÌáÊÇÄãÓÃ¸¡µãÊý£¬Èç¹ûÕûÊý¼ÆËã£¬ÓÃÏÂÃæÕâ¸ö·½Ê½¸üºÃ
+		// è¿™æ ·è®¡ç®—è€Œä¸æ˜¯ç”¨ceilçš„ç›®çš„æ˜¯é˜²æ­¢ceilå‰ææ˜¯ä½ ç”¨æµ®ç‚¹æ•°ï¼Œå¦‚æžœæ•´æ•°è®¡ç®—ï¼Œç”¨ä¸‹é¢è¿™ä¸ªæ–¹å¼æ›´å¥½
 		uint32_t numGroupsX = (w + groupSizeX - 1) / groupSizeX;
 		uint32_t numGroupsY = (h + groupSizeY - 1) / groupSizeY;
 		cmd->Dispatch(numGroupsX, numGroupsY, 1);
@@ -49,7 +49,7 @@ void GameEngine::FXAAPass::Build(RDGBuilder& builder)
 		.Finish();
 
 
-	// äÖÈ¾½á¹ûÐ´µ½Viewport
+	// æ¸²æŸ“ç»“æžœå†™åˆ°Viewport
 	builder.CreateCopyPass("FXAA_Copy")
 		.From(FXAARes)
 		.To(Viewport)

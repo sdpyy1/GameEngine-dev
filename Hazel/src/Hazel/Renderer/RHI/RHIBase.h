@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Core/Base.h"
 namespace GameEngine {
 
 #define SWAPCHAIN_COLOR_FORMAT FORMAT_R8G8B8A8_UNORM
 
-#define MAX_QUEUE_CNT 2					//Ã¿¸ö¶ÓÁĞ×åµÄ×î´ó¶ÓÁĞÊıÄ¿
-#define MAX_SHADER_IN_OUT_VARIABLES 8	//ÔÊĞí×ÅÉ«Æ÷×î´óµÄÊäÈëºÍÊä³ö±äÁ¿ÊıÄ¿
-#define MAX_RENDER_TARGETS 8			//ÔÊĞíÍ¬Ê±°ó¶¨µÄ×î´óRTÊıÄ¿
-#define MAX_DESCRIPTOR_SETS 8			//ÔÊĞí°ó¶¨µÄ×î´óÃèÊö·û¼¯ÊıÄ¿
+#define MAX_QUEUE_CNT 2					//æ¯ä¸ªé˜Ÿåˆ—æ—çš„æœ€å¤§é˜Ÿåˆ—æ•°ç›®
+#define MAX_SHADER_IN_OUT_VARIABLES 8	//å…è®¸ç€è‰²å™¨æœ€å¤§çš„è¾“å…¥å’Œè¾“å‡ºå˜é‡æ•°ç›®
+#define MAX_RENDER_TARGETS 8			//å…è®¸åŒæ—¶ç»‘å®šçš„æœ€å¤§RTæ•°ç›®
+#define MAX_DESCRIPTOR_SETS 8			//å…è®¸ç»‘å®šçš„æœ€å¤§æè¿°ç¬¦é›†æ•°ç›®
 #define MAX_TIMEQUERYPOOL_SIZE 10000
 #define RHI_COLOR_FROMAT FORMAT_R32G32B32A32_SFLOAT
 #define RHI_DEPTH_FROMAT FORMAT_D32_SFLOAT
@@ -56,29 +56,29 @@ namespace GameEngine {
 
 	enum RHIResourceType : uint32_t
 	{
-		// »ù´¡×ÊÔ´
+		// åŸºç¡€èµ„æº
 		RHI_BUFFER = 0,
 		RHI_TEXTURE,
 		RHI_TEXTURE_VIEW,
 		RHI_SAMPLER,
 		RHI_SHADER,
 
-		// ¹â×·
+		// å…‰è¿½
 		RHI_SHADER_BINDING_TABLE,
 		RHI_TOP_LEVEL_ACCELERATION_STRUCTURE,
 		RHI_BOTTOM_LEVEL_ACCELERATION_STRUCTURE,
 
-		// ×ÊÔ´ÃèÊö·û
+		// èµ„æºæè¿°ç¬¦
 		RHI_ROOT_SIGNATURE,
 		RHI_DESCRIPTOR_SET,
 
-		// äÖÈ¾Pass
+		// æ¸²æŸ“Pass
 		RHI_RENDER_PASS,
 		RHI_GRAPHICS_PIPELINE,
 		RHI_COMPUTE_PIPELINE,
 		RHI_RAY_TRACING_PIPELINE,
 
-		// µ×²ãÏà¹Ø
+		// åº•å±‚ç›¸å…³
 		RHI_QUEUE,
 		RHI_SURFACE,
 		RHI_SWAPCHAIN,
@@ -87,7 +87,7 @@ namespace GameEngine {
 		RHI_COMMAND_CONTEXT,
 		RHI_COMMAND_CONTEXT_IMMEDIATE,
 
-		// Í¬²½
+		// åŒæ­¥
 		RHI_FENCE,
 		RHI_SEMAPHORE,
 
@@ -114,24 +114,24 @@ namespace GameEngine {
 	enum RHIFormat : uint32_t
 	{
 		/*
-			¹éÒ»»¯£º»áÔÙGPU¶ÁÈ¡Ê±×Ô¶¯×ªµ½ 0-1Ö®¼ä
-			UNORM£ºÎŞ·ûºÅ¹éÒ»»¯£¬´æ´¢µÄÊÇ0-2^x-1µÄÊı¾İ£¬¶ÁÈ¡Ê±×Ô¶¯×ªÎª 0-1
-			SNORM£ºÓĞ·ûºÅ¹éÒ»»¯£¬´æ´¢µÄÊÇ-2^(x-1)µ½2^(x-1)µÄÊı¾İ£¬¶ÁÈ¡Ê±×Ô¶¯×ªÎª -1.0~1.0
+			å½’ä¸€åŒ–ï¼šä¼šå†GPUè¯»å–æ—¶è‡ªåŠ¨è½¬åˆ° 0-1ä¹‹é—´
+			UNORMï¼šæ— ç¬¦å·å½’ä¸€åŒ–ï¼Œå­˜å‚¨çš„æ˜¯0-2^x-1çš„æ•°æ®ï¼Œè¯»å–æ—¶è‡ªåŠ¨è½¬ä¸º 0-1
+			SNORMï¼šæœ‰ç¬¦å·å½’ä¸€åŒ–ï¼Œå­˜å‚¨çš„æ˜¯-2^(x-1)åˆ°2^(x-1)çš„æ•°æ®ï¼Œè¯»å–æ—¶è‡ªåŠ¨è½¬ä¸º -1.0~1.0
 
-			UINT£ºÎŞ·ûºÅÕûÊı£¬´æ´¢µÄÊÇ0-2^x-1µÄÊı¾İ
-			SINT: ÓĞ·ûºÅÕûÊı£¬´æ´¢µÄÊÇ-2^(x-1)µ½2^(x-1)µÄÊı¾İ
-			SFLOAT£ºÓĞ·ûºÅ¸¡µãÊı£¬Ö±½Ó×÷Îª¸¡µãÊı
+			UINTï¼šæ— ç¬¦å·æ•´æ•°ï¼Œå­˜å‚¨çš„æ˜¯0-2^x-1çš„æ•°æ®
+			SINT: æœ‰ç¬¦å·æ•´æ•°ï¼Œå­˜å‚¨çš„æ˜¯-2^(x-1)åˆ°2^(x-1)çš„æ•°æ®
+			SFLOATï¼šæœ‰ç¬¦å·æµ®ç‚¹æ•°ï¼Œç›´æ¥ä½œä¸ºæµ®ç‚¹æ•°
 		
-			SRGB£º¶ÁÈ¡Ê±×Ô¶¯×ªÎªÏßĞÔ£¬ÊäÈëÊ±×Ô¶¯½øĞĞÙ¤Âí½ÃÕı
+			SRGBï¼šè¯»å–æ—¶è‡ªåŠ¨è½¬ä¸ºçº¿æ€§ï¼Œè¾“å…¥æ—¶è‡ªåŠ¨è¿›è¡Œä¼½é©¬çŸ«æ­£
 		*/
 		FORMAT_UKNOWN = 0,
-		// 	´øÙ¤ÂíĞ£ÕıµÄÉ«²Ê¸ñÊ½£¬´æ´¢Ê±Ñ¹Ëõ¡¢²ÉÑùÊ±½âÑ¹Ëõ
+		// 	å¸¦ä¼½é©¬æ ¡æ­£çš„è‰²å½©æ ¼å¼ï¼Œå­˜å‚¨æ—¶å‹ç¼©ã€é‡‡æ ·æ—¶è§£å‹ç¼©
 		FORMAT_R8_SRGB,
 		FORMAT_R8G8_SRGB,
 		FORMAT_R8G8B8_SRGB,
 		FORMAT_R8G8B8A8_SRGB,
 		FORMAT_B8G8R8A8_SRGB,
-		// ´æ´¢¸ß¾«¶È¸¡µãÊı£¬Ö§³ÖĞ¡ÊıºÍ´ó·¶Î§ÊıÖµ
+		// å­˜å‚¨é«˜ç²¾åº¦æµ®ç‚¹æ•°ï¼Œæ”¯æŒå°æ•°å’Œå¤§èŒƒå›´æ•°å€¼
 		FORMAT_R16_SFLOAT,
 		FORMAT_R16G16_SFLOAT,
 		FORMAT_R16G16B16_SFLOAT,
@@ -140,17 +140,17 @@ namespace GameEngine {
 		FORMAT_R32G32_SFLOAT,
 		FORMAT_R32G32B32_SFLOAT,
 		FORMAT_R32G32B32A32_SFLOAT,
-		// ÎŞ·ûºÅ¹éÒ»»¯¸ñÊ½£¨0~255 Ó³Éäµ½ 0.0~1.0£©£¬´æ´¢ÕûÊı¡¢Ê¹ÓÃÊ±×ª¸¡µã
+		// æ— ç¬¦å·å½’ä¸€åŒ–æ ¼å¼ï¼ˆ0~255 æ˜ å°„åˆ° 0.0~1.0ï¼‰ï¼Œå­˜å‚¨æ•´æ•°ã€ä½¿ç”¨æ—¶è½¬æµ®ç‚¹
 		FORMAT_R8_UNORM,
 		FORMAT_R8G8_UNORM,
 		FORMAT_R8G8B8_UNORM,
 		FORMAT_R8G8B8A8_UNORM,
-		FORMAT_B8G8R8A8_UNORM,  // SwapChainÖ§³ÖÕâÖÖ¸ñÊ½
+		FORMAT_B8G8R8A8_UNORM,  // SwapChainæ”¯æŒè¿™ç§æ ¼å¼
 		FORMAT_R16_UNORM,
 		FORMAT_R16G16_UNORM,
 		FORMAT_R16G16B16_UNORM,
 		FORMAT_R16G16B16A16_UNORM,
-		// ÓĞ·ûºÅ¹éÒ»»¯¸ñÊ½£¨-128~127 Ó³Éäµ½ - 1.0~1.0£©£¬Ö§³ÖÕı¸ºÖµ
+		// æœ‰ç¬¦å·å½’ä¸€åŒ–æ ¼å¼ï¼ˆ-128~127 æ˜ å°„åˆ° - 1.0~1.0ï¼‰ï¼Œæ”¯æŒæ­£è´Ÿå€¼
 		FORMAT_R8_SNORM,
 		FORMAT_R8G8_SNORM,
 		FORMAT_R8G8B8_SNORM,
@@ -159,7 +159,7 @@ namespace GameEngine {
 		FORMAT_R16G16_SNORM,
 		FORMAT_R16G16B16_SNORM,
 		FORMAT_R16G16B16A16_SNORM,
-		// ÎŞ·ûºÅÕûÊı¸ñÊ½£¨Ö±½Ó´æ´¢ÕûÊı£¬²»×ö¹éÒ»»¯£©	
+		// æ— ç¬¦å·æ•´æ•°æ ¼å¼ï¼ˆç›´æ¥å­˜å‚¨æ•´æ•°ï¼Œä¸åšå½’ä¸€åŒ–ï¼‰	
 		FORMAT_R8_UINT,
 		FORMAT_R8G8_UINT,
 		FORMAT_R8G8B8_UINT,
@@ -172,7 +172,7 @@ namespace GameEngine {
 		FORMAT_R32G32_UINT,
 		FORMAT_R32G32B32_UINT,
 		FORMAT_R32G32B32A32_UINT,
-		// ÓĞ·ûºÅÕûÊı¸ñÊ½£¨´æ´¢Õı¸ºÕûÊı£©	
+		// æœ‰ç¬¦å·æ•´æ•°æ ¼å¼ï¼ˆå­˜å‚¨æ­£è´Ÿæ•´æ•°ï¼‰	
 		FORMAT_R8_SINT,
 		FORMAT_R8G8_SINT,
 		FORMAT_R8G8B8_SINT,
@@ -186,7 +186,7 @@ namespace GameEngine {
 		FORMAT_R32G32B32_SINT,
 		FORMAT_R32G32B32A32_SINT,
 
-		// Éî¶È¡¢Ä£°å
+		// æ·±åº¦ã€æ¨¡æ¿
 		FORMAT_D32_SFLOAT,
 		FORMAT_D32_SFLOAT_S8_UINT,
 		FORMAT_D24_UNORM_S8_UINT,
@@ -196,18 +196,18 @@ namespace GameEngine {
 	enum MemoryUsage : uint32_t
 	{
 		MEMORY_USAGE_UNKNOWN = 0,
-		MEMORY_USAGE_GPU_ONLY = 1,		// ½öGPUÊ¹ÓÃ£¬ÔÚVRAMÏÔ´æÉÏ·ÖÅä£¬²»¿É°ó¶¨
-		MEMORY_USAGE_CPU_ONLY = 2,		// HOST_VISIBLE &&  HOST_COHERENT ¼°Ê±Í¬²½£¬²»ĞèÒªflushµ½GPU£¬GPU¿É·ÃÎÊµ«ÊÇºÜÂı
-		MEMORY_USAGE_CPU_TO_GPU = 3,	// HOST_VISIBLE CPU¶Ëuncached£¬ÓÃÓÚCPU¶ËÆµ·±½øĞĞÊı¾İĞ´Èë£¬GPU¶Ë¶ÔÊı¾İ½øĞĞ¶ÁÈ¡
-		MEMORY_USAGE_GPU_TO_CPU = 4,	// HOST_VISIBLE CPU¶Ëcached£¬ÓÃÓÚ±»GPUĞ´ÈëÇÒ±»CPU¶ÁÈ¡
+		MEMORY_USAGE_GPU_ONLY = 1,		// ä»…GPUä½¿ç”¨ï¼Œåœ¨VRAMæ˜¾å­˜ä¸Šåˆ†é…ï¼Œä¸å¯ç»‘å®š
+		MEMORY_USAGE_CPU_ONLY = 2,		// HOST_VISIBLE &&  HOST_COHERENT åŠæ—¶åŒæ­¥ï¼Œä¸éœ€è¦flushåˆ°GPUï¼ŒGPUå¯è®¿é—®ä½†æ˜¯å¾ˆæ…¢
+		MEMORY_USAGE_CPU_TO_GPU = 3,	// HOST_VISIBLE CPUç«¯uncachedï¼Œç”¨äºCPUç«¯é¢‘ç¹è¿›è¡Œæ•°æ®å†™å…¥ï¼ŒGPUç«¯å¯¹æ•°æ®è¿›è¡Œè¯»å–
+		MEMORY_USAGE_GPU_TO_CPU = 4,	// HOST_VISIBLE CPUç«¯cachedï¼Œç”¨äºè¢«GPUå†™å…¥ä¸”è¢«CPUè¯»å–
 
 		MEMORY_USAGE_MAX_ENUM = 0x7FFFFFFF,		//
 	};
 	enum BufferCreationFlagBits : uint32_t
 	{
 		BUFFER_CREATION_NONE = 0x00000000,
-		BUFFER_CREATION_PERSISTENT_MAP = 0x00000001,   // Ç¿ÖÆ³Ö¾ÃÓ³Éä£¬¿ÉÓÉallocationInfo.pMappedDataÖ±½Ó·ÃÎÊ
-		BUFFER_CREATION_FORCE_ALIGNMENT = 0x00000002,	// Ê¹ÓÃ256×Ö½ÚµÄÄÚ´æ¶ÔÆë
+		BUFFER_CREATION_PERSISTENT_MAP = 0x00000001,   // å¼ºåˆ¶æŒä¹…æ˜ å°„ï¼Œå¯ç”±allocationInfo.pMappedDataç›´æ¥è®¿é—®
+		BUFFER_CREATION_FORCE_ALIGNMENT = 0x00000002,	// ä½¿ç”¨256å­—èŠ‚çš„å†…å­˜å¯¹é½
 
 		BUFFER_CREATION_MAX_ENUM = 0x7FFFFFFF,	//
 	};
@@ -239,7 +239,7 @@ namespace GameEngine {
 	typedef uint32_t ResourceType;
 
 
-	// ¼ä½Ó»æÖÆÓÃ
+	// é—´æ¥ç»˜åˆ¶ç”¨
 	typedef struct RHIIndexedIndirectCommand
 	{
 		uint32_t    indexCount;
@@ -250,7 +250,7 @@ namespace GameEngine {
 	} RHIIndexedIndirectCommand;
 
 
-	// ¼ä½Ó»æÖÆÓÃ
+	// é—´æ¥ç»˜åˆ¶ç”¨
 	typedef struct RHIIndirectCommand
 	{
 		uint32_t    vertexCount;
@@ -506,7 +506,7 @@ namespace GameEngine {
 	typedef uint32_t ShaderFrequency;
 
 
-	// TODO: ÆÁÕÏÓÃµÄ
+	// TODO: å±éšœç”¨çš„
 	enum RHIResourceState : uint32_t	
 	{
 		RESOURCE_STATE_UNDEFINED = 0,
@@ -515,9 +515,9 @@ namespace GameEngine {
 		RESOURCE_STATE_TRANSFER_DST,
 		RESOURCE_STATE_VERTEX_BUFFER,
 		RESOURCE_STATE_INDEX_BUFFER,
-		RESOURCE_STATE_COLOR_ATTACHMENT, // ÑÕÉ«»º³å
-		RESOURCE_STATE_DEPTH_STENCIL_ATTACHMENT, // Éî¶È»º³å
-		RESOURCE_STATE_UNORDERED_ACCESS,   // Ö§³ÖËæ»ú¶ÁĞ´£¨Storage Buffer / Storage Image£©
+		RESOURCE_STATE_COLOR_ATTACHMENT, // é¢œè‰²ç¼“å†²
+		RESOURCE_STATE_DEPTH_STENCIL_ATTACHMENT, // æ·±åº¦ç¼“å†²
+		RESOURCE_STATE_UNORDERED_ACCESS,   // æ”¯æŒéšæœºè¯»å†™ï¼ˆStorage Buffer / Storage Imageï¼‰
 		RESOURCE_STATE_SHADER_RESOURCE,
 		RESOURCE_STATE_INDIRECT_ARGUMENT,
 		RESOURCE_STATE_PRESENT,
@@ -547,7 +547,7 @@ namespace GameEngine {
 		ShaderFrequency frequency = SHADER_FREQUENCY_ALL;
 
 		ResourceType type = RESOURCE_TYPE_NONE;
-		// TextureViewType textureViewType = VIEW_TYPE_UNDEFINED;	// Ö»ÓĞ·´Éä»áÌîµÄĞÅÏ¢£¬´´½¨ÃèÊö·û°ó¶¨²¢²»ĞèÒª
+		// TextureViewType textureViewType = VIEW_TYPE_UNDEFINED;	// åªæœ‰åå°„ä¼šå¡«çš„ä¿¡æ¯ï¼Œåˆ›å»ºæè¿°ç¬¦ç»‘å®šå¹¶ä¸éœ€è¦
 
 		friend bool operator== (const ShaderResourceEntry& a, const ShaderResourceEntry& b)
 		{
@@ -577,7 +577,7 @@ namespace GameEngine {
 
 	} ShaderReflectInfo;
 
-	// Ö»ÔÊĞíÒ»²ãmip£¬¶à²ãlayerµÄ½á¹¹
+	// åªå…è®¸ä¸€å±‚mipï¼Œå¤šå±‚layerçš„ç»“æ„
 	typedef struct TextureSubresourceLayers
 	{
 		TextureAspectFlags	  aspect = TEXTURE_ASPECT_NONE;
@@ -622,7 +622,7 @@ namespace GameEngine {
 		uint32_t mipLevels = 1;
 		MemoryUsage memoryUsage = MEMORY_USAGE_GPU_ONLY;
 		ResourceType type = RESOURCE_TYPE_TEXTURE;
-		TextureCreationFlags creationFlag = TEXTURE_CREATION_NONE;    // Ç¿ÖÆ´´½¨2D»ò3D
+		TextureCreationFlags creationFlag = TEXTURE_CREATION_NONE;    // å¼ºåˆ¶åˆ›å»º2Dæˆ–3D
 		friend bool operator== (const RHITextureInfo& a, const RHITextureInfo& b)
 		{
 			return  a.format == b.format &&
@@ -646,7 +646,7 @@ namespace GameEngine {
 		RHICommandPoolRef pool;
 		RHICommandContextRef context;
 
-		bool byPass = true; 		//ÊÇ·ñÁ¢¼´Â¼ÖÆ
+		bool byPass = true; 		//æ˜¯å¦ç«‹å³å½•åˆ¶
 
 	} CommandListInfo;
 	typedef struct CommandListImmediateInfo
@@ -680,7 +680,7 @@ namespace GameEngine {
 		RHISamplerRef sampler;
 		RHITopLevelAccelerationStructureRef tlas;
 
-		uint64_t bufferOffset = 0;	// ½öbufferÊ¹ÓÃ
+		uint64_t bufferOffset = 0;	// ä»…bufferä½¿ç”¨
 		uint64_t bufferRange = 0;
 
 	} RHIDescriptorUpdateInfo;
@@ -706,7 +706,7 @@ namespace GameEngine {
 		RHIResourceState srcState;
 		RHIResourceState dstState;
 
-		TextureSubresourceRange subresource = {};	// ´ËÊ±È¡textureµÄÄ¬ÈÏrange
+		TextureSubresourceRange subresource = {};	// æ­¤æ—¶å–textureçš„é»˜è®¤range
 
 	} RHITextureBarrier;
 
@@ -981,7 +981,7 @@ namespace GameEngine {
 
 		RHIRootSignatureRef				rootSignature = nullptr;
 
-		VertexInputStateInfo            vertexInputState = {};   // TODO£ºÒòÎª²¢Ã»Ê¹ÓÃÕâ¸ö×Ö¶Î£¬»á×Ô¶¯´´½¨£¬»áµ¼ÖÂinfoµÄHash¼ÆËã´íÎó£¬»º´æ´íÎó
+		VertexInputStateInfo            vertexInputState = {};   // TODOï¼šå› ä¸ºå¹¶æ²¡ä½¿ç”¨è¿™ä¸ªå­—æ®µï¼Œä¼šè‡ªåŠ¨åˆ›å»ºï¼Œä¼šå¯¼è‡´infoçš„Hashè®¡ç®—é”™è¯¯ï¼Œç¼“å­˜é”™è¯¯
 		PrimitiveType					primitiveType = PRIMITIVE_TYPE_TRIANGLE_LIST;
 		RHIRasterizerStateInfo			rasterizerState = {};
 		RHIBlendStateInfo				blendState = {};
@@ -993,7 +993,7 @@ namespace GameEngine {
 		uint32_t 						__padding = FORMAT_UKNOWN;
 
 		// uint32_t						numSamples = 1;		// TODO
-		// uint8_t						subpassIndex = 0;	// ·ÅÆúÖ§³Ösub pass
+		// uint8_t						subpassIndex = 0;	// æ”¾å¼ƒæ”¯æŒsub pass
 
 		friend bool operator== (const RHIGraphicsPipelineInfo& a, const RHIGraphicsPipelineInfo& b)
 		{
@@ -1188,7 +1188,7 @@ namespace GameEngine {
 		}
 	}
 	struct RHIBottomLevelAccelerationStructureInfo {
-		RHIBufferRef vertexBuffer;  // ÆäÊµÖ»ĞèÒªÎ»ÖÃĞÅÏ¢£¿
+		RHIBufferRef vertexBuffer;  // å…¶å®åªéœ€è¦ä½ç½®ä¿¡æ¯ï¼Ÿ
 		RHIBufferRef indexBuffer;
 		uint32_t vertexCount;
 		uint32_t triangleCount;
@@ -1223,9 +1223,9 @@ namespace GameEngine {
 
 		struct HitGroup
 		{
-			RHIShaderRef closestHitShader; // ×î½üÃüÖĞ
-			RHIShaderRef anyHitShader; // ÃüÖĞ
-			RHIShaderRef intersectionShader; // ×Ô¶¨Òå¼¸ºÎÌå
+			RHIShaderRef closestHitShader; // æœ€è¿‘å‘½ä¸­
+			RHIShaderRef anyHitShader; // å‘½ä¸­
+			RHIShaderRef intersectionShader; // è‡ªå®šä¹‰å‡ ä½•ä½“
 		};
 
 		std::vector<RHIShaderRef> rayGenGroups;
@@ -1247,7 +1247,7 @@ namespace GameEngine {
 		}
 
 	} RHIRayTracingPipelineInfo;
-	// passÖ´ĞĞºÄÊ±¼ÇÂ¼
+	// passæ‰§è¡Œè€—æ—¶è®°å½•
 	struct RHIGPUTimeInfo{
 		std::string Name;
 		uint32_t StartQueryIndex;

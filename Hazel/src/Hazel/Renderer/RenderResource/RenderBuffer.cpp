@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "RenderBuffer.h"
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
@@ -19,7 +19,7 @@ namespace GameEngine {
             vertexInfo.positionID,
             BINDLESS_SLOT_POSITION);
 
-        vertexNum = position.size();    // ´æÒ»ÏÂµ±Ç°µÄ¶¥µãÊıÄ¿£¬ÒÔpositionÎª»ù×¼
+        vertexNum = position.size();    // å­˜ä¸€ä¸‹å½“å‰çš„é¡¶ç‚¹æ•°ç›®ï¼Œä»¥positionä¸ºåŸºå‡†
     }
     void VertexBuffer::SetNormal(const std::vector<glm::vec3>& normal)
     {
@@ -90,7 +90,7 @@ namespace GameEngine {
     void VertexBuffer::SetBufferData(void* data, uint32_t size, RHIBufferRef& buffer, uint32_t& id, uint32_t slot)
     {
         if (size == 0) return;
-        if (!buffer || buffer->GetInfo().size < size)  // ´´½¨buffer
+        if (!buffer || buffer->GetInfo().size < size)  // åˆ›å»ºbuffer
         {
             RHIBufferInfo rHIBufferInfo;
             rHIBufferInfo.type = RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_VERTEX_BUFFER;
@@ -133,7 +133,7 @@ namespace GameEngine {
         uint32_t size = index.size() * sizeof(uint32_t);
 
         if (size == 0) return;
-        if (!buffer || buffer->GetInfo().size < size)  // ´´½¨buffer
+        if (!buffer || buffer->GetInfo().size < size)  // åˆ›å»ºbuffer
         {
             RHIBufferInfo rHIBufferInfo;
             rHIBufferInfo.type = RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDEX_BUFFER;

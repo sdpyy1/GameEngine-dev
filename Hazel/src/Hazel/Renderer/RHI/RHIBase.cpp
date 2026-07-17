@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "RHIBase.h"
 #include "RHIResource.h"
 
@@ -6,7 +6,7 @@ namespace GameEngine {
 
 	RHIRootSignatureInfo& RHIRootSignatureInfo::AddEntry(const ShaderResourceEntry& entry)
 	{
-        // ºÏ²¢ÒÑÓĞµÄ 
+        // åˆå¹¶å·²æœ‰çš„ 
         for (ShaderResourceEntry& oldEntry : entries)
         {
             if (oldEntry.set == entry.set &&
@@ -28,7 +28,7 @@ namespace GameEngine {
             }
         }
 
-        // ĞÂ¼ÓÈë
+        // æ–°åŠ å…¥
         entries.push_back(entry);
         return *this;
 	}

@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "Model.h"
 #include "Hazel/Renderer/RenderResource/Material.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
@@ -52,7 +52,7 @@ namespace GameEngine {
         }
         textureMap.clear();
 
-        // Í³¼ÆĞÅÏ¢
+        // ç»Ÿè®¡ä¿¡æ¯
         totalIndex = 0;
         totalVertex = 0;
         for (auto& submesh : submeshes)
@@ -79,10 +79,10 @@ namespace GameEngine {
 
 	void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene, int index)
 	{
-        // ´´½¨×ÓÍø¸ñ
+        // åˆ›å»ºå­ç½‘æ ¼
         std::shared_ptr<Mesh> submesh = std::make_shared<Mesh>();
 
-        // Ô¤·ÖÅäËùÓĞ¶¥µãÊôĞÔµÄÄÚ´æ£¨ÌáÇ°·ÖÅä±ÈÑ­»·ÄÚ¶¯Ì¬À©Èİ¸ü¸ßĞ§£©
+        // é¢„åˆ†é…æ‰€æœ‰é¡¶ç‚¹å±æ€§çš„å†…å­˜ï¼ˆæå‰åˆ†é…æ¯”å¾ªç¯å†…åŠ¨æ€æ‰©å®¹æ›´é«˜æ•ˆï¼‰
         const uint32_t vertexCount = mesh->mNumVertices;
         submesh->position.resize(vertexCount);
         if (mesh->mNormals)        submesh->normal.resize(vertexCount);
@@ -92,14 +92,14 @@ namespace GameEngine {
 
         for (uint32_t i = 0; i < vertexCount; ++i)
         {
-            // ¶¥µãÎ»ÖÃ
+            // é¡¶ç‚¹ä½ç½®
             submesh->position[i] = glm::vec3(
                 mesh->mVertices[i].x,
                 mesh->mVertices[i].y,
                 mesh->mVertices[i].z
             );
 
-            // ¶¥µã·¨Ïß
+            // é¡¶ç‚¹æ³•çº¿
             if (mesh->mNormals)
             {
                 submesh->normal[i] = glm::vec3(
@@ -109,7 +109,7 @@ namespace GameEngine {
                 );
             }
 
-            // ¶¥µãÑÕÉ«
+            // é¡¶ç‚¹é¢œè‰²
             if (mesh->mColors[0])
             {
                 submesh->color[i] = glm::vec3(
@@ -119,7 +119,7 @@ namespace GameEngine {
                 );
             }
 
-            // ¶¥µãÎÆÀí×ø±ê
+            // é¡¶ç‚¹çº¹ç†åæ ‡
             if (mesh->mTextureCoords[0])
             {
                 submesh->texCoord[i] = glm::vec2(
@@ -128,7 +128,7 @@ namespace GameEngine {
                 );
             }
 
-            // ¶¥µãÇĞÏß
+            // é¡¶ç‚¹åˆ‡çº¿
             if (mesh->mTangents)
             {
                 submesh->tangent[i] = glm::vec4(
@@ -140,7 +140,7 @@ namespace GameEngine {
             }
         }
 
-        // Ë÷Òı
+        // ç´¢å¼•
         const uint32_t indexCount = mesh->mNumFaces * 3;
         submesh->index.resize(indexCount);
         int tempCnt = 0;
@@ -154,10 +154,10 @@ namespace GameEngine {
             tempCnt += face.mNumIndices;
         }
         
-        // ´¦Àí²ÄÖÊ
+        // å¤„ç†æè´¨
         if (m_ModelSpec.loadMaterials && mesh->mMaterialIndex >= 0)
         {
-            aiMaterial* aiMaterial = scene->mMaterials[mesh->mMaterialIndex];  // Õâ¾Í»ñµÃÁËµ±Ç°SubMeshÏà¹ØµÄ²ÄÖÊĞÅÏ¢
+            aiMaterial* aiMaterial = scene->mMaterials[mesh->mMaterialIndex];  // è¿™å°±è·å¾—äº†å½“å‰SubMeshç›¸å…³çš„æè´¨ä¿¡æ¯
 			auto aiMaterialName = aiMaterial->GetName();
 			LOG_TRACE("Load Material [{}]", aiMaterialName.data);
 
@@ -183,7 +183,7 @@ namespace GameEngine {
 			if (aiMaterial->Get(AI_MATKEY_REFLECTIVITY, metalness) != aiReturn_SUCCESS)
 				metalness = 0.0f;
 
-			// TODO: ÕâÊÇÔÚ¸ÉÊ²Ã´
+			// TODO: è¿™æ˜¯åœ¨å¹²ä»€ä¹ˆ
 			// Physically realistic materials are either metal (1.0) or not (0.0)
 			// Some models seem to come in with 0.5 which seems wrong - materials are either metal or they are not.
 			// (maybe these are specular workflow, and what we're seeing is specular = 0.5 in AI_MATKEY_REFLECTIVITY (?))
@@ -200,7 +200,7 @@ namespace GameEngine {
             LOG_TRACE("    METALNESS = {0}", metalness);
 
 
-			// ÑÕÉ«ÌùÍ¼
+			// é¢œè‰²è´´å›¾
 			bool hasAlbedoMap = aiMaterial->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &aiTexPath) == AI_SUCCESS;
 			if (!hasAlbedoMap)
 			{
@@ -211,19 +211,19 @@ namespace GameEngine {
 			{
 				TextureRef albedo = LoadMaterialTexture(aiTexPath.C_Str());
 				ma->SetDiffuse(albedo);
-				ma->SetDiffuse(glm::vec4(1.0f));  // ÓĞÌùÍ¼¾Í¾Í²»ĞèÒªÁË
+				ma->SetDiffuse(glm::vec4(1.0f));  // æœ‰è´´å›¾å°±å°±ä¸éœ€è¦äº†
             }
 
 
 
-			// ×Ô·¢¹âÌùÍ¼
+			// è‡ªå‘å…‰è´´å›¾
 			bool hasEmissiveMap = aiMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &aiTexPath) == AI_SUCCESS;
 			if (hasEmissiveMap) {
                 TextureRef emission = LoadMaterialTexture(aiTexPath.C_Str());
 				ma->SetEmission(emission);
 			}
 
-			// ·¨ÏßÌùÍ¼
+			// æ³•çº¿è´´å›¾
 			bool hasNormalMap = aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTexPath) == AI_SUCCESS;
 			if (hasNormalMap)
 			{
@@ -232,7 +232,7 @@ namespace GameEngine {
 				ma->SetUseNormalTexture(true);
 			}
 
-			// ´Ö²Ú¶ÈÌùÍ¼
+			// ç²—ç³™åº¦è´´å›¾
 			bool hasRoughnessMap = aiMaterial->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &aiTexPath) == AI_SUCCESS;
 			bool invertRoughness = false;
 			if (!hasRoughnessMap)
@@ -263,12 +263,12 @@ namespace GameEngine {
             materials[index] = ma;
 		}
         else {
-            materials[index] = std::make_shared<Material>(true); // Ä¬ÈÏ²ÄÖÊ
+            materials[index] = std::make_shared<Material>(true); // é»˜è®¤æè´¨
         }
-        // ´¦Àí¹Ç÷À
+        // å¤„ç†éª¨éª¼
         if (mesh->HasBones())   ExtractBoneWeights(submesh.get(), mesh, scene);
 
-        // ´¦Àí°üÎ§ºĞ
+        // å¤„ç†åŒ…å›´ç›’
         submesh->aabb = AxisAlignedBox(submesh->position[0], glm::zero<glm::vec3>());
         for (uint32_t i = 0; i < mesh->mNumVertices; i++)   submesh->aabb.Merge(submesh->position[i]);
         submesh->sphere = BoundingSphere(submesh->aabb);
@@ -276,10 +276,10 @@ namespace GameEngine {
 
         submesh->name = std::string(mesh->mName.C_Str());
 
-        // ÓÅ»¯»º´æ
+        // ä¼˜åŒ–ç¼“å­˜
         // MeshOptimizor::OptimizeMesh(submesh);
 
-        // Ìí¼Óµ½mesh asset
+        // æ·»åŠ åˆ°mesh asset
         submeshes[index].mesh = submesh;
 
 
@@ -287,7 +287,7 @@ namespace GameEngine {
             LOG_TRACE("  - Vertex Count: {}", submeshes[index].mesh->position.size());
             LOG_TRACE("  - Index Count: {}", submeshes[index].mesh->index.size());
 
-            // ÉÏ´«µ½GPU
+            // ä¸Šä¼ åˆ°GPU
             VertexBufferRef vertexBuffer = std::make_shared<VertexBuffer>();
             vertexBuffer->SetPosition(submesh->position);
             vertexBuffer->SetNormal(submesh->normal);
@@ -340,24 +340,24 @@ namespace GameEngine {
         submesh->boneIndex = std::vector<glm::ivec4>(mesh->mNumVertices);
         submesh->boneWeight = std::vector<glm::vec4>(mesh->mNumVertices);
 
-        // ½«¹Ç÷ÀÏà¹ØĞÅÏ¢³õÊ¼»¯
+        // å°†éª¨éª¼ç›¸å…³ä¿¡æ¯åˆå§‹åŒ–
         for (int i = 0; i < mesh->mNumVertices; i++)
         {
             submesh->boneIndex[i] = glm::ivec4(-1);
             submesh->boneWeight[i] = glm::vec4(.0f);
         }
 
-        // ±éÀúmeshµÄ¹Ç÷À
+        // éå†meshçš„éª¨éª¼
         for (uint32_t index = 0; index < mesh->mNumBones; ++index)
         {
             int boneIndex = -1;
             std::string boneName = mesh->mBones[index]->mName.C_Str();
 
-            // ÅĞ¶Ïµ±Ç°¹Ç÷ÀÊÇ²»ÊÇÔÚµ±Ç°submeshÉÏ
+            // åˆ¤æ–­å½“å‰éª¨éª¼æ˜¯ä¸æ˜¯åœ¨å½“å‰submeshä¸Š
             bool find = false;
             for (int i = 0; i < submesh->bone.size(); i++)
             {
-                if (submesh->bone[i].name.compare(boneName) == 0)  // µ±Ç°¹Ç÷ÀÊÇÔÚµ±Ç°submeshÉÏ
+                if (submesh->bone[i].name.compare(boneName) == 0)  // å½“å‰éª¨éª¼æ˜¯åœ¨å½“å‰submeshä¸Š
                 {
                     boneIndex = submesh->bone[i].index;
                     find = true;
@@ -365,7 +365,7 @@ namespace GameEngine {
                 }
             }
 
-            // ²»ÊÇÔÚµ±Ç°SubmeshÉÏ
+            // ä¸æ˜¯åœ¨å½“å‰Submeshä¸Š
             if (!find)
             {
                 BoneInfo newBoneInfo;
@@ -378,25 +378,25 @@ namespace GameEngine {
                         newBoneInfo.offset[i][j] = mesh->mBones[index]->mOffsetMatrix[i][j];
                     }
                 }
-                // newBoneInfo.offset.transposeInPlace();  // Òª×öÒ»¸ö×ªÖÃ£¿
+                // newBoneInfo.offset.transposeInPlace();  // è¦åšä¸€ä¸ªè½¬ç½®ï¼Ÿ
                 newBoneInfo.name = std::string(boneName);
                 submesh->bone.push_back(newBoneInfo);
 
                 boneIndex = newBoneInfo.index;
             }
 
-            auto weights = mesh->mBones[index]->mWeights;  // µ±Ç°¹Ç÷À¶ÔËùÓĞ¶¥µãµÄÈ¨ÖØ
-            int numWeights = mesh->mBones[index]->mNumWeights;  // µ±Ç°¹Ç÷ÀÓ°ÏìÁË¶àÉÙ¶¥µã
+            auto weights = mesh->mBones[index]->mWeights;  // å½“å‰éª¨éª¼å¯¹æ‰€æœ‰é¡¶ç‚¹çš„æƒé‡
+            int numWeights = mesh->mBones[index]->mNumWeights;  // å½“å‰éª¨éª¼å½±å“äº†å¤šå°‘é¡¶ç‚¹
 
-            // ´¦ÀíºÍ¸Ã¹Ç÷ÀÏà¹ØµÄ¶¥µã
+            // å¤„ç†å’Œè¯¥éª¨éª¼ç›¸å…³çš„é¡¶ç‚¹
             for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
             {
-                // ¹Ç÷Àindex¶Ô¶¥µãvertexIdµÄÈ¨ÖØÊÇweight
+                // éª¨éª¼indexå¯¹é¡¶ç‚¹vertexIdçš„æƒé‡æ˜¯weight
                 int vertexId = weights[weightIndex].mVertexId;
                 float weight = weights[weightIndex].mWeight;
 
 
-                // ¿´vertexId¶ÔÓ¦¶¥µã°ó¶¨µÄ¹Ç÷ÀÊÇ·ñÒÑÂú£¬Ñ¡Ò»¸öÃ»ÓÃµÄÎ»ÖÃÉèÖÃ¹Ç÷ÀºÍ¹Ç÷ÀÈ¨ÖØ
+                // çœ‹vertexIdå¯¹åº”é¡¶ç‚¹ç»‘å®šçš„éª¨éª¼æ˜¯å¦å·²æ»¡ï¼Œé€‰ä¸€ä¸ªæ²¡ç”¨çš„ä½ç½®è®¾ç½®éª¨éª¼å’Œéª¨éª¼æƒé‡
                 for (int i = 0; i < 4; ++i)
                 {
                    if (submesh->boneIndex[vertexId].x < 0)

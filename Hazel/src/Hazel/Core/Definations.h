@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 namespace GameEngine {
-#define FRAMES_IN_FLIGHT 3							//Ö¡»º³åÊıÄ¿
+#define FRAMES_IN_FLIGHT 3							//å¸§ç¼“å†²æ•°ç›®
 
 #define APP_FRAMEINDEX Application::GetFrameIndex()
 #define APP_GLFWWINDOW Application::GetWindowManager()->GetGLFWWindow()
@@ -16,7 +16,7 @@ namespace GameEngine {
 
 
 
-#define APP_WORKING_DIR std::string("D:/AAA_GameEngine_Dev/Hazel/") // TODO: Ğ´ËÀÁËÊôÓÚÊÇ Ó¦¸ÃÈ¥ApplicationÈ¥ÄÃ
+#define APP_WORKING_DIR std::string("D:/AAA_GameEngine_Dev/Hazel/") // TODO: å†™æ­»äº†å±äºæ˜¯ åº”è¯¥å»Applicationå»æ‹¿
 
 #define APP_SHADER_PATH std::string(APP_WORKING_DIR + "Assets/Shader/")
 #define APP_HDR_PATH std::string(APP_WORKING_DIR + "Assets/HDR/")

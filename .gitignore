@@ -1,5 +1,7 @@
 # Binaries
 **/bin/
+# 例外：构建工具 premake5.exe 必须随仓库分发，否则 clone 后无法生成工程
+!vendor/premake/bin/
 bin-int/
 Intermediates/
 
@@ -11,6 +13,8 @@ Intermediates/
 # Visual Studio files and folder
 .vs/
 **.sln
+**.slnx
+**.sln.DotSettings.user
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user

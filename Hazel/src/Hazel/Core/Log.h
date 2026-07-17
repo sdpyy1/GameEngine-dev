@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Hazel/Core/Base.h"
 #define GLM_ENABLE_EXPERIMENTAL
@@ -35,14 +35,14 @@ namespace GameEngine {
 		static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
 		static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 
-		// ÈÕÖ¾»º´æÏà¹Ø½Ó¿Ú
+		// æ—¥å¿—ç¼“å­˜ç›¸å…³æ¥å£
 		static void AddToCache(LogLevel level, const std::string& message);
 		static const std::deque<LogEntry>& GetCache() { return s_LogCache; }
 
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
 
-		// ÈÕÖ¾»º´æ
+		// æ—¥å¿—ç¼“å­˜
 		static std::deque<LogEntry> s_LogCache;
 		static std::mutex s_LogMutex;
 	};

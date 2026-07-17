@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "Hazel/Core/Log.h"
 
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -26,7 +26,7 @@ namespace GameEngine {
 
 	}
 
-	// »º´æÈÕÖ¾£¬ÓÃÓÚImGui»æÖÆÈÕÖ¾´°¿Ú
+	// ç¼“å­˜æ—¥å¿—ï¼Œç”¨äºImGuiç»˜åˆ¶æ—¥å¿—çª—å£
 	void Log::AddToCache(LogLevel level, const std::string& message)
 	{
 		std::lock_guard<std::mutex> lock(s_LogMutex);

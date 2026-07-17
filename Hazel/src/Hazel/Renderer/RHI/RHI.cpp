@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "RHI.h"
 #include "Vulkan/VulkanRHI.h"
 namespace GameEngine {
@@ -18,7 +18,7 @@ namespace GameEngine {
 		return s_DynamicRHI;
 	}
 
-    // Ö®Ç°µÄ¼Ü¹¹Ê¹ÓÃÑÓ³Ù¶ÓÁÐÀ´É¾³ý£¬ÕâÀï²ÉÓÃ¼ÆÊýÆ÷À´É¾³ý£¬Ò²ÊÇÑÓ³ÙÉ¾³ý
+    // ä¹‹å‰çš„æž¶æž„ä½¿ç”¨å»¶è¿Ÿé˜Ÿåˆ—æ¥åˆ é™¤ï¼Œè¿™é‡Œé‡‡ç”¨è®¡æ•°å™¨æ¥åˆ é™¤ï¼Œä¹Ÿæ˜¯å»¶è¿Ÿåˆ é™¤
 	void DynamicRHI::Tick()
 	{
         for (auto& resources : resourceMap)
@@ -31,7 +31,7 @@ namespace GameEngine {
                     if (resource.use_count() == 1)   resource->lastUseTick++;
                     else                            resource->lastUseTick = 0;
 
-                    if (resource->lastUseTick > 6)  //Îö¹¹×ÊÔ´6Ö¡ºóÏú»Ù
+                    if (resource->lastUseTick > 6)  //æžæž„èµ„æº6å¸§åŽé”€æ¯
                     {
                         needClean = true;
                          //if(resource->GetType() != RHI_RENDER_PASS) 
@@ -42,7 +42,7 @@ namespace GameEngine {
                 }
             }
 
-            // É¾³ý¿ÕÖ¸Õë
+            // åˆ é™¤ç©ºæŒ‡é’ˆ
             if (needClean) {
                 resources.erase(std::remove_if(resources.begin(), resources.end(), [](RHIResourceRef x) {
                     return x == nullptr;

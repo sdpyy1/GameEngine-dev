@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Asset/Asset.h"
 #include <Hazel/Renderer/RenderResource/Texture.h>
 #include "Shader.h"
@@ -8,11 +8,11 @@ namespace GameEngine {
 	enum RenderPassMaskBits
 	{
 		PASS_MASK_NONE = 0x00000000,
-		// PASS_MASK_DEPTH_PASS = 0x00000001,           // ÔİÊ±²»Ö§³Ö£¬Éî¶Èpass¶¼Ê¹ÓÃÄ¬ÈÏ×ÅÉ«Æ÷£¬ºóÃæÔÙÖ§³Öoverride°É
+		// PASS_MASK_DEPTH_PASS = 0x00000001,           // æš‚æ—¶ä¸æ”¯æŒï¼Œæ·±åº¦passéƒ½ä½¿ç”¨é»˜è®¤ç€è‰²å™¨ï¼Œåé¢å†æ”¯æŒoverrideå§
 		PASS_MASK_FORWARD_PASS = 0x00000001,
 		PASS_MASK_DEFERRED_PASS = 0x00000002,
 		PASS_MASK_TRANSPARENT_PASS = 0x00000004,
-		// PASS_MASK_POST_PROCESS_PASS = 0x00000008,    // ºó´¦ÀíµÄscreen passÒ²ÔİÊ±²»Ö§³Ö
+		// PASS_MASK_POST_PROCESS_PASS = 0x00000008,    // åå¤„ç†çš„screen passä¹Ÿæš‚æ—¶ä¸æ”¯æŒ
 
 		PASS_MASK_MAX_ENUM = 0x7FFFFFFF,	//
 	};
@@ -22,7 +22,7 @@ namespace GameEngine {
 	public:
 		Material();
 		Material(bool init);
-		Material(const Material& other) = default;  // ¿ÉÒÔ¿½±´¹¹Ôì
+		Material(const Material& other) = default;  // å¯ä»¥æ‹·è´æ„é€ 
 		std::shared_ptr<Material> Clone() const {
 			auto & copy = std::make_shared<Material>(*this);
             copy->Update(true);
@@ -55,7 +55,7 @@ namespace GameEngine {
 		void SetNormal(TextureRef texture) { textureNormal = texture;      Update(); }
 		void SetUseNormalTexture(bool use) { useNormalTexture = use ? 1 : 0;      Update(); }
 
-		// ¶îÍâĞÅÏ¢
+		// é¢å¤–ä¿¡æ¯
 		void SetInt(int32_t data, uint32_t index) { ints[index] = data;           Update(); }
 		void SetFloat(float data, uint32_t index) { floats[index] = data;         Update(); }
 		void SetColor(glm::vec4 data, uint32_t index) { colors[index] = data;         Update(); }
@@ -68,7 +68,7 @@ namespace GameEngine {
 		inline ShaderRef GetVertexShader() const { return vertexShader; }
 		inline ShaderRef GetGeometryShader() const { return geometryShader; }
 		inline ShaderRef GetFragmentShader() const { return fragmentShader; }
-		// äÖÈ¾¹ÜÏßÉèÖÃ
+		// æ¸²æŸ“ç®¡çº¿è®¾ç½®
 		uint32_t RenderQueue() { return renderQueue; }
 		RenderPassMasks RenderPassMask() { return renderPassMask; }
 		RasterizerCullMode CullMode() { return cullMode; }
@@ -104,7 +104,7 @@ namespace GameEngine {
         TextureRef textureMetallic = nullptr;
 
 
-		// ¶îÍâĞÅÏ¢
+		// é¢å¤–ä¿¡æ¯
 		std::array<int32_t, 8> ints = { 0 };
 		std::array<float, 8> floats = { 0.0f };
 		std::array<glm::vec4, 8> colors = { glm::zero<glm::vec4>() };
@@ -114,26 +114,26 @@ namespace GameEngine {
 		std::array<TextureRef, 4> texture3D;
 
 
-		// ¹ÜÏßĞÅÏ¢
-		ShaderRef vertexShader;                                     // ²ÄÖÊÊ¹ÓÃµÄ×ÅÉ«Æ÷£¬ÈôÎª¿ÕÔò¿ÉÄÜÊ¹ÓÃ¸÷¸öpassµÄÄ¬ÈÏ×ÅÉ«Æ÷
+		// ç®¡çº¿ä¿¡æ¯
+		ShaderRef vertexShader;                                     // æè´¨ä½¿ç”¨çš„ç€è‰²å™¨ï¼Œè‹¥ä¸ºç©ºåˆ™å¯èƒ½ä½¿ç”¨å„ä¸ªpassçš„é»˜è®¤ç€è‰²å™¨
 		ShaderRef geometryShader;
 		ShaderRef fragmentShader;
 		MaterialInfo materialInfo;
 
-		// ²ÄÖÊÏµÍ³²ÅÊÇ´´½¨²»Í¬PipelineµÄÒÀ¾İ
-		uint32_t renderQueue = 1000;                                // ÓÃÓÚÖ¸Ê¾äÖÈ¾Ë³Ğò
-		RenderPassMasks renderPassMask = PASS_MASK_DEFERRED_PASS;   // ÓÃÓÚÖ¸Ê¾ºÍ±ê¼ÇÌØ¶¨pass£¬·½±ã¶ÔÓ¦µÄmesh passÊÕ¼¯
+		// æè´¨ç³»ç»Ÿæ‰æ˜¯åˆ›å»ºä¸åŒPipelineçš„ä¾æ®
+		uint32_t renderQueue = 1000;                                // ç”¨äºæŒ‡ç¤ºæ¸²æŸ“é¡ºåº
+		RenderPassMasks renderPassMask = PASS_MASK_DEFERRED_PASS;   // ç”¨äºæŒ‡ç¤ºå’Œæ ‡è®°ç‰¹å®špassï¼Œæ–¹ä¾¿å¯¹åº”çš„mesh passæ”¶é›†
 
-		RasterizerCullMode cullMode = CULL_MODE_FRONT;               // ÌŞ³ıÄ£Ê½
-		RasterizerFillMode fillMode = FILL_MODE_SOLID;              // Ìî³äÄ£Ê½
-		bool depthTest = true;                                      // Éî¶È²âÊÔ
-		bool depthWrite = true;                                     // Éî¶ÈĞ´Èë
-		CompareFunction depthCompare = COMPARE_FUNCTION_LESS_EQUAL; // Éî¶È²âÊÔº¯Êı
-		bool useForDepthPass = true;                                // ÊÇ·ñ¼ÓÈëÉî¶ÈpassäÖÈ¾
-		bool castShadow = true;                                     // ÊÇ·ñ¼ÓÈëÒõÓ°passäÖÈ¾
+		RasterizerCullMode cullMode = CULL_MODE_FRONT;               // å‰”é™¤æ¨¡å¼
+		RasterizerFillMode fillMode = FILL_MODE_SOLID;              // å¡«å……æ¨¡å¼
+		bool depthTest = true;                                      // æ·±åº¦æµ‹è¯•
+		bool depthWrite = true;                                     // æ·±åº¦å†™å…¥
+		CompareFunction depthCompare = COMPARE_FUNCTION_LESS_EQUAL; // æ·±åº¦æµ‹è¯•å‡½æ•°
+		bool useForDepthPass = true;                                // æ˜¯å¦åŠ å…¥æ·±åº¦passæ¸²æŸ“
+		bool castShadow = true;                                     // æ˜¯å¦åŠ å…¥é˜´å½±passæ¸²æŸ“
 
 
-		// TODO:¹ÜÏßĞÅÏ¢ĞòÁĞ»¯ÏÈµÈµÈ
+		// TODO:ç®¡çº¿ä¿¡æ¯åºåˆ—åŒ–å…ˆç­‰ç­‰
 		BeginSerailize
 			SerailizeEntry(diffuse)
 			SerailizeEntry(emission)
@@ -151,7 +151,7 @@ namespace GameEngine {
 			SerailizeEntry(texture2D)
 			SerailizeEntry(textureCube)
 			SerailizeEntry(texture3D)
-			Update(true); // TODO: ÆäÊµÖ»ÓĞ·´ĞòÁĞ»¯²ÅĞèÒªTrue
+			Update(true); // TODO: å…¶å®åªæœ‰ååºåˆ—åŒ–æ‰éœ€è¦True
 		EndSerailize
 
 	};

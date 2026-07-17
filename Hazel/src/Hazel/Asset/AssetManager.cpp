@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "AssetManager.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
@@ -10,7 +10,7 @@ namespace GameEngine {
 
 
 
-	// Ö»ÊÇÎªÁËĞòÁĞ»¯Ê±ÏÈ¼ÓÔØÔ­Ê¼Ä£ĞÍÊı¾İ£¬²»ĞèÒªCPUĞÅÏ¢
+	// åªæ˜¯ä¸ºäº†åºåˆ—åŒ–æ—¶å…ˆåŠ è½½åŸå§‹æ¨¡å‹æ•°æ®ï¼Œä¸éœ€è¦CPUä¿¡æ¯
 	ModelRef AssetManager::LoadModel(std::string path) {
 		ModelSpec m_ModelSpec;
 		return std::make_shared<Model>(path, m_ModelSpec);

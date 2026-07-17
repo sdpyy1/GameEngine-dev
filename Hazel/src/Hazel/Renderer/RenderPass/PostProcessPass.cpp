@@ -1,4 +1,4 @@
-#include "hzpch.h"
+﻿#include "hzpch.h"
 #include "PostProcessPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -7,7 +7,7 @@
 #include "Hazel/Scene/SceneManager.h"
 #include <Hazel/Renderer/RenderResource/Shader.h>
 
-// �ع⡢ ToneMapping �� ColorGrading
+// 曝光、 ToneMapping 、 ColorGrading
 namespace GameEngine {
 	void PostProcessPass::Init()
 	{

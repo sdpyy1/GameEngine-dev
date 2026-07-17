@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "RDGPool.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
@@ -11,7 +11,7 @@ namespace GameEngine {
         auto& buffers = pooledBuffers[info];
         for (auto iter = buffers.begin(); iter != buffers.end(); iter++)
         {
-            if (iter->buffer->GetInfo().size >= info.size)  // Èç¹û»º´æµÄBuffer³ß´ç´óÓÚÐèÒª£¬¾ÍÖ±½ÓÓÃÕâ¿ébuffer
+            if (iter->buffer->GetInfo().size >= info.size)  // å¦‚æžœç¼“å­˜çš„Bufferå°ºå¯¸å¤§äºŽéœ€è¦ï¼Œå°±ç›´æŽ¥ç”¨è¿™å—buffer
             {
                 ret = *iter;
                 buffers.erase(iter);
@@ -41,7 +41,7 @@ namespace GameEngine {
         if (tempInfo.mipLevels == 0) tempInfo.mipLevels = tempInfo.extent.MipSize(); // auto mip
 
         auto& textures = pooledTextures[{tempInfo}];
-        for (auto iter = textures.begin(); iter != textures.end(); iter++)   // TODO:Õâ¸öFor×ÜÊÇ·µ»ØµÚÒ»Ïî
+        for (auto iter = textures.begin(); iter != textures.end(); iter++)   // TODO:è¿™ä¸ªForæ€»æ˜¯è¿”å›žç¬¬ä¸€é¡¹
         {
             ret = *iter;
             textures.erase(iter);
@@ -51,9 +51,9 @@ namespace GameEngine {
 #ifdef RDG_DEBUG
         LOG_TRACE("RHITexture not found in cache, creating new.");
 #endif
-        ret.texture = APP_DYNAMICRHI->CreateTexture(tempInfo);   // ÔÚÊÍ·Å×ÊÔ´Ê±²Å»á°Ñtexture·ÅÈë³ØÖÐ
+        ret.texture = APP_DYNAMICRHI->CreateTexture(tempInfo);   // åœ¨é‡Šæ”¾èµ„æºæ—¶æ‰ä¼šæŠŠtextureæ”¾å…¥æ± ä¸­
 
-        ret.state = RESOURCE_STATE_UNDEFINED; // RHI½Ó¿Ú´´½¨µÄtextureµÄstateÊÇUNDEFINED
+        ret.state = RESOURCE_STATE_UNDEFINED; // RHIæŽ¥å£åˆ›å»ºçš„textureçš„stateæ˜¯UNDEFINED
 
 
 
@@ -70,7 +70,7 @@ namespace GameEngine {
 
     RDGTextureViewPool::PooledTextureView RDGTextureViewPool::Allocate(const RHITextureViewInfo& info)
     {
-        RHITextureViewInfo actualInfo = info;   // RHI¼ÆËãµÄÊ±ºòÒ²»áÓÃÄ¬ÈÏsubresourceÌæ»»£¬ÐèÒª±ÜÃâ·ÖÅäºÍ·µ»ØµÄinfo²»Ò»ÖÂ
+        RHITextureViewInfo actualInfo = info;   // RHIè®¡ç®—çš„æ—¶å€™ä¹Ÿä¼šç”¨é»˜è®¤subresourceæ›¿æ¢ï¼Œéœ€è¦é¿å…åˆ†é…å’Œè¿”å›žçš„infoä¸ä¸€è‡´
         if (actualInfo.subresource.aspect == TEXTURE_ASPECT_NONE)  actualInfo.subresource = actualInfo.texture->GetDefaultSubresourceRange();
 
         RDGTextureViewPool::PooledTextureView ret;

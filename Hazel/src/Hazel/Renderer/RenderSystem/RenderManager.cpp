@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "RenderManager.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Editor/PanelManager.h"
@@ -60,9 +60,9 @@ namespace GameEngine {
 		CurCommandList->BeginCommand();
 		CurCommandList->ClearDrawCallCount();
 		RDGBuilder rdgBuilder = RDGBuilder(CurCommandList);
-		// ¹¹½¨Í¼½á¹¹
+		// æž„å»ºå›¾ç»“æž„
 		for (auto& pass : passes) { if (pass) pass->Build(rdgBuilder); }
-		// Ö´ÐÐRDG
+		// æ‰§è¡ŒRDG
 		rdgBuilder.Execute();
 		rdgDependencyGraph = rdgBuilder.GetGraph();
 		m_DrawCallCount = CurCommandList->GetDrawCallCount();
@@ -91,7 +91,7 @@ namespace GameEngine {
 		passes[GBUFFER_PASS] = meshPasses[MESH_PASS_GBUFFER_PASS];
 		if (RENDER_ENABLE_RAY_TRACING) {
 			passes[PATHTRACING_PASS] = std::make_shared<PathTracingPass>();
-			// passes[SVGF_PASS] = std::make_shared<SVGFPass>();  SVGF»¹Ã»Ð´Ã÷°×
+			// passes[SVGF_PASS] = std::make_shared<SVGFPass>();  SVGFè¿˜æ²¡å†™æ˜Žç™½
 			passes[DDGI_PASS] = std::make_shared<DDGIPass>();
 		}
 		passes[PREDEPTH_PASS] = meshPasses[MESH_PASS_PREDEPTH_PASS];

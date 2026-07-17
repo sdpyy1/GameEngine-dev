@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Volk/volk.h"
 #include "Hazel/Renderer/RHI/RHIResource.h"
 #include <GLFW/glfw3.h>
@@ -163,7 +163,7 @@ namespace GameEngine {
 	{
 	public:
 		VulkanRHIDescriptorSet(VkDescriptorSetLayout setLayout);
-		VulkanRHIDescriptorSet(VkDescriptorSet aSet);   // ImGUI×¨ÓÃ
+		VulkanRHIDescriptorSet(VkDescriptorSet aSet);   // ImGUIä¸“ç”¨
 
 		virtual RHIDescriptorSet& UpdateDescriptor(const RHIDescriptorUpdateInfo& descriptorUpdateInfo) override final;
 
@@ -214,7 +214,7 @@ namespace GameEngine {
 		std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
 		std::vector<VkPipelineColorBlendAttachmentState> blendStates;
 
-		// Ä¬ÈÏ¿ªÆôµÄ¶¯Ì¬ÉèÖÃ×´Ì¬
+		// é»˜è®¤å¼€å¯çš„åŠ¨æ€è®¾ç½®çŠ¶æ€
 		std::vector<VkDynamicState> dynamicStates =
 		{
 			VK_DYNAMIC_STATE_VIEWPORT,
@@ -330,9 +330,9 @@ namespace GameEngine {
 		VkStridedDeviceAddressRegionKHR raygenRegion{};
 		VkStridedDeviceAddressRegionKHR missRegion{};
 		VkStridedDeviceAddressRegionKHR hitRegion{};
-		VkStridedDeviceAddressRegionKHR callableRegion{};   //TODO£º»¹Î´ÊµÏÖ
+		VkStridedDeviceAddressRegionKHR callableRegion{};   //TODOï¼šè¿˜æœªå®ç°
 
-		RHIBufferRef shaderGroupHandleBuffer;	// ÓÃÓÚ´æ´¢SBTµÄÈ«²¿¾ä±ú
+		RHIBufferRef shaderGroupHandleBuffer;	// ç”¨äºå­˜å‚¨SBTçš„å…¨éƒ¨å¥æŸ„
 
 		VkPipeline handle;
 		VkPipelineLayout pipelineLayout;
@@ -354,8 +354,8 @@ namespace GameEngine {
 	private:
 		VkAccelerationStructureKHR handle = VK_NULL_HANDLE;
 		VkDeviceAddress address;
-		RHIBufferRef accelerationStructureBuffer;	// ¼ÓËÙ½á¹¹Õ¼ÓÃµÄÄÚ´æ
-		RHIBufferRef instanceBuffer;				// ÊµÀıĞÅÏ¢ÄÚ´æ
+		RHIBufferRef accelerationStructureBuffer;	// åŠ é€Ÿç»“æ„å ç”¨çš„å†…å­˜
+		RHIBufferRef instanceBuffer;				// å®ä¾‹ä¿¡æ¯å†…å­˜
 	};
 	class VulkanRHIBottomLevelAccelerationStructure : public RHIBottomLevelAccelerationStructure
 	{
@@ -376,7 +376,7 @@ namespace GameEngine {
 
 
 
-	//Í¬²½ ////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//åŒæ­¥ ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	class VulkanRHIFence : public RHIFence
 	{

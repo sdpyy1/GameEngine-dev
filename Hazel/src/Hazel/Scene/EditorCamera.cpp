@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "EditorCamera.h"
 
 #include "Hazel/Core/Input.h"
@@ -61,7 +61,7 @@ namespace GameEngine {
 		bool isMouseInViewport = m_IsMouseInViewport;
 		bool isButtonPressed = Input::IsMouseButtonDown(MouseButton::Right) || Input::IsMouseButtonDown(MouseButton::Middle) || (Input::IsMouseButtonDown(MouseButton::Left) && Input::IsKeyDown(KeyCode::LeftAlt));
 
-		// Êó±ê¿ªÊ¼¿ØÖÆµÄµÚÒ»Ö¡£¬³õÊ¼»¯Delta×ÊÔ´
+		// é¼ æ ‡å¼€å§‹æ§åˆ¶çš„ç¬¬ä¸€å¸§ï¼Œåˆå§‹åŒ–Deltaèµ„æº
 		if (isButtonPressed && isMouseInViewport && !m_IsCapturing) {
 			m_IsCapturing = true;
 			m_InitialMousePosition = { Input::GetMouseX(), Input::GetMouseY() };
@@ -70,7 +70,7 @@ namespace GameEngine {
 			m_PositionDelta = glm::vec3(0.0f);
 		}
 
-		// ½áÊøÊó±ê¿ØÖÆ
+		// ç»“æŸé¼ æ ‡æ§åˆ¶
 		if (!isButtonPressed)
 			m_IsCapturing = false;
 
@@ -79,7 +79,7 @@ namespace GameEngine {
 		{
 			EnableMouse();
 		}else {
-			// Êó±ê¿ØÖÆÖĞµÄÒ»Ö¡
+			// é¼ æ ‡æ§åˆ¶ä¸­çš„ä¸€å¸§
 			const glm::vec2 mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			const glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.002f;
 			if (Input::IsMouseButtonDown(MouseButton::Right) && !Input::IsKeyDown(KeyCode::LeftAlt))
@@ -89,7 +89,7 @@ namespace GameEngine {
 
 				const float yawSign = GetUpDirection().y < 0 ? -1.0f : 1.0f;
 				const float speed = GetCameraSpeed();
-				// Î»ÖÃµ÷Õû Position
+				// ä½ç½®è°ƒæ•´ Position
 				if (Input::IsKeyDown(KeyCode::Q))
 					m_PositionDelta -= ts.GetMilliseconds() * speed * glm::vec3{ 0.f, yawSign, 0.f };
 				if (Input::IsKeyDown(KeyCode::E))
@@ -103,14 +103,14 @@ namespace GameEngine {
 				if (Input::IsKeyDown(KeyCode::D))
 					m_PositionDelta += ts.GetMilliseconds() * speed * m_RightDirection;
 
-				// Ğı×ªµ÷ÕûDirection
+				// æ—‹è½¬è°ƒæ•´Direction
 				constexpr float maxRate{ 0.12f };
-				// Yaw * yawSignÊÇÎªÁËÏà»úµ¹ÖÃµÄÊ±ºò£¬Æ«º½½ÇºÍÊó±êµÄÒÆ¶¯»¹ÊÇÒ»ÖÂµÄ
+				// Yaw * yawSignæ˜¯ä¸ºäº†ç›¸æœºå€’ç½®çš„æ—¶å€™ï¼Œåèˆªè§’å’Œé¼ æ ‡çš„ç§»åŠ¨è¿˜æ˜¯ä¸€è‡´çš„
 				m_YawDelta += glm::clamp(yawSign * delta.x * RotationSpeed(), -maxRate, maxRate);
 				m_PitchDelta += glm::clamp(delta.y * RotationSpeed(), -maxRate, maxRate);
 				m_RightDirection = glm::cross(m_Direction, glm::vec3{ 0.f, yawSign, 0.f });
 
-				// ÖØĞÂµ÷Õû½¹µã
+				// é‡æ–°è°ƒæ•´ç„¦ç‚¹
 				const float distance = glm::distance(m_FocalPoint, m_Position);
 				m_FocalPoint = m_Position + GetForwardDirection() * distance;
 				m_Distance = distance;
@@ -283,7 +283,7 @@ namespace GameEngine {
 
 	glm::vec3 EditorCamera::GetForwardDirection() const
 	{
-		// Ä¬ÈÏ·½ÏòÊÇ¿´Ïò¡ªz£¬Í¨¹ıGetOrientation()À´ĞŞ¸Ä³¯Ïò
+		// é»˜è®¤æ–¹å‘æ˜¯çœ‹å‘â€”zï¼Œé€šè¿‡GetOrientation()æ¥ä¿®æ”¹æœå‘
 		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, -1.0f));
 	}
 
@@ -294,7 +294,7 @@ namespace GameEngine {
 
 	glm::quat EditorCamera::GetOrientation() const
 	{
-		// Èç¹û²»ÓÃ¸ººÅ£¬Êó±ê²Ù×÷»á·´Ïò
+		// å¦‚æœä¸ç”¨è´Ÿå·ï¼Œé¼ æ ‡æ“ä½œä¼šåå‘
 		return glm::quat(glm::vec3(-m_Pitch - m_PitchDelta, -m_Yaw - m_YawDelta, 0.0f));
 	}
 }

@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "Material.h"
 #include "Hazel/Core/Application.h"
 #include <Hazel/Renderer/RenderSystem/RenderManager.h>
@@ -31,7 +31,7 @@ namespace GameEngine
 	{
         if (isCopy)
         { 
-            materialID = RENDER_RESOURCEMANAGER->AllocateMaterialID(); // ¿½±´¹¹ÔìºóĞèÒªÖØĞÂÉú³ÉÒ»·İĞÂ²ÄÖÊ
+            materialID = RENDER_RESOURCEMANAGER->AllocateMaterialID(); // æ‹·è´æ„é€ åéœ€è¦é‡æ–°ç”Ÿæˆä¸€ä»½æ–°æè´¨
         }
         materialInfo = {};
         materialInfo.roughness = roughness;

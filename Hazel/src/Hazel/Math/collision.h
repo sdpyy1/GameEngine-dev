@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Utils/Serializable.h"
 #include <glm/glm.hpp>
 
@@ -93,14 +93,14 @@ namespace GameEngine {
         }*/
         void Merge(const glm::vec3& point)
         {
-            // È¡µ±Ç°minBoundºÍÐÂµãpoint¸÷·ÖÁ¿µÄ×îÐ¡Öµ
+            // å–å½“å‰minBoundå’Œæ–°ç‚¹pointå„åˆ†é‡çš„æœ€å°å€¼
             minBound = glm::min(minBound, point);
-            // È¡µ±Ç°maxBoundºÍÐÂµãpoint¸÷·ÖÁ¿µÄ×î´óÖµ
+            // å–å½“å‰maxBoundå’Œæ–°ç‚¹pointå„åˆ†é‡çš„æœ€å¤§å€¼
             maxBound = glm::max(maxBound, point);
         }
 
         /*
-            ÊÇ·ñÍêÈ«°üº¬B
+            æ˜¯å¦å®Œå…¨åŒ…å«B
         */
         bool IsContains(BoundingBox& B) {
             return this->minBound.x <= B.minBound.x &&

@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "VulkanRHI.h"
 #include "VulkanUtil.h"
 #include "VulkanRHIResource.h"
@@ -29,7 +29,7 @@ namespace GameEngine
 			LOG_ERROR("Volk initialize failed!");
 			return;
 		}
-		// »ñÈ¡¿ÉÓÃµÄÊµÀı²ã
+		// è·å–å¯ç”¨çš„å®ä¾‹å±‚
 		{
 			uint32_t layerCount;
 			vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
@@ -84,11 +84,11 @@ namespace GameEngine
 
 
 
-		// ´´½¨VulkanÊµÀı
+		// åˆ›å»ºVulkanå®ä¾‹
 		VK_CHECK_RESULT(vkCreateInstance(&createInfo, nullptr, &m_Instance));
 		volkLoadInstance(m_Instance);
 
-		//´´½¨DebugMessager
+		//åˆ›å»ºDebugMessager
 		if (m_Config.debug)
 		{
 			VkDebugUtilsMessengerCreateInfoEXT info = VulkanUtil::GetDebugMessengerCreateInfo();
@@ -98,7 +98,7 @@ namespace GameEngine
 
 	void VulkanDynamicRHI::CreatePhysicalDevice()
 	{
-		// »ñÈ¡¿ÉÓÃÎïÀíÉè±¸
+		// è·å–å¯ç”¨ç‰©ç†è®¾å¤‡
 		uint32_t deviceCount = 0;
 		vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
 		std::vector<VkPhysicalDevice> devices(deviceCount);
@@ -106,7 +106,7 @@ namespace GameEngine
 
 		for (auto& device : devices) {
 			vkGetPhysicalDeviceProperties(device, &m_PhysicalDeviceProperties);
-			// Ö±½ÓÕÒAMD»òNVIDIA£¬ÕÒµ½¾Í´´½¨£¬²»Ö§³Ö¼¯³ÉGPU
+			// ç›´æ¥æ‰¾AMDæˆ–NVIDIAï¼Œæ‰¾åˆ°å°±åˆ›å»ºï¼Œä¸æ”¯æŒé›†æˆGPU
 			for (auto target : TARGET_DEVICES)
 			{
 				std::string name = std::string(m_PhysicalDeviceProperties.deviceName);
@@ -130,12 +130,12 @@ namespace GameEngine
 						LOG_TRACE_TAG("PhysicalDevice", LOG_LINE);
 					}
 
-					//³õÊ¼»¯´æ´¢ÎïÀíÉè±¸Ö§³ÖµÄ¸÷ÖÖÊôĞÔ£¬ÌØĞÔ£¬À©Õ¹£¬ÄÚ´æÌØĞÔ£¬¶ÓÁĞĞÅÏ¢
+					//åˆå§‹åŒ–å­˜å‚¨ç‰©ç†è®¾å¤‡æ”¯æŒçš„å„ç§å±æ€§ï¼Œç‰¹æ€§ï¼Œæ‰©å±•ï¼Œå†…å­˜ç‰¹æ€§ï¼Œé˜Ÿåˆ—ä¿¡æ¯
 					//vkGetPhysicalDeviceFeatures2(device, &fetures2);
 					vkGetPhysicalDeviceFeatures(device, &m_PhysicalDeviceFeatures);
 					vkGetPhysicalDeviceMemoryProperties(device, &m_PhysicalDeviceMemoryProperties);
 
-					// »ñÈ¡ËùÓĞÖ§³ÖµÄÍØÕ¹
+					// è·å–æ‰€æœ‰æ”¯æŒçš„æ‹“å±•
 					uint32_t extCount = 0;
 					vkEnumerateDeviceExtensionProperties(device, nullptr, &extCount, nullptr);
 					std::vector<VkExtensionProperties> extensions(extCount);
@@ -150,7 +150,7 @@ namespace GameEngine
 
 					if (m_Config.enableRayTracing)
 					{
-						//»ñÈ¡¹â×·¹ÜÏßÌØĞÔ
+						//è·å–å…‰è¿½ç®¡çº¿ç‰¹æ€§
 						m_PhysicalDeviceRayTracingPipelineProperties = {};
 						m_PhysicalDeviceRayTracingPipelineProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR;
 
@@ -183,7 +183,7 @@ namespace GameEngine
 	}
 
 	void VulkanDynamicRHI::CreateLogicalDevice() {
-		// »ñÈ¡¶ÓÁĞ×åĞÅÏ¢
+		// è·å–é˜Ÿåˆ—æ—ä¿¡æ¯
 		uint32_t queueFamilyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(m_PhysicalDevice, &queueFamilyCount, nullptr);
 		m_QueueFamilyProperties.resize(queueFamilyCount);
@@ -197,8 +197,8 @@ namespace GameEngine
 			LOG_TRACE_TAG("Queue", "Queue Flags: {}", VulkanUtil::QueueFlagsToString(queueFamily.queueFlags));
 		}*/
 
-		// ±éÀú¶ÓÁĞ×å£¬Ñ°ÕÒĞèÒªµÄ¶ÓÁĞµÄÖ§³Ö£¬ÕÒµ½Ö§³ÖµÄ¶ÓÁĞ×éºóºóĞø×å¾Í²»ĞèÒª´´½¨ÁË£¬Ã¿¸öÀàĞÍ¶ÓÁĞ»á´´½¨2¸öQueue
-		std::vector<uint32_t> allocatedCounts(m_QueueFamilyProperties.size()); // ¼ÇÂ¼Ã¿¸ö¶ÓÁĞ×éĞèÒªÉêÇëµÄQueueÊıÁ¿£¬Ìá¹©¸øÂß¼­Éè±¸´´½¨
+		// éå†é˜Ÿåˆ—æ—ï¼Œå¯»æ‰¾éœ€è¦çš„é˜Ÿåˆ—çš„æ”¯æŒï¼Œæ‰¾åˆ°æ”¯æŒçš„é˜Ÿåˆ—ç»„ååç»­æ—å°±ä¸éœ€è¦åˆ›å»ºäº†ï¼Œæ¯ä¸ªç±»å‹é˜Ÿåˆ—ä¼šåˆ›å»º2ä¸ªQueue
+		std::vector<uint32_t> allocatedCounts(m_QueueFamilyProperties.size()); // è®°å½•æ¯ä¸ªé˜Ÿåˆ—ç»„éœ€è¦ç”³è¯·çš„Queueæ•°é‡ï¼Œæä¾›ç»™é€»è¾‘è®¾å¤‡åˆ›å»º
 		for (int i = 0; i < m_QueueFamilyProperties.size(); i++)
 		{
 			auto& queueFamily = m_QueueFamilyProperties[i];
@@ -224,11 +224,11 @@ namespace GameEngine
 			for (int i = 0; i < QUEUE_TYPE_MAX_ENUM; i++) if (m_QueueIndices[i] < 0) LOG_ERROR("Fail to allocate queue!");
 		}
 
-		// ´´½¨Éè±¸ÇëÇóĞÅÏ¢
+		// åˆ›å»ºè®¾å¤‡è¯·æ±‚ä¿¡æ¯
 		VkDeviceCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 
-		//¶ÓÁĞĞÅÏ¢ ÒªÉùÃ÷Ã¿¸ö¶ÓÁĞ×éĞèÒª´´½¨µÄQueueÊıÁ¿
+		//é˜Ÿåˆ—ä¿¡æ¯ è¦å£°æ˜æ¯ä¸ªé˜Ÿåˆ—ç»„éœ€è¦åˆ›å»ºçš„Queueæ•°é‡
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 		for (int i = 0; i < allocatedCounts.size(); i++)
 		{
@@ -237,15 +237,15 @@ namespace GameEngine
 
 			VkDeviceQueueCreateInfo queueCreateInfo = {};
 			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-			queueCreateInfo.queueFamilyIndex = i;                               //¶ÓÁĞ×å
-			queueCreateInfo.queueCount = allocatedCounts[i];                    //¶ÓÁĞÊıÄ¿£¬¶à¸ö¶ÓÁĞ¿ÉÒÔÖ§³Ö²¢ĞĞÒì²½¼ÆËã
-			queueCreateInfo.pQueuePriorities = QUEUE_PRIORITIES;                //ÓÅÏÈ¼¶
+			queueCreateInfo.queueFamilyIndex = i;                               //é˜Ÿåˆ—æ—
+			queueCreateInfo.queueCount = allocatedCounts[i];                    //é˜Ÿåˆ—æ•°ç›®ï¼Œå¤šä¸ªé˜Ÿåˆ—å¯ä»¥æ”¯æŒå¹¶è¡Œå¼‚æ­¥è®¡ç®—
+			queueCreateInfo.pQueuePriorities = QUEUE_PRIORITIES;                //ä¼˜å…ˆçº§
 			queueCreateInfos.push_back(queueCreateInfo);
 		}
 		createInfo.queueCreateInfoCount = (uint32_t)queueCreateInfos.size();
 		createInfo.pQueueCreateInfos = queueCreateInfos.data();
 
-		// Éè±¸ÍØÕ¹
+		// è®¾å¤‡æ‹“å±•
 		std::vector<const char*> deviceExtentions;
 		for (auto extention : DEVICE_EXTENTIONS) {
 			if (!VulkanUtil::IsExtensionSupported(m_PhysicalDeviceSupportedExtensions, extention)) continue;
@@ -258,13 +258,13 @@ namespace GameEngine
 					LOG_ERROR("Ray Tracing Device Extention Not Supported: {}", extention);
 					continue;
 				}
-				deviceExtentions.push_back(extention);  // ¿ªÆôRTÍØÕ¹ºó£¬RenderDoc»á±¨´í(Ó¦¸ÃRenderDoc²»Ö§³ÖRTpipelineµÄµ÷ÊÔ)
+				deviceExtentions.push_back(extention);  // å¼€å¯RTæ‹“å±•åï¼ŒRenderDocä¼šæŠ¥é”™(åº”è¯¥RenderDocä¸æ”¯æŒRTpipelineçš„è°ƒè¯•)
 			}
 		}
 		createInfo.enabledExtensionCount = (uint32_t)deviceExtentions.size();
 		createInfo.ppEnabledExtensionNames = deviceExtentions.data();
 
-		// Éè±¸LayerÒÑ±»·ÏÆú
+		// è®¾å¤‡Layerå·²è¢«åºŸå¼ƒ
 		/*std::vector<const char*> devicelayers;
 		if (m_Config.debug)
 		{
@@ -274,59 +274,59 @@ namespace GameEngine
 			createInfo.ppEnabledLayerNames = devicelayers.data();
 		}*/
 
-		// ÌØĞÔÖ§³Ö
-		VkPhysicalDeviceFeatures deviceFeatures = {};       //Éè±¸ÌØĞÔĞÅÏ¢
-		deviceFeatures.samplerAnisotropy = VK_TRUE;         //ÇëÇó¸÷ÏòÒìĞÔ²ÉÑùÖ§³Ö
-		deviceFeatures.geometryShader = VK_TRUE;            //¼¸ºÎ×ÅÉ«Æ÷Ö§³Ö
-		deviceFeatures.tessellationShader = VK_TRUE;        //ÇúÃæÏ¸·Ö×ÅÉ«Æ÷Ö§³Ö
-		deviceFeatures.pipelineStatisticsQuery = VK_TRUE;   //¹ÜÏßÍ³¼Æ²éÑ¯Ö§³Ö
-		deviceFeatures.fillModeNonSolid = VK_TRUE;          //Ïß¿òÄ£Ê½
-		deviceFeatures.multiDrawIndirect = VK_TRUE;         //¶àÖØ¼ä½Ó»æÖÆ
-		deviceFeatures.independentBlend = VK_TRUE;          //MRTµ¥¶ÀÉèÖÃÃ¿¸ö»ìºÏ×´Ì¬
-		deviceFeatures.drawIndirectFirstInstance = VK_TRUE; //ÔÊĞí¼ä½Ó»æÖÆµÄfirstInstance²»Îª0
-		deviceFeatures.shaderInt64 = VK_TRUE;               //64Î»Ö§³Ö
+		// ç‰¹æ€§æ”¯æŒ
+		VkPhysicalDeviceFeatures deviceFeatures = {};       //è®¾å¤‡ç‰¹æ€§ä¿¡æ¯
+		deviceFeatures.samplerAnisotropy = VK_TRUE;         //è¯·æ±‚å„å‘å¼‚æ€§é‡‡æ ·æ”¯æŒ
+		deviceFeatures.geometryShader = VK_TRUE;            //å‡ ä½•ç€è‰²å™¨æ”¯æŒ
+		deviceFeatures.tessellationShader = VK_TRUE;        //æ›²é¢ç»†åˆ†ç€è‰²å™¨æ”¯æŒ
+		deviceFeatures.pipelineStatisticsQuery = VK_TRUE;   //ç®¡çº¿ç»Ÿè®¡æŸ¥è¯¢æ”¯æŒ
+		deviceFeatures.fillModeNonSolid = VK_TRUE;          //çº¿æ¡†æ¨¡å¼
+		deviceFeatures.multiDrawIndirect = VK_TRUE;         //å¤šé‡é—´æ¥ç»˜åˆ¶
+		deviceFeatures.independentBlend = VK_TRUE;          //MRTå•ç‹¬è®¾ç½®æ¯ä¸ªæ··åˆçŠ¶æ€
+		deviceFeatures.drawIndirectFirstInstance = VK_TRUE; //å…è®¸é—´æ¥ç»˜åˆ¶çš„firstInstanceä¸ä¸º0
+		deviceFeatures.shaderInt64 = VK_TRUE;               //64ä½æ”¯æŒ
 		deviceFeatures.shaderFloat64 = VK_TRUE;
 		deviceFeatures.vertexPipelineStoresAndAtomics = VK_TRUE;
-		deviceFeatures.fragmentStoresAndAtomics = VK_TRUE; // Æ¬¶Î×ÅÉ«Æ÷´æ´¢ºÍÔ­×ÓÖ§³Ö
+		deviceFeatures.fragmentStoresAndAtomics = VK_TRUE; // ç‰‡æ®µç€è‰²å™¨å­˜å‚¨å’ŒåŸå­æ”¯æŒ
 
 		createInfo.pEnabledFeatures = &deviceFeatures;
 
-		VkPhysicalDeviceVulkan12Features vulkan12Features{};                                        //1.2°æ±¾µÄÆäËûÖ§³Ö
+		VkPhysicalDeviceVulkan12Features vulkan12Features{};                                        //1.2ç‰ˆæœ¬çš„å…¶ä»–æ”¯æŒ
 		vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
-		vulkan12Features.samplerFilterMinmax = VK_TRUE;                                             //²ÉÑùÆ÷µÄ¹ıÂËÄ£Ê½£¬ÓÃÓÚHiz
-		//bindlessÖ§³Ö£¬ÃèÊö·ûË÷Òı
-		vulkan12Features.runtimeDescriptorArray = VK_TRUE;                                          //SPIR-V ÖĞÊ¹ÓÃ¶¯Ì¬Êı×é
-		vulkan12Features.descriptorBindingVariableDescriptorCount = VK_TRUE;                        //DescriptorSet Layout µÄ Binding ÖĞÊ¹ÓÃ¿É±ä´óĞ¡µÄ AoD
-		vulkan12Features.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;                       //SPIR-V ÖĞÍ¨¹ı nonuniformEXT Decoration ÓÃÓÚ·Ç Uniform ±äÁ¿ÏÂ±êË÷Òı×ÊÔ´Êı×é
+		vulkan12Features.samplerFilterMinmax = VK_TRUE;                                             //é‡‡æ ·å™¨çš„è¿‡æ»¤æ¨¡å¼ï¼Œç”¨äºHiz
+		//bindlessæ”¯æŒï¼Œæè¿°ç¬¦ç´¢å¼•
+		vulkan12Features.runtimeDescriptorArray = VK_TRUE;                                          //SPIR-V ä¸­ä½¿ç”¨åŠ¨æ€æ•°ç»„
+		vulkan12Features.descriptorBindingVariableDescriptorCount = VK_TRUE;                        //DescriptorSet Layout çš„ Binding ä¸­ä½¿ç”¨å¯å˜å¤§å°çš„ AoD
+		vulkan12Features.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;                       //SPIR-V ä¸­é€šè¿‡ nonuniformEXT Decoration ç”¨äºé Uniform å˜é‡ä¸‹æ ‡ç´¢å¼•èµ„æºæ•°ç»„
 		vulkan12Features.descriptorBindingPartiallyBound = VK_TRUE;
 		vulkan12Features.descriptorIndexing = VK_TRUE;
 		vulkan12Features.bufferDeviceAddress = VK_TRUE;
 		createInfo.pNext = &vulkan12Features;
 
-		VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT dynamicVertexInputFeatures = {};         //¶¯Ì¬¶¥µãÊäÈëÃèÊö
+		VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT dynamicVertexInputFeatures = {};         //åŠ¨æ€é¡¶ç‚¹è¾“å…¥æè¿°
 		dynamicVertexInputFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_INPUT_DYNAMIC_STATE_FEATURES_EXT;
 		dynamicVertexInputFeatures.vertexInputDynamicState = VK_TRUE;
 		vulkan12Features.pNext = &dynamicVertexInputFeatures;
 
 		if (m_Config.enableRayTracing)
 		{
-			VkPhysicalDeviceBufferDeviceAddressFeaturesEXT deviceAddressfeture = {};                //ÇëÇóÄÚ´æµØÖ·ĞÅÏ¢
+			VkPhysicalDeviceBufferDeviceAddressFeaturesEXT deviceAddressfeture = {};                //è¯·æ±‚å†…å­˜åœ°å€ä¿¡æ¯
 			deviceAddressfeture.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT;
 			deviceAddressfeture.bufferDeviceAddress = VK_TRUE;
 
-			VkPhysicalDeviceAccelerationStructureFeaturesKHR accelerationStructureFeatures = {};    //rt¼ÓËÙ½á¹¹
+			VkPhysicalDeviceAccelerationStructureFeaturesKHR accelerationStructureFeatures = {};    //rtåŠ é€Ÿç»“æ„
 			accelerationStructureFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR;
-			accelerationStructureFeatures.accelerationStructure = VK_TRUE;   // ¼ÓËÙ½á¹¹Ö§³Ö
-			accelerationStructureFeatures.accelerationStructureCaptureReplay = VK_TRUE; // ±£´æºÍÖØÓÃ¼ÓËÙ½á¹¹Éè±¸µØÖ·£¬ÓÃÓÚ²¶»ñºÍ»Ø·Å×·×Ù½á¹û
-			accelerationStructureFeatures.descriptorBindingAccelerationStructureUpdateAfterBind = VK_TRUE; // ÔÚ°ó¶¨ºó¸üĞÂ¼ÓËÙ½á¹¹
+			accelerationStructureFeatures.accelerationStructure = VK_TRUE;   // åŠ é€Ÿç»“æ„æ”¯æŒ
+			accelerationStructureFeatures.accelerationStructureCaptureReplay = VK_TRUE; // ä¿å­˜å’Œé‡ç”¨åŠ é€Ÿç»“æ„è®¾å¤‡åœ°å€ï¼Œç”¨äºæ•è·å’Œå›æ”¾è¿½è¸ªç»“æœ
+			accelerationStructureFeatures.descriptorBindingAccelerationStructureUpdateAfterBind = VK_TRUE; // åœ¨ç»‘å®šåæ›´æ–°åŠ é€Ÿç»“æ„
 
-			VkPhysicalDeviceRayTracingPipelineFeaturesKHR rayTracingPipelineFeatures = {};          //rt¹ÜÏß
+			VkPhysicalDeviceRayTracingPipelineFeaturesKHR rayTracingPipelineFeatures = {};          //rtç®¡çº¿
 			rayTracingPipelineFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR;
-			rayTracingPipelineFeatures.rayTracingPipeline = VK_TRUE; // ¹âÏß×·×Ù¹ÜÏßÖ§³Ö
-			rayTracingPipelineFeatures.rayTracingPipelineTraceRaysIndirect = VK_TRUE;// ¼ä½Ó¹âÏß×·×Ùµ÷¶ÈÃüÁî
-			rayTracingPipelineFeatures.rayTraversalPrimitiveCulling = VK_TRUE; // ÔÚ¹âÏß±éÀúÊ±ÌŞ³ıÍ¼Ôª
+			rayTracingPipelineFeatures.rayTracingPipeline = VK_TRUE; // å…‰çº¿è¿½è¸ªç®¡çº¿æ”¯æŒ
+			rayTracingPipelineFeatures.rayTracingPipelineTraceRaysIndirect = VK_TRUE;// é—´æ¥å…‰çº¿è¿½è¸ªè°ƒåº¦å‘½ä»¤
+			rayTracingPipelineFeatures.rayTraversalPrimitiveCulling = VK_TRUE; // åœ¨å…‰çº¿éå†æ—¶å‰”é™¤å›¾å…ƒ
 
-			VkPhysicalDeviceRayQueryFeaturesKHR rayQueryFeatures = {};                              //rt²éÑ¯
+			VkPhysicalDeviceRayQueryFeaturesKHR rayQueryFeatures = {};                              //rtæŸ¥è¯¢
 			rayQueryFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR;
 			rayQueryFeatures.rayQuery = VK_TRUE;
 
@@ -364,9 +364,9 @@ namespace GameEngine
 
 	void VulkanDynamicRHI::CreateMemoryAllocator()
 	{
-		// volk¼¯³Évma: https://zhuanlan.zhihu.com/p/634912614
-		// vma¹Ù·½ÎÄµµ: https://gpuopen-librariesandsdks.github.io/VulkanMemoryAllocator/html/index.html
-		// ¶ÔÕÕ¸Ã±í£¬²»Í¬vulkan°æ±¾ÓĞ²»Í¬µÄ°ó¶¨ÒªÇó: https://gpuopen-librariesandsdks.github.io/VulkanMemoryAllocator/html/struct_vma_vulkan_functions.html
+		// volké›†æˆvma: https://zhuanlan.zhihu.com/p/634912614
+		// vmaå®˜æ–¹æ–‡æ¡£: https://gpuopen-librariesandsdks.github.io/VulkanMemoryAllocator/html/index.html
+		// å¯¹ç…§è¯¥è¡¨ï¼Œä¸åŒvulkanç‰ˆæœ¬æœ‰ä¸åŒçš„ç»‘å®šè¦æ±‚: https://gpuopen-librariesandsdks.github.io/VulkanMemoryAllocator/html/struct_vma_vulkan_functions.html
 
 		VmaVulkanFunctions vulkanFunctions{};
 		vulkanFunctions.vkGetPhysicalDeviceProperties = vkGetPhysicalDeviceProperties;
@@ -405,7 +405,7 @@ namespace GameEngine
 		allocatorCreateInfo.device = m_LogicalDevice;
 		allocatorCreateInfo.instance = m_Instance;
 		allocatorCreateInfo.pVulkanFunctions = &vulkanFunctions;
-		allocatorCreateInfo.flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT; // ¼ÓÉÏÕâ¸ö²ÅÄÜ»ñÈ¡µØÖ·
+		allocatorCreateInfo.flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT; // åŠ ä¸Šè¿™ä¸ªæ‰èƒ½è·å–åœ°å€
 
 		VK_CHECK_RESULT(vmaCreateAllocator(&allocatorCreateInfo, &m_MemoryAllocator));
 	}
@@ -425,13 +425,13 @@ namespace GameEngine
 			{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 4096 },
 		};
 
-		//ÃèÊö·û³ØĞÅÏ¢
+		//æè¿°ç¬¦æ± ä¿¡æ¯
 		VkDescriptorPoolCreateInfo poolInfo = {};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		poolInfo.poolSizeCount = static_cast<uint32_t>(descriptorPoolSizes.size());
 		poolInfo.pPoolSizes = descriptorPoolSizes.data();
 		poolInfo.maxSets = 8192;
-		poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT | VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;   // Ê¹µÃÃèÊö·û¿ÉÒÔÊµÊ±¸üĞÂ
+		poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT | VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;   // ä½¿å¾—æè¿°ç¬¦å¯ä»¥å®æ—¶æ›´æ–°
 
 		VK_CHECK_RESULT(vkCreateDescriptorPool(m_LogicalDevice, &poolInfo, nullptr, &m_DescriptorPool));
 	}
@@ -486,7 +486,7 @@ namespace GameEngine
 	{
 		VulkanUtil::VulkanRenderPassAttachments attachmentInfo = {};
 		VkAttachmentDescription colorAttachment = {};
-		colorAttachment.format = VulkanUtil::RHIFormatToVkFormat(FORMAT_R8G8B8A8_UNORM);   // ÒòÎªImgui×îÖÕäÖÈ¾½á¹ûÖ±½Ócopyµ½½»»»Á´µÄImage£¬ËùÒÔ¸ñÊ½¾ÍÈ¡ºÍ½»»»Á´µÄImageµÄ¸ñÊ½Ò»ÖÂ
+		colorAttachment.format = VulkanUtil::RHIFormatToVkFormat(FORMAT_R8G8B8A8_UNORM);   // å› ä¸ºImguiæœ€ç»ˆæ¸²æŸ“ç»“æœç›´æ¥copyåˆ°äº¤æ¢é“¾çš„Imageï¼Œæ‰€ä»¥æ ¼å¼å°±å–å’Œäº¤æ¢é“¾çš„Imageçš„æ ¼å¼ä¸€è‡´
 		colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 		colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 		colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -783,7 +783,7 @@ namespace GameEngine
 
 	VkRenderPass VulkanDynamicRHI::CreateVkRenderPass(const VulkanUtil::VulkanRenderPassAttachments& info)
 	{
-		// ÊÇ·ñÓĞ depth ¸½¼ş
+		// æ˜¯å¦æœ‰ depth é™„ä»¶
 		bool hasDepth = (info.depthStencilAttachment.format != VK_FORMAT_UNDEFINED);
 
 		std::vector<VkAttachmentDescription> attachments;
@@ -792,19 +792,19 @@ namespace GameEngine
 
 		uint32_t attachmentIndex = 0;
 
-		// --- ´¦Àí color attachments£¨Ã¿¸ö color Ò»¸ö attachment + reference£© ---
+		// --- å¤„ç† color attachmentsï¼ˆæ¯ä¸ª color ä¸€ä¸ª attachment + referenceï¼‰ ---
 		for (const VkAttachmentDescription& src : info.colorAttachments)
 		{
-			VkAttachmentDescription desc = src; // ¿½±´Ò»·İ£¬±ÜÃâĞŞ¸ÄÔ­Ê¼½á¹¹
-			// Îª color ¸½¼şÑ¡ÔñºÏÀíµÄ³õÊ¼/×îÖÕ layout£¨¿É¸ù¾İĞèÒªµ÷Õû£©
+			VkAttachmentDescription desc = src; // æ‹·è´ä¸€ä»½ï¼Œé¿å…ä¿®æ”¹åŸå§‹ç»“æ„
+			// ä¸º color é™„ä»¶é€‰æ‹©åˆç†çš„åˆå§‹/æœ€ç»ˆ layoutï¼ˆå¯æ ¹æ®éœ€è¦è°ƒæ•´ï¼‰
 			if (desc.initialLayout == VK_IMAGE_LAYOUT_UNDEFINED)
-				desc.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; // ÈÃÇı¶¯ÔÚ¿ªÊ¼Ê± transition£¨¸üÍ¨ÓÃ£©
-			// finalLayout Ä¬ÈÏÉèÖÃÎª COLOR_ATTACHMENT_OPTIMAL£»Èç¹ûÕâÊÇ swapchain image£¬ĞèÒªµ÷ÓÃ·½Ìæ»»Îª PRESENT_SRC_KHR
+				desc.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; // è®©é©±åŠ¨åœ¨å¼€å§‹æ—¶ transitionï¼ˆæ›´é€šç”¨ï¼‰
+			// finalLayout é»˜è®¤è®¾ç½®ä¸º COLOR_ATTACHMENT_OPTIMALï¼›å¦‚æœè¿™æ˜¯ swapchain imageï¼Œéœ€è¦è°ƒç”¨æ–¹æ›¿æ¢ä¸º PRESENT_SRC_KHR
 			if (desc.finalLayout == VK_IMAGE_LAYOUT_UNDEFINED)
 				desc.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-			// stencil ¶Ô color ÎŞĞ§£¬µ«±£ÁôÔ­À´µÄ load/store ÉèÖÃ£¨Èç¹ûÓ¦ÓÃĞèÒª£¬¿ÉÒÔ override£©
-			// °ÑÄ¬ÈÏµÄ stencil ops Ò²ÉèÖÃÎª color µÄ load/store£¬ÒÔ±ÜÃâÎ´³õÊ¼»¯ĞĞÎª
+			// stencil å¯¹ color æ— æ•ˆï¼Œä½†ä¿ç•™åŸæ¥çš„ load/store è®¾ç½®ï¼ˆå¦‚æœåº”ç”¨éœ€è¦ï¼Œå¯ä»¥ overrideï¼‰
+			// æŠŠé»˜è®¤çš„ stencil ops ä¹Ÿè®¾ç½®ä¸º color çš„ load/storeï¼Œä»¥é¿å…æœªåˆå§‹åŒ–è¡Œä¸º
 			desc.stencilLoadOp = desc.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_DONT_CARE ? VK_ATTACHMENT_LOAD_OP_DONT_CARE : desc.stencilLoadOp;
 			desc.stencilStoreOp = desc.stencilStoreOp == VK_ATTACHMENT_STORE_OP_DONT_CARE ? VK_ATTACHMENT_STORE_OP_DONT_CARE : desc.stencilStoreOp;
 
@@ -818,17 +818,17 @@ namespace GameEngine
 			++attachmentIndex;
 		}
 
-		// --- ´¦Àí depth stencil attachment£¨Èç¹û´æÔÚ£© ---
+		// --- å¤„ç† depth stencil attachmentï¼ˆå¦‚æœå­˜åœ¨ï¼‰ ---
 		if (hasDepth)
 		{
-			VkAttachmentDescription desc = info.depthStencilAttachment; // ¿½±´
-			// depth ³õÊ¼/×îÖÕ layout£º³õÊ¼Ê¹ÓÃ UNDEFINED ¸üÍ¨ÓÃ£¨±íÊ¾¿ÉÓÉ renderpass transition£©
+			VkAttachmentDescription desc = info.depthStencilAttachment; // æ‹·è´
+			// depth åˆå§‹/æœ€ç»ˆ layoutï¼šåˆå§‹ä½¿ç”¨ UNDEFINED æ›´é€šç”¨ï¼ˆè¡¨ç¤ºå¯ç”± renderpass transitionï¼‰
 			if (desc.initialLayout == VK_IMAGE_LAYOUT_UNDEFINED)
 				desc.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 			if (desc.finalLayout == VK_IMAGE_LAYOUT_UNDEFINED)
 				desc.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-			// stencil ops£ºÍ¨³£ depth-stencil ĞèÒªÉèÖÃ stencilLoad/Store µ½ºÏÀíÖµ£¨ÕâÀï±£³ÖÓë loadOp/storeOp Ò»ÖÂ£©
+			// stencil opsï¼šé€šå¸¸ depth-stencil éœ€è¦è®¾ç½® stencilLoad/Store åˆ°åˆç†å€¼ï¼ˆè¿™é‡Œä¿æŒä¸ loadOp/storeOp ä¸€è‡´ï¼‰
 			desc.stencilLoadOp = desc.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_DONT_CARE ? desc.loadOp : desc.stencilLoadOp;
 			desc.stencilStoreOp = desc.stencilStoreOp == VK_ATTACHMENT_STORE_OP_DONT_CARE ? desc.storeOp : desc.stencilStoreOp;
 
@@ -840,7 +840,7 @@ namespace GameEngine
 			++attachmentIndex;
 		}
 
-		// --- ×¼±¸ subpass ---
+		// --- å‡†å¤‡ subpass ---
 		VkSubpassDescription subpass = {};
 		subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 		subpass.colorAttachmentCount = static_cast<uint32_t>(colorReferences.size());
@@ -850,9 +850,9 @@ namespace GameEngine
 		subpass.pInputAttachments = nullptr;
 		subpass.preserveAttachmentCount = 0;
 		subpass.pPreserveAttachments = nullptr;
-		subpass.pResolveAttachments = nullptr; // ÈôÖ§³Ö MSAA£¬ÇëÔÚ´ËÌá¹© resolve attachments
+		subpass.pResolveAttachments = nullptr; // è‹¥æ”¯æŒ MSAAï¼Œè¯·åœ¨æ­¤æä¾› resolve attachments
 
-		// --- Subpass dependency£ºÍâ²¿ -> subpass£¬±£Ö¤ layout ×ª»»/Ğ´Èë¿É¼ûĞÔ ---
+		// --- Subpass dependencyï¼šå¤–éƒ¨ -> subpassï¼Œä¿è¯ layout è½¬æ¢/å†™å…¥å¯è§æ€§ ---
 		VkSubpassDependency dependency = {};
 		dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
 		dependency.dstSubpass = 0;
@@ -895,7 +895,7 @@ namespace GameEngine
 
 	RHIDescriptorSetRef VulkanDynamicRHI::GetImGuiTextId(RHITextureViewRef textureView)
 	{
-		static RHISamplerRef sampler = nullptr; // ÓÃÍ¬Ò»¸ö²ÉÑùÆ÷¼´¿É
+		static RHISamplerRef sampler = nullptr; // ç”¨åŒä¸€ä¸ªé‡‡æ ·å™¨å³å¯
 		if (!sampler) {
 			RHISamplerInfo samplerInfo;
 			samplerInfo.addressModeU = ADDRESS_MODE_CLAMP_TO_EDGE;
@@ -931,11 +931,11 @@ namespace GameEngine
 			LOG_ERROR("Failed to allocate command buffer!");
 		}
 
-		// ºÄÊ±²éÑ¯³Ø
+		// è€—æ—¶æŸ¥è¯¢æ± 
 		VkQueryPoolCreateInfo queryPoolInfo{};
 		queryPoolInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
 		queryPoolInfo.queryType = VK_QUERY_TYPE_TIMESTAMP;
-		queryPoolInfo.queryCount = MAX_TIMEQUERYPOOL_SIZE; // Ã¿¸ö½×¶ÎĞèÒª 2 ¸ö²éÑ¯£¨¿ªÊ¼ + ½áÊø£©
+		queryPoolInfo.queryCount = MAX_TIMEQUERYPOOL_SIZE; // æ¯ä¸ªé˜¶æ®µéœ€è¦ 2 ä¸ªæŸ¥è¯¢ï¼ˆå¼€å§‹ + ç»“æŸï¼‰
 
 		vkCreateQueryPool(VULKAN_DEVICE, &queryPoolInfo, nullptr, &m_TimestampQueryPool);
 	}
@@ -970,8 +970,8 @@ namespace GameEngine
 		VkPipelineStageFlags srcStage = VulkanUtil::AccessFlagsToPipelineStageFlags(srcAccessMask);
 		VkPipelineStageFlags dstStage = VulkanUtil::AccessFlagsToPipelineStageFlags(dstAccessMask);
 
-		// srcStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;   // ¿ÉÒÔ±£Ö¤¾ø¶Ô²»»á³ö´í
-		// dstStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;   // Ä¿Ç°ÑéÖ¤²ãVK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT»¹ÊÇ»áÓĞÒ»Ğ©±¨´í£¬Ì«ÄÑµ÷ÁË
+		// srcStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;   // å¯ä»¥ä¿è¯ç»å¯¹ä¸ä¼šå‡ºé”™
+		// dstStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;   // ç›®å‰éªŒè¯å±‚VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXTè¿˜æ˜¯ä¼šæœ‰ä¸€äº›æŠ¥é”™ï¼Œå¤ªéš¾è°ƒäº†
 
 		VkImageMemoryBarrier memoryBarrier = {};
 		memoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -1067,7 +1067,7 @@ namespace GameEngine
 		}
 
 		/*
-			BeginRenderPass£ºËùÒÔ×îÖÕäÖÈ¾Á÷³Ì°ó¶¨µÄÊÇRenderPass¶ÔÏó£¬²»¹ıFrameBufferµ±×÷²ÎÊı´«µİ½øÈ¥ÁË
+			BeginRenderPassï¼šæ‰€ä»¥æœ€ç»ˆæ¸²æŸ“æµç¨‹ç»‘å®šçš„æ˜¯RenderPasså¯¹è±¡ï¼Œä¸è¿‡FrameBufferå½“ä½œå‚æ•°ä¼ é€’è¿›å»äº†
 		*/
 
 		VkRenderPassBeginInfo renderPassInfo{};
@@ -1116,7 +1116,7 @@ namespace GameEngine
 			CAST<VulkanRHITexture>(dst)->GetHandle(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 			1, &imageCopy);
 	}
-	// ¼Ù¶¨´¦ÓÚÕıÈ·µÄsrcÔÚsrc×´Ì¬£¬dstÔÚdst×´Ì¬
+	// å‡å®šå¤„äºæ­£ç¡®çš„srcåœ¨srcçŠ¶æ€ï¼Œdståœ¨dstçŠ¶æ€
 	void BlitTexture(VkCommandBuffer commandBuffer,
 		RHITextureRef src, RHITextureRef dst,
 		TextureSubresourceLayers srcSubresource, TextureSubresourceLayers dstSubresource,
@@ -1130,7 +1130,7 @@ namespace GameEngine
 
 		VkImageBlit blit = {};
 
-		// offset±íÊ¾Ô´Í¼ÏñµÄÇøÓò·¶Î§ºÍÄ¿±êÍ¼ÏñµÄÇøÓò·¶Î§
+		// offsetè¡¨ç¤ºæºå›¾åƒçš„åŒºåŸŸèŒƒå›´å’Œç›®æ ‡å›¾åƒçš„åŒºåŸŸèŒƒå›´
 		blit.srcOffsets[0] = { 0, 0, 0 }; //TODO offset
 		blit.srcOffsets[1] = { (int32_t)(src->GetInfo().extent.width / pow(2, srcMip)),
 								(int32_t)(src->GetInfo().extent.height / pow(2, srcMip)), 1 };
@@ -1153,7 +1153,7 @@ namespace GameEngine
 
 	void VulkanRHICommandContext::GenerateMips(RHITextureRef src)
 	{
-		//×Ü¼ÆÉú³ÉµÄmip²ãÊı
+		//æ€»è®¡ç”Ÿæˆçš„mipå±‚æ•°
 		uint32_t mipLevels = src->GetInfo().mipLevels;
 
 		VkImageSubresourceRange transition = {};
@@ -1168,14 +1168,14 @@ namespace GameEngine
 			transition.baseMipLevel = 0;
 			transition.baseArrayLayer = i;
 
-			// 1. ÏÈ½«ºóÃæµÄ²ãÈ«ÉèÖÃµ½dst
+			// 1. å…ˆå°†åé¢çš„å±‚å…¨è®¾ç½®åˆ°dst
 			TextureBarrier(
 				{ src,
 				RESOURCE_STATE_TRANSFER_SRC, RESOURCE_STATE_TRANSFER_DST,
 						{TEXTURE_ASPECT_COLOR, 1, mipLevels - 1, transition.baseArrayLayer, transition.layerCount} });
 
-			//Ñ­»·Éú³É¸÷¼¶mip£¬²¢½«¶ÔÓ¦²ã¼¶×ªµ½srcLayout
-			for (uint32_t i = 1; i < mipLevels; i++)    //×Ü¹²mipLevels¼¶£¬Ö»ĞèÒªmipLevels-1´Îblit
+			//å¾ªç¯ç”Ÿæˆå„çº§mipï¼Œå¹¶å°†å¯¹åº”å±‚çº§è½¬åˆ°srcLayout
+			for (uint32_t i = 1; i < mipLevels; i++)    //æ€»å…±mipLevelsçº§ï¼Œåªéœ€è¦mipLevels-1æ¬¡blit
 			{
 				BlitTexture(
 					handle,
@@ -1185,7 +1185,7 @@ namespace GameEngine
 					{ transition.aspectMask, transition.baseMipLevel + 1, transition.baseArrayLayer, transition.layerCount },
 					FILTER_TYPE_LINEAR);
 
-				// ½«Éú³ÉºóµÄ²ã¼¶ÉèÖÃµ½src
+				// å°†ç”Ÿæˆåçš„å±‚çº§è®¾ç½®åˆ°src
 				TextureBarrier(
 					{ src,
 					RESOURCE_STATE_TRANSFER_DST, RESOURCE_STATE_TRANSFER_SRC,
@@ -1235,8 +1235,8 @@ namespace GameEngine
 	void VulkanRHICommandContext::TextureBarrier(const RHITextureBarrier& barrier)
 	{
 		/*
-			srcStageMask/dstStageMask£ºPipelineStage£¨±íÊ¾PipelineµÄ¸÷¸ö½×¶Î£©£¬ÕâÁ½¸öÉèÖÃ±íÊ¾src½×¶ÎÃüÁîÍê³ÉÖ®Ç°£¬dst½×¶Î²»ÄÜ¿ªÊ¼Ö´ĞĞ£¨ÈÎÎñAĞèÒªÖ´ĞĞÍêsrcStage£¬ÈÎÎñB²ÅÄÜ¿ªÊ¼Ö´ĞĞdstStage£©
-			ÀıÈç£ºA->Barrier->B,ÕâÑùÌá½»ÃüÁîºó£¬B»áÍ£ÔÚdstStage£¬AµÄsrcStageÖ´ĞĞÍê³Éºó£¬B²ÅÄÜ¼ÌĞø
+			srcStageMask/dstStageMaskï¼šPipelineStageï¼ˆè¡¨ç¤ºPipelineçš„å„ä¸ªé˜¶æ®µï¼‰ï¼Œè¿™ä¸¤ä¸ªè®¾ç½®è¡¨ç¤ºsrcé˜¶æ®µå‘½ä»¤å®Œæˆä¹‹å‰ï¼Œdsté˜¶æ®µä¸èƒ½å¼€å§‹æ‰§è¡Œï¼ˆä»»åŠ¡Aéœ€è¦æ‰§è¡Œå®ŒsrcStageï¼Œä»»åŠ¡Bæ‰èƒ½å¼€å§‹æ‰§è¡ŒdstStageï¼‰
+			ä¾‹å¦‚ï¼šA->Barrier->B,è¿™æ ·æäº¤å‘½ä»¤åï¼ŒBä¼šåœåœ¨dstStageï¼ŒAçš„srcStageæ‰§è¡Œå®Œæˆåï¼ŒBæ‰èƒ½ç»§ç»­
 		*/
 		TextureSubresourceRange range = barrier.subresource;
 		if (range.aspect == TEXTURE_ASPECT_NONE) range = barrier.texture->GetDefaultSubresourceRange();
@@ -1246,8 +1246,8 @@ namespace GameEngine
 		VkPipelineStageFlags srcStage = VulkanUtil::AccessFlagsToPipelineStageFlags(srcAccessMask);
 		VkPipelineStageFlags dstStage = VulkanUtil::AccessFlagsToPipelineStageFlags(dstAccessMask);
 
-		// srcStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;   // ¿ÉÒÔ±£Ö¤¾ø¶Ô²»»á³ö´í
-		// dstStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;   // Ä¿Ç°ÑéÖ¤²ãVK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT»¹ÊÇ»áÓĞÒ»Ğ©±¨´í£¬Ì«ÄÑµ÷ÁË
+		// srcStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;   // å¯ä»¥ä¿è¯ç»å¯¹ä¸ä¼šå‡ºé”™
+		// dstStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;   // ç›®å‰éªŒè¯å±‚VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXTè¿˜æ˜¯ä¼šæœ‰ä¸€äº›æŠ¥é”™ï¼Œå¤ªéš¾è°ƒäº†
 
 		VkImageMemoryBarrier memoryBarrier = {};
 		memoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -1256,7 +1256,7 @@ namespace GameEngine
 		memoryBarrier.oldLayout = VulkanUtil::ResourceStateToImageLayout(barrier.srcState);
 		memoryBarrier.newLayout = VulkanUtil::ResourceStateToImageLayout(barrier.dstState);
 		memoryBarrier.image = CAST<VulkanRHITexture>(barrier.texture)->GetHandle();
-		memoryBarrier.subresourceRange = VulkanUtil::SubresourceToVk(range);   // ¿ÉÒÔÖ»×ª»»²¿·Ö²ã
+		memoryBarrier.subresourceRange = VulkanUtil::SubresourceToVk(range);   // å¯ä»¥åªè½¬æ¢éƒ¨åˆ†å±‚
 		memoryBarrier.srcAccessMask = srcAccessMask;
 		memoryBarrier.dstAccessMask = dstAccessMask;
 
@@ -1369,7 +1369,7 @@ namespace GameEngine
 
 	void VulkanRHICommandContext::BindIndexBuffer(RHIBufferRef indexBuffer, uint32_t offset)
 	{
-		vkCmdBindIndexBuffer(handle, CAST<VulkanRHIBuffer>(indexBuffer)->GetHandle(), offset, VK_INDEX_TYPE_UINT32);    // ¹Ì¶¨ÁËË÷ÒıÓÃ32Î»µÄ
+		vkCmdBindIndexBuffer(handle, CAST<VulkanRHIBuffer>(indexBuffer)->GetHandle(), offset, VK_INDEX_TYPE_UINT32);    // å›ºå®šäº†ç´¢å¼•ç”¨32ä½çš„
 	}
 
 	void VulkanRHICommandContext::Dispatch(uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ)
@@ -1386,8 +1386,8 @@ namespace GameEngine
 	{
 		ASSERT(this->rayTracingPipeline != nullptr);
 
-		//gl_LaunchSizeEXT ¶ÔÓ¦´Ë´¦¸ø³öµÄ3Î¬³ß´ç
-		//gl_LaunchIDEXT ÀàËÆÓÚcompute shaderµÄgl_GlobalInvocationID£¬¶ÔÓ¦µ÷ÓÃshaderµÄ×ø±ê(ID)
+		//gl_LaunchSizeEXT å¯¹åº”æ­¤å¤„ç»™å‡ºçš„3ç»´å°ºå¯¸
+		//gl_LaunchIDEXT ç±»ä¼¼äºcompute shaderçš„gl_GlobalInvocationIDï¼Œå¯¹åº”è°ƒç”¨shaderçš„åæ ‡(ID)
 		vkCmdTraceRaysKHR(
 			handle,
 			&this->rayTracingPipeline->GetRaygenRegion(),
@@ -1412,43 +1412,43 @@ namespace GameEngine
 	void VulkanRHICommandContext::DrawIndirect(RHIBufferRef argumentBuffer, uint32_t offset, uint32_t drawCount)
 	{
 		/*
-		*	»æÖÆÖ¸Áî²ÎÊı£º
+		*	ç»˜åˆ¶æŒ‡ä»¤å‚æ•°ï¼š
 		   //indexed draw
 			VKAPI_ATTR void VKAPI_CALL vkCmdDrawIndexedIndirect(
 				VkCommandBuffer                             commandBuffer,
-				VkBuffer                                    buffer, // ´æ´¢»æÖÆ²ÎÊıµÄBuffer
-				VkDeviceSize                                offset, // BufferÆğÊ¼Æ«ÒÆ 
-				uint32_t                                    drawCount,  // »æÖÆµÄ´ÎÊı
-				uint32_t                                    stride); // BufferÖĞÃ¿¸ö»æÖÆÖ¸ÁîµÄ´óĞ¡
+				VkBuffer                                    buffer, // å­˜å‚¨ç»˜åˆ¶å‚æ•°çš„Buffer
+				VkDeviceSize                                offset, // Bufferèµ·å§‹åç§» 
+				uint32_t                                    drawCount,  // ç»˜åˆ¶çš„æ¬¡æ•°
+				uint32_t                                    stride); // Bufferä¸­æ¯ä¸ªç»˜åˆ¶æŒ‡ä»¤çš„å¤§å°
 
 			//non indexed draw
-			VKAPI_ATTR void VKAPI_CALL vkCmdDrawIndirect(  // ²ÎÊıÓëvkCmdDrawIndirectÒ»ÖÂ
+			VKAPI_ATTR void VKAPI_CALL vkCmdDrawIndirect(  // å‚æ•°ä¸vkCmdDrawIndirectä¸€è‡´
 				VkCommandBuffer                             commandBuffer,
 				VkBuffer                                    buffer,
 				VkDeviceSize                                offset,
 				uint32_t                                    drawCount,
 				uint32_t                                    stride);
 
-			»æÖÆBuffer²ÎÊı£ºÕâ¸öBufferÖĞ´æ´¢µÄ²ÎÊıÊµ¼Ê¾ÍÊÇÖ±½Óµ÷ÓÃvkCmdDrawIndexed¡¢vkCmdDrawĞèÒªµÄ²ÎÊı
+			ç»˜åˆ¶Bufferå‚æ•°ï¼šè¿™ä¸ªBufferä¸­å­˜å‚¨çš„å‚æ•°å®é™…å°±æ˜¯ç›´æ¥è°ƒç”¨vkCmdDrawIndexedã€vkCmdDrawéœ€è¦çš„å‚æ•°
 			//indexed
 			struct VkDrawIndexedIndirectCommand {
-				uint32_t    indexCount;		// Ë÷ÒıÊıÁ¿
-				uint32_t    instanceCount;	// ÊµÀıÊıÁ¿
-				uint32_t    firstIndex;		// Ë÷ÒıÆ«ÒÆ
-				int32_t     vertexOffset;	// ¶¥µãÆ«ÒÆ
-				uint32_t    firstInstance;	// ÊµÀıÆ«ÒÆ
+				uint32_t    indexCount;		// ç´¢å¼•æ•°é‡
+				uint32_t    instanceCount;	// å®ä¾‹æ•°é‡
+				uint32_t    firstIndex;		// ç´¢å¼•åç§»
+				int32_t     vertexOffset;	// é¡¶ç‚¹åç§»
+				uint32_t    firstInstance;	// å®ä¾‹åç§»
 			};
 
 			//non indexed
 			typedef struct VkDrawIndirectCommand {
-				uint32_t    vertexCount;   // ¶¥µãÊıÁ¿
-				uint32_t    instanceCount; // ÊµÀıÊıÁ¿
-				uint32_t    firstVertex;   // ¶¥µãÆ«ÒÆ
-				uint32_t    firstInstance; // ÊµÀıÆ«ÒÆ
+				uint32_t    vertexCount;   // é¡¶ç‚¹æ•°é‡
+				uint32_t    instanceCount; // å®ä¾‹æ•°é‡
+				uint32_t    firstVertex;   // é¡¶ç‚¹åç§»
+				uint32_t    firstInstance; // å®ä¾‹åç§»
 			} VkDrawIndirectCommand;
 
 
-			Multi Draw£ºÔÚÖ§³ÖMulti DrawÊ±£¬Buffer¿ÉÒÔ´æ´¢¶à¸ö»æÖÆÖ¸Áî£¬Ò»´ÎĞÔÌá½»
+			Multi Drawï¼šåœ¨æ”¯æŒMulti Drawæ—¶ï¼ŒBufferå¯ä»¥å­˜å‚¨å¤šä¸ªç»˜åˆ¶æŒ‡ä»¤ï¼Œä¸€æ¬¡æ€§æäº¤
 
 
 
@@ -1497,7 +1497,7 @@ namespace GameEngine
 
 	void VulkanRHICommandContext::PopLabel()
 	{
-		// ¼ÇÂ¼½áÊøÊ±¼ä´Á
+		// è®°å½•ç»“æŸæ—¶é—´æˆ³
 		uint32_t endIndex = m_TimestampQueryIndex;
 		vkCmdWriteTimestamp(handle, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPool, endIndex);
 		m_TimestampQueryIndex++;
@@ -1580,11 +1580,11 @@ namespace GameEngine
 
 	void VulkanRHICommandContextImmediate::EndSingleTimeCommand()
 	{
-		// µÈ´ıÇ°Ò»´ÎflushÖ´ĞĞÍê³É
+		// ç­‰å¾…å‰ä¸€æ¬¡flushæ‰§è¡Œå®Œæˆ
 		fence->WaitAndReset();
 		if (oldHandle != VK_NULL_HANDLE) vkFreeCommandBuffers(VULKAN_DEVICE, CAST<VulkanRHICommandPool>(commandPool)->GetHandle(), 1, &oldHandle);
 
-		// Ìá½»×îĞÂÒ»´ÎµÄflush
+		// æäº¤æœ€æ–°ä¸€æ¬¡çš„flush
 		if (vkEndCommandBuffer(handle) != VK_SUCCESS) {
 			LOG_ERROR("Failed to record command buffer!");
 		}
@@ -1609,7 +1609,7 @@ namespace GameEngine
 	}
 	void GenerateMipsFun(VkCommandBuffer commandBuffer, RHITextureRef src)
 	{
-		//×Ü¼ÆÉú³ÉµÄmip²ãÊı
+		//æ€»è®¡ç”Ÿæˆçš„mipå±‚æ•°
 		uint32_t mipLevels = src->GetInfo().mipLevels;
 
 		VkImageSubresourceRange transition = {};
@@ -1624,14 +1624,14 @@ namespace GameEngine
 			transition.baseMipLevel = 0;
 			transition.baseArrayLayer = i;
 
-			// ÏÈ½«ºóÃæµÄ²ãÈ«ÉèÖÃµ½dst
+			// å…ˆå°†åé¢çš„å±‚å…¨è®¾ç½®åˆ°dst
 			TextureBarrier(commandBuffer,
 				{ src,
 				RESOURCE_STATE_TRANSFER_SRC, RESOURCE_STATE_TRANSFER_DST,
 						{TEXTURE_ASPECT_COLOR, 1, mipLevels - 1, transition.baseArrayLayer, transition.layerCount} });
 
-			//Ñ­»·Éú³É¸÷¼¶mip£¬²¢½«¶ÔÓ¦²ã¼¶×ªµ½srcLayout
-			for (uint32_t i = 1; i < mipLevels; i++)    //×Ü¹²mipLevels¼¶£¬Ö»ĞèÒªmipLevels-1´Îblit
+			//å¾ªç¯ç”Ÿæˆå„çº§mipï¼Œå¹¶å°†å¯¹åº”å±‚çº§è½¬åˆ°srcLayout
+			for (uint32_t i = 1; i < mipLevels; i++)    //æ€»å…±mipLevelsçº§ï¼Œåªéœ€è¦mipLevels-1æ¬¡blit
 			{
 				BlitTexture(
 					commandBuffer,
@@ -1641,7 +1641,7 @@ namespace GameEngine
 					{ transition.aspectMask, transition.baseMipLevel + 1, transition.baseArrayLayer, transition.layerCount },
 					FILTER_TYPE_LINEAR);
 
-				// ½«Éú³ÉºóµÄ²ã¼¶ÉèÖÃµ½src
+				// å°†ç”Ÿæˆåçš„å±‚çº§è®¾ç½®åˆ°src
 				TextureBarrier(commandBuffer,
 					{ src,
 					RESOURCE_STATE_TRANSFER_DST, RESOURCE_STATE_TRANSFER_SRC,

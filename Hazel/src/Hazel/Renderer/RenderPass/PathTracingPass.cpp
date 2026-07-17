@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "PathTracingPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -90,7 +90,7 @@ namespace GameEngine {
 			.Execute([&](RDGPassContext context) {
 				auto& [w, h] = APP_WINDOWSIZE;
 				if (APP_SCENE_CAMERA->GetIsMove() || Input::IsKeyDown(KeyCode::R)) {
-					m_Settings.totalNumSamples = 0;  // Ïà»úÒÆ¶¯ºó/ÊÖ¶¯¸üĞÂºóÖØĞÂÀÛ¼Æ
+					m_Settings.totalNumSamples = 0;  // ç›¸æœºç§»åŠ¨å/æ‰‹åŠ¨æ›´æ–°åé‡æ–°ç´¯è®¡
 				}
 				m_Settings.totalNumSamples += m_Settings.numSamples;
 				RHICommandListRef command = context.command;

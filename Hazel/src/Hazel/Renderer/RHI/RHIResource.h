@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include "RHIBase.h"
 #include <queue>
 namespace GameEngine {
 	/** 
 		The base type of RHI resources.
-		ÓÃÀ´Î¬»¤RHIResourceTypeºÍtick´ÎÊı
+		ç”¨æ¥ç»´æŠ¤RHIResourceTypeå’Œtickæ¬¡æ•°
 	*/
 	class RHIResource
 	{
@@ -81,8 +81,8 @@ namespace GameEngine {
 	protected:
 		RHICommandPoolInfo info;
 
-		//std::queue<RHICommandContextRef> idleContexts = {};  // ÔİÎ´ÔËĞĞµÄÏß³Ì
-		//std::vector<RHICommandContextRef> contexts = {};     // ËùÓĞ·ÖÅäµÄÏß³Ì
+		//std::queue<RHICommandContextRef> idleContexts = {};  // æš‚æœªè¿è¡Œçš„çº¿ç¨‹
+		//std::vector<RHICommandContextRef> contexts = {};     // æ‰€æœ‰åˆ†é…çš„çº¿ç¨‹
 		// CriticalSectionRef sync;
 
 		// void ReturnToPool(RHICommandContextRef commandContext) { idleContexts.push(commandContext); }
@@ -163,7 +163,7 @@ namespace GameEngine {
 			return *this;
 		};
 	};
-	class RHIRootSignature : public RHIResource	//¶Ôpipelinelayout, descriptorSetPoolµÈµÄ³éÏó
+	class RHIRootSignature : public RHIResource	//å¯¹pipelinelayout, descriptorSetPoolç­‰çš„æŠ½è±¡
 	{
 	public:
 		RHIRootSignature(const RHIRootSignatureInfo& info)
@@ -214,7 +214,7 @@ namespace GameEngine {
 	protected:
 		RHIGraphicsPipelineInfo info;
 	};
-	class RHIRenderPass : public RHIResource	// ÔÚvulkanÀïÏàµ±ÓÚrenderpassºÍframebufferµÄÕûÌå³éÏó
+	class RHIRenderPass : public RHIResource	// åœ¨vulkané‡Œç›¸å½“äºrenderpasså’Œframebufferçš„æ•´ä½“æŠ½è±¡
 	{
 	public:
 		RHIRenderPass(const RHIRenderPassInfo& info)
@@ -289,9 +289,9 @@ namespace GameEngine {
 	};
 
 
-	// ------------------------------------------------------------------------ Í¬²½ ------------------------------------------------------------------------
+	// ------------------------------------------------------------------------ åŒæ­¥ ------------------------------------------------------------------------
 	/*
-		Fence ÓÃÓÚÍ¬²½CPUºÍGPU£¬ Ö»ÓĞÖÃÎ»£¨singaled£©ºÍÎ´ÖÃÎ»£¨unsingaled£©Á½ÖÖ×´Ì¬
+		Fence ç”¨äºåŒæ­¥CPUå’ŒGPUï¼Œ åªæœ‰ç½®ä½ï¼ˆsingaledï¼‰å’Œæœªç½®ä½ï¼ˆunsingaledï¼‰ä¸¤ç§çŠ¶æ€
 	*/
 	class RHIFence : public RHIResource
 	{
@@ -303,7 +303,7 @@ namespace GameEngine {
 	};
 
 	/*
-		¶şÖµĞÅºÅÁ¿£¬Ö»ÓĞÖÃÎ»£¨singaled£©ºÍÎ´ÖÃÎ»£¨unsingaled£©Á½ÖÖ×´Ì¬£¬ÓÃÓÚÔÚ¶ÓÁĞ¼äÍ¬²½(±ÈÈç³ÊÏÖĞèÒªµÈ´ıGPUÖ´ĞĞÍê±Ï)
+		äºŒå€¼ä¿¡å·é‡ï¼Œåªæœ‰ç½®ä½ï¼ˆsingaledï¼‰å’Œæœªç½®ä½ï¼ˆunsingaledï¼‰ä¸¤ç§çŠ¶æ€ï¼Œç”¨äºåœ¨é˜Ÿåˆ—é—´åŒæ­¥(æ¯”å¦‚å‘ˆç°éœ€è¦ç­‰å¾…GPUæ‰§è¡Œå®Œæ¯•)
 	*/
 	class RHISemaphore : public RHIResource
 	{

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Asset/Asset.h"
 #include "Hazel/Renderer/RenderResource/Texture.h"
 #include "Mesh.h"
@@ -15,7 +15,7 @@ namespace GameEngine {
         bool flipUV = false;
         bool loadMaterials = true; 
         bool genBLAS = false;
-        bool uploadGPU = false;  // CPUÄÚ²¿´´½¨Ä£ÐÍ£¬±ØÐëtrue
+        bool uploadGPU = false;  // CPUå†…éƒ¨åˆ›å»ºæ¨¡åž‹ï¼Œå¿…é¡»true
     private:
         BeginSerailize
             SerailizeEntry(flipUV)
@@ -35,10 +35,10 @@ namespace GameEngine {
         BeginSerailize
             SerailizeEntry(mesh)
          
-            BeginIfLoad //¼ÓÔØÊ±ÐèÒª°Ñ¶¥µãÊý¾ÝÉÏ´«µ½GPU
+            BeginIfLoad //åŠ è½½æ—¶éœ€è¦æŠŠé¡¶ç‚¹æ•°æ®ä¸Šä¼ åˆ°GPU
             LOG_TRACE("  - Vertex Count: {}", mesh->position.size());
             LOG_TRACE("  - Index Count: {}", mesh->index.size());
-            // ÉÏ´«µ½GPU
+            // ä¸Šä¼ åˆ°GPU
             vertexBuffer = std::make_shared<VertexBuffer>();
             vertexBuffer->SetPosition(mesh->position);
             vertexBuffer->SetNormal(mesh->normal);

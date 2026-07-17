@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Volk/volk.h"
 #include "Hazel/Renderer/RHI/RHI.h"
 #include "Hazel/Renderer/RHI/RHICommandList.h"
@@ -57,7 +57,7 @@ namespace GameEngine
 
 		RHICommandContextImmediateRef GetImmediateCommandContext() {
 			if (!m_ImmediateCommandContext) {
-				LOG_ERROR("ÇëÏÈÆô¶¯Ò»¸öCommandListImmediate");
+				LOG_ERROR("è¯·å…ˆå¯åŠ¨ä¸€ä¸ªCommandListImmediate");
 			}
 			return m_ImmediateCommandContext;
 		}
@@ -71,38 +71,38 @@ namespace GameEngine
 		void CreateDescriptorPool();
 		void CreateImmediateCommand();
 	private:
-		// ÊµÀı
+		// å®ä¾‹
 		VkInstance m_Instance;
 		VkDebugUtilsMessengerEXT m_DebugMessenger;
 		std::vector<VkLayerProperties> m_AvailableLayers;
 
-		// ÎïÀíÉè±¸
+		// ç‰©ç†è®¾å¤‡
 		VkPhysicalDevice m_PhysicalDevice;
 		VkPhysicalDeviceProperties m_PhysicalDeviceProperties;
 		VkPhysicalDeviceFeatures m_PhysicalDeviceFeatures;
 		VkPhysicalDeviceMemoryProperties m_PhysicalDeviceMemoryProperties;
-		VkPhysicalDeviceSamplerFilterMinmaxProperties filterMinmaxProperties;           //²ÉÑùÆ÷ÌØĞÔ
-		VkPhysicalDeviceRayTracingPipelinePropertiesKHR m_PhysicalDeviceRayTracingPipelineProperties;   //¹â×·ÌØĞÔ
+		VkPhysicalDeviceSamplerFilterMinmaxProperties filterMinmaxProperties;           //é‡‡æ ·å™¨ç‰¹æ€§
+		VkPhysicalDeviceRayTracingPipelinePropertiesKHR m_PhysicalDeviceRayTracingPipelineProperties;   //å…‰è¿½ç‰¹æ€§
 		std::vector<std::string> m_PhysicalDeviceSupportedExtensions;
-		// Âß¼­Éè±¸
+		// é€»è¾‘è®¾å¤‡
 		VkDevice m_LogicalDevice = nullptr;
 
-		// ¶ÓÁĞ
-		std::vector<VkQueueFamilyProperties> m_QueueFamilyProperties; // ËùÓĞ¶ÓÁĞ×å
-		std::array<int32_t, QUEUE_TYPE_MAX_ENUM> m_QueueIndices; // Ã¿ÖÖÀàĞÍµÄ¶ÓÁĞÀ´×ÔÄÄÒ»¸ö¶ÓÁĞ×å
-		std::array<std::array<RHIQueueRef, MAX_QUEUE_CNT>, QUEUE_TYPE_MAX_ENUM> m_Queues; // Íâ²ãÊÇÀàĞÍË÷Òı£¬Ã¿¸öÀàĞÍÓĞ¶à¸öQueue£¬ÓÉQUEUE_TYPE_MAX_ENUM¿ØÖÆ
+		// é˜Ÿåˆ—
+		std::vector<VkQueueFamilyProperties> m_QueueFamilyProperties; // æ‰€æœ‰é˜Ÿåˆ—æ—
+		std::array<int32_t, QUEUE_TYPE_MAX_ENUM> m_QueueIndices; // æ¯ç§ç±»å‹çš„é˜Ÿåˆ—æ¥è‡ªå“ªä¸€ä¸ªé˜Ÿåˆ—æ—
+		std::array<std::array<RHIQueueRef, MAX_QUEUE_CNT>, QUEUE_TYPE_MAX_ENUM> m_Queues; // å¤–å±‚æ˜¯ç±»å‹ç´¢å¼•ï¼Œæ¯ä¸ªç±»å‹æœ‰å¤šä¸ªQueueï¼Œç”±QUEUE_TYPE_MAX_ENUMæ§åˆ¶
 
 		// VMA
 		VmaAllocator m_MemoryAllocator;
 
-		// ÃèÊö·û
+		// æè¿°ç¬¦
 		VkDescriptorPool m_DescriptorPool;
 
-		// Á¢¼´Ä£Ê½ÃüÁî¶ÓÁĞ
+		// ç«‹å³æ¨¡å¼å‘½ä»¤é˜Ÿåˆ—
 		RHICommandContextImmediateRef m_ImmediateCommandContext;
 		RHICommandListImmediateRef m_ImmediateCommandList;
 
-		// ³Ø»¯µÄrenderPassºÍframeBuffer
+		// æ± åŒ–çš„renderPasså’ŒframeBuffer
 		VkRenderPassCache renderPassPool;
 		VkFramebufferCache frameBufferPool;
 	};
@@ -150,15 +150,15 @@ namespace GameEngine
 	private:
 		VkCommandBuffer handle;
 		std::shared_ptr<VulkanRHICommandPool> pool;
-		VulkanRHIRenderPass* renderPass;                // ÔËĞĞÊ±×´Ì¬£¬ËæÖ¸Áî±ä»¯
+		VulkanRHIRenderPass* renderPass;                // è¿è¡Œæ—¶çŠ¶æ€ï¼ŒéšæŒ‡ä»¤å˜åŒ–
 		VulkanRHIGraphicsPipeline* graphicsPipeline;
 		VulkanRHIComputePipeline* computePipeline;
 		VulkanRHIRayTracingPipeline* rayTracingPipeline;
 		VkQueryPool m_TimestampQueryPool;
 		uint32_t m_TimestampQueryIndex = 0;
-		// ÓÃÓÚÔÚäÖÈ¾Ê±ÁÙÊ±´æ´¢±êÇ©ĞÅÏ¢µÄÕ»
+		// ç”¨äºåœ¨æ¸²æŸ“æ—¶ä¸´æ—¶å­˜å‚¨æ ‡ç­¾ä¿¡æ¯çš„æ ˆ
 		std::vector<RHIGPUTimeInfo> m_ActiveLabels;
-		// ÓÃÓÚ´æ´¢×îÖÕ¼ÆËãºÃµÄºÄÊ±½á¹û
+		// ç”¨äºå­˜å‚¨æœ€ç»ˆè®¡ç®—å¥½çš„è€—æ—¶ç»“æœ
 		std::vector<RHIGPUTimeInfo> m_FinishedLabels;
 		VkPipelineLayout GetCuttentPipelineLayout();
 		VkPipelineBindPoint GetCuttentBindingPoint();
@@ -185,7 +185,7 @@ namespace GameEngine
 		RHIFenceRef fence;
 		RHIQueueRef queue;
 		RHICommandPoolRef commandPool;
-		VkCommandBuffer oldHandle = VK_NULL_HANDLE;  // Ã¿´ÎFlushÊ±¶¼ĞèÒªÏÈµÈ´ıoldhandleÖ´ĞĞÍê³É£¬²¢ÇÒÊÍ·Åºó²ÅcĞÂµÄBuffer
+		VkCommandBuffer oldHandle = VK_NULL_HANDLE;  // æ¯æ¬¡Flushæ—¶éƒ½éœ€è¦å…ˆç­‰å¾…oldhandleæ‰§è¡Œå®Œæˆï¼Œå¹¶ä¸”é‡Šæ”¾åæ‰cæ–°çš„Buffer
 
 		VkCommandBuffer handle;
 		friend class VulkanDynamicRHI;

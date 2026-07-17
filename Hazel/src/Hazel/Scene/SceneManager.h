@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Core/Timestep.h"
 #include "Scene.h"
 #include "Hazel/Scene/EditorCamera.h"
@@ -6,7 +6,7 @@
 
 namespace GameEngine
 {
-	// Ö»ÔÚCPU´«µİµÄÉèÖÃÊı¾İ
+	// åªåœ¨CPUä¼ é€’çš„è®¾ç½®æ•°æ®
 	struct CPURenderSetting {
 		std::string IBLPath;
 	};

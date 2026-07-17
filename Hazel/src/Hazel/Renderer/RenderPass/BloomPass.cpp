@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "BloomPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -25,7 +25,7 @@ namespace GameEngine
 
 	void BloomPass::Build(RDGBuilder& builder)
 	{
-		// ÒÑ¾­µ÷ÕûºÃ£¬µ÷Õû¿ÉÄÜ»á±¨´í£¬ÒòÎªÒ»Ğ©ÆÁÕÏ×´Ì¬µÄÉèÖÃ~
+		// å·²ç»è°ƒæ•´å¥½ï¼Œè°ƒæ•´å¯èƒ½ä¼šæŠ¥é”™ï¼Œå› ä¸ºä¸€äº›å±éšœçŠ¶æ€çš„è®¾ç½®~
 		if (IsEnabled()) {
 			auto [w, h] = APP_WINDOWSIZE;
 			RDGTextureHandle Viewport = builder.GetTexture("ViewPort");
@@ -46,7 +46,7 @@ namespace GameEngine
 			m_BloomComputePushConstants.Params = { m_BloomSettings.Threshold, m_BloomSettings.Threshold - m_BloomSettings.Knee, m_BloomSettings.Knee * 2.0f, 0.25f / m_BloomSettings.Knee };
 
 
-			// Step1: ÌáÈ¡ViewPortÁÁµÄµØ·½
+			// Step1: æå–ViewPortäº®çš„åœ°æ–¹
 			builder.CreateComputePass("Bloom_Prefilter")
 				.RootSignature(m_RootSignature)
 				.Read(2, 1, 0, Viewport)
@@ -66,7 +66,7 @@ namespace GameEngine
 				})
 				.Finish();
 
-			// Step2: ÏÂ²ÉÑù
+			// Step2: ä¸‹é‡‡æ ·
 			Extent3D extent = { w,h,1 };
 			uint32_t mipLevels = extent.MipSize();
 
@@ -79,7 +79,7 @@ namespace GameEngine
 					.ReadWrite(2, 0, 0, Bloom, VIEW_TYPE_2D, { TEXTURE_ASPECT_COLOR , i, 1, 0, 1 })
 					.Execute([&](RDGPassContext context) {
 						m_BloomComputePushConstants.Mode = 1;
-						m_BloomComputePushConstants.LOD = 0;   // ÒòÎªÎÒÒÑ¾­´«µİÁËÕıÈ·µÄÒ»²ãView£¬ËùÒÔ²»ĞèÒªÖ¸¶¨£¬LOD=0¾ÍÏàµ±ÓÚ´«µİµÄÒ»²ãmip
+						m_BloomComputePushConstants.LOD = 0;   // å› ä¸ºæˆ‘å·²ç»ä¼ é€’äº†æ­£ç¡®çš„ä¸€å±‚Viewï¼Œæ‰€ä»¥ä¸éœ€è¦æŒ‡å®šï¼ŒLOD=0å°±ç›¸å½“äºä¼ é€’çš„ä¸€å±‚mip
 
 						RHICommandListRef command = context.command;
 						auto [w, h] = APP_WINDOWSIZE;
@@ -95,7 +95,7 @@ namespace GameEngine
 					});
 
 
-				if (i == mipLevels - 1) // ×îºóÒ»¼¶ÊÖ¶¯ÆÁÕÏ
+				if (i == mipLevels - 1) // æœ€åä¸€çº§æ‰‹åŠ¨å±éšœ
 					downBuilder.OutputRead(Bloom, { TEXTURE_ASPECT_COLOR, (uint32_t)i, 1, 0, 1 });
 
 
@@ -103,7 +103,7 @@ namespace GameEngine
 			}
 
 
-			// Step3: ÉÏ²ÉÑù
+			// Step3: ä¸Šé‡‡æ ·
 			for (int i = mipLevels - 2; i >= 0; i--) {
 				RDGComputePassBuilder downBuilder = builder.CreateComputePass("Bloom_UpSample" + std::to_string(i))
 					.PassIndex(i)
@@ -130,7 +130,7 @@ namespace GameEngine
 					command->PushConstants(&m_BloomComputePushConstants, sizeof(bloomComputePushConstants), SHADER_FREQUENCY_COMPUTE);
 					command->Dispatch(workGroups.x, workGroups.y, workGroups.z);
 						});
-				if (i == 0) // ×îºóÒ»¼¶ÊÖ¶¯ÆÁÕÏ
+				if (i == 0) // æœ€åä¸€çº§æ‰‹åŠ¨å±éšœ
 						downBuilder.OutputRead(UpBloom, { TEXTURE_ASPECT_COLOR, (uint32_t)i, 1, 0, 1 });
 
 

@@ -1,4 +1,4 @@
-#pragma once-
+ï»¿#pragma once-
 #include "Hazel/Renderer/RHI/RHI.h"
 #include "Hazel/Utils/Serializable.h"
 namespace GameEngine {
@@ -12,7 +12,7 @@ namespace GameEngine {
 	struct TextureSpec {
 		std::string path;
 		TextureType type = TEXTURE_TYPE_2D;
-		bool srgb = true;   // ĞèÒªÊÖ¶¯Ö¸¶¨´«ÈëµÄÍ¼Æ¬ÊÇ²»ÊÇSRGB
+		bool srgb = true;   // éœ€è¦æ‰‹åŠ¨æŒ‡å®šä¼ å…¥çš„å›¾ç‰‡æ˜¯ä¸æ˜¯SRGB
 		uint32_t mipLevels = 1;
 		uint32_t arrayLayers = 1;
 		bool generateMipmap = true;  
@@ -21,7 +21,7 @@ namespace GameEngine {
 
 		// output
 		Extent3D extent = { 1,1,1 };
-		RHIFormat format = FORMAT_UKNOWN;  // ´ÓÎÄ¼şÖĞ½âÎö
+		RHIFormat format = FORMAT_UKNOWN;  // ä»æ–‡ä»¶ä¸­è§£æ
 		uint32_t textureID = 0;
 		RHITextureRef texture;
 		RHITextureViewRef textureView;
@@ -41,7 +41,7 @@ namespace GameEngine {
 	class Texture : public std::enable_shared_from_this<Texture> {
 	public:
 		Texture() = default;
-		Texture(TextureSpec& spec);   // ´ÓÕâÀï´´½¨µÄTextue£¬³öÈ¥µÄ²¼¾ÖÊÇRESOURCE_STATE_SHADER_RESOURCE
+		Texture(TextureSpec& spec);   // ä»è¿™é‡Œåˆ›å»ºçš„Textueï¼Œå‡ºå»çš„å¸ƒå±€æ˜¯RESOURCE_STATE_SHADER_RESOURCE
 		void LoadFromFile();
 		void CreateRHITexture();
 		RHIDescriptorSetRef GetImGuiID();

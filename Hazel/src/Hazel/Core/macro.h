@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Core/Log.h"
 #include <filesystem>
-// ×Ô¶¯¼ì²âÆ½Ì¨£¬²»¹ıÄ¿Ç°Ö»Ö§³ÖWindows
+// è‡ªåŠ¨æ£€æµ‹å¹³å°ï¼Œä¸è¿‡ç›®å‰åªæ”¯æŒWindows
 #ifdef _WIN32
 	#ifdef _WIN64
 		#define HZ_PLATFORM_WINDOWS
@@ -31,7 +31,7 @@
 	#error "Unknown platform!"
 #endif
 
-// HZ_DEBUG ÔÚpremakeÖĞ¶¨Òå
+// HZ_DEBUG åœ¨premakeä¸­å®šä¹‰
 #ifdef HZ_DEBUG
 	#if defined(HZ_PLATFORM_WINDOWS)
 		#define HZ_DEBUGBREAK() __debugbreak()
@@ -68,7 +68,7 @@
 #define LOG_CRITICAL_TAG(tag, ...)  _TAG_LOG(critical,tag, __VA_ARGS__)
 #define LOG_LINE "-------------------------------------------------------------------"
 #define HZ_EXPAND_MACRO(x) x
-#define HZ_STRINGIFY(x) #x  // °Ñ x ±ä³É "x"
+#define HZ_STRINGIFY(x) #x  // æŠŠ x å˜æˆ "x"
 #define HZ_STRINGIFY_MACRO(x) HZ_STRINGIFY(x)
 #ifdef HZ_ENABLE_ASSERTS
 	#define ASSERT(condition,...) if(!(condition)) { LOG_ERROR("Assert Failed"); HZ_DEBUGBREAK(); }
@@ -82,13 +82,13 @@
 // misc
 #define BIT(x) (1u << x)
 
-/* ÀàĞÍËµÃ÷£º
-- int£ºÆÕÍ¨ÕûÊıÀàĞÍ£¬´æ´¢Êµ¼ÊÖµ£¬¸³ÖµÊ±¿½±´
-- int&£º×óÖµÒıÓÃ£¬°ó¶¨×óÖµ£¨¾ßÃû±äÁ¿£©£¬×÷Îª±ğÃû£¬ĞŞ¸ÄÓ°ÏìÔ­¶ÔÏó
-- int&&£ºÓÒÖµÒıÓÃ£¬°ó¶¨ÓÒÖµ£¨ÁÙÊ±¶ÔÏóµÈ£©£¬Ö§³ÖÒÆ¶¯ÓïÒå£¬¼õÉÙ¿½±´
-- auto&&£ºÍ¨ÓÃÒıÓÃ£¬×Ô¶¯ÍÆµ¼Îª×óÖµ/ÓÒÖµÒıÓÃ£¬¼æÈİÈÎÒâÖµÀà±ğ£¬ÓÃÓÚÍêÃÀ×ª·¢
+/* ç±»å‹è¯´æ˜ï¼š
+- intï¼šæ™®é€šæ•´æ•°ç±»å‹ï¼Œå­˜å‚¨å®é™…å€¼ï¼Œèµ‹å€¼æ—¶æ‹·è´
+- int&ï¼šå·¦å€¼å¼•ç”¨ï¼Œç»‘å®šå·¦å€¼ï¼ˆå…·åå˜é‡ï¼‰ï¼Œä½œä¸ºåˆ«åï¼Œä¿®æ”¹å½±å“åŸå¯¹è±¡
+- int&&ï¼šå³å€¼å¼•ç”¨ï¼Œç»‘å®šå³å€¼ï¼ˆä¸´æ—¶å¯¹è±¡ç­‰ï¼‰ï¼Œæ”¯æŒç§»åŠ¨è¯­ä¹‰ï¼Œå‡å°‘æ‹·è´
+- auto&&ï¼šé€šç”¨å¼•ç”¨ï¼Œè‡ªåŠ¨æ¨å¯¼ä¸ºå·¦å€¼/å³å€¼å¼•ç”¨ï¼Œå…¼å®¹ä»»æ„å€¼ç±»åˆ«ï¼Œç”¨äºå®Œç¾è½¬å‘
 */
-// °ÑÒ»¸ö³ÉÔ±º¯ÊıÉùÃ÷³Élambda
+// æŠŠä¸€ä¸ªæˆå‘˜å‡½æ•°å£°æ˜æˆlambda
 #define HZ_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
 // #define RTDEBUG

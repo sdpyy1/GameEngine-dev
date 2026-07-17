@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 #include <glm/ext/matrix_float4x4.hpp>
 #include <Hazel/Math/collision.h>
 
 #define MAX_MULTI_FRAME_RESOURCE_SIZE 10240
-#define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless µ¥¸öbindingµÄ×î´óÃèÊö·ûÊıÄ¿
-#define MAX_PER_FRAME_INSTANCE_SIZE 10240			//È«¾Ö×î´óÖ§³ÖµÄÎïÌåÊıÄ¿
+#define MAX_BINDLESS_RESOURCE_SIZE 10240	        //bindless å•ä¸ªbindingçš„æœ€å¤§æè¿°ç¬¦æ•°ç›®
+#define MAX_PER_FRAME_INSTANCE_SIZE 10240			//å…¨å±€æœ€å¤§æ”¯æŒçš„ç‰©ä½“æ•°ç›®
 #define MAX_GIZMO_PRIMITIVE_COUNT 102400				// Gizmo
-#define MAX_PER_PASS_PIPELINE_STATE_COUNT 1024      // pipeline»º´æÊıÁ¿
+#define MAX_PER_PASS_PIPELINE_STATE_COUNT 1024      // pipelineç¼“å­˜æ•°é‡
 #define MAX_POINT_SHADOW_COUNT 4
 
-#define LIGHT_CLUSTER_DEPTH 128						// ÊÓ×¶·Ö´ØÉî¶È»®·ÖÊı
-#define LIGHT_CLUSTER_GRID_SIZE 64					// UV·½Ïò»®·ÖÁ£¶È
-#define MAX_LIGHTS_PER_CLUSTER 8					// Ã¿¸ö´Ø×î¶àÖ§³ÖµÄµÆ¹âÊı
+#define LIGHT_CLUSTER_DEPTH 128						// è§†é”¥åˆ†ç°‡æ·±åº¦åˆ’åˆ†æ•°
+#define LIGHT_CLUSTER_GRID_SIZE 64					// UVæ–¹å‘åˆ’åˆ†ç²’åº¦
+#define MAX_LIGHTS_PER_CLUSTER 8					// æ¯ä¸ªç°‡æœ€å¤šæ”¯æŒçš„ç¯å…‰æ•°
 
 
 
@@ -21,7 +21,7 @@
 #define CSM_LEVEL_COUNT 4
 
 namespace GameEngine {
-	// Ê¹ÓÃBindlessµÄ×ÊÔ´£¬Ã¿¸öSlot¶¼ÊÇSet=0µÄ×ÊÔ´ÃèÊö·ûµÄÒ»¸öbinding£¬binding°ó¶¨µÄÊÇÒ»¸öÎŞ½çÊı×é
+	// ä½¿ç”¨Bindlessçš„èµ„æºï¼Œæ¯ä¸ªSlotéƒ½æ˜¯Set=0çš„èµ„æºæè¿°ç¬¦çš„ä¸€ä¸ªbindingï¼Œbindingç»‘å®šçš„æ˜¯ä¸€ä¸ªæ— ç•Œæ•°ç»„
 	enum BindlessSlot
 	{
 		BINDLESS_SLOT_POSITION = 0,
@@ -44,13 +44,13 @@ namespace GameEngine {
 		BINDLESS_SLOT_MAX_ENUM,     //
 	};
 
-// G-Buffer ×ÊÔ´°ó¶¨µã  ×¢ÒâSet = 2
+// G-Buffer èµ„æºç»‘å®šç‚¹  æ³¨æ„Set = 2
 #define GBUFFER_POSITION_BINDING 0
 #define GBUFFER_NORMAL_BINDING 1
 #define GBUFFER_MATERIAL_BINDING 2
 #define GBUFFER_ALBEDO_BINDING 3
 
-// Bindless°ó¶¨µã
+// Bindlessç»‘å®šç‚¹
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION 0
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_NORMAL 1
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_TANGENT 2
@@ -61,7 +61,7 @@ namespace GameEngine {
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_ANIMATION 7
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_INDEX 8
 
-// ²ÉÑù×ÊÔ´
+// é‡‡æ ·èµ„æº
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_SAMPLER 9
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D 10
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D_ARRAY 11
@@ -70,7 +70,7 @@ namespace GameEngine {
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE 14
 #define GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_3D 15
 
-// ³£¹æ×ÊÔ´
+// å¸¸è§„èµ„æº
 #define GLORBAL_RESOURCE_BINDING_SETTING 16
 #define GLORBAL_RESOURCE_BINDING_CAMERA 17
 #define GLORBAL_RESOURCE_BINDING_MESHINSTANCEINFO 18
@@ -80,12 +80,12 @@ namespace GameEngine {
 #define GLORBAL_RESOURCE_BINDING_GIZMO 22
 #define GLORBAL_RESOURCE_BINDING_TLAS 23
 
-	// Ã¿¸ö´Ø´æ´¢µÄĞÅÏ¢
+	// æ¯ä¸ªç°‡å­˜å‚¨çš„ä¿¡æ¯
 	struct LightingClusterInfo {
 		uint32_t lightCount;
 		uint32_t firstLightIndex;
 	};
-	// ËùÓĞ´ØµÄ¹âÔ´ĞÅÏ¢
+	// æ‰€æœ‰ç°‡çš„å…‰æºä¿¡æ¯
 	struct LightingClusterIdInfo {
 		uint32_t lightID;
 	};
@@ -155,14 +155,14 @@ namespace GameEngine {
 		uint32_t directionLightCount = 0;
 		uint32_t pointLightCount = 0;
 		uint32_t spotLightCount = 0;
-		uint32_t clusterAtomicOffset;   // ClusterLightingÍ³¼ÆÊ±Ê¹ÓÃ
+		uint32_t clusterAtomicOffset;   // ClusterLightingç»Ÿè®¡æ—¶ä½¿ç”¨
 
 		DirectionLight dirLights;
 		PointLight pointLights[MAX_POINT_LIGHT_SIZE];
 		SpotLight spotLights[MAX_SPOT_LIGHT_SIZE];
 	};
 
-	// ¶ÁÈ¡µÄMeshĞÅÏ¢
+	// è¯»å–çš„Meshä¿¡æ¯
 	typedef struct MeshInfo
 	{
 		uint32_t positionID = 0;
@@ -178,11 +178,11 @@ namespace GameEngine {
 		BoundingBox box;
 	} MeshInfo;
 
-	// MeshµÄÊµÀıĞÅÏ¢
+	// Meshçš„å®ä¾‹ä¿¡æ¯
 	typedef struct MeshInstanceInfo {
 		glm::mat4 modelMatrix;
 		glm::mat4 prevModelMatrix;
-		uint32_t animationID;           //TODO:¶¯»­Ë÷Òı
+		uint32_t animationID;           //TODO:åŠ¨ç”»ç´¢å¼•
 		uint32_t materialID;
 		uint32_t vertexID;
 		uint32_t indexID;
@@ -229,7 +229,7 @@ namespace GameEngine {
 		uint32_t textureMetallic;
 		uint32_t textureEmission;
 
-		//Ô¤ÁôµÄÍ¨ÓÃ²ÛÎ»///////////////////////////////
+		//é¢„ç•™çš„é€šç”¨æ§½ä½///////////////////////////////
 		std::array<int32_t, 8> ints;
 		std::array<float, 8> floats;
 		std::array<glm::vec4, 8> colors;
@@ -274,7 +274,7 @@ namespace GameEngine {
 	};
 
 	struct GizmoDrawData {
-		RHIIndexedIndirectCommand command[4];  // ÓÃÓÚ¸øGPU´«µİ¼ä½ÓäÖÈ¾Ö¸Áî
+		RHIIndexedIndirectCommand command[4];  // ç”¨äºç»™GPUä¼ é€’é—´æ¥æ¸²æŸ“æŒ‡ä»¤
 
 		GizmoBoxInfo boxes[MAX_GIZMO_PRIMITIVE_COUNT];
 		GizmoSphereInfo spheres[MAX_GIZMO_PRIMITIVE_COUNT];

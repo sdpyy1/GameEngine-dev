@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 #include "RHIBase.h"
 #include "RHIResource.h"
 #include <GLFW/glfw3.h>
 namespace GameEngine {
-		/* RHI×ÜÀÀ
-		* ÉÏÏÂÎÄÎÞ¹ØµÄ²Ù×÷£¬¶¨ÒåÔÚDynamicRHIµÄÐéº¯Êý£¬InitÊ±½øÐÐ¸÷¸öAPIµÄ³õÊ¼»¯²Ù×÷
-		* ÉÏÏÂÎÄÏà¹ØµÄ²Ù×÷£¬¶¨ÒåÔÚRHICommandContextµÄÐéº¯Êý£¬´´½¨RHICommandContext¶ÔÏóÊ±£¬µ×²ã»á´´½¨Ò»¸öÉÏÏÂÎÄhandle£¬±ÈÈçVulkan»á´´½¨Ò»¸öVkCommandBuffer
-		* ÐèÒªÁ¢¼´Ö´ÐÐµÄÃüÁî£¬±ÈÈç×ª»»Í¼Æ¬²¼¾Ö£¬¶¨ÒåÔÚRHICommandContextImmediate£¬ËüÐèÒªÉÏÏÂÎÄ£¬µ«ÊÇÐèÒªFlushÁ¢¼´Ö´ÐÐ£¬µ×²ãÒ²»á´´½¨Ò»¸öÉÏÏÂÎÄ²¢ÇÒÐèÒªFence¿ØÖÆ²¢·¢
+		/* RHIæ€»è§ˆ
+		* ä¸Šä¸‹æ–‡æ— å…³çš„æ“ä½œï¼Œå®šä¹‰åœ¨DynamicRHIçš„è™šå‡½æ•°ï¼ŒInitæ—¶è¿›è¡Œå„ä¸ªAPIçš„åˆå§‹åŒ–æ“ä½œ
+		* ä¸Šä¸‹æ–‡ç›¸å…³çš„æ“ä½œï¼Œå®šä¹‰åœ¨RHICommandContextçš„è™šå‡½æ•°ï¼Œåˆ›å»ºRHICommandContextå¯¹è±¡æ—¶ï¼Œåº•å±‚ä¼šåˆ›å»ºä¸€ä¸ªä¸Šä¸‹æ–‡handleï¼Œæ¯”å¦‚Vulkanä¼šåˆ›å»ºä¸€ä¸ªVkCommandBuffer
+		* éœ€è¦ç«‹å³æ‰§è¡Œçš„å‘½ä»¤ï¼Œæ¯”å¦‚è½¬æ¢å›¾ç‰‡å¸ƒå±€ï¼Œå®šä¹‰åœ¨RHICommandContextImmediateï¼Œå®ƒéœ€è¦ä¸Šä¸‹æ–‡ï¼Œä½†æ˜¯éœ€è¦Flushç«‹å³æ‰§è¡Œï¼Œåº•å±‚ä¹Ÿä¼šåˆ›å»ºä¸€ä¸ªä¸Šä¸‹æ–‡å¹¶ä¸”éœ€è¦FenceæŽ§åˆ¶å¹¶å‘
 		*/
 	class DynamicRHI {
 	private:

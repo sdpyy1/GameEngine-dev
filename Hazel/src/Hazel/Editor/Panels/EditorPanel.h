@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Hazel/Core/Events/Event.h>
 #include "Hazel/Renderer/RenderResource/Texture.h"
 namespace GameEngine {
@@ -9,7 +9,7 @@ namespace GameEngine {
 			TextureSpec spec;
 			spec.path = path;
 			spec.yFlip = isYFlip;
-			spec.srgb = false;  // Ä¿Ç°¿´Í¼±ê¶¼²»ÊÇSRGB¿Õ¼äµÄ
+			spec.srgb = false;  // ç›®å‰çœ‹å›¾æ ‡éƒ½ä¸æ˜¯SRGBç©ºé—´çš„
 			icon = std::make_shared<Texture>(spec);
 			textureID = icon->GetImGuiID();
 		}

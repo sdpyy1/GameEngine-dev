@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Renderer/RHI/RHI.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Utils/IndexAllocator.h"
@@ -6,7 +6,7 @@
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
 namespace GameEngine
 {
-	template<typename Type>   // Ö±½ÓÖ¸Ã÷BufferÒª´æ´¢µÄÊı¾İÀàĞÍ
+	template<typename Type>   // ç›´æ¥æŒ‡æ˜Bufferè¦å­˜å‚¨çš„æ•°æ®ç±»å‹
 	class RenderBuffer
 	{
 	public:
@@ -16,7 +16,7 @@ namespace GameEngine
 			info.size = sizeof(Type);
 			info.memoryUsage = usage;
 			info.type = type;
-			info.creationFlag = BUFFER_CREATION_PERSISTENT_MAP;  // ¼ÓËÙmap²Ù×÷
+			info.creationFlag = BUFFER_CREATION_PERSISTENT_MAP;  // åŠ é€Ÿmapæ“ä½œ
 			buffer = APP_DYNAMICRHI->CreateBuffer(info);
 		}
 		RHIBufferRef GetRHIBuffer() { return buffer; }
@@ -45,7 +45,7 @@ namespace GameEngine
 		uint32_t m_Size;
 	};
 
-	// ÓÃÒ»¸öBufferÀ´¹ÜÀíÊı×é£¬Í¨¹ıÆ«ÒÆÀ´·ÃÎÊ
+	// ç”¨ä¸€ä¸ªBufferæ¥ç®¡ç†æ•°ç»„ï¼Œé€šè¿‡åç§»æ¥è®¿é—®
 	template<typename Type, size_t arraySize>
 	class ArrayBuffer
 	{
@@ -83,7 +83,7 @@ namespace GameEngine
 	template<typename Type, size_t arraySize>
 	using ArrayBufferRef = std::shared_ptr<ArrayBuffer<Type, arraySize>>;
 
-	// Ò»¸öMesh½âÎö³öÀ´µÄ¶¥µãÊı¾İ±»·Ö±ğ´æ´¢ÔÚ¶à¸öBindlessÎ»ÖÃ£¬ÕâÀï´æÒ»·İ¸÷ÖÖĞÅÏ¢µÄBindlessµÄID
+	// ä¸€ä¸ªMeshè§£æå‡ºæ¥çš„é¡¶ç‚¹æ•°æ®è¢«åˆ†åˆ«å­˜å‚¨åœ¨å¤šä¸ªBindlessä½ç½®ï¼Œè¿™é‡Œå­˜ä¸€ä»½å„ç§ä¿¡æ¯çš„Bindlessçš„ID
 	class VertexBuffer {
 	public:
 		VertexBuffer();

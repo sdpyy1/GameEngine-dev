@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "RHIBase.h"
 namespace GameEngine
 {
@@ -15,8 +15,8 @@ namespace GameEngine
 #define COMMANDLIST_DEBUG_RESET_INDEX() do {} while(0)
 #endif
 
-	/*UEÀïµÄCommand¶ÔÏó´«ÈëµÄÊÇCommandList¶ÔÏó£¬ExecuteÊ±»ñÈ¡CommandListµÄGetContextµÄ¾ßÌåÖ´ĞĞ*/
-	/*RHICommand¸øÃ¿¸öÃüÁîÌ×ÁËÒ»¸ö¿Ç×Ó£¬ÆäÊµ±¾ÖÊ»¹ÊÇµ÷ÓÃcontextÌá¹©µÄ·½·¨£¬µ«ÊÇËû»á×é×°Ò»¸öÃüÁîĞèÒªµÄ²ÎÊı*/
+	/*UEé‡Œçš„Commandå¯¹è±¡ä¼ å…¥çš„æ˜¯CommandListå¯¹è±¡ï¼ŒExecuteæ—¶è·å–CommandListçš„GetContextçš„å…·ä½“æ‰§è¡Œ*/
+	/*RHICommandç»™æ¯ä¸ªå‘½ä»¤å¥—äº†ä¸€ä¸ªå£³å­ï¼Œå…¶å®æœ¬è´¨è¿˜æ˜¯è°ƒç”¨contextæä¾›çš„æ–¹æ³•ï¼Œä½†æ˜¯ä»–ä¼šç»„è£…ä¸€ä¸ªå‘½ä»¤éœ€è¦çš„å‚æ•°*/
 	typedef struct RHICommand
 	{
 		RHICommand() = default;
@@ -31,7 +31,7 @@ namespace GameEngine
 
 		virtual void Execute(RHICommandContextImmediateRef context) = 0;
 	} RHICommandImmediate;
-	// ¸÷ÖÖCommandµÄ·â×°
+	// å„ç§Commandçš„å°è£…
 	struct RHICommandBeginCommand : public RHICommand
 	{
 		RHICommandBeginCommand() {}
@@ -114,7 +114,7 @@ namespace GameEngine
 		virtual void Execute(RHICommandContextRef context) override final;
 	};
 
-	// ¸÷ÖÖCommandImmediateµÄ·â×°
+	// å„ç§CommandImmediateçš„å°è£…
 	struct RHICommandImmediateGenerateMips : public RHICommandImmediate
 	{
 		RHITextureRef src;
@@ -231,7 +231,7 @@ namespace GameEngine
 
 	struct RHICommandPushConstants : public RHICommand
 	{
-		uint8_t data[256] = { 0 };  // ĞèÒª»º´æpush constantµÄÊı¾İ£¬¼Ù¶¨×î´óÖ§³Ö256×Ö½Ú
+		uint8_t data[256] = { 0 };  // éœ€è¦ç¼“å­˜push constantçš„æ•°æ®ï¼Œå‡å®šæœ€å¤§æ”¯æŒ256å­—èŠ‚
 		uint16_t size;
 		ShaderFrequency frequency;
 
@@ -442,7 +442,7 @@ namespace GameEngine
 		virtual void Execute(RHICommandContextRef context) override final;
 	};
 
-	/*RHICommandListÊÇRHICommandµÄÔØÌå£¬·½·¨Í¨¹ıRHICommandListµ÷ÓÃºó»á¸ù¾İÅäÖÃÑ¡ÔñÊÇÖ±½ÓÖ´ĞĞÃüÁî»¹ÊÇ»º´æÃüÁî*/
+	/*RHICommandListæ˜¯RHICommandçš„è½½ä½“ï¼Œæ–¹æ³•é€šè¿‡RHICommandListè°ƒç”¨åä¼šæ ¹æ®é…ç½®é€‰æ‹©æ˜¯ç›´æ¥æ‰§è¡Œå‘½ä»¤è¿˜æ˜¯ç¼“å­˜å‘½ä»¤*/
 	class RHICommandList {
 	public:
 		RHICommandList(const CommandListInfo& info) : info(info) {}
@@ -532,7 +532,7 @@ namespace GameEngine
 	public:
 		RHICommandListImmediate(const CommandListImmediateInfo& info) : info(info) {}
 
-		void Flush(); // Á¢¼´Ö´ĞĞ»º´æµÄAPIÃüÁî
+		void Flush(); // ç«‹å³æ‰§è¡Œç¼“å­˜çš„APIå‘½ä»¤
 		void GenerateMips(RHITextureRef src);
 		void TextureBarrier(const RHITextureBarrier& barrier);
 		void CopyBufferToTexture(RHIBufferRef src, uint64_t srcOffset, RHITextureRef dst, TextureSubresourceLayers dstSubresource);

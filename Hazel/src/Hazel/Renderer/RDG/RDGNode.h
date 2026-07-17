@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Hazel/Renderer/RHI/RHIBase.h>
 #include "DependencyGraph.h"
 #include "RDGEdge.h"
@@ -51,7 +51,7 @@ namespace GameEngine {
     };
     typedef RDGNode* RDGNodeRef;
 
-    // ×ÊÔ´½Úµã/////////////////////////////////////////////////////////////////////////////////////
+    // èµ„æºèŠ‚ç‚¹/////////////////////////////////////////////////////////////////////////////////////
 
     class RDGResourceNode : public RDGNode
     {
@@ -85,9 +85,9 @@ namespace GameEngine {
         RHITextureRef GetRHITexture() { return texture; }
     private:
         RHITextureInfo info;
-        RHIResourceState initState; // ´Ó³ØÖĞ/Íâ²¿ÒıÓÃÊ±µÄ×î³õ×´Ì¬
+        RHIResourceState initState; // ä»æ± ä¸­/å¤–éƒ¨å¼•ç”¨æ—¶çš„æœ€åˆçŠ¶æ€
 
-        RHITextureRef texture;      // Ö´ĞĞÊ±·ÖÅäºÍ°ó¶¨£¬»á¶¯Ì¬¸üĞÂ£¬ÔÚ×îºóÒ»¸öÒÀÀµpassÍê³Éºó·µ»Ø×ÊÔ´³Ø
+        RHITextureRef texture;      // æ‰§è¡Œæ—¶åˆ†é…å’Œç»‘å®šï¼Œä¼šåŠ¨æ€æ›´æ–°ï¼Œåœ¨æœ€åä¸€ä¸ªä¾èµ–passå®Œæˆåè¿”å›èµ„æºæ± 
 
         friend class RDGTextureBuilder;
         friend class RDGBuilder;
@@ -107,16 +107,16 @@ namespace GameEngine {
 
     private:
         RHIBufferInfo info;
-        RHIResourceState initState; // ´Ó³ØÖĞ/Íâ²¿ÒıÓÃÊ±µÄ×î³õ×´Ì¬
+        RHIResourceState initState; // ä»æ± ä¸­/å¤–éƒ¨å¼•ç”¨æ—¶çš„æœ€åˆçŠ¶æ€
 
-        RHIBufferRef buffer;        // Ö´ĞĞÊ±·ÖÅäºÍ°ó¶¨£¬»á¶¯Ì¬¸üĞÂ£¬ÔÚ×îºóÒ»¸öÒÀÀµpassÍê³Éºó·µ»Ø×ÊÔ´³Ø
+        RHIBufferRef buffer;        // æ‰§è¡Œæ—¶åˆ†é…å’Œç»‘å®šï¼Œä¼šåŠ¨æ€æ›´æ–°ï¼Œåœ¨æœ€åä¸€ä¸ªä¾èµ–passå®Œæˆåè¿”å›èµ„æºæ± 
 
         friend class RDGBufferBuilder;
         friend class RDGBuilder;
     };
     typedef RDGBufferNode* RDGBufferNodeRef;
 
-    // pass½Úµã/////////////////////////////////////////////////////////////////////////////////////
+    // passèŠ‚ç‚¹/////////////////////////////////////////////////////////////////////////////////////
 
     class RDGPassNode : public RDGNode
     {
@@ -127,7 +127,7 @@ namespace GameEngine {
         {
         }
 
-        inline bool Before(RDGPassNode* other) { return ID() < other->ID(); }    // ¼Ù¶¨ËùÓĞpassµÄÌí¼ÓË³Ğò¾ÍÊÇÖ´ĞĞË³Ğò
+        inline bool Before(RDGPassNode* other) { return ID() < other->ID(); }    // å‡å®šæ‰€æœ‰passçš„æ·»åŠ é¡ºåºå°±æ˜¯æ‰§è¡Œé¡ºåº
         inline bool After(RDGPassNode* other) { return ID() > other->ID(); }
 
         void ForEachTexture(const std::function<void(RDGTextureEdgeRef, RDGTextureNodeRef)>& func);
@@ -144,7 +144,7 @@ namespace GameEngine {
         RHIRootSignatureRef rootSignature;
         std::array<RHIDescriptorSetRef, MAX_DESCRIPTOR_SETS> descriptorSets;
 
-        std::vector<RHITextureViewRef> pooledViews;             // ¶¯Ì¬·ÖÅäµÄ³Ø»¯×ÊÔ´£¬Ö´ĞĞÍê±Ïºó·µ»Ø×ÊÔ´³Ø
+        std::vector<RHITextureViewRef> pooledViews;             // åŠ¨æ€åˆ†é…çš„æ± åŒ–èµ„æºï¼Œæ‰§è¡Œå®Œæ¯•åè¿”å›èµ„æºæ± 
         std::vector<std::pair<RHIDescriptorSetRef, uint32_t>> pooledDescriptorSets;
 
         friend class RDGBuilder;

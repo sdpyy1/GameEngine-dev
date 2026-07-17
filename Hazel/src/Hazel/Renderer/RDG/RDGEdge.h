@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #include "DependencyGraph.h"
 #include <Hazel/Renderer/RHI/RHIBase.h>
 namespace GameEngine
 {
-	// ËùÓĞRDG±ß¾ùÎª { ×ÊÔ´½Úµã, pass½Úµã }   ×ÓÀà¶¨ÒåÁËÎÆÀí×ÊÔ´ºÍBuffer×ÊÔ´µÄ±ß
+	// æ‰€æœ‰RDGè¾¹å‡ä¸º { èµ„æºèŠ‚ç‚¹, passèŠ‚ç‚¹ }   å­ç±»å®šä¹‰äº†çº¹ç†èµ„æºå’ŒBufferèµ„æºçš„è¾¹
     enum RDGEdgeType
     {
         RDG_EDGE_TYPE_TEXTURE = 0,
@@ -21,7 +21,7 @@ namespace GameEngine
 
         RDGEdgeType EdgeType() { return edgeType; }
 
-        RHIResourceState state; // ÔÚ¶ÔÓ¦µÄpass´¦ÒªÇóµÄ×´Ì¬£¨Èô×÷ÎªpassÊäÈë£¬pass²»Ó¦ÔÚÄÚ²¿¸Ä±ä×´Ì¬£©
+        RHIResourceState state; // åœ¨å¯¹åº”çš„passå¤„è¦æ±‚çš„çŠ¶æ€ï¼ˆè‹¥ä½œä¸ºpassè¾“å…¥ï¼Œpassä¸åº”åœ¨å†…éƒ¨æ”¹å˜çŠ¶æ€ï¼‰
 
     protected:
         RDGEdgeType edgeType;
@@ -37,11 +37,11 @@ namespace GameEngine
         }
 
         TextureSubresourceRange subresource = {};
-        TextureSubresourceLayers subresourceLayer = {};  // µ¥²ãmip£¬¶à²ãlayer
+        TextureSubresourceLayers subresourceLayer = {};  // å•å±‚mipï¼Œå¤šå±‚layer
 
-        // ÏÂÃæÕâĞ©Ã¿ÖÖ±ê¼Ç¶¼¶ÔÓ¦Ò»ÖÖÓÃ·¨
-        bool asColor = false;   // ÑÕÉ«»º³å±ê¼Ç
-        bool asDepthStencil = false; // Éî¶È»º³å±ê¼Ç
+        // ä¸‹é¢è¿™äº›æ¯ç§æ ‡è®°éƒ½å¯¹åº”ä¸€ç§ç”¨æ³•
+        bool asColor = false;   // é¢œè‰²ç¼“å†²æ ‡è®°
+        bool asDepthStencil = false; // æ·±åº¦ç¼“å†²æ ‡è®°
         bool asShaderRead = false;
         bool asShaderReadWrite = false;
         bool asOutputRead = false;
@@ -77,7 +77,7 @@ namespace GameEngine
 
         uint32_t offset = 0;
         uint32_t size = 0;
-        bool asShaderRead = false;   // Shader»á¶ÁÈ¡
+        bool asShaderRead = false;   // Shaderä¼šè¯»å–
         bool asShaderReadWrite = false;
         bool asOutputRead = false;
         bool asOutputReadWrite = false;
@@ -85,7 +85,7 @@ namespace GameEngine
 
         virtual bool IsOutput() override { return asOutputRead || asOutputReadWrite || asOutputIndirectDraw; }
 
-        uint32_t set = 0;       // ÃèÊö·ûÊ¹ÓÃ
+        uint32_t set = 0;       // æè¿°ç¬¦ä½¿ç”¨
         uint32_t binding = 0;
         uint32_t index = 0;
         ResourceType type = RESOURCE_TYPE_UNIFORM_BUFFER;

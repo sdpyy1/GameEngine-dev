@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include "string"
 #include "Hazel/Renderer/RDG/RDGBuilder.h"
 namespace GameEngine {
-	// °´Ë³Ğò
+	// æŒ‰é¡ºåº
 	enum PassType
 	{
 		IBL_PASS,

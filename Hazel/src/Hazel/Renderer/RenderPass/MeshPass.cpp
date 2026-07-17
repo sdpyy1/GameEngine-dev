@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "MeshPass.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -15,33 +15,33 @@ namespace GameEngine
 		}
 	}
 
-	// ÔÚUEÖĞ¸÷¸öPassÖ´ĞĞÕâ¸ö¹ı³ÌÊÇ²¢ĞĞµÄ
+	// åœ¨UEä¸­å„ä¸ªPassæ‰§è¡Œè¿™ä¸ªè¿‡ç¨‹æ˜¯å¹¶è¡Œçš„
 	void MeshPassProcessor::Process(const std::vector<MeshBatch>& drawBatches)
 	{
 		m_MeshBatches.clear();
 		m_MeshDrawCommands.clear();
 		m_IndirectCommands.clear();
 		m_MeshBatchMap.clear();
-		// 1. ÊÕ¼¯µ±Ç°PassĞèÒªµÄMeshBatch
+		// 1. æ”¶é›†å½“å‰Passéœ€è¦çš„MeshBatch
 		for (auto& batch : drawBatches)
 		{
 			AddMeshBatch(batch);
 		}
 
-		// 2. °´¹ÜÏß½øĞĞ·ÖÀà
+		// 2. æŒ‰ç®¡çº¿è¿›è¡Œåˆ†ç±»
 		for (auto& batch : m_MeshBatches)
 		{
 			MapMeshBatches(batch);
 		}
 
-		// 3. ´´½¨»ò»ñÈ¡ĞèÒªµÄPipeline
+		// 3. åˆ›å»ºæˆ–è·å–éœ€è¦çš„Pipeline
 		uint32_t pipelineIndex = 0;
 		for (auto& pair : m_MeshBatchMap)
 		{
 			ASSERT(pipelineIndex < MAX_PER_PASS_PIPELINE_STATE_COUNT);
 			RHIGraphicsPipelineRef pipeline = OnCreatePipeline(pair.first);
 
-			// 4. ¹¹½¨×îÖÕµÄDrawCommands
+			// 4. æ„å»ºæœ€ç»ˆçš„DrawCommands
 			if (pipeline)
 			{
 				OnBuildDrawCommands(pipeline, pair.second);
@@ -49,7 +49,7 @@ namespace GameEngine
 			}
 		}
 
-		// 5.½«×¼±¸ºÃµÄÈ«²¿Êı¾İÌá½»¸øGPU¶Ë
+		// 5.å°†å‡†å¤‡å¥½çš„å…¨éƒ¨æ•°æ®æäº¤ç»™GPUç«¯
 		uint32_t instanceCount = (uint32_t)m_MeshBatches.size();
 		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&instanceCount, sizeof(uint32_t),0);
 		m_MeshIndirectDrawDataBuffer[APP_FRAMEINDEX]->SetData(&m_PassType, sizeof(uint32_t), sizeof(uint32_t));
@@ -78,9 +78,9 @@ namespace GameEngine
 		MeshDrawCommand drawCommand;
         drawCommand.pipeline = pipeline;
 		drawCommand.meshCommandRange = { (uint32_t)m_IndirectCommands.size(), 0 };
-		for (auto& batch : meshBatch) { // ÊÕ¼¯Õâ¸öPSOµÄ»æÖÆÃüÁîµ½m_IndirectCommands£¨×îÖÕÒ»²¢ÉÏ´«£©
+		for (auto& batch : meshBatch) { // æ”¶é›†è¿™ä¸ªPSOçš„ç»˜åˆ¶å‘½ä»¤åˆ°m_IndirectCommandsï¼ˆæœ€ç»ˆä¸€å¹¶ä¸Šä¼ ï¼‰
 			RHIIndirectCommand meshDrawCommand;
-			meshDrawCommand.firstInstance = batch.instanceID;   // ÔÚShaderÖĞÍ¨¹ıÕâ¸öÄÃµ½ÊµÀıID
+			meshDrawCommand.firstInstance = batch.instanceID;   // åœ¨Shaderä¸­é€šè¿‡è¿™ä¸ªæ‹¿åˆ°å®ä¾‹ID
             meshDrawCommand.vertexCount = batch.indexCount;
             meshDrawCommand.instanceCount = 1;
             meshDrawCommand.firstVertex = 0;
@@ -93,7 +93,7 @@ namespace GameEngine
 
 	void MeshPassProcessor::MapMeshBatches(MeshBatch& batch)
 	{
-		// ¸ù¾İbatchµÄ²ÄÖÊ£¬¹¹½¨¹ÜÏßĞÅÏ¢
+		// æ ¹æ®batchçš„æè´¨ï¼Œæ„å»ºç®¡çº¿ä¿¡æ¯
 		DrawPipelineState pipelineState = {};
 		pipelineState.renderQueue = batch.material->RenderQueue();
 		pipelineState.cullMode = batch.material->CullMode();
@@ -124,7 +124,7 @@ namespace GameEngine
 			}
 		}
 		else {
-            meshPassProcessors[0]->Init(CULLING_TYPE_BASE,0); // ÆÕÍ¨µÄÖ»ĞèÒªÒ»¸ö¾ÍĞĞ
+            meshPassProcessors[0]->Init(CULLING_TYPE_BASE,0); // æ™®é€šçš„åªéœ€è¦ä¸€ä¸ªå°±è¡Œ
 		}
 	}
 }

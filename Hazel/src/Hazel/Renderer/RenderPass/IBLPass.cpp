@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "IBLPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
@@ -46,7 +46,7 @@ namespace GameEngine
 			environmentMipFilterCompPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
 		}
 
-		// Ä¬ÈÏµÄIBL
+		// é»˜è®¤çš„IBL
 		LoadEnv(APP_HDR_PATH + "black.jpg", "Default");
 	}
 
@@ -84,7 +84,7 @@ namespace GameEngine
 				RDGTextureHandle irradianceMap = builder.CreateTexture("IrradianceMap")
 					.Import(IrradianceMap, RESOURCE_STATE_UNDEFINED)
 					.Finish();
-				// ´ÓHDRÉú³ÉPrefilterµÄMip0
+				// ä»HDRç”ŸæˆPrefilterçš„Mip0
 				builder.CreateComputePass(GetName() + "/HDR->PrefilterMapMip0")
 					.Read(0, 1, 0, hdr)
 					.RootSignature(equirectangularConversionCompRootSignature)
@@ -99,7 +99,7 @@ namespace GameEngine
 						})
 					.Finish();
 
-				// °ÑprefilterµÄmip0¿½±´µ½CubeMap£¬²¢Éú³Émip£¬ºóĞøprefilter¼ÆËãmipÊ±»áÓÃµ½
+				// æŠŠprefilterçš„mip0æ‹·è´åˆ°CubeMapï¼Œå¹¶ç”Ÿæˆmipï¼Œåç»­prefilterè®¡ç®—mipæ—¶ä¼šç”¨åˆ°
 				builder.CreateCopyPass(GetName() + "/HDR->CubeMap")
 					.From(prefilterMap)
 					.To(cubeMap)
@@ -108,7 +108,7 @@ namespace GameEngine
 					.OutputReadWrite(prefilterMap)
 					.Finish();
 				/*
-					32*32*6µÄcubemap£¬¶ÔÃ¿¸ö·¨Ïß·½ÏòÉÏ£¬ÔÚ°ëÇòÉÏ½øĞĞ²ÉÑù£¬½øĞĞÃÉÌØ¿¨Âå»ı·Ö£¬¼ÆËãµÄ¾ÍÊÇ°ëÇòÉÏµÄirrandianceÖµ
+					32*32*6çš„cubemapï¼Œå¯¹æ¯ä¸ªæ³•çº¿æ–¹å‘ä¸Šï¼Œåœ¨åŠçƒä¸Šè¿›è¡Œé‡‡æ ·ï¼Œè¿›è¡Œè’™ç‰¹å¡æ´›ç§¯åˆ†ï¼Œè®¡ç®—çš„å°±æ˜¯åŠçƒä¸Šçš„irrandianceå€¼
 				*/
 				builder.CreateComputePass(GetName() + "/IrradianceMap")
 					.Read(0, 1, 0, cubeMap, VIEW_TYPE_CUBE)
@@ -120,19 +120,19 @@ namespace GameEngine
 							command->SetComputePipeline(environmentIrradianceCompPipeline);
 							command->BindDescriptorSet(context.descriptors[0], 0);
 							command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetSamplerDescriptorSet(), 1);
-							uint32_t samleperCount = 512;    // ÅäºÃIBLºóÕâÀïÒª¸ÄÎª512
+							uint32_t samleperCount = 512;    // é…å¥½IBLåè¿™é‡Œè¦æ”¹ä¸º512
 							command->PushConstants(&samleperCount, sizeof(uint32_t), SHADER_FREQUENCY_COMPUTE);
 							command->Dispatch(32 / 32, 32 / 32, 6);
 						})
 					.Finish();
 
 				/*
-					0²ãMip¶ÔÓ¦´Ö²Ú¶È0£¬×î´óMip¶ÔÓ¦´Ö²Ú¶È1£¬ÖĞ¼äÆ½¾ù·Ö
+					0å±‚Mipå¯¹åº”ç²—ç³™åº¦0ï¼Œæœ€å¤§Mipå¯¹åº”ç²—ç³™åº¦1ï¼Œä¸­é—´å¹³å‡åˆ†
 				*/
 				uint32_t mipLevels = (uint32_t)(std::floor(std::log2(std::max(1024, 1024)))) + 1;
 				static const float deltaRoughness = 1.0f / glm::max((float)mipLevels - 1.0f, 1.0f);
 				for (uint32_t i = 1, size = 1024; i < mipLevels; i++, size /= 2) {
-					// ×¢ÒâÍâ²¿¶¨ÒåµÄ±äÁ¿Ö»ÄÜÄÃ½øÀ´³õÊ¼Öµ
+					// æ³¨æ„å¤–éƒ¨å®šä¹‰çš„å˜é‡åªèƒ½æ‹¿è¿›æ¥åˆå§‹å€¼
 					builder.CreateComputePass(GetName() + "/PrefilterMapMip" + std::to_string(i))
 						.Read(0, 1, 0, cubeMap, VIEW_TYPE_CUBE)
 						.PassIndex(size, i)
@@ -147,7 +147,7 @@ namespace GameEngine
 
 								uint32_t numGroups = glm::max(1u, context.passIndex[0] / 32);
 								float roughness = context.passIndex[1] * deltaRoughness;
-								command->PushConstants(&roughness, sizeof(float), SHADER_FREQUENCY_COMPUTE); // ´«Èëµ±Ç°Mip´ú±íµÄ´Ö²Ú¶È
+								command->PushConstants(&roughness, sizeof(float), SHADER_FREQUENCY_COMPUTE); // ä¼ å…¥å½“å‰Mipä»£è¡¨çš„ç²—ç³™åº¦
 								command->Dispatch(numGroups, numGroups, 6);
 							})
 						.Finish();
@@ -155,7 +155,7 @@ namespace GameEngine
 				hasPreCompute = true;
 			}
 			else {
-				// Ö´ĞĞ¹ıÒ»´Îºó ²¼¾Ö±äÁË
+				// æ‰§è¡Œè¿‡ä¸€æ¬¡å å¸ƒå±€å˜äº†
 				RDGTextureHandle hdr = builder.CreateTexture("HDR")
 					.Import(HDRTexture->GetRHITexture(), RESOURCE_STATE_SHADER_RESOURCE)
 					.Finish();
@@ -182,9 +182,9 @@ namespace GameEngine
 		spec.generateMipmap = false;
 		environmentMap.HDRTexture = std::make_shared<Texture>(spec);
 
-		spec.path = APP_TEXTURE_PATH + "BRDF_LUT.png"; // Õâ¸öÖ±½ÓÓÃÒÑ¾­ÓĞµÄ¾ÍĞĞ
+		spec.path = APP_TEXTURE_PATH + "BRDF_LUT.png"; // è¿™ä¸ªç›´æ¥ç”¨å·²ç»æœ‰çš„å°±è¡Œ
 		spec.srgb = false;
-		spec.yFlip = true; // TODO: Õâ¸öÓÃ²»ÓÃµ¹ÖÃ
+		spec.yFlip = true; // TODO: è¿™ä¸ªç”¨ä¸ç”¨å€’ç½®
 		spec.generateMipmap = true;
 		environmentMap.LutTexture = std::make_shared<Texture>(spec);
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Volk/volk.h"
 #include <Hazel/Core/macro.h>
 #include <GLFW/glfw3.h>
@@ -23,10 +23,10 @@ namespace GameEngine {
         "VK_LAYER_KHRONOS_validation"
     };
     static const char* DEVICE_LAYERS[] = {
-        "·ÏÆú",
+        "åºŸå¼ƒ",
     };
 
-    // TODO: ÓÅÏÈ¼¶
+    // TODO: ä¼˜å…ˆçº§
     static const float QUEUE_PRIORITIES[] = {
         1.f, 1.f, 1.f, 1.f, 1.f,
         1.f, 1.f, 1.f, 1.f, 1.f,
@@ -64,8 +64,8 @@ namespace GameEngine {
         // Required by VK_KHR_spirv_1_4
         VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME,
     };
-    // ÑéÖ¤²ãµÄ¹¦ÄÜ
-    static const std::vector<VkValidationFeatureEnableEXT> ENABLED_VALIDATION_FEATURES = {  // ĞèÒªÊ±ÔÙÆôÓÃ£¬¶ÔÖ¡ÊıÓ°Ïì´ó
+    // éªŒè¯å±‚çš„åŠŸèƒ½
+    static const std::vector<VkValidationFeatureEnableEXT> ENABLED_VALIDATION_FEATURES = {  // éœ€è¦æ—¶å†å¯ç”¨ï¼Œå¯¹å¸§æ•°å½±å“å¤§
 #if ENABLE_DEBUG_MODE
         //VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT,
         //VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT,
@@ -92,7 +92,7 @@ namespace GameEngine {
             return false;
         }
 
-        // ÑéÖ¤²ãDebug»Øµ÷
+        // éªŒè¯å±‚Debugå›è°ƒ
         static VkDebugUtilsMessengerCreateInfoEXT GetDebugMessengerCreateInfo()
         {
             VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {};
@@ -113,7 +113,7 @@ namespace GameEngine {
             return debugCreateInfo;
         }
 
-        // ÑéÖ¤²ã¹¦ÄÜÉèÖÃ
+        // éªŒè¯å±‚åŠŸèƒ½è®¾ç½®
         static VkValidationFeaturesEXT GetValidationFeatureCreateInfo()
         {
             VkValidationFeaturesEXT validationFeaturesExt = {};
@@ -124,7 +124,7 @@ namespace GameEngine {
             return validationFeaturesExt;
         }
 
-        // ÉèÖÃÊµÀıÀ©Õ¹
+        // è®¾ç½®å®ä¾‹æ‰©å±•
         static std::vector<const char*> GetRequiredInstanceExtensions(bool debug)
         {
             std::vector<const char*> extensions;
@@ -168,11 +168,11 @@ namespace GameEngine {
         }
         static VkAccessFlags ResourceStateToAccessFlags(RHIResourceState state)
         {
-            // ¸÷¸ö×ÊÔ´×´Ì¬¾ö¶¨ÁË·ÃÎÊÓÃÍ¾£¬×÷ÎªsrcºÍdstÊÇÒ»ÖÂµÄ
+            // å„ä¸ªèµ„æºçŠ¶æ€å†³å®šäº†è®¿é—®ç”¨é€”ï¼Œä½œä¸ºsrcå’Œdstæ˜¯ä¸€è‡´çš„
             VkAccessFlags accessFlags = VK_ACCESS_NONE;
             switch (state) {
-                case RESOURCE_STATE_UNDEFINED:                      accessFlags = VK_ACCESS_NONE;                                           break;     // ÎŞĞ§£¿
-                case RESOURCE_STATE_COMMON:                         accessFlags = VK_ACCESS_NONE;                                           break;     // ÎŞĞ§£¿   
+                case RESOURCE_STATE_UNDEFINED:                      accessFlags = VK_ACCESS_NONE;                                           break;     // æ— æ•ˆï¼Ÿ
+                case RESOURCE_STATE_COMMON:                         accessFlags = VK_ACCESS_NONE;                                           break;     // æ— æ•ˆï¼Ÿ   
                 case RESOURCE_STATE_TRANSFER_SRC:                   accessFlags = VK_ACCESS_TRANSFER_READ_BIT;                              break;
                 case RESOURCE_STATE_TRANSFER_DST:                   accessFlags = VK_ACCESS_TRANSFER_WRITE_BIT;                             break;
                 case RESOURCE_STATE_VERTEX_BUFFER:                  accessFlags = VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;                      break;
@@ -182,7 +182,7 @@ namespace GameEngine {
                 case RESOURCE_STATE_UNORDERED_ACCESS:               accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;   break;
                 case RESOURCE_STATE_SHADER_RESOURCE:                accessFlags = VK_ACCESS_SHADER_READ_BIT;                                break;
                 case RESOURCE_STATE_INDIRECT_ARGUMENT:              accessFlags = VK_ACCESS_INDIRECT_COMMAND_READ_BIT;                      break;
-                case RESOURCE_STATE_PRESENT:                        accessFlags = VK_ACCESS_NONE;                                           break;      // ÎŞĞ§£¿ 
+                case RESOURCE_STATE_PRESENT:                        accessFlags = VK_ACCESS_NONE;                                           break;      // æ— æ•ˆï¼Ÿ 
                 case RESOURCE_STATE_ACCELERATION_STRUCTURE:         accessFlags = VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR | VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR;   break;
             default:                                            LOG_ERROR("Unsupported resource state!");
             }
@@ -191,7 +191,7 @@ namespace GameEngine {
 
         static VkImageLayout ResourceStateToImageLayout(RHIResourceState state)
         {
-            // ¸÷¸ö×ÊÔ´×´Ì¬¾ö¶¨ÁË²¼¾Ö£¬×÷ÎªsrcºÍdstÊÇÒ»ÖÂµÄ
+            // å„ä¸ªèµ„æºçŠ¶æ€å†³å®šäº†å¸ƒå±€ï¼Œä½œä¸ºsrcå’Œdstæ˜¯ä¸€è‡´çš„
             VkImageLayout layout = VK_IMAGE_LAYOUT_UNDEFINED;
             switch (state) {
             case RESOURCE_STATE_UNDEFINED:                      layout = VK_IMAGE_LAYOUT_UNDEFINED;                         break;
@@ -209,7 +209,7 @@ namespace GameEngine {
         }
         static VkPipelineStageFlags AccessFlagsToPipelineStageFlags(VkAccessFlags accessFlags)
         {
-            // ¸ù¾İËùÓĞµÄaccessFlagsÀ´·ÖÎöÉæ¼°µ½µÄstage½×¶Î ²Î¿¼Sakura
+            // æ ¹æ®æ‰€æœ‰çš„accessFlagsæ¥åˆ†ææ¶‰åŠåˆ°çš„stageé˜¶æ®µ å‚è€ƒSakura
 
             VkPipelineStageFlags flags = 0;
 
@@ -665,7 +665,7 @@ namespace GameEngine {
             return format;
         }
 
-        static VkBufferUsageFlags ResourceTypeToBufferUsage(ResourceType type,bool enableRayTracing = false)   // Èç¹û¿ªÆô¹â×·£¬¶¥µãºÍË÷Òı»º³åĞèÒªĞÂÔöVK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
+        static VkBufferUsageFlags ResourceTypeToBufferUsage(ResourceType type,bool enableRayTracing = false)   // å¦‚æœå¼€å¯å…‰è¿½ï¼Œé¡¶ç‚¹å’Œç´¢å¼•ç¼“å†²éœ€è¦æ–°å¢VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
         {
             VkBufferUsageFlags usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
             if (type & RESOURCE_TYPE_UNIFORM_BUFFER)        usage |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
@@ -765,7 +765,7 @@ namespace GameEngine {
         {
             VkPipelineLayout layout;
 
-            // ¹ÜµÀ²¼¾ÖĞÅÏ¢
+            // ç®¡é“å¸ƒå±€ä¿¡æ¯
             VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
             pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
             pipelineLayoutInfo.setLayoutCount = (uint32_t)descriptorSetLayouts.size();
@@ -818,7 +818,7 @@ namespace GameEngine {
             VkCullModeFlags mode;
             switch (cullMode) {
             case CULL_MODE_NONE:        mode = VK_CULL_MODE_NONE;           break;
-            case CULL_MODE_FRONT:       mode = VK_CULL_MODE_FRONT_BIT;      break;  // ÄæÊ±ÕëÎªÕıÃæ
+            case CULL_MODE_FRONT:       mode = VK_CULL_MODE_FRONT_BIT;      break;  // é€†æ—¶é’ˆä¸ºæ­£é¢
             case CULL_MODE_BACK:        mode = VK_CULL_MODE_BACK_BIT;       break;
             default:                    LOG_ERROR("Unsupported cull mode!");
             }
@@ -911,7 +911,7 @@ namespace GameEngine {
             instance.instanceCustomIndex = info.instanceIndex;
             instance.mask = info.mask;
             instance.instanceShaderBindingTableRecordOffset = info.shaderBindingTableOffset;
-            instance.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;                 // ÌŞ³ıÄ£Ê½
+            instance.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;                 // å‰”é™¤æ¨¡å¼
             instance.accelerationStructureReference = CAST<VulkanRHIBottomLevelAccelerationStructure>(info.blas)->GetAddress();
 
             return instance;

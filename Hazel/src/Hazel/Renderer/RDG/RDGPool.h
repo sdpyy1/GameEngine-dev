@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Renderer/RHI/RHI.h"
 #include "Hazel/Utils/HashUtils.h"
 
 namespace GameEngine
-{// RDGËùÓÃµ½µÄÖ÷ÒªµÄ×ÊÔ´£¬ÓÉÓÚÃ¿Ö¡ÖØ¹¹£¬¶¼ĞèÒª³Ø»¯
-// °üÀ¨buffer texture textureViewµÈ
-// Â¼ÖÆÃ¿¸öpassµÄÃüÁîÊ±»áÉêÇë´Ë´¦µÄÊµ¼ÊRHI×ÊÔ´£¬Â¼ÖÆÍê³ÉºóÔÙ½«×ÊÔ´¹é»¹¸ø³Ø×Ó
+{// RDGæ‰€ç”¨åˆ°çš„ä¸»è¦çš„èµ„æºï¼Œç”±äºæ¯å¸§é‡æ„ï¼Œéƒ½éœ€è¦æ± åŒ–
+// åŒ…æ‹¬buffer texture textureViewç­‰
+// å½•åˆ¶æ¯ä¸ªpassçš„å‘½ä»¤æ—¶ä¼šç”³è¯·æ­¤å¤„çš„å®é™…RHIèµ„æºï¼Œå½•åˆ¶å®Œæˆåå†å°†èµ„æºå½’è¿˜ç»™æ± å­
 
-// renderPassºÍframeBufferÊÇÔÚRHI²ãÊµÏÖµÄ³Ø»¯
-// TODO Ä¿Ç°²¢Ã»ÓĞ×ö³Ø»¯ºóµÄGC£¬ÈßÓà×ÊÔ´Ã»ÓĞ¶¨ÆÚÉ¾³ı
+// renderPasså’ŒframeBufferæ˜¯åœ¨RHIå±‚å®ç°çš„æ± åŒ–
+// TODO ç›®å‰å¹¶æ²¡æœ‰åšæ± åŒ–åçš„GCï¼Œå†—ä½™èµ„æºæ²¡æœ‰å®šæœŸåˆ é™¤
 
     class RDGBufferPool
     {
@@ -60,7 +60,7 @@ namespace GameEngine
         }
 
     private:
-        std::unordered_map<Key, std::list<PooledBuffer>, Key::Hash> pooledBuffers;  // KeyÒ»ÑùµÄBufferÒ²ÓĞÒ»¸öList£¨Ë«ÏòÁ´±í£©
+        std::unordered_map<Key, std::list<PooledBuffer>, Key::Hash> pooledBuffers;  // Keyä¸€æ ·çš„Bufferä¹Ÿæœ‰ä¸€ä¸ªListï¼ˆåŒå‘é“¾è¡¨ï¼‰
         uint32_t pooledSize = 0;
         uint32_t allocatedSize = 0;
     };
@@ -111,7 +111,7 @@ namespace GameEngine
         }
 
     private:
-        std::unordered_map<Key, std::list<PooledTexture>, Key::Hash> pooledTextures;   // Ã¿¸öKey¶ÔÓ¦Ò»¸öList¶ø²»ÊÇÒ»¸öTexture
+        std::unordered_map<Key, std::list<PooledTexture>, Key::Hash> pooledTextures;   // æ¯ä¸ªKeyå¯¹åº”ä¸€ä¸ªListè€Œä¸æ˜¯ä¸€ä¸ªTexture
         uint32_t pooledSize = 0;
         uint32_t allocatedSize = 0;
     };
@@ -174,7 +174,7 @@ namespace GameEngine
             RHIDescriptorSetRef descriptor;
         };
 
-        struct Key  // ¸ùÇ©ÃûºÍSetÒ»ÖÂ¾Í¿ÉÒÔ¸´ÓÃ
+        struct Key  // æ ¹ç­¾åå’ŒSetä¸€è‡´å°±å¯ä»¥å¤ç”¨
         {
             Key(const RHIRootSignatureInfo& info, uint32_t set)
                 : entries(info.GetEntries())
@@ -212,7 +212,7 @@ namespace GameEngine
         inline uint32_t AllocatedSize() { return allocatedSize; }
         void Clear() { pooledDescriptors.clear(); pooledSize = 0; }
 
-        static std::shared_ptr<RDGDescriptorSetPool> Get(uint32_t index)    // ÃèÊö·û³ØĞèÒªFRAMES_IN_FLIGHTÃ¿Ö¡Ò»¸ö£¬²»È»ÏÂÒ»Ö¡ĞŞ¸Ä¿ÉÄÜÓ°ÏìÉÏÒ»Ö¡»¹Î´Íê³ÉµÄäÖÈ¾£¡£¡£¡
+        static std::shared_ptr<RDGDescriptorSetPool> Get(uint32_t index)    // æè¿°ç¬¦æ± éœ€è¦FRAMES_IN_FLIGHTæ¯å¸§ä¸€ä¸ªï¼Œä¸ç„¶ä¸‹ä¸€å¸§ä¿®æ”¹å¯èƒ½å½±å“ä¸Šä¸€å¸§è¿˜æœªå®Œæˆçš„æ¸²æŸ“ï¼ï¼ï¼
         {
             static std::shared_ptr<RDGDescriptorSetPool> pool[3];
             if (pool[index] == nullptr) pool[index] = std::make_shared<RDGDescriptorSetPool>();

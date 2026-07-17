@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Core/Events/MouseEvent.h"
 #include "Panels/AssetManagerPanel.h"
 #include "Panels/FolderPreviewPanel.h"
@@ -34,13 +34,13 @@ namespace GameEngine {
 	private:
 		// Gizmo's
 		int m_GizmoType = -1;
-		// Ãæ°å
+		// é¢æ¿
 		AssetManagerPanel m_AssetManagerPanel;
 		FolderPreviewPanel m_FolderPreviewPanel{ APP_ASSET_PATH };
 		ImGuiLogPanel m_LogPanel;
 		RDGPanel m_RDGPanel;
 
-		//×´Ì¬
+		//çŠ¶æ€
 		ImVec2 m_ViewportBounds[2] = { {0,0},{1216,849} };
 		bool isMouseInViewport = false;
 
@@ -51,7 +51,7 @@ namespace GameEngine {
 			Entity mesh;
 			float Distance = 0.0f;
 		};
-		// Êı¾İ
+		// æ•°æ®
 		std::vector<RHIGPUTimeInfo> m_GPUTimeInfo;
 	};
 }

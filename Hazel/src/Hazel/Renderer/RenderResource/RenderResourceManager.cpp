@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "RenderResourceManager.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
@@ -18,7 +18,7 @@ namespace GameEngine {
 
 	void RenderResourceManager::InitPerFrameGlobalResources()
 	{
-		// ´´½¨Ò»¸öÈ«¾ÖµÄ×ÊÔ´ÃèÊö·û¼¯À´¹ÒÔØ¸÷ÖÖÈ«¾Ö×ÊÔ´
+		// åˆ›å»ºä¸€ä¸ªå…¨å±€çš„èµ„æºæè¿°ç¬¦é›†æ¥æŒ‚è½½å„ç§å…¨å±€èµ„æº
 		RHIRootSignatureInfo info = {};
 		// set binding count frequency type
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_POSITION, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
@@ -36,10 +36,10 @@ namespace GameEngine {
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_1D_ARRAY, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_2D_ARRAY, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
-		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE }); // ¾ÍÊÇµÃÉèÖÃTexture£¬ÉèÖÃCube²»¶Ô
+		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_CUBE, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE }); // å°±æ˜¯å¾—è®¾ç½®Textureï¼Œè®¾ç½®Cubeä¸å¯¹
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_BINDLESS_TEXTURE_3D, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_TEXTURE });
 
-		// ÏÂÃæÕâĞ©ĞèÒªÊÖ¶¯È¥°ó¶¨bufferºÍpreFrame×ÊÔ´ÃèÊö·û
+		// ä¸‹é¢è¿™äº›éœ€è¦æ‰‹åŠ¨å»ç»‘å®šbufferå’ŒpreFrameèµ„æºæè¿°ç¬¦
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MESHINSTANCEINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MATERIALINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
 		info.AddEntry({ 0, GLORBAL_RESOURCE_BINDING_MESHINFO, 1, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_RW_BUFFER });
@@ -55,11 +55,11 @@ namespace GameEngine {
 		m_GlobalResourcePreFrameRootSignature = APP_DYNAMICRHI->CreateRootSignature(info);
 		for (auto& resource : m_PerFrameGlobalResources) resource.descriptorSet = m_GlobalResourcePreFrameRootSignature->CreateDescriptorSet(0);
 
-		// ¹ÒÔØÄ¬ÈÏÈ«¾Ö×ÊÔ´
+		// æŒ‚è½½é»˜è®¤å…¨å±€èµ„æº
 		for (auto& resource : m_PerFrameGlobalResources) {
 			// camera
 			{
-				// 0ºÅÎ»ÊÇµ±Ç°ÉãÏñ»ú£¬ 1ºÅÎ»´æ´¢Scene×Ô´øµÄÄ¬ÈÏÉãÏñ»ú
+				// 0å·ä½æ˜¯å½“å‰æ‘„åƒæœºï¼Œ 1å·ä½å­˜å‚¨Sceneè‡ªå¸¦çš„é»˜è®¤æ‘„åƒæœº
 				RHIDescriptorUpdateInfo cameraUpdateInfo = {};
 				cameraUpdateInfo.resourceType = RESOURCE_TYPE_RW_BUFFER;
 				cameraUpdateInfo.buffer = resource.activeCameraDataBuffer.GetRHIBuffer();
@@ -165,10 +165,10 @@ namespace GameEngine {
 		return m_PerFrameGlobalResources[APP_FRAMEINDEX].descriptorSet;
 	}
 
-	// ¸üĞÂ×ÊÔ´
+	// æ›´æ–°èµ„æº
 	void RenderResourceManager::Tick()
 	{
-		// ´¦ÀíĞèÒª¸üĞÂµÄ×ÊÔ´ÃèÊö·û¼¯
+		// å¤„ç†éœ€è¦æ›´æ–°çš„èµ„æºæè¿°ç¬¦é›†
 		auto& resource = m_PerFrameGlobalResources[APP_FRAMEINDEX];
 		if (resource.isNeedUpdate) {
 			for (auto& updateInfo : m_PerFrameGlobalResources[APP_FRAMEINDEX].updateInfos) {
@@ -222,7 +222,7 @@ namespace GameEngine {
 
 		EditorCameraRef defaultCamera = APP_SCENEMANAGER->GetSceneInfo().defaultCamera;
 		if (camera == defaultCamera) {
-			m_PerFrameGlobalResources[APP_FRAMEINDEX].defalutCameraDataBuffer.SetData(activeCameraData);  // ÒòÎªBuildÊ±»á¸Ä±äCameraµÄPreview£¬²»ÄÜÈÃÄ¬ÈÏÉãÏñ»úÔÙÖ´ĞĞÒ»´Î
+			m_PerFrameGlobalResources[APP_FRAMEINDEX].defalutCameraDataBuffer.SetData(activeCameraData);  // å› ä¸ºBuildæ—¶ä¼šæ”¹å˜Cameraçš„Previewï¼Œä¸èƒ½è®©é»˜è®¤æ‘„åƒæœºå†æ‰§è¡Œä¸€æ¬¡
 		}
 		else {
 			m_PerFrameGlobalResources[APP_FRAMEINDEX].defalutCameraDataBuffer.SetData(BuildCameraUpdateData(defaultCamera));
@@ -231,13 +231,13 @@ namespace GameEngine {
 
 	uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot)
 	{
-		// ¸øÕâ¸ö×ÊÔ´·ÖÅäÒ»¸öID
+		// ç»™è¿™ä¸ªèµ„æºåˆ†é…ä¸€ä¸ªID
 		uint32_t index = m_BindlessIDAlloctor[slot].Allocate();
 
-		// ¹¹½¨¸üĞÂĞÅÏ¢
+		// æ„å»ºæ›´æ–°ä¿¡æ¯
 		RHIDescriptorUpdateInfo updateInfo = {};
 		updateInfo.binding = BindlessSlotToPerFrameBinding(slot);
-		updateInfo.index = index;  // bindlessÊı×éµÄindex
+		updateInfo.index = index;  // bindlessæ•°ç»„çš„index
 		updateInfo.resourceType = resoruceInfo.resourceType;
 		updateInfo.buffer = resoruceInfo.buffer;
 		updateInfo.textureView = resoruceInfo.textureView;
@@ -245,7 +245,7 @@ namespace GameEngine {
 		updateInfo.bufferOffset = resoruceInfo.bufferOffset;
 		updateInfo.bufferRange = resoruceInfo.bufferRange;
 
-		// ÊµÊ±¸üĞÂ»áÒòÎªÒ»Ğ©ÎÊÌâ±¨´í£¬ÔİÊ±²»¸üĞÂ±¾Ö¡£¬Ö»¸üĞÂÆäËûÖ¡
+		// å®æ—¶æ›´æ–°ä¼šå› ä¸ºä¸€äº›é—®é¢˜æŠ¥é”™ï¼Œæš‚æ—¶ä¸æ›´æ–°æœ¬å¸§ï¼Œåªæ›´æ–°å…¶ä»–å¸§
 		for (size_t i = 0; i < m_PerFrameGlobalResources.size(); ++i) {
 			if (i == APP_FRAMEINDEX) {
 				auto& resource = m_PerFrameGlobalResources[i];
@@ -287,7 +287,7 @@ namespace GameEngine {
 			MIPMAP_MODE_NEAREST,
 			0.0f,
 			SAMPLER_REDUCTION_MODE_MAX));
-		// Îªsamplerµ¥¶À´´½¨Ò»¸öÃèÊö·û£¬·½±ãpassÊ¹ÓÃ
+		// ä¸ºsamplerå•ç‹¬åˆ›å»ºä¸€ä¸ªæè¿°ç¬¦ï¼Œæ–¹ä¾¿passä½¿ç”¨
 		{
 			RHIRootSignatureInfo info = {};
 			info.AddEntry({ 1, 0, MAX_BINDLESS_RESOURCE_SIZE, SHADER_FREQUENCY_ALL, RESOURCE_TYPE_SAMPLER });
@@ -331,7 +331,7 @@ namespace GameEngine {
 	uint32_t RenderResourceManager::LoadIconFromFile(std::string filePath) {
 		TextureSpec spec;
 		spec.srgb = false;
-		spec.bindless = false; // ÒòÎªÒ»Ğ©³õÊ¼»¯Á÷³ÌÔ­Òò£¬ÔÚÖ´ĞĞÄÚ²¿ÎŞ·¨Ö±½ÓÉêÇëBindless,ËùÒÔÔÚÏÂ±ßÊÖ¶¯ÉêÇë
+		spec.bindless = false; // å› ä¸ºä¸€äº›åˆå§‹åŒ–æµç¨‹åŸå› ï¼Œåœ¨æ‰§è¡Œå†…éƒ¨æ— æ³•ç›´æ¥ç”³è¯·Bindless,æ‰€ä»¥åœ¨ä¸‹è¾¹æ‰‹åŠ¨ç”³è¯·
 		spec.path = filePath;
 		TextureRef icon = std::make_shared<Texture>(spec);
 		BindlessResourceInfo bindlessResourceInfo;
@@ -400,7 +400,7 @@ namespace GameEngine {
 			SetTLAS();
 		}
 		else {
-			// TODO: UpdateÄ¿Ç°´æÔÚÒ»Ğ©ÎÊÌâ£¬µ¼ÖÂ¶¯Ì¬¸üĞÂModelÊ±»á³öÏÖÔ­Ä£ĞÍ±»¸²¸ÇµÄÎÊÌâ£¬ÈçĞè¸ü¸Ä³¡¾°²¢×÷ÓÃ¹âÏß×·×Ù£¬ĞèÒª±£´æ³¡¾°ºóÖØĞÂÆô¶¯³ÌĞò
+			// TODO: Updateç›®å‰å­˜åœ¨ä¸€äº›é—®é¢˜ï¼Œå¯¼è‡´åŠ¨æ€æ›´æ–°Modelæ—¶ä¼šå‡ºç°åŸæ¨¡å‹è¢«è¦†ç›–çš„é—®é¢˜ï¼Œå¦‚éœ€æ›´æ”¹åœºæ™¯å¹¶ä½œç”¨å…‰çº¿è¿½è¸ªï¼Œéœ€è¦ä¿å­˜åœºæ™¯åé‡æ–°å¯åŠ¨ç¨‹åº
 			m_PerFrameGlobalResources[APP_FRAMEINDEX].tlas->Update(instances);
  
 		}

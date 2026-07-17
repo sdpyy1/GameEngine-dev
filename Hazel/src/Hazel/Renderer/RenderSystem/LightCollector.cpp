@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "LightCollector.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -42,7 +42,7 @@ namespace GameEngine {
 				break; // only one directional light
 			}
 			if (lightInfo.directionLightCount == 0) {
-				lightInfo.dirLights.radiance = { 0.0f, 0.0f, 0.0f }; // ·ÀÖ¹ÇÐ»»³¡¾°Ê±Buffer»¹ÊÇÉÏ¸ö³¡¾°µÄÊý¾Ý
+				lightInfo.dirLights.radiance = { 0.0f, 0.0f, 0.0f }; // é˜²æ­¢åˆ‡æ¢åœºæ™¯æ—¶Bufferè¿˜æ˜¯ä¸Šä¸ªåœºæ™¯çš„æ•°æ®
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace GameEngine {
 				lightInfo.pointLights[pointLightCount].sphere = { lightInfo.pointLights[pointLightCount].position,pointLightComp.Radius };
                 lightInfo.pointLights[pointLightCount].showRadius = pointLightComp.showRadius? 1:0;
 
-				// 6¸öÃæµÄview proj
+				// 6ä¸ªé¢çš„view proj
 				auto & position = transformComp.Translation;
 				glm::vec3 up = glm::vec3(0.0f, -1.0f, 0.0f); 
 				lightInfo.pointLights[pointLightCount].view[0] = glm::lookAt(position, position + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));  // +X
@@ -87,7 +87,7 @@ namespace GameEngine {
 			}
 			lightInfo.pointLightCount = pointLightCount;
 			if (pointLightCount == 0) {
-				lightInfo.pointLights[0].radiance = { 0.0f, 0.0f, 0.0f }; // ·ÀÖ¹ÇÐ»»³¡¾°Ê±Buffer»¹ÊÇÉÏ¸ö³¡¾°µÄÊý¾Ý
+				lightInfo.pointLights[0].radiance = { 0.0f, 0.0f, 0.0f }; // é˜²æ­¢åˆ‡æ¢åœºæ™¯æ—¶Bufferè¿˜æ˜¯ä¸Šä¸ªåœºæ™¯çš„æ•°æ®
 			}
 		}
 
@@ -113,10 +113,10 @@ namespace GameEngine {
 			}
 			lightInfo.spotLightCount = spotLightCount;
 			if (spotLightCount == 0) {
-				lightInfo.spotLights[0].radiance = { 0.0f, 0.0f, 0.0f }; // ·ÀÖ¹ÇÐ»»³¡¾°Ê±Buffer»¹ÊÇÉÏ¸ö³¡¾°µÄÊý¾Ý
+				lightInfo.spotLights[0].radiance = { 0.0f, 0.0f, 0.0f }; // é˜²æ­¢åˆ‡æ¢åœºæ™¯æ—¶Bufferè¿˜æ˜¯ä¸Šä¸ªåœºæ™¯çš„æ•°æ®
 			}
 		}
-		lightInfo.clusterAtomicOffset = 0; // ³õÊ¼»¯Ô­×Ó¼ÆÊýÆ÷
+		lightInfo.clusterAtomicOffset = 0; // åˆå§‹åŒ–åŽŸå­è®¡æ•°å™¨
 		s_LightInfo = lightInfo;
 		RENDER_RESOURCEMANAGER->SetLightInfo(lightInfo);
 	}
@@ -198,7 +198,7 @@ namespace GameEngine {
 
 			// Offset to texel space to avoid shimmering (from https://stackoverflow.com/questions/33499053/cascaded-shadow-map-shimmering)
 			glm::mat4 shadowMatrix = lightOrthoMatrix * lightViewMatrix;
-			float ShadowMapResolution = 4096.0f; // TODO£ºDefine in config
+			float ShadowMapResolution = 4096.0f; // TODOï¼šDefine in config
 
 			glm::vec4 shadowOrigin = (shadowMatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) * ShadowMapResolution / 2.0f;
 			glm::vec4 roundedOrigin = glm::round(shadowOrigin);

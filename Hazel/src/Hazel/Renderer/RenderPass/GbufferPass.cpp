@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "GbufferPass.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
 #include <Hazel/Renderer/RenderSystem/RenderManager.h>
@@ -34,11 +34,11 @@ namespace GameEngine
 		pipelineInfo.depthStencilState = { COMPARE_FUNCTION_EQUAL, true, false };
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
 
-		// TODO: Èç¹û²ÄÖÊ×Ô´øÁËShader£¬¿ÉÒÔÖ±½ÓÔÚÕâÀï¾Í´´½¨¹ÜÏß²¢·µ»Ø£¬·ñÔò¾ÍÊÇµ±Ç°Pass×Ô´øµÄShaderÐÅÏ¢
+		// TODO: å¦‚æžœæè´¨è‡ªå¸¦äº†Shaderï¼Œå¯ä»¥ç›´æŽ¥åœ¨è¿™é‡Œå°±åˆ›å»ºç®¡çº¿å¹¶è¿”å›žï¼Œå¦åˆ™å°±æ˜¯å½“å‰Passè‡ªå¸¦çš„Shaderä¿¡æ¯
 		// pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
-		//if (pipeline) return pipeline;   // ²ÄÖÊ×Ô´øShader
+		//if (pipeline) return pipeline;   // æè´¨è‡ªå¸¦Shader
 
-		pipelineInfo.vertexShader = pass->vertexShader->GetRHIShader();                          // ÓÃÄ¬ÈÏ×ÅÉ«Æ÷
+		pipelineInfo.vertexShader = pass->vertexShader->GetRHIShader();                          // ç”¨é»˜è®¤ç€è‰²å™¨
 		pipelineInfo.geometryShader = nullptr;
 		pipelineInfo.fragmentShader = pass->fragmentShader->GetRHIShader();
 		pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
@@ -56,7 +56,7 @@ namespace GameEngine
 		fragmentShader = std::make_shared<Shader>("mesh/Gbuffer", SHADER_FREQUENCY_FRAGMENT);
 
 		RHIRootSignatureInfo rootSignatureInfo = {};
-		rootSignatureInfo.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());  // Set=0 È«¾Ö×ÊÔ´
+		rootSignatureInfo.AddEntry(RENDER_RESOURCEMANAGER->GetGlobalResourcePreFrameRootSignature()->GetInfo());  // Set=0 å…¨å±€èµ„æº
 		rootSignature = APP_DYNAMICRHI->CreateRootSignature(rootSignatureInfo);
 
 		RHIGraphicsPipelineInfo pipelineInfo = {};
@@ -72,7 +72,7 @@ namespace GameEngine
 		pipelineInfo.colorAttachmentFormats[3] = FORMAT_R32G32B32A32_SFLOAT;
 		pipelineInfo.colorAttachmentFormats[4] = FORMAT_R32G32_SFLOAT;  // Velocity
 
-		pipelineInfo.depthStencilState = { COMPARE_FUNCTION_LESS_EQUAL, true, false };   // ²»ÐèÒªÐ´ÈëÉî¶ÈÁË
+		pipelineInfo.depthStencilState = { COMPARE_FUNCTION_LESS_EQUAL, true, false };   // ä¸éœ€è¦å†™å…¥æ·±åº¦äº†
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
 		pipeline = GraphicsPipelineCache::Get()->Allocate(pipelineInfo).pipeline;
 	}

@@ -1,14 +1,14 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "ExposurePass.h"
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderResource/RenderResourceManager.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
 #include "Hazel/Renderer/RenderResource/Shader.h"
 /*
-	¼ÆËã³¡¾°ÁÁ¶ÈµÄÖù×´Í¼Histogram£¬²¢¸ù¾İÖù×´Í¼ÇóÆ½¾ùÁÁ¶È£¬¼ÆËã³öÒ»¸öÆØ¹âÖµ
+	è®¡ç®—åœºæ™¯äº®åº¦çš„æŸ±çŠ¶å›¾Histogramï¼Œå¹¶æ ¹æ®æŸ±çŠ¶å›¾æ±‚å¹³å‡äº®åº¦ï¼Œè®¡ç®—å‡ºä¸€ä¸ªæ›å…‰å€¼
 
 
-	Luminance = Radiance ¡Á ÈËÑÛÁÁ¶È¸ĞÖªº¯Êı
+	Luminance = Radiance Ã— äººçœ¼äº®åº¦æ„ŸçŸ¥å‡½æ•°
 */
 namespace GameEngine {
 	void ExposurePass::Init()
@@ -47,7 +47,7 @@ namespace GameEngine {
 		RDGBufferHandle exposureData = builder.CreateBuffer("ExposureData")
 			.Import(exposureDataBuffer.GetRHIBuffer(), RESOURCE_STATE_UNDEFINED)
 			.Finish();
-		// Í³¼ÆÖ±·½Í¼
+		// ç»Ÿè®¡ç›´æ–¹å›¾
 		builder.CreateComputePass(GetName() + "_Luminance Histogram")
 			.RootSignature(m_RootSignature)
 			.ReadWrite(0, 0, 0, Viewport)

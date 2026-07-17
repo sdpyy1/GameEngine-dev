@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "DDGIPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -67,7 +67,7 @@ namespace GameEngine
 			m_ProbeDistanceBlendPipeline = APP_DYNAMICRHI->CreateComputePipeline(pipelineInfo);
 		}
 
-		// TODO:ÕâÁ½ÕÅÍ¼Ó¦¸Ã½»¸øVolum×Ô¼º¹ÜÀí£¬ÕâÀï³õÊ¼»¯Ö»ÄÜ¹Ì¶¨´óĞ¡
+		// TODO:è¿™ä¸¤å¼ å›¾åº”è¯¥äº¤ç»™Volumè‡ªå·±ç®¡ç†ï¼Œè¿™é‡Œåˆå§‹åŒ–åªèƒ½å›ºå®šå¤§å°
 		{
 			RHITextureInfo textureInfo;
 			textureInfo.extent = { 8*8, 8*8, 1 };
@@ -141,13 +141,13 @@ namespace GameEngine
 			RDGTextureHandle skyBox = builder.GetTexture("CubeMap");
 
 			// VolumeTrace
-			{ //TODO: ÒõÓ°²»ĞèÒªÔØÈë£¬Ö±½ÓÓÃRTÒõÓ°¼´¿É
+			{ //TODO: é˜´å½±ä¸éœ€è¦è½½å…¥ï¼Œç›´æ¥ç”¨RTé˜´å½±å³å¯
 				auto& build = builder.CreateRayTracingPass(GetName() + "_VolumeTrace")
 					.PassIndex(raysPerProbe, probeCountPreLayer, volumeLayerCount)
 					.RootSignature(m_VolumeTraceRootSignature)
 					.ReadWrite(1, 0, 0, rayTexture, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR ,0,1,0,volumeLayerCount })
 					.Read(1, 1, 0, dirShadowMap, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_DEPTH ,0,1,0,4 })
-					// µã¹âÔ´ÒõÓ°µ¥¶À´¦Àí
+					// ç‚¹å…‰æºé˜´å½±å•ç‹¬å¤„ç†
 					.Read(1, 3, 0, skyBox, VIEW_TYPE_CUBE, { TEXTURE_ASPECT_COLOR ,0,1,0,6 })
 					.Read(1, 4, 0, irrandiance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR,0,1,0,volumeLayerCount })
 					.Read(1, 5, 0, distance, VIEW_TYPE_2D_ARRAY, { TEXTURE_ASPECT_COLOR,0,1,0,volumeLayerCount })

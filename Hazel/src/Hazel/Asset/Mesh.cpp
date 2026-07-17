@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "Mesh.h"
 
 namespace GameEngine{
@@ -18,7 +18,7 @@ namespace GameEngine{
             assert((texCoord.size() > 0 && other.texCoord.size() > 0) || (texCoord.size() == 0 && other.texCoord.size() == 0));
             assert((color.size() > 0 && other.color.size() > 0) || (color.size() == 0 && other.color.size() == 0));
 
-            // ²»ºÏ²¢¹Ç÷À
+            // ä¸åˆå¹¶éª¨éª¼
             assert(boneIndex.size() == 0 && other.boneIndex.size() == 0);
             assert(boneWeight.size() == 0 && other.boneWeight.size() == 0);
         }
@@ -57,7 +57,7 @@ namespace GameEngine{
             for (auto& pair : indexMap)  this->color[pair.second] = other.color[pair.first];
         }
 
-        // °üÎ§ºÐ
+        // åŒ…å›´ç›’
         if (baseIndexSize == 0) this->aabb = AxisAlignedBox(this->position[0], { 0, 0,0 });
         this->aabb.Merge(other.aabb);
         this->sphere = BoundingSphere(this->aabb);

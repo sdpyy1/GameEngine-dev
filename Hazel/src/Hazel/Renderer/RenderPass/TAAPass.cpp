@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "TAAPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -66,13 +66,13 @@ namespace GameEngine {
 				})
 			.Finish();
 
-		// ²ÉÑù½á¹ûcpoyµ½ÀúÊ·ÎÆÀí
+		// é‡‡æ ·ç»“æœcpoyåˆ°å†å²çº¹ç†
 		builder.CreateCopyPass("TAA_HistoryCopy")
 			.From(TaaRes)
 			.To(history)
 			.Finish();
 
-		// äÖÈ¾½á¹ûĞ´µ½Viewport
+		// æ¸²æŸ“ç»“æœå†™åˆ°Viewport
 		builder.CreateCopyPass("TAA_Copy")
 			.From(TaaRes)
 			.To(Viewport)

@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "VulkanRHIResource.h"
 #include "VulkanRHI.h"
 #include "VulkanUtil.h"
@@ -30,18 +30,18 @@ namespace GameEngine
 
 		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &capabilities);
 
-		// »ñÈ¡Éè±¸Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£¬×îÖÕ³ÊÏÖµÄVkImageÖ§³ÖµÄ¸ñÊ½
+		// è·å–è®¾å¤‡æ”¯æŒçš„å›¾ç‰‡æ ¼å¼ï¼Œæœ€ç»ˆå‘ˆç°çš„VkImageæ”¯æŒçš„æ ¼å¼
 		uint32_t size;
 		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &size, nullptr);
 		availableFormats.resize(size);
 		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &size, availableFormats.data());
 
-		// Ö§³ÖµÄ³ÊÏÖÄ£Ê½
+		// æ”¯æŒçš„å‘ˆç°æ¨¡å¼
 		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &size, nullptr);
 		availablePresentModes.resize(size);
 		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &size, availablePresentModes.data());
 
-		// ½»»»Á´»ù±¾ĞÅÏ¢
+		// äº¤æ¢é“¾åŸºæœ¬ä¿¡æ¯
 		VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(VulkanUtil::RHIFormatToVkFormat(info.format));
 		RHIFormat targetFormat = VulkanUtil::VkFormatToRHIFormat(surfaceFormat.format);
 		if (targetFormat != info.format)
@@ -50,7 +50,7 @@ namespace GameEngine
 			LOG_ERROR("Cant find swapchain image format support!");
 		}
 
-		// ³ÊÏÖÄ£Ê½
+		// å‘ˆç°æ¨¡å¼
 		VkPresentModeKHR presentMode = ChooseSwapPresentMode();
 
 		// Extent
@@ -61,7 +61,7 @@ namespace GameEngine
 			LOG_ERROR("Cant find suitable swapchain image extent!");
 		}
 
-		// ½»»»Á´Í¼ÏñÊıÄ¿
+		// äº¤æ¢é“¾å›¾åƒæ•°ç›®
 		uint32_t imageCount = std::max(info.imageCount, capabilities.minImageCount);
 		if (capabilities.maxImageCount > 0 && imageCount > capabilities.maxImageCount)
 		{
@@ -73,7 +73,7 @@ namespace GameEngine
 			LOG_ERROR("Swapchain image count is greater than capability maximum!");
 		}
 
-		// ´´½¨½»»»Á´ĞÅÏ¢
+		// åˆ›å»ºäº¤æ¢é“¾ä¿¡æ¯
 		VkSwapchainCreateInfoKHR createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 		createInfo.surface = surface;
@@ -82,42 +82,42 @@ namespace GameEngine
 		createInfo.imageColorSpace = surfaceFormat.colorSpace;
 		createInfo.imageExtent = extent;
 		createInfo.imageArrayLayers = 1;
-		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT; // ÒòÎªÒªcopyµ½ËüÉÏ±ß£¬ËùÒÔ¼ÓVK_IMAGE_USAGE_TRANSFER_DST_BIT
+		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT; // å› ä¸ºè¦copyåˆ°å®ƒä¸Šè¾¹ï¼Œæ‰€ä»¥åŠ VK_IMAGE_USAGE_TRANSFER_DST_BIT
 
-		// ¼ì²â¶ÓÁĞ×å¶Ô½»»»Á´Í¼ÏñµÄ²Ù×÷·½Ê½
+		// æ£€æµ‹é˜Ÿåˆ—æ—å¯¹äº¤æ¢é“¾å›¾åƒçš„æ“ä½œæ–¹å¼
 		/*
 		uint32_t queueFamilyIndices[] = { (uint32_t)queueInfo.graphicsFamily, (uint32_t)queueInfo.presentFamily };
 		if (queueInfo.graphicsFamily != queueInfo.presentFamily) {
-			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;   // Í¼Ïñ¿É±»¶à¸ö¶ÓÁĞ×å·ÃÎÊ
+			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;   // å›¾åƒå¯è¢«å¤šä¸ªé˜Ÿåˆ—æ—è®¿é—®
 			createInfo.queueFamilyIndexCount = 2;
 			createInfo.pQueueFamilyIndices = queueFamilyIndices;
 		}
 		else {
-			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;    // Í¼ÏñÍ¬Ò»Ê±¼äÖ»ÄÜ±»µ¥¸ö¶ÓÁĞ×å·ÃÎÊ
+			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;    // å›¾åƒåŒä¸€æ—¶é—´åªèƒ½è¢«å•ä¸ªé˜Ÿåˆ—æ—è®¿é—®
 			createInfo.queueFamilyIndexCount = 0; // Optional
 			createInfo.pQueueFamilyIndices = nullptr; // Optional
 		}
 		*/
-		createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;    // Í¼ÏñÍ¬Ò»Ê±¼äÖ»ÄÜ±»µ¥¸ö¶ÓÁĞ×å·ÃÎÊ
+		createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;    // å›¾åƒåŒä¸€æ—¶é—´åªèƒ½è¢«å•ä¸ªé˜Ÿåˆ—æ—è®¿é—®
 		createInfo.queueFamilyIndexCount = 0; // Optional
 		createInfo.pQueueFamilyIndices = nullptr; // Optional
 
-		createInfo.preTransform = capabilities.currentTransform;                    // ±ä»»²Ù×÷£¬ÀıÈçĞı×ª·´×ª£¬ÓÃÄ¬ÈÏ
-		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;              // Í¸Ã÷¶È»ìºÏ
-		createInfo.presentMode = presentMode;                                       // Ë¢ĞÂÄ£Ê½
-		createInfo.clipped = VK_TRUE;                                               // ²Ã¼ô£¨ÕÚµ²»òÔÙ¿ÉÊÓ·¶Î§ÍâµÈ£©
-		createInfo.oldSwapchain = VK_NULL_HANDLE;                                   // ½»»»Á´¸üĞÂÊ±Ê¹ÓÃ
+		createInfo.preTransform = capabilities.currentTransform;                    // å˜æ¢æ“ä½œï¼Œä¾‹å¦‚æ—‹è½¬åè½¬ï¼Œç”¨é»˜è®¤
+		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;              // é€æ˜åº¦æ··åˆ
+		createInfo.presentMode = presentMode;                                       // åˆ·æ–°æ¨¡å¼
+		createInfo.clipped = VK_TRUE;                                               // è£å‰ªï¼ˆé®æŒ¡æˆ–å†å¯è§†èŒƒå›´å¤–ç­‰ï¼‰
+		createInfo.oldSwapchain = VK_NULL_HANDLE;                                   // äº¤æ¢é“¾æ›´æ–°æ—¶ä½¿ç”¨
 
 		if (vkCreateSwapchainKHR(logicalDevice, &createInfo, nullptr, &handle) != VK_SUCCESS)
 		{
 			LOG_ERROR("Failed to create swap chain!");
 		}
 
-		vkGetSwapchainImagesKHR(logicalDevice, handle, &imageCount, nullptr);   // »ñÈ¡image¾ä±ú
+		vkGetSwapchainImagesKHR(logicalDevice, handle, &imageCount, nullptr);   // è·å–imageå¥æŸ„
 		images.resize(imageCount);
 		vkGetSwapchainImagesKHR(logicalDevice, handle, &imageCount, images.data());
 
-		imageFormat = surfaceFormat.format;  // ´æ´¢extentºÍformat
+		imageFormat = surfaceFormat.format;  // å­˜å‚¨extentå’Œformat
 		imageExtent = extent;
 		RHI_DYNAMICRHI->GetImmediateCommandList();
 		for (uint32_t i = 0; i < imageCount; i++)
@@ -133,7 +133,7 @@ namespace GameEngine
 			RHITextureRef texture = std::make_shared<VulkanRHITexture>(info, images[i]);
 			textures.push_back(texture);
 
-			// ĞŞ¸Ä²¼¾Ö
+			// ä¿®æ”¹å¸ƒå±€
 			RHI_DYNAMICRHI->GetImmediateCommandList()->TextureBarrier({ texture, RESOURCE_STATE_UNDEFINED, RESOURCE_STATE_PRESENT,{ TEXTURE_ASPECT_COLOR, 0, 1, 0, 1 } });
 		}
 		RHI_DYNAMICRHI->GetImmediateCommandList()->Flush();
@@ -152,11 +152,11 @@ namespace GameEngine
 		return textures[currentIndex];
 	}
 
-	// SRGB¿Õ¼ä£ºhttps://stackoverflow.com/questions/12524623/what-are-the-practical-differences-when-working-with-colors-in-a-linear-vs-a-no
+	// SRGBç©ºé—´ï¼šhttps://stackoverflow.com/questions/12524623/what-are-the-practical-differences-when-working-with-colors-in-a-linear-vs-a-no
 	/*
-		ÀíÇå³ş£ºÙ¤Âí½ÃÕıºÍSRGB
-		Ù¤Âí½ÃÕı£ºpow(1/2.2) ÓÃÓÚµÖÏûÏÔÊ¾Æ÷µÄpow(2.2),ÈÃÏÔÊ¾Æ÷×îÖÕÏÔÊ¾µÄÄÚÈİ¾ÍÊÇÎÒÏëÒªÊä³öµÄÄÚÈİ
-		SRGB¿Õ¼ä£º Ëü²»½ö¿¼ÂÇµ½ÁËÙ¤Âí½ÃÕı£¬¶øÇÒ¿¼ÂÇµ½ÁËÈËÑÛ¶Ô°µ²¿¸üÃô¸Ğ£¬ËùÒÔÏßĞÔ´¦ÀíÍêºó£¬×ªµ½SRGB¿Õ¼äºó²»½ö»áµÖÏûÏÔÊ¾Æ÷µÄpow(2.2)²¢ÇÒ»á°ÑÏßĞÔÑÕÉ«×ªÎªÊÊºÏÈËÑÛµÄ·ÇÏßĞÔÑÕÉ«·Ö²¼
+		ç†æ¸…æ¥šï¼šä¼½é©¬çŸ«æ­£å’ŒSRGB
+		ä¼½é©¬çŸ«æ­£ï¼špow(1/2.2) ç”¨äºæŠµæ¶ˆæ˜¾ç¤ºå™¨çš„pow(2.2),è®©æ˜¾ç¤ºå™¨æœ€ç»ˆæ˜¾ç¤ºçš„å†…å®¹å°±æ˜¯æˆ‘æƒ³è¦è¾“å‡ºçš„å†…å®¹
+		SRGBç©ºé—´ï¼š å®ƒä¸ä»…è€ƒè™‘åˆ°äº†ä¼½é©¬çŸ«æ­£ï¼Œè€Œä¸”è€ƒè™‘åˆ°äº†äººçœ¼å¯¹æš—éƒ¨æ›´æ•æ„Ÿï¼Œæ‰€ä»¥çº¿æ€§å¤„ç†å®Œåï¼Œè½¬åˆ°SRGBç©ºé—´åä¸ä»…ä¼šæŠµæ¶ˆæ˜¾ç¤ºå™¨çš„pow(2.2)å¹¶ä¸”ä¼šæŠŠçº¿æ€§é¢œè‰²è½¬ä¸ºé€‚åˆäººçœ¼çš„éçº¿æ€§é¢œè‰²åˆ†å¸ƒ
 	*/
 	VkSurfaceFormatKHR VulkanRHISwapchain::ChooseSwapSurfaceFormat(VkFormat targetFormat)
 	{
@@ -164,19 +164,19 @@ namespace GameEngine
 			return { VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
 		}
 
-		// ½»»»Á´µÄVkImageÉ«²Ê¿Õ¼äÓ¦¸ÃÑ¡ÔñSRGBµÄ£¬×Ô¼ºÔÚºó´¦ÀíÊ±°ÑÏßĞÔ×ªÎªSRGBÔÙ´«µİ¸ø½»»»Á´µÄVkImage  Vulkan¹Ù·½½Ì³ÌÖĞÑ¡ÔñµÄÊÇVK_FORMAT_B8G8R8A8_SRGB
+		// äº¤æ¢é“¾çš„VkImageè‰²å½©ç©ºé—´åº”è¯¥é€‰æ‹©SRGBçš„ï¼Œè‡ªå·±åœ¨åå¤„ç†æ—¶æŠŠçº¿æ€§è½¬ä¸ºSRGBå†ä¼ é€’ç»™äº¤æ¢é“¾çš„VkImage  Vulkanå®˜æ–¹æ•™ç¨‹ä¸­é€‰æ‹©çš„æ˜¯VK_FORMAT_B8G8R8A8_SRGB
 		for (const auto& availableFormat : availableFormats) {
 			if (availableFormat.format == targetFormat && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
 				return availableFormat;
 			}
 		}
 
-		return availableFormats[0];  // Ä¬ÈÏ¾ÍÊÇ return { VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
+		return availableFormats[0];  // é»˜è®¤å°±æ˜¯ return { VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
 	}
 
 	VkPresentModeKHR VulkanRHISwapchain::ChooseSwapPresentMode()
 	{
-		// Ñ¡ÔñË¢ĞÂÄ£Ê½
+		// é€‰æ‹©åˆ·æ–°æ¨¡å¼
 	   /* std::cout << "Available swapchain present modes:" << std::endl;
 		for (const auto mode : availablePresentModes) {
 			std::cout << mode << std::endl;
@@ -203,7 +203,7 @@ namespace GameEngine
 
 	VkExtent2D VulkanRHISwapchain::ChooseSwapExtent()
 	{
-		// Ñ¡Ôñ·Ö±æÂÊ
+		// é€‰æ‹©åˆ†è¾¨ç‡
 		//std::cout << "Swapchain extent: " << capabilities.currentExtent.width << " : " << capabilities.currentExtent.height << std::endl;
 
 		if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
@@ -258,15 +258,15 @@ namespace GameEngine
 
 	void VulkanRHISwapchain::Resize()
 	{
-		// 1. µÈ´ıÉè±¸¿ÕÏĞ£¬È·±£¾ÉSwapchain×ÊÔ´²»ÔÙ±»Ê¹ÓÃ
+		// 1. ç­‰å¾…è®¾å¤‡ç©ºé—²ï¼Œç¡®ä¿æ—§Swapchainèµ„æºä¸å†è¢«ä½¿ç”¨
 		vkDeviceWaitIdle(VULKAN_DEVICE);
 
 		VkSurfaceKHR surface = std::static_pointer_cast<VulkanRHISurface>(info.surface)->GetHandle();
 
-		// 2. Ïú»Ù¾ÉSwapchainÏà¹Ø×ÊÔ´
-		// Ïú»ÙÎÆÀí¶ÔÏó£¨Èç¹ûÎÆÀíÓÉSwapchain¹ÜÀí£©
+		// 2. é”€æ¯æ—§Swapchainç›¸å…³èµ„æº
+		// é”€æ¯çº¹ç†å¯¹è±¡ï¼ˆå¦‚æœçº¹ç†ç”±Swapchainç®¡ç†ï¼‰
 		textures.clear();
-		// Ïú»Ù¾ÉSwapchain¾ä±ú
+		// é”€æ¯æ—§Swapchainå¥æŸ„
 		if (handle != VK_NULL_HANDLE)
 		{
 			vkDestroySwapchainKHR(VULKAN_DEVICE, handle, nullptr);
@@ -274,7 +274,7 @@ namespace GameEngine
 		}
 		VkPhysicalDevice device = VULKAN_PHYSICALDEVICE;
 		VkDevice logicalDevice = VULKAN_DEVICE;
-		// 3. ÖØĞÂ²éÑ¯SurfaceÖ§³ÖĞÅÏ¢£¨´°¿ÚResizeºó¿ÉÄÜ±ä»¯£©
+		// 3. é‡æ–°æŸ¥è¯¢Surfaceæ”¯æŒä¿¡æ¯ï¼ˆçª—å£Resizeåå¯èƒ½å˜åŒ–ï¼‰
 		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &capabilities);
 
 		uint32_t size = 0;
@@ -286,7 +286,7 @@ namespace GameEngine
 		availablePresentModes.resize(size);
 		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &size, availablePresentModes.data());
 
-		// 4. ÖØĞÂ¼ÆËãSwapchain²ÎÊı£¨Óë¹¹Ôìº¯ÊıÂß¼­Ò»ÖÂ£¬µ«Ê¹ÓÃĞÂ´°¿Ú³ß´ç£©
+		// 4. é‡æ–°è®¡ç®—Swapchainå‚æ•°ï¼ˆä¸æ„é€ å‡½æ•°é€»è¾‘ä¸€è‡´ï¼Œä½†ä½¿ç”¨æ–°çª—å£å°ºå¯¸ï¼‰
 		VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(VulkanUtil::RHIFormatToVkFormat(this->info.format));
 		RHIFormat targetFormat = VulkanUtil::VkFormatToRHIFormat(surfaceFormat.format);
 		if (targetFormat != this->info.format)
@@ -296,10 +296,10 @@ namespace GameEngine
 		}
 
 		VkPresentModeKHR presentMode = ChooseSwapPresentMode();
-		VkExtent2D newExtent = ChooseSwapExtent(); // ×Ô¶¯ÊÊÅäĞÂ´°¿Ú³ß´ç
-		this->info.extent = { newExtent.width, newExtent.height }; // ¸üĞÂinfoÖĞµÄ³ß´ç
+		VkExtent2D newExtent = ChooseSwapExtent(); // è‡ªåŠ¨é€‚é…æ–°çª—å£å°ºå¯¸
+		this->info.extent = { newExtent.width, newExtent.height }; // æ›´æ–°infoä¸­çš„å°ºå¯¸
 
-		// Í¼ÏñÊıÁ¿£¨±£³ÖÓëÔ­Âß¼­Ò»ÖÂ£©
+		// å›¾åƒæ•°é‡ï¼ˆä¿æŒä¸åŸé€»è¾‘ä¸€è‡´ï¼‰
 		uint32_t imageCount = std::max(this->info.imageCount, capabilities.minImageCount);
 		if (capabilities.maxImageCount > 0 && imageCount > capabilities.maxImageCount)
 		{
@@ -307,7 +307,7 @@ namespace GameEngine
 		}
 		this->info.imageCount = imageCount;
 
-		// 5. ÖØĞÂ´´½¨Swapchain
+		// 5. é‡æ–°åˆ›å»ºSwapchain
 		VkSwapchainCreateInfoKHR createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 		createInfo.surface = surface;
@@ -322,7 +322,7 @@ namespace GameEngine
 			VK_IMAGE_USAGE_SAMPLED_BIT |
 			VK_IMAGE_USAGE_STORAGE_BIT;
 
-		// Í¼Ïñ¹²ÏíÄ£Ê½£¨±£³ÖÔ­Âß¼­£©
+		// å›¾åƒå…±äº«æ¨¡å¼ï¼ˆä¿æŒåŸé€»è¾‘ï¼‰
 		createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		createInfo.queueFamilyIndexCount = 0;
 		createInfo.pQueueFamilyIndices = nullptr;
@@ -331,23 +331,23 @@ namespace GameEngine
 		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 		createInfo.presentMode = presentMode;
 		createInfo.clipped = VK_TRUE;
-		createInfo.oldSwapchain = VK_NULL_HANDLE; // ¾ÉSwapchainÒÑÏú»Ù
+		createInfo.oldSwapchain = VK_NULL_HANDLE; // æ—§Swapchainå·²é”€æ¯
 
 		if (vkCreateSwapchainKHR(logicalDevice, &createInfo, nullptr, &handle) != VK_SUCCESS)
 		{
 			LOG_ERROR("Failed to recreate Swapchain!");
 		}
 
-		// 6. ÖØĞÂ»ñÈ¡ĞÂSwapchainµÄÍ¼ÏñºÍÎÆÀí
+		// 6. é‡æ–°è·å–æ–°Swapchainçš„å›¾åƒå’Œçº¹ç†
 		vkGetSwapchainImagesKHR(logicalDevice, handle, &imageCount, nullptr);
 		images.resize(imageCount);
 		vkGetSwapchainImagesKHR(logicalDevice, handle, &imageCount, images.data());
 
-		// ¸üĞÂÍ¼Ïñ¸ñÊ½ºÍ³ß´ç
+		// æ›´æ–°å›¾åƒæ ¼å¼å’Œå°ºå¯¸
 		imageFormat = surfaceFormat.format;
 		imageExtent = newExtent;
 		info.extent = { newExtent.width, newExtent.height };
-		// ÖØĞÂ´´½¨ÎÆÀí¶ÔÏó£¨Óë¹¹Ôìº¯ÊıÂß¼­Ò»ÖÂ£©
+		// é‡æ–°åˆ›å»ºçº¹ç†å¯¹è±¡ï¼ˆä¸æ„é€ å‡½æ•°é€»è¾‘ä¸€è‡´ï¼‰
 		for (uint32_t i = 0; i < imageCount; i++)
 		{
 			RHITextureInfo textureInfo;
@@ -362,7 +362,7 @@ namespace GameEngine
 			RHITextureRef texture = std::make_shared<VulkanRHITexture>(textureInfo, images[i]);
 			textures.push_back(texture);
 
-			// ÎÆÀíÆÁÕÏ£º´ÓUNDEFINED¹ı¶Éµ½PRESENT×´Ì¬
+			// çº¹ç†å±éšœï¼šä»UNDEFINEDè¿‡æ¸¡åˆ°PRESENTçŠ¶æ€
 			RHI_DYNAMICRHI->GetImmediateCommandList()->TextureBarrier({
 				texture,
 				RESOURCE_STATE_UNDEFINED,
@@ -379,17 +379,17 @@ namespace GameEngine
 	VulkanRHITexture::VulkanRHITexture(const RHITextureInfo& info, VkImage image) : RHITexture(info)
 	{
 		/*
-			TextureAspectFlags: ÑÕÉ«¡¢Éî¶È¡¢Ä£°å¡¢Éî¶È + Ä£°å
+			TextureAspectFlags: é¢œè‰²ã€æ·±åº¦ã€æ¨¡æ¿ã€æ·±åº¦ + æ¨¡æ¿
 			VkFormat: SRGBA URGBA....
-			VkImageUsageFlags£ºÄ¬ÈÏ¶¼¼ÓÁË SRC¡¢DST ,¸ù¾İResourceTypeÌí¼ÓSAMPLED¡¢STORAGE¡¢£¨COLOR_ATTACHMENT/DEPTH_STENCIL_ATTACHMENT£©
-			VkImageType£º1D¡¢2D¡¢3D £¨creationFlagÓÃÀ´Ç¿ÖÆ£©
-			VkImageCreateFlags£ºCubeµÄ»°ĞèÒªÌí¼Ó£¨»¹ÓĞºÜ¶àÆäËû¹¦ÄÜ£©
+			VkImageUsageFlagsï¼šé»˜è®¤éƒ½åŠ äº† SRCã€DST ,æ ¹æ®ResourceTypeæ·»åŠ SAMPLEDã€STORAGEã€ï¼ˆCOLOR_ATTACHMENT/DEPTH_STENCIL_ATTACHMENTï¼‰
+			VkImageTypeï¼š1Dã€2Dã€3D ï¼ˆcreationFlagç”¨æ¥å¼ºåˆ¶ï¼‰
+			VkImageCreateFlagsï¼šCubeçš„è¯éœ€è¦æ·»åŠ ï¼ˆè¿˜æœ‰å¾ˆå¤šå…¶ä»–åŠŸèƒ½ï¼‰
 
-			´´½¨ºó²¼¾ÖÎª UNDEFINED
+			åˆ›å»ºåå¸ƒå±€ä¸º UNDEFINED
 		*/
-		// ´´½¨Ä¬ÈÏµÄView²ÎÊı
-		ASSERT(info.mipLevels > 0, "RHI²ã²»»á×Ô¶¯Mip£¡£¡£¡");
-		ASSERT(info.arrayLayers > 0, "layerÃ»´«£¿");
+		// åˆ›å»ºé»˜è®¤çš„Viewå‚æ•°
+		ASSERT(info.mipLevels > 0, "RHIå±‚ä¸ä¼šè‡ªåŠ¨Mipï¼ï¼ï¼");
+		ASSERT(info.arrayLayers > 0, "layeræ²¡ä¼ ï¼Ÿ");
 		TextureAspectFlags aspects = IsDepthStencilFormat(info.format) ? TEXTURE_ASPECT_DEPTH_STENCIL : IsDepthFormat(info.format) ? TEXTURE_ASPECT_DEPTH : IsStencilFormat(info.format) ? TEXTURE_ASPECT_STENCIL : TEXTURE_ASPECT_COLOR;
 		defaultRange = { aspects, 0, info.mipLevels, 0, info.arrayLayers };
 		defaultLayers = { aspects, 0, 0, info.arrayLayers };
@@ -414,7 +414,7 @@ namespace GameEngine
 
 		VkImageCreateFlags flag = 0;
 		if (info.type & RESOURCE_TYPE_TEXTURE_CUBE)      flag |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
-		if (type & VK_IMAGE_TYPE_3D)                    flag |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR;   // ÔËĞĞ°´ÕÕ2DÊı×éÀ´´¦Àí3DÎÆÀí£¨²»È»¾ÍĞèÒª´´½¨3DImageViewÀ´Ê¹ÓÃ£¬ÆäÊµÒ»Ö±ÓÃµÄ¶¼ÊÇÕâÖÖ£©
+		if (type & VK_IMAGE_TYPE_3D)                    flag |= VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR;   // è¿è¡ŒæŒ‰ç…§2Dæ•°ç»„æ¥å¤„ç†3Dçº¹ç†ï¼ˆä¸ç„¶å°±éœ€è¦åˆ›å»º3DImageViewæ¥ä½¿ç”¨ï¼Œå…¶å®ä¸€ç›´ç”¨çš„éƒ½æ˜¯è¿™ç§ï¼‰
 
 		VkImageCreateInfo imageInfo = {};
 		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -426,10 +426,10 @@ namespace GameEngine
 		imageInfo.arrayLayers = info.arrayLayers;
 		if (info.type & RESOURCE_TYPE_TEXTURE_CUBE) imageInfo.arrayLayers = std::max(imageInfo.arrayLayers, (uint32_t)6);
 		imageInfo.format = format;
-		imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL; // ÎïÀí²¼¾Ö·½Ê½
+		imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL; // ç‰©ç†å¸ƒå±€æ–¹å¼
 		imageInfo.usage = usage;
-		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;   // Âß¼­×´Ì¬ / ·ÃÎÊ¹æÔòµÄ±ê¼Ç ²»Ó°ÏìÊı¾İ±¾Éí£¬µ«ÊÇ»áÓ°ÏìVulkanÈçºÎÊ¹ÓÃËü£¨Ö»ÄÜundefined£¬Ö±½ÓÖ¸¶¨shaderread¾Í±¨´íÁË£©
-		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE; // Ä³¸ö¶ÓÁĞ×å¶ÀÕ¼
+		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;   // é€»è¾‘çŠ¶æ€ / è®¿é—®è§„åˆ™çš„æ ‡è®° ä¸å½±å“æ•°æ®æœ¬èº«ï¼Œä½†æ˜¯ä¼šå½±å“Vulkanå¦‚ä½•ä½¿ç”¨å®ƒï¼ˆåªèƒ½undefinedï¼Œç›´æ¥æŒ‡å®šshaderreadå°±æŠ¥é”™äº†ï¼‰
+		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE; // æŸä¸ªé˜Ÿåˆ—æ—ç‹¬å 
 		imageInfo.samples = VK_SAMPLE_COUNT_1_BIT; // MSAA
 		imageInfo.flags = flag; // Optional
 
@@ -490,7 +490,7 @@ namespace GameEngine
 	{
 		VkCommandPoolCreateInfo poolInfo = {};
 		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		poolInfo.queueFamilyIndex = CAST<VulkanRHIQueue>(info.queue)->GetQueueFamilyIndex();  //ÃüÁî³ØĞèÒª°ó¶¨¶ÓÁĞ×å£¬Ê¹ÓÃÆäÖ¸¶¨µÄÃüÁîÀàĞÍ
+		poolInfo.queueFamilyIndex = CAST<VulkanRHIQueue>(info.queue)->GetQueueFamilyIndex();  //å‘½ä»¤æ± éœ€è¦ç»‘å®šé˜Ÿåˆ—æ—ï¼Œä½¿ç”¨å…¶æŒ‡å®šçš„å‘½ä»¤ç±»å‹
 		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; // Optional
 
 		if (vkCreateCommandPool(VULKAN_DEVICE, &poolInfo, nullptr, &handle) != VK_SUCCESS)
@@ -551,18 +551,18 @@ namespace GameEngine
 	VulkanRHISampler::VulkanRHISampler(const RHISamplerInfo& info) : RHISampler(info)
 	{
 		/*
-			magFilter£º·Å´óÂË²¨£¬µ±ÎÆÀí·Ö±æÂÊĞ¡£¬·Å´ó¹Û¿´ ½Ï½üÊ±Ê¹ÓÃ£¨ÒòÎªÄ£ĞÍÒ»ÏÂ¿éµØ·½¾ÍÕ¼¾İÁËºÜ¶à¸öÆÁÄ»ÏñËØ£¬ÎÆÀíµÄÏñËØ¾Í²»¹»ÁË£©
-			minFilter£ºËõĞ¡ÂË²¨£¬µ±ÎÆÀí·Ö±æÂÊ´ó£¬ËõĞ¡¹Û¿´ ½ÏÔ¶Ê±Ê¹ÓÃ£¨Ä£ĞÍºÜ¶àÎ»ÖÃÖ»Õ¼ÁË¼¸¸öÏñËØ£¬Ô­ÎÆÀíµÄÏñËØ¹ı¶àÁË£©
-			mipmapMode£ºmipmapÄ£Ê½£¬¿ÉÒÔÑ¡ÔñÏßĞÔ²åÖµ»¹ÊÇ×î½üÁÚ²åÖµ
-			anisotropyEnable£º¸÷ÏòÒìĞÔ¹ıÂËÆôÓÃ£¬ÓÃÓÚ¸ÄÉÆÎÆÀíÔÚÇãĞ±ÊÓ½ÇÏÂµÄÀ­ÉìºÍÄ£ºıÎÊÌâ
-			maxAnisotropy£ºÉèÖÃ¸÷ÏòÒìĞÔ¹ıÂËµÄÇ¿¶È£¬ÖµÔ½¸ß£¬ÖÊÁ¿Ô½ºÃ£¬µ«ĞÔÄÜ¿ªÏúÔ½´ó
-			minLod£ºmipmap ×îĞ¡²ã¼¶
-			maxLod£ºmipmap ×î´ó²ã¼¶
-			mipLodBias£ºµ÷Õû mipmap ²ã¼¶µÄÑ¡Ôñ£¬ÈÃ²ÉÑùÆ÷Æ«ÏòÊ¹ÓÃ¸ü¸ß»ò¸üµÍ·Ö±æÂÊµÄ mipmap
-			addressModeU / addressModeV / addressModeW£º ¶¨Òåµ±ÎÆÀí×ø±ê£¨UVW£©³¬³ö [0.0, 1.0] ·¶Î§Ê±£¬ÈçºÎ´¦Àí²ÉÑù
-			borderColor£ºµ±ÉÏ±ß³¬³öUVWÉèÖÃÎªclamp_to_edgeÊ±£¬Õâ¾ÍÊÇ±ß½çÑÕÉ«
-			compareEnable/compareOp£ºÆôÓÃ±È½ÏÄ£Ê½ºó£¬²ÉÑùÆ÷»á½«²ÉÑùµÃµ½µÄÎÆÀíÖµÓëÒ»¸ö²Î¿¼Öµ½øĞĞ±È½Ï£¬ÔÚShaderÖĞ²ÉÑùÊ±Ê¹ÓÃ£¬µ«ÊÇÄÜÁ¦ÓĞÏŞ£¬Ö»ÄÜÅĞ¶Ï±È½Ï½á¹û
-			Reduction£º±¾À´²ÉÑùÊÇ²åÖµ£¬Õâ¸öÍØÕ¹¿ÉÒÔ¸Ä³É·µ»Ø×î´óÖµ»ò×îĞ¡Öµ
+			magFilterï¼šæ”¾å¤§æ»¤æ³¢ï¼Œå½“çº¹ç†åˆ†è¾¨ç‡å°ï¼Œæ”¾å¤§è§‚çœ‹ è¾ƒè¿‘æ—¶ä½¿ç”¨ï¼ˆå› ä¸ºæ¨¡å‹ä¸€ä¸‹å—åœ°æ–¹å°±å æ®äº†å¾ˆå¤šä¸ªå±å¹•åƒç´ ï¼Œçº¹ç†çš„åƒç´ å°±ä¸å¤Ÿäº†ï¼‰
+			minFilterï¼šç¼©å°æ»¤æ³¢ï¼Œå½“çº¹ç†åˆ†è¾¨ç‡å¤§ï¼Œç¼©å°è§‚çœ‹ è¾ƒè¿œæ—¶ä½¿ç”¨ï¼ˆæ¨¡å‹å¾ˆå¤šä½ç½®åªå äº†å‡ ä¸ªåƒç´ ï¼ŒåŸçº¹ç†çš„åƒç´ è¿‡å¤šäº†ï¼‰
+			mipmapModeï¼šmipmapæ¨¡å¼ï¼Œå¯ä»¥é€‰æ‹©çº¿æ€§æ’å€¼è¿˜æ˜¯æœ€è¿‘é‚»æ’å€¼
+			anisotropyEnableï¼šå„å‘å¼‚æ€§è¿‡æ»¤å¯ç”¨ï¼Œç”¨äºæ”¹å–„çº¹ç†åœ¨å€¾æ–œè§†è§’ä¸‹çš„æ‹‰ä¼¸å’Œæ¨¡ç³Šé—®é¢˜
+			maxAnisotropyï¼šè®¾ç½®å„å‘å¼‚æ€§è¿‡æ»¤çš„å¼ºåº¦ï¼Œå€¼è¶Šé«˜ï¼Œè´¨é‡è¶Šå¥½ï¼Œä½†æ€§èƒ½å¼€é”€è¶Šå¤§
+			minLodï¼šmipmap æœ€å°å±‚çº§
+			maxLodï¼šmipmap æœ€å¤§å±‚çº§
+			mipLodBiasï¼šè°ƒæ•´ mipmap å±‚çº§çš„é€‰æ‹©ï¼Œè®©é‡‡æ ·å™¨åå‘ä½¿ç”¨æ›´é«˜æˆ–æ›´ä½åˆ†è¾¨ç‡çš„ mipmap
+			addressModeU / addressModeV / addressModeWï¼š å®šä¹‰å½“çº¹ç†åæ ‡ï¼ˆUVWï¼‰è¶…å‡º [0.0, 1.0] èŒƒå›´æ—¶ï¼Œå¦‚ä½•å¤„ç†é‡‡æ ·
+			borderColorï¼šå½“ä¸Šè¾¹è¶…å‡ºUVWè®¾ç½®ä¸ºclamp_to_edgeæ—¶ï¼Œè¿™å°±æ˜¯è¾¹ç•Œé¢œè‰²
+			compareEnable/compareOpï¼šå¯ç”¨æ¯”è¾ƒæ¨¡å¼åï¼Œé‡‡æ ·å™¨ä¼šå°†é‡‡æ ·å¾—åˆ°çš„çº¹ç†å€¼ä¸ä¸€ä¸ªå‚è€ƒå€¼è¿›è¡Œæ¯”è¾ƒï¼Œåœ¨Shaderä¸­é‡‡æ ·æ—¶ä½¿ç”¨ï¼Œä½†æ˜¯èƒ½åŠ›æœ‰é™ï¼Œåªèƒ½åˆ¤æ–­æ¯”è¾ƒç»“æœ
+			Reductionï¼šæœ¬æ¥é‡‡æ ·æ˜¯æ’å€¼ï¼Œè¿™ä¸ªæ‹“å±•å¯ä»¥æ”¹æˆè¿”å›æœ€å¤§å€¼æˆ–æœ€å°å€¼
 		*/
 		VkSamplerCreateInfo samplerInfo = {};
 		samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -582,7 +582,7 @@ namespace GameEngine
 		samplerInfo.compareEnable = (info.compareFunction != CompareFunction::COMPARE_FUNCTION_NEVER);
 		samplerInfo.compareOp = VulkanUtil::CompareFunctionToVk(info.compareFunction);
 
-		// ¸÷ÏòÒìĞÔĞèÒªÉè±¸Ö§³Ö
+		// å„å‘å¼‚æ€§éœ€è¦è®¾å¤‡æ”¯æŒ
 		if (info.maxAnisotropy > 0.0f) {
 			VkPhysicalDeviceProperties properties{};
 			vkGetPhysicalDeviceProperties(VULKAN_PHYSICALDEVICE, &properties);
@@ -617,7 +617,7 @@ namespace GameEngine
 
 	VulkanRHIShader::VulkanRHIShader(const RHIShaderInfo& info) : RHIShader(info)
 	{
-		// ´ÓspvÎÄ¼şµÄ×Ö·û´®ĞÅÏ¢ÀïÊÕ¼¯¶¨ÒåµÄºê
+		// ä»spvæ–‡ä»¶çš„å­—ç¬¦ä¸²ä¿¡æ¯é‡Œæ”¶é›†å®šä¹‰çš„å®
 		std::regex pattern("#define (\\w+)");
 		for (std::cregex_iterator it((char*)info.code.data(), (char*)info.code.data() + info.code.size(), pattern);
 			it != std::cregex_iterator{}; it++)
@@ -625,7 +625,7 @@ namespace GameEngine
 			reflectInfo.definedSymbols.insert((*it)[1].str());
 		}
 
-		// ´´½¨ShaderModule
+		// åˆ›å»ºShaderModule
 		VkShaderModuleCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = info.code.size();
@@ -635,9 +635,9 @@ namespace GameEngine
 		{
 			LOG_ERROR("Failed to create shader module!");
 		}
-		this->info.code.clear();    // ´úÂë²»ĞèÒª´ø×ÅÁË
+		this->info.code.clear();    // ä»£ç ä¸éœ€è¦å¸¦ç€äº†
 
-		// ÊÕ¼¯·´ÉäĞÅÏ¢
+		// æ”¶é›†åå°„ä¿¡æ¯
 		SpvReflectShaderModule module;
 		SpvReflectResult result = spvReflectCreateShaderModule(info.code.size(), info.code.data(), &module);
 		if (result != SPV_REFLECT_RESULT_SUCCESS)    LOG_ERROR("Failed to generate shader reflect data!");
@@ -666,7 +666,7 @@ namespace GameEngine
 		//     spvReflectEnumeratePushConstantBlocks(&module, &pushConstantCnt, blockVariables.data());
 		// }
 
-		// ×ÅÉ«Æ÷ÊäÈëºÍÊä³ö
+		// ç€è‰²å™¨è¾“å…¥å’Œè¾“å‡º
 		uint32_t inputVariableCnt;
 		spvReflectEnumerateInputVariables(&module, &inputVariableCnt, NULL);
 		if (inputVariableCnt > 0)
@@ -723,7 +723,7 @@ namespace GameEngine
 		//     }
 		// }
 
-		// ÃèÊö·û
+		// æè¿°ç¬¦
 		uint32_t descriptorSetCnt;
 		spvReflectEnumerateDescriptorSets(&module, &descriptorSetCnt, NULL);
 		if (descriptorSetCnt > 0)
@@ -756,7 +756,7 @@ namespace GameEngine
 						(currentBinding->type_description->type_flags & SPV_REFLECT_TYPE_FLAG_EXTERNAL_SAMPLED_IMAGE))
 					{
 						bool isArray = (currentBinding->type_description->type_flags & SPV_REFLECT_TYPE_FLAG_ARRAY);
-						// entry.textureViewType = VulkanUtil::SpvDimToTextureViewType(currentBinding->image.dim, isArray); // ÔİÊ±²»ĞèÒªÕâ¸öĞÅÏ¢
+						// entry.textureViewType = VulkanUtil::SpvDimToTextureViewType(currentBinding->image.dim, isArray); // æš‚æ—¶ä¸éœ€è¦è¿™ä¸ªä¿¡æ¯
 					}
 				}
 			}
@@ -767,9 +767,9 @@ namespace GameEngine
 	{
 		VkPipelineShaderStageCreateInfo shaderStage = {};
 		shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		shaderStage.stage = VulkanUtil::ShaderFrequencyToVkStageFlagBits(info.frequency); // ¾ÍÊÇShaderÀàĞÍ¸øÒ»¸ö±êÖ¾Î»
+		shaderStage.stage = VulkanUtil::ShaderFrequencyToVkStageFlagBits(info.frequency); // å°±æ˜¯Shaderç±»å‹ç»™ä¸€ä¸ªæ ‡å¿—ä½
 		shaderStage.module = handle; // shaderModule
-		shaderStage.pName = info.entry.c_str(); // Èë¿Ú Ò»°ã¶¼ÊÇmain
+		shaderStage.pName = info.entry.c_str(); // å…¥å£ ä¸€èˆ¬éƒ½æ˜¯main
 
 		return shaderStage;
 	}
@@ -799,17 +799,17 @@ namespace GameEngine
 			allocationCreateInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
 			mapped = true;
 		}
-		//allocationCreateInfo.requiredFlags    //±ØÒªĞèÇó
-		//allocationCreateInfo.preferredFlags   //¾¡Á¿Âú×ãµÄĞèÇó
+		//allocationCreateInfo.requiredFlags    //å¿…è¦éœ€æ±‚
+		//allocationCreateInfo.preferredFlags   //å°½é‡æ»¡è¶³çš„éœ€æ±‚
 
-		//VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT Ç¿ÖÆÒªÇóµ¥¶À¿ª±ÙÄÚ´æ
-		//VMA_ALLOCATION_CREATE_MAPPED_BIT  Ç¿ÖÆ³Ö¾ÃÓ³Éä£¬¿ÉÓÉallocationInfo.pMappedDataÖ±½Ó·ÃÎÊ
-		//vmaFlushAllocation(), vmaInvalidateAllocation() Ö¸¶¨»º´æĞ´ÈëºÍ»º´æÊ§Ğ§
+		//VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT å¼ºåˆ¶è¦æ±‚å•ç‹¬å¼€è¾Ÿå†…å­˜
+		//VMA_ALLOCATION_CREATE_MAPPED_BIT  å¼ºåˆ¶æŒä¹…æ˜ å°„ï¼Œå¯ç”±allocationInfo.pMappedDataç›´æ¥è®¿é—®
+		//vmaFlushAllocation(), vmaInvalidateAllocation() æŒ‡å®šç¼“å­˜å†™å…¥å’Œç¼“å­˜å¤±æ•ˆ
 
 		allocationInfo = {};
 		if (info.creationFlag & BUFFER_CREATION_FORCE_ALIGNMENT)
 		{
-			// ´øÉÏÒ»¸ö256Î»¶ÔÆë£¬¹â×·µÈ»áÓÃµ½
+			// å¸¦ä¸Šä¸€ä¸ª256ä½å¯¹é½ï¼Œå…‰è¿½ç­‰ä¼šç”¨åˆ°
 			if (vmaCreateBufferWithAlignment(VULKAN_VMA,
 				&bufferInfo,
 				&allocationCreateInfo,
@@ -865,13 +865,13 @@ namespace GameEngine
 	{
 		for (const ShaderResourceEntry& entry : info.GetEntries())
 		{
-			//ÃèÊö·û²¼¾Ö°ó¶¨ĞÅÏ¢
+			//æè¿°ç¬¦å¸ƒå±€ç»‘å®šä¿¡æ¯
 			VkDescriptorSetLayoutBinding layoutBinding = {};
 			layoutBinding.binding = entry.binding;
 			layoutBinding.stageFlags = VulkanUtil::ShaderFrequencyToVkStageFlags(entry.frequency);
 			layoutBinding.descriptorType = VulkanUtil::ResourceTypeToVk(entry.type);
-			layoutBinding.descriptorCount = entry.size == 0 ? 8192 : entry.size;    //Ö¸¶¨¸Ã°ó¶¨´¦µÄÃèÊö·ûÊıÁ¿£¬>1ÎªÊı×é£¨Ò»¸ölayout¶à¸öbinding£¬Ò»¸öbinding¶à¸ödescriptor£©
-			//¿ªÆôÀ©Õ¹ºóÎª×î´ó¿ÉÄÜµÄÊıÁ¿£¬ÇÒÕâÖÖbinding±ØĞëÔÚlayoutµÄ×îºó
+			layoutBinding.descriptorCount = entry.size == 0 ? 8192 : entry.size;    //æŒ‡å®šè¯¥ç»‘å®šå¤„çš„æè¿°ç¬¦æ•°é‡ï¼Œ>1ä¸ºæ•°ç»„ï¼ˆä¸€ä¸ªlayoutå¤šä¸ªbindingï¼Œä¸€ä¸ªbindingå¤šä¸ªdescriptorï¼‰
+			//å¼€å¯æ‰©å±•åä¸ºæœ€å¤§å¯èƒ½çš„æ•°é‡ï¼Œä¸”è¿™ç§bindingå¿…é¡»åœ¨layoutçš„æœ€å
 			layoutBinding.pImmutableSamplers = nullptr;
 
 			if (setInfos.size() < entry.set + 1) setInfos.resize(entry.set + 1);
@@ -882,29 +882,29 @@ namespace GameEngine
 		{
 			if (set.bindings.size() > 0)
 			{
-				//ÃèÊö·û²¼¾ÖĞÅÏ¢
+				//æè¿°ç¬¦å¸ƒå±€ä¿¡æ¯
 				VkDescriptorSetLayoutCreateInfo layoutInfo;
 				layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 				layoutInfo.bindingCount = (uint32_t)set.bindings.size();
 				layoutInfo.pBindings = set.bindings.data();
-				layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;  //TODO Ê¹µÃÃèÊö·û¿ÉÒÔÊµÊ±¸üĞÂ
+				layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;  //TODO ä½¿å¾—æè¿°ç¬¦å¯ä»¥å®æ—¶æ›´æ–°
 
-				// ÆôÓÃ¿É±ä´óĞ¡ÃèÊö·ûÊıÁ¿±êÖ¾Î»
+				// å¯ç”¨å¯å˜å¤§å°æè¿°ç¬¦æ•°é‡æ ‡å¿—ä½
 				//VkDescriptorBindingFlagsEXT descriptorBindingFlags = VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT;
 				std::vector<VkDescriptorBindingFlagsEXT> descriptorBindingFlags = {};
 				descriptorBindingFlags.resize((uint32_t)set.bindings.size());
 				for (auto& descriptorBindingFlag : descriptorBindingFlags)
 				{
-					descriptorBindingFlag = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;  //ÔÊĞí Variable Descriptor binding µÄ Descriptor ÔÚÃ»ÓĞ±»¶¯Ì¬·ÃÎÊÊ±²»Ö¸¶¨ÎªÓĞĞ§µÄÃèÊö·û
+					descriptorBindingFlag = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;  //å…è®¸ Variable Descriptor binding çš„ Descriptor åœ¨æ²¡æœ‰è¢«åŠ¨æ€è®¿é—®æ—¶ä¸æŒ‡å®šä¸ºæœ‰æ•ˆçš„æè¿°ç¬¦
 				}
 
-				// ÓÃÓÚbindless´´½¨¿É±äµÄbinding descriptorÊıÄ¿
+				// ç”¨äºbindlessåˆ›å»ºå¯å˜çš„binding descriptoræ•°ç›®
 				VkDescriptorSetLayoutBindingFlagsCreateInfo setLayoutBindingFlags{};
 				setLayoutBindingFlags.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
 				setLayoutBindingFlags.bindingCount = (uint32_t)set.bindings.size();
 				setLayoutBindingFlags.pBindingFlags = descriptorBindingFlags.data();
 
-				// Ö¸¶¨ Descriptor Set Layout CreateInfo À©Õ¹
+				// æŒ‡å®š Descriptor Set Layout CreateInfo æ‰©å±•
 				layoutInfo.pNext = &setLayoutBindingFlags;
 
 				if (vkCreateDescriptorSetLayout(VULKAN_DEVICE, &layoutInfo, nullptr, &set.layout) != VK_SUCCESS)
@@ -939,14 +939,14 @@ namespace GameEngine
 
 	VulkanRHIDescriptorSet::VulkanRHIDescriptorSet(VkDescriptorSetLayout setLayout) : RHIDescriptorSet()
 	{
-		//ÃèÊö·û¼¯ºÏĞÅÏ¢
+		//æè¿°ç¬¦é›†åˆä¿¡æ¯
 		VkDescriptorSetLayout layouts[] = { setLayout };
 
 		VkDescriptorSetAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = VULKAN_DESCPOOL;      //Ö¸¶¨ÃèÊö·û³Ø
+		allocInfo.descriptorPool = VULKAN_DESCPOOL;      //æŒ‡å®šæè¿°ç¬¦æ± 
 		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = layouts;                                //Ö¸¶¨ÃèÊö·û¼¯ºÏµÄ²¼¾Ö
+		allocInfo.pSetLayouts = layouts;                                //æŒ‡å®šæè¿°ç¬¦é›†åˆçš„å¸ƒå±€
 
 		if (vkAllocateDescriptorSets(VULKAN_DEVICE, &allocInfo, &handle) != VK_SUCCESS)
 		{
@@ -963,7 +963,7 @@ namespace GameEngine
 
 	RHIDescriptorSet& VulkanRHIDescriptorSet::UpdateDescriptor(const RHIDescriptorUpdateInfo& descriptorUpdateInfo)
 	{
-		//¸üĞÂĞ´ÈëĞÅÏ¢
+		//æ›´æ–°å†™å…¥ä¿¡æ¯
 		VkWriteDescriptorSet descriptorWrite = {};
 		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descriptorWrite.dstSet = handle;
@@ -1028,7 +1028,7 @@ namespace GameEngine
 
 	VulkanRHIGraphicsPipeline::VulkanRHIGraphicsPipeline(const RHIGraphicsPipelineInfo& info) : RHIGraphicsPipeline(info)
 	{
-		// ÃèÊö·û push constant
+		// æè¿°ç¬¦ push constant
 		std::vector<VkPushConstantRange> pushConstants;
 		std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
 		for (const auto& pushConstant : info.rootSignature->GetInfo().GetPushConstants())
@@ -1041,18 +1041,18 @@ namespace GameEngine
 		}
 		pipelineLayout = VulkanUtil::CreatePipelineLayout(VULKAN_DEVICE, descriptorSetLayouts, pushConstants);
 
-		// ×ÅÉ«Æ÷
+		// ç€è‰²å™¨
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
 		if (info.vertexShader)   shaderStages.push_back(CAST<VulkanRHIShader>(info.vertexShader)->GetShaderStageCreateInfo());
 		if (info.geometryShader) shaderStages.push_back(CAST<VulkanRHIShader>(info.geometryShader)->GetShaderStageCreateInfo());
 		if (info.fragmentShader) shaderStages.push_back(CAST<VulkanRHIShader>(info.fragmentShader)->GetShaderStageCreateInfo());
 
-		// Pipeline´´½¨ĞèÒªÒ»¸öRenderPass
+		// Pipelineåˆ›å»ºéœ€è¦ä¸€ä¸ªRenderPass
 		uint32_t attachmentSize = 0;
 		VulkanUtil::VulkanRenderPassAttachments renderPassAttachments = {};
 		for (uint32_t i = 0; i < info.colorAttachmentFormats.size(); i++)
 		{
-			if (info.colorAttachmentFormats[i] == FORMAT_UKNOWN)  // Éè¼ÆÊÇ Ä¬ÈÏ8¸öÎ»ÖÃ£¬ÅĞ¶Ïµ½FORMAT_UKNOWNËµÃ÷ºóĞø¶¼Ã»ÓĞÁË
+			if (info.colorAttachmentFormats[i] == FORMAT_UKNOWN)  // è®¾è®¡æ˜¯ é»˜è®¤8ä¸ªä½ç½®ï¼Œåˆ¤æ–­åˆ°FORMAT_UKNOWNè¯´æ˜åç»­éƒ½æ²¡æœ‰äº†
 				break;
 
 			attachmentSize++;
@@ -1072,10 +1072,10 @@ namespace GameEngine
 		depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 		depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 
-		renderPassAttachments.depthStencilAttachment = depthAttachment;  // Èç¹ûÃ»ÓĞ£¬¸ñÊ½ÊÇFORMAT_UKNOWN
+		renderPassAttachments.depthStencilAttachment = depthAttachment;  // å¦‚æœæ²¡æœ‰ï¼Œæ ¼å¼æ˜¯FORMAT_UKNOWN
 		VkRenderPass renderPass = VULKAN_RHI->FindOrCreateVkRenderPass(renderPassAttachments);
 
-		// ¹âÕ¤¹Ì¶¨¹ÜÏß×´Ì¬
+		// å…‰æ …å›ºå®šç®¡çº¿çŠ¶æ€
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo = GetInputStateCreateInfo(info.vertexInputState);
 		VkPipelineInputAssemblyStateCreateInfo inputAssembly = GetPipelineInputAssemblyStateCreateInfo(info.primitiveType);
 		VkPipelineViewportStateCreateInfo viewportState = GetPipelineViewportStateCreateInfo();
@@ -1113,7 +1113,7 @@ namespace GameEngine
 
 	VulkanRHIRayTracingPipeline::VulkanRHIRayTracingPipeline(const RHIRayTracingPipelineInfo& info) : RHIRayTracingPipeline(info)
 	{
-		// ÃèÊö·û push constant
+		// æè¿°ç¬¦ push constant
 		std::vector<VkPushConstantRange> pushConstants;
 		std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
 		for (const auto& pushConstant : info.rootSignature->GetInfo().GetPushConstants())
@@ -1125,13 +1125,13 @@ namespace GameEngine
 			descriptorSetLayouts.push_back(setInfo.layout);
 		}
 		pipelineLayout = VulkanUtil::CreatePipelineLayout(VULKAN_DEVICE, descriptorSetLayouts, pushConstants);
-		// ×ÅÉ«Æ÷£¬ÓÃSBTÃèÊö
+		// ç€è‰²å™¨ï¼Œç”¨SBTæè¿°
 
 		VkRayTracingPipelineCreateInfoKHR pipelineInfo = {};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 		pipelineInfo.basePipelineIndex = -1;
-		pipelineInfo.maxPipelineRayRecursionDepth = 1;	//¹âÏß×î¶àµÄµ¯Éä´ÎÊı
+		pipelineInfo.maxPipelineRayRecursionDepth = 1;	//å…‰çº¿æœ€å¤šçš„å¼¹å°„æ¬¡æ•°
 		pipelineInfo.layout = pipelineLayout;
 		pipelineInfo.stageCount = (uint32_t)CAST<VulkanRHIShaderBindingTable>(info.shaderBindingTable)->GetStages().size();
 		pipelineInfo.pStages = CAST<VulkanRHIShaderBindingTable>(info.shaderBindingTable)->GetStages().data();
@@ -1143,7 +1143,7 @@ namespace GameEngine
 			LOG_ERROR("Failed to create compute pipeline!");
 		}
 
-		// ´¦ÀíSBT¾ä±ú
+		// å¤„ç†SBTå¥æŸ„
 		BuildShaderGroupHandle();
 	}
 
@@ -1151,7 +1151,7 @@ namespace GameEngine
 	{
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, handle);
 
-		vkCmdSetVertexInputEXT(commandBuffer,   // ¼ÓÁËÒ»¸ö¶¯Ì¬°ó¶¨£¬ÔİÊ±Ö»ÎªÁË²»±¨´í£¿
+		vkCmdSetVertexInputEXT(commandBuffer,   // åŠ äº†ä¸€ä¸ªåŠ¨æ€ç»‘å®šï¼Œæš‚æ—¶åªä¸ºäº†ä¸æŠ¥é”™ï¼Ÿ
 			(uint32_t)dynamicBindingDescriptions.size(),
 			dynamicBindingDescriptions.data(),
 			(uint32_t)dynamicAttributeDescriptions.size(),
@@ -1179,15 +1179,15 @@ namespace GameEngine
 		uint32_t rayMissGroupSize = CAST<VulkanRHIShaderBindingTable>(info.shaderBindingTable)->GetRayMissGroupSize();
 		uint32_t groupSize = CAST<VulkanRHIShaderBindingTable>(info.shaderBindingTable)->GetGroups().size();
 
-		// 0. ³õÊ¼»¯ÓĞ¹ØÄÚ´æÆ«ÒÆºÍ¶ÔÆëµÄĞÅÏ¢
+		// 0. åˆå§‹åŒ–æœ‰å…³å†…å­˜åç§»å’Œå¯¹é½çš„ä¿¡æ¯
 		VkPhysicalDeviceRayTracingPipelinePropertiesKHR rayTracingPipelineProperties = VULKAN_RHI->GetRayTracingPipelineProperties();
 		uint32_t handleSize = rayTracingPipelineProperties.shaderGroupHandleSize;
 		uint32_t handleSizeAligned = Align(rayTracingPipelineProperties.shaderGroupHandleSize, rayTracingPipelineProperties.shaderGroupHandleAlignment);
 		{
-			// Ã¿¸öhandle°´ÕÕshaderGroupHandleSize¶ÔÆë£»
-			// Ã¿¸ötable°´ÕÕshaderGroupBaseAlignment¶ÔÆë
+			// æ¯ä¸ªhandleæŒ‰ç…§shaderGroupHandleSizeå¯¹é½ï¼›
+			// æ¯ä¸ªtableæŒ‰ç…§shaderGroupBaseAlignmentå¯¹é½
 			raygenRegion.deviceAddress = 0;
-			raygenRegion.stride = Align(rayGenGroupSize * handleSizeAligned, rayTracingPipelineProperties.shaderGroupBaseAlignment);	//¶ÔÓÚpRayGenShaderBindingTable£¬²½³¤ºÍ´óĞ¡ÒªÒ»ÖÂ£¿
+			raygenRegion.stride = Align(rayGenGroupSize * handleSizeAligned, rayTracingPipelineProperties.shaderGroupBaseAlignment);	//å¯¹äºpRayGenShaderBindingTableï¼Œæ­¥é•¿å’Œå¤§å°è¦ä¸€è‡´ï¼Ÿ
 			raygenRegion.size = Align(rayGenGroupSize * handleSizeAligned, rayTracingPipelineProperties.shaderGroupBaseAlignment);
 
 			missRegion.deviceAddress = raygenRegion.size;
@@ -1199,7 +1199,7 @@ namespace GameEngine
 			hitRegion.size = Align(hitGroupSize * handleSizeAligned, rayTracingPipelineProperties.shaderGroupBaseAlignment);;
 		}
 
-		// 1. »ñÈ¡ShaderGroupµÄ¾ä±úĞÅÏ¢£¬ÔÚ»æÖÆÊ±ĞèÒªÊ¹ÓÃ
+		// 1. è·å–ShaderGroupçš„å¥æŸ„ä¿¡æ¯ï¼Œåœ¨ç»˜åˆ¶æ—¶éœ€è¦ä½¿ç”¨
 		std::vector<uint8_t> shaderHandleStorage;
 		{
 			uint32_t sbtSize = groupSize * handleSize;
@@ -1208,7 +1208,7 @@ namespace GameEngine
 			vkGetRayTracingShaderGroupHandlesKHR(VULKAN_DEVICE, handle, 0, groupSize, sbtSize, shaderHandleStorage.data());
 		}
 
-		// 2. ´´½¨buffer±£´æ¾ä±úĞÅÏ¢
+		// 2. åˆ›å»ºbufferä¿å­˜å¥æŸ„ä¿¡æ¯
 		{
 			uint32_t totalSize = raygenRegion.size + missRegion.size + hitRegion.size;
 			RHIBufferInfo bufferInfo = {};
@@ -1224,7 +1224,7 @@ namespace GameEngine
 
 			uint32_t handleIndex = 0;
 
-			// °Ñ»ñÈ¡µ½µÄ¾ä±úĞÅÏ¢°´ÄÚ´æ¶ÔÆë¿½±´µ½bufferÄÚ
+			// æŠŠè·å–åˆ°çš„å¥æŸ„ä¿¡æ¯æŒ‰å†…å­˜å¯¹é½æ‹·è´åˆ°bufferå†…
 			for (int i = 0; i < rayGenGroupSize; i++)
 			{
 				memcpy((uint8_t*)shaderGroupHandleBuffer->Map() + (0 + (i * raygenRegion.stride)),
@@ -1260,15 +1260,15 @@ namespace GameEngine
 			uint8_t binding = vertexElement.streamIndex;
 			VkVertexInputAttributeDescription attributeDescription = {};
 			attributeDescription.binding = binding;
-			attributeDescription.location = vertexElement.attributeIndex;                                       // ¶ÔÓ¦layout location
-			attributeDescription.format = VulkanUtil::RHIFormatToVkFormat(vertexElement.format);   // ÊôĞÔ¸ñÊ½
-			attributeDescription.offset = vertexElement.offset;                                                 // ×Ö¶ÎÆ«ÒÆ
+			attributeDescription.location = vertexElement.attributeIndex;                                       // å¯¹åº”layout location
+			attributeDescription.format = VulkanUtil::RHIFormatToVkFormat(vertexElement.format);   // å±æ€§æ ¼å¼
+			attributeDescription.offset = vertexElement.offset;                                                 // å­—æ®µåç§»
 			attributeDescriptions.push_back(attributeDescription);
 
-			while (bindingDescriptions.size() < vertexElement.streamIndex + 1) bindingDescriptions.push_back({});   // ÏÂÈıÏî¶ÔËùÓĞÍ¬bindingµÄvertexElementÓ¦¸ÃÈ«²¿Ò»ÖÂ
+			while (bindingDescriptions.size() < vertexElement.streamIndex + 1) bindingDescriptions.push_back({});   // ä¸‹ä¸‰é¡¹å¯¹æ‰€æœ‰åŒbindingçš„vertexElementåº”è¯¥å…¨éƒ¨ä¸€è‡´
 			bindingDescriptions[binding].binding = binding;
-			bindingDescriptions[binding].stride = vertexElement.stride;                                                                             //²½³¤
-			bindingDescriptions[binding].inputRate = vertexElement.useInstanceIndex ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX;  //ÊäÈëËÙÂÊ£¬Öğ¶¥µã/ÖğÊµÀı
+			bindingDescriptions[binding].stride = vertexElement.stride;                                                                             //æ­¥é•¿
+			bindingDescriptions[binding].inputRate = vertexElement.useInstanceIndex ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX;  //è¾“å…¥é€Ÿç‡ï¼Œé€é¡¶ç‚¹/é€å®ä¾‹
 		}
 
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
@@ -1283,11 +1283,11 @@ namespace GameEngine
 
 	VkPipelineInputAssemblyStateCreateInfo VulkanRHIGraphicsPipeline::GetPipelineInputAssemblyStateCreateInfo(const PrimitiveType& primitiveType)
 	{
-		// ÊäÈëAssemblyĞÅÏ¢
+		// è¾“å…¥Assemblyä¿¡æ¯
 		VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
 		inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-		inputAssembly.topology = VulkanUtil::PrimitiveTypeToVk(primitiveType);      // Í¼ÔªÍØÆË
-		inputAssembly.primitiveRestartEnable = VK_FALSE;                            // ÉèÎªtrue£¬¿ÉÒÔÍ¨¹ı0xFFFF»òÕß0xFFFFFFFFÎªÌØÊâË÷Òı£¬·Ö½â_STRIPÍØÆËÏÂµÄ½á¹¹
+		inputAssembly.topology = VulkanUtil::PrimitiveTypeToVk(primitiveType);      // å›¾å…ƒæ‹“æ‰‘
+		inputAssembly.primitiveRestartEnable = VK_FALSE;                            // è®¾ä¸ºtrueï¼Œå¯ä»¥é€šè¿‡0xFFFFæˆ–è€…0xFFFFFFFFä¸ºç‰¹æ®Šç´¢å¼•ï¼Œåˆ†è§£_STRIPæ‹“æ‰‘ä¸‹çš„ç»“æ„
 		inputAssembly.flags = 0;
 
 		return inputAssembly;
@@ -1295,7 +1295,7 @@ namespace GameEngine
 
 	VkPipelineViewportStateCreateInfo VulkanRHIGraphicsPipeline::GetPipelineViewportStateCreateInfo()
 	{
-		// ÊÓ´°ĞÅÏ¢
+		// è§†çª—ä¿¡æ¯
 		// VkViewport viewport = {};
 		// viewport.x = 0.0f;
 		// viewport.y = 0.0f;
@@ -1304,12 +1304,12 @@ namespace GameEngine
 		// viewport.minDepth = 0.0f;
 		// viewport.maxDepth = 1.0f;
 
-		// ²Ã¼ô¾ØĞÎĞÅÏ¢
+		// è£å‰ªçŸ©å½¢ä¿¡æ¯
 		// VkRect2D scissor = {};
 		// scissor.offset = { 0, 0 };
 		// scissor.extent = extent;
 
-		// Ê¹ÓÃdynamic ²»ÔÚÕâÀï´´½¨
+		// ä½¿ç”¨dynamic ä¸åœ¨è¿™é‡Œåˆ›å»º
 		VkPipelineViewportStateCreateInfo viewportState = {};
 		viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 		viewportState.viewportCount = 1;
@@ -1323,19 +1323,19 @@ namespace GameEngine
 
 	VkPipelineRasterizationStateCreateInfo VulkanRHIGraphicsPipeline::GetPipelineRasterizationStateCreateInfo(const RHIRasterizerStateInfo& rasterizerState)
 	{
-		// ¹âÕ¤»¯ĞÅÏ¢
+		// å…‰æ …åŒ–ä¿¡æ¯
 		VkPipelineRasterizationStateCreateInfo rasterizer = {};
 		rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-		rasterizer.depthClampEnable = rasterizerState.depthClipMode == DEPTH_CLAMP ? VK_TRUE : VK_FALSE;            //¶ÔÓÚ³¬¹ıÔ¶½ü²Ã¼ôÆ½ÃæµÄ´¦Àí
-		rasterizer.rasterizerDiscardEnable = VK_FALSE;                                                              //½ûÖ¹Í¼Ôª´«Êä
-		rasterizer.polygonMode = VulkanUtil::FillModeToVk(rasterizerState.fillMode);                       //¶à±ßĞÎµÄÌî³äÄ£Ê½
-		rasterizer.lineWidth = 1.0f;                                                                                //Ìî³äÄ£Ê½ÎªÏß¿òÊ±µÄÏß¿í¶È
-		rasterizer.cullMode = VulkanUtil::CullModeToVk(rasterizerState.cullMode);                          //²Ã¼ôÄ£Ê½
-		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;                                                     //ÃæÊÖĞÔ
+		rasterizer.depthClampEnable = rasterizerState.depthClipMode == DEPTH_CLAMP ? VK_TRUE : VK_FALSE;            //å¯¹äºè¶…è¿‡è¿œè¿‘è£å‰ªå¹³é¢çš„å¤„ç†
+		rasterizer.rasterizerDiscardEnable = VK_FALSE;                                                              //ç¦æ­¢å›¾å…ƒä¼ è¾“
+		rasterizer.polygonMode = VulkanUtil::FillModeToVk(rasterizerState.fillMode);                       //å¤šè¾¹å½¢çš„å¡«å……æ¨¡å¼
+		rasterizer.lineWidth = 1.0f;                                                                                //å¡«å……æ¨¡å¼ä¸ºçº¿æ¡†æ—¶çš„çº¿å®½åº¦
+		rasterizer.cullMode = VulkanUtil::CullModeToVk(rasterizerState.cullMode);                          //è£å‰ªæ¨¡å¼
+		rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;                                                     //é¢æ‰‹æ€§
 
 		// rasterizer.depthBiasEnable = (  rasterizerState.depthBias > 0.0f ||
-		//                                 rasterizerState.slopeScaleDepthBias > 0.0f) ? VK_TRUE : VK_FALSE;        //Éî¶È»º³åµÄbias
-		rasterizer.depthBiasEnable = VK_TRUE;                                                                       //¶¯Ì¬ÉèÖÃ
+		//                                 rasterizerState.slopeScaleDepthBias > 0.0f) ? VK_TRUE : VK_FALSE;        //æ·±åº¦ç¼“å†²çš„bias
+		rasterizer.depthBiasEnable = VK_TRUE;                                                                       //åŠ¨æ€è®¾ç½®
 		rasterizer.depthBiasConstantFactor = rasterizerState.depthBias;
 		rasterizer.depthBiasClamp = 0.0f;
 		rasterizer.depthBiasSlopeFactor = rasterizerState.slopeScaleDepthBias;
@@ -1346,11 +1346,11 @@ namespace GameEngine
 
 	VkPipelineMultisampleStateCreateInfo VulkanRHIGraphicsPipeline::GetPipelineMultisampleStateCreateInfo()
 	{
-		// ¶àÖØ²ÉÑùĞÅÏ¢
+		// å¤šé‡é‡‡æ ·ä¿¡æ¯
 		VkPipelineMultisampleStateCreateInfo multisampling = {};
 		multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 		multisampling.sampleShadingEnable = VK_FALSE;
-		multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;     // TODO Ö®ºóÔÙÖ§³Ö
+		multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;     // TODO ä¹‹åå†æ”¯æŒ
 		multisampling.minSampleShading = 1.0f;
 		multisampling.pSampleMask = nullptr;
 		multisampling.alphaToCoverageEnable = VK_FALSE;
@@ -1362,7 +1362,7 @@ namespace GameEngine
 
 	VkPipelineColorBlendStateCreateInfo VulkanRHIGraphicsPipeline::GetPipelineColorBlendStateCreateInfo(const RHIBlendStateInfo& blendState, uint32_t size)
 	{
-		//»ìºÏĞÅÏ¢
+		//æ··åˆä¿¡æ¯
 		for (uint32_t i = 0; i < size; i++)
 		{
 			auto& attachment = blendState.renderTargets[i];
@@ -1396,17 +1396,17 @@ namespace GameEngine
 
 	VkPipelineDepthStencilStateCreateInfo VulkanRHIGraphicsPipeline::GetPipelineDepthStencilStateCreateInfo(const RHIDepthStencilStateInfo& depthStencilState)
 	{
-		//Éî¶È/Ä£°å»º³åĞÅÏ¢
+		//æ·±åº¦/æ¨¡æ¿ç¼“å†²ä¿¡æ¯
 		VkPipelineDepthStencilStateCreateInfo depthStencil{};
 		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencil.depthTestEnable = depthStencilState.enableDepthTest;                                               //Éî¶È²âÊÔ
-		depthStencil.depthWriteEnable = depthStencilState.enableDepthWrite;                                             //Éî¶ÈĞ´Èë
-		depthStencil.depthCompareOp = VulkanUtil::CompareFunctionToVk(depthStencilState.depthTest);    //Éî¶È±È½Ï·½Ê½
-		depthStencil.depthBoundsTestEnable = VK_FALSE;              //±ß½ç¼ì²â
+		depthStencil.depthTestEnable = depthStencilState.enableDepthTest;                                               //æ·±åº¦æµ‹è¯•
+		depthStencil.depthWriteEnable = depthStencilState.enableDepthWrite;                                             //æ·±åº¦å†™å…¥
+		depthStencil.depthCompareOp = VulkanUtil::CompareFunctionToVk(depthStencilState.depthTest);    //æ·±åº¦æ¯”è¾ƒæ–¹å¼
+		depthStencil.depthBoundsTestEnable = VK_FALSE;              //è¾¹ç•Œæ£€æµ‹
 		depthStencil.minDepthBounds = 0.0f;
 		depthStencil.maxDepthBounds = 1.0f;
 
-		depthStencil.stencilTestEnable = VK_FALSE;                  //Ä£°å²âÊÔ
+		depthStencil.stencilTestEnable = VK_FALSE;                  //æ¨¡æ¿æµ‹è¯•
 		depthStencil.front = {};
 		depthStencil.back = {};
 
@@ -1425,7 +1425,7 @@ namespace GameEngine
 
 	void VulkanRHIGraphicsPipeline::GetDynamicInputStateCreateInfo(const VertexInputStateInfo& vertexInputState)
 	{
-		// ¸ú¾²Ì¬µÄÉùÃ÷»ù±¾Ò»Ñù£¬µ«ÊÇÌî³äµÄ½á¹¹Ìå²»Ò»Ñù
+		// è·Ÿé™æ€çš„å£°æ˜åŸºæœ¬ä¸€æ ·ï¼Œä½†æ˜¯å¡«å……çš„ç»“æ„ä½“ä¸ä¸€æ ·
 		for (const VertexElement& vertexElement : vertexInputState.vertexElements)
 		{
 			uint8_t binding = vertexElement.streamIndex;
@@ -1441,14 +1441,14 @@ namespace GameEngine
 			dynamicBindingDescriptions[binding].sType = VK_STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT;
 			dynamicBindingDescriptions[binding].binding = binding;
 			dynamicBindingDescriptions[binding].stride = vertexElement.stride;
-			dynamicBindingDescriptions[binding].divisor = 1;    // ÕâÊÇÉ¶£¿
+			dynamicBindingDescriptions[binding].divisor = 1;    // è¿™æ˜¯å•¥ï¼Ÿ
 			dynamicBindingDescriptions[binding].inputRate = vertexElement.useInstanceIndex ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX;
 		}
 	}
 
 	VulkanRHIRenderPass::VulkanRHIRenderPass(const RHIRenderPassInfo& info) : RHIRenderPass(info)
 	{
-		// ´´½¨FrameBuffer Ã¿¸ö¸½¼şĞèÒªÓĞImageView
+		// åˆ›å»ºFrameBuffer æ¯ä¸ªé™„ä»¶éœ€è¦æœ‰ImageView
 		std::vector<VkImageView> imageViews;
 		VulkanUtil::VulkanRenderPassAttachments renderPassAttachments = {};
 		for (uint32_t i = 0; i < info.colorAttachments.size(); i++)
@@ -1466,7 +1466,7 @@ namespace GameEngine
 
 			imageViews.push_back(CAST<VulkanRHITextureView>(info.colorAttachments[i].textureView)->GetHandle());
 		}
-		// Éî¶È¸½¼şĞèÒªÓĞImageView
+		// æ·±åº¦é™„ä»¶éœ€è¦æœ‰ImageView
 		if (info.depthStencilAttachment.textureView != nullptr)
 		{
 			VkAttachmentDescription depthAttachment{};
@@ -1480,11 +1480,11 @@ namespace GameEngine
 			imageViews.push_back(CAST<VulkanRHITextureView>(info.depthStencilAttachment.textureView)->GetHandle());
 		}
 
-		// PoolÖĞ»º´æRenderPass   imageViews×îºóÒ»ÏîÊÇÉî¶È¸½¼ş
+		// Poolä¸­ç¼“å­˜RenderPass   imageViewsæœ€åä¸€é¡¹æ˜¯æ·±åº¦é™„ä»¶
 		handle = VULKAN_RHI->FindOrCreateVkRenderPass(renderPassAttachments);
 
-		// ´´½¨framebuffer  TODO:°ÑFrameBufferÈûµ½RenderPassÀïÁË
-		// Framebuffer´´½¨Ê±ÊÇĞèÒª¾ßÌå×ÊÔ´µÄ£¬ÒòÎªÕâÀï°ÑimageViews´«½øÈ¥ÁË
+		// åˆ›å»ºframebuffer  TODO:æŠŠFrameBufferå¡åˆ°RenderPassé‡Œäº†
+		// Framebufferåˆ›å»ºæ—¶æ˜¯éœ€è¦å…·ä½“èµ„æºçš„ï¼Œå› ä¸ºè¿™é‡ŒæŠŠimageViewsä¼ è¿›å»äº†
 		VkFramebufferCreateInfo framebufferInfo = {};
 		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		framebufferInfo.renderPass = handle;
@@ -1503,7 +1503,7 @@ namespace GameEngine
 
 	VulkanRHIComputePipeline::VulkanRHIComputePipeline(const RHIComputePipelineInfo& info) : RHIComputePipeline(info)
 	{
-		// ÃèÊö·û push constant
+		// æè¿°ç¬¦ push constant
 		std::vector<VkPushConstantRange> pushConstants;
 		std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
 		for (const auto& pushConstant : info.rootSignature->GetInfo().GetPushConstants())
@@ -1516,7 +1516,7 @@ namespace GameEngine
 		}
 		pipelineLayout = VulkanUtil::CreatePipelineLayout(VULKAN_DEVICE, descriptorSetLayouts, pushConstants);
 
-		// ×ÅÉ«Æ÷
+		// ç€è‰²å™¨
 		VkPipelineShaderStageCreateInfo shaderStage = CAST<VulkanRHIShader>(info.computeShader)->GetShaderStageCreateInfo();
 
 		VkComputePipelineCreateInfo pipelineInfo = {};
@@ -1552,7 +1552,7 @@ namespace GameEngine
 
 
 
-		// ¶¨Òå¶¥µã/Ë÷ÒıÊı¾İ£¨Éè±¸µØÖ·£©µÄ¶ÁÈ¡Î»ÖÃ¼°Êı¾İ½âÊÍ·½Ê½£¨¸ñÊ½¡¢²½³¤µÈ
+		// å®šä¹‰é¡¶ç‚¹/ç´¢å¼•æ•°æ®ï¼ˆè®¾å¤‡åœ°å€ï¼‰çš„è¯»å–ä½ç½®åŠæ•°æ®è§£é‡Šæ–¹å¼ï¼ˆæ ¼å¼ã€æ­¥é•¿ç­‰
 		VkAccelerationStructureGeometryTrianglesDataKHR triangles = {};
 		triangles.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
 		triangles.vertexFormat = VK_FORMAT_R32G32B32_SFLOAT;
@@ -1564,14 +1564,14 @@ namespace GameEngine
 		triangles.transformData.deviceAddress = 0;
 		triangles.transformData.hostAddress = nullptr;
 
-		// Ö¸¶¨¼¸ºÎÌåÀàĞÍ£¨Èı½ÇĞÎ¡¢ÊµÀı¡¢AABB£©¼°¹¹½¨±êÖ¾µÄ°ü×°Æ÷
+		// æŒ‡å®šå‡ ä½•ä½“ç±»å‹ï¼ˆä¸‰è§’å½¢ã€å®ä¾‹ã€AABBï¼‰åŠæ„å»ºæ ‡å¿—çš„åŒ…è£…å™¨
 		VkAccelerationStructureGeometryKHR geometry = {};
 		geometry.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
 		geometry.geometryType = VK_GEOMETRY_TYPE_TRIANGLES_KHR;
 		geometry.geometry.triangles = triangles;
-		geometry.flags = VK_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR | VK_GEOMETRY_OPAQUE_BIT_KHR; // È¥ÖØ | ²»Í¸Ã÷
+		geometry.flags = VK_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR | VK_GEOMETRY_OPAQUE_BIT_KHR; // å»é‡ | ä¸é€æ˜
 
-		// ¶¨ÒåÒª´¦ÀíµÄÊı¾İ²¿·Ö£¨Ô­Ê¼¼ÆÊı¡¢Æ«ÒÆÁ¿µÈ£©
+		// å®šä¹‰è¦å¤„ç†çš„æ•°æ®éƒ¨åˆ†ï¼ˆåŸå§‹è®¡æ•°ã€åç§»é‡ç­‰ï¼‰
 		VkAccelerationStructureBuildRangeInfoKHR rangeInfo = {};
 		rangeInfo.primitiveCount = info.triangleCount;
 		rangeInfo.primitiveOffset = info.indexOffset;
@@ -1585,20 +1585,20 @@ namespace GameEngine
 		buildInfo.geometryCount = 1; // Deal with one geometry at a time
 		buildInfo.pGeometries = &geometry;
 
-		// ²éÑ¯¹¹½¨ĞèÒªµÄÄÚ´æ´óĞ¡
+		// æŸ¥è¯¢æ„å»ºéœ€è¦çš„å†…å­˜å¤§å°
 		VkAccelerationStructureBuildSizesInfoKHR buildSize = {};
 		buildSize.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR;
 		vkGetAccelerationStructureBuildSizesKHR(VULKAN_DEVICE, VK_ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR, &buildInfo,
 			&rangeInfo.primitiveCount, &buildSize);
 
-		// ´´½¨ÁÙÊ±»º´æÇø
+		// åˆ›å»ºä¸´æ—¶ç¼“å­˜åŒº
 		RHIBufferInfo bufferInfo = {};
 		bufferInfo.size = buildSize.accelerationStructureSize;
 		bufferInfo.memoryUsage = MEMORY_USAGE_GPU_ONLY;
 		bufferInfo.type = RESOURCE_TYPE_RAY_TRACING;
 		accelerationStructureBuffer = VULKAN_RHI->CreateBuffer(bufferInfo);
 
-		// ´´½¨¼ÓËÙ½á¹¹
+		// åˆ›å»ºåŠ é€Ÿç»“æ„
 		VkAccelerationStructureCreateInfoKHR accelerationStructureInfo = {};
 		accelerationStructureInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR;
 		accelerationStructureInfo.buffer = CAST<VulkanRHIBuffer>(accelerationStructureBuffer)->GetHandle();
@@ -1609,7 +1609,7 @@ namespace GameEngine
 			LOG_ERROR("Failed to create Acceleration Structure!");
 		}
 
-		// »ñÈ¡¼ÓËÙ½á¹¹µØÖ·
+		// è·å–åŠ é€Ÿç»“æ„åœ°å€
 		VkAccelerationStructureDeviceAddressInfoKHR accelerationDeviceAddressInfo{};
 		accelerationDeviceAddressInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR;
 		accelerationDeviceAddressInfo.accelerationStructure = handle;
@@ -1619,7 +1619,7 @@ namespace GameEngine
 		bufferInfo1.size = buildSize.buildScratchSize;
 		bufferInfo1.memoryUsage = MEMORY_USAGE_GPU_ONLY;
 		bufferInfo1.type = RESOURCE_TYPE_RW_BUFFER;
-		bufferInfo1.creationFlag = BUFFER_CREATION_PERSISTENT_MAP | BUFFER_CREATION_FORCE_ALIGNMENT; // ÄÚ´æ¶ÔÆë
+		bufferInfo1.creationFlag = BUFFER_CREATION_PERSISTENT_MAP | BUFFER_CREATION_FORCE_ALIGNMENT; // å†…å­˜å¯¹é½
 		RHIBufferRef scratchBuffer = VULKAN_RHI->CreateBuffer(bufferInfo1);
 
 		buildInfo.srcAccelerationStructure = VK_NULL_HANDLE;
@@ -1635,7 +1635,7 @@ namespace GameEngine
 			&pBuildRange);
 
 		immediateCommandContest->Flush();
-		//scratchBuffer->Destroy();  »á×Ô¶¯ÇåÀí
+		//scratchBuffer->Destroy();  ä¼šè‡ªåŠ¨æ¸…ç†
 	}
 
 	void VulkanRHIBottomLevelAccelerationStructure::Destroy()
@@ -1664,8 +1664,8 @@ namespace GameEngine
 		}
 		memcpy(instanceBuffer->Map(), blasInstances.data(), blasInstances.size() * sizeof(VkAccelerationStructureInstanceKHR));
 
-		// 0. Êı¾İ½á¹¹
-		// Ìî³ä¶¥²ã¼ÓËÙ½á¹¹Ê¹ÓÃµÄ¼¸ºÎĞÅÏ¢£¨Ö»ÓĞÒ»¸ö£©£¬Ê¹ÓÃµÄÍ¼ÔªÊÇVK_GEOMETRY_TYPE_INSTANCES_KHR
+		// 0. æ•°æ®ç»“æ„
+		// å¡«å……é¡¶å±‚åŠ é€Ÿç»“æ„ä½¿ç”¨çš„å‡ ä½•ä¿¡æ¯ï¼ˆåªæœ‰ä¸€ä¸ªï¼‰ï¼Œä½¿ç”¨çš„å›¾å…ƒæ˜¯VK_GEOMETRY_TYPE_INSTANCES_KHR
 		VkAccelerationStructureGeometryKHR accelerationStructureGeometry{};
 		accelerationStructureGeometry.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
 		accelerationStructureGeometry.geometryType = VK_GEOMETRY_TYPE_INSTANCES_KHR;
@@ -1674,26 +1674,26 @@ namespace GameEngine
 		accelerationStructureGeometry.geometry.instances.arrayOfPointers = VK_FALSE;
 		accelerationStructureGeometry.geometry.instances.data.deviceAddress = VulkanUtil::GetBufferDeviceAddress(CAST<VulkanRHIBuffer>(instanceBuffer)->GetHandle(), VULKAN_DEVICE);
 
-		// ¹¹½¨¼ÓËÙ½á¹¹µÄĞÅÏ¢
+		// æ„å»ºåŠ é€Ÿç»“æ„çš„ä¿¡æ¯
 		VkAccelerationStructureBuildGeometryInfoKHR accelerationStructureBuildGeometryInfo{};
 		accelerationStructureBuildGeometryInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR;
-		accelerationStructureBuildGeometryInfo.type = VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR;			//¶¥²ã
+		accelerationStructureBuildGeometryInfo.type = VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR;			//é¡¶å±‚
 		accelerationStructureBuildGeometryInfo.flags = VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR | VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR;
-		accelerationStructureBuildGeometryInfo.geometryCount = 1;											//Ö»ÓĞÒ»¸ö¼¸ºÎĞÅÏ¢£¬¾ÍÊÇ¶¥²ãµÄ
+		accelerationStructureBuildGeometryInfo.geometryCount = 1;											//åªæœ‰ä¸€ä¸ªå‡ ä½•ä¿¡æ¯ï¼Œå°±æ˜¯é¡¶å±‚çš„
 		accelerationStructureBuildGeometryInfo.mode = update ?
-			VK_BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR :   //¼ÓËÙ½á¹¹ÊÇ·ñ¸üĞÂ
+			VK_BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR :   //åŠ é€Ÿç»“æ„æ˜¯å¦æ›´æ–°
 			VK_BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR;
 		accelerationStructureBuildGeometryInfo.pGeometries = &accelerationStructureGeometry;
 		accelerationStructureBuildGeometryInfo.srcAccelerationStructure = VK_NULL_HANDLE;
 		accelerationStructureBuildGeometryInfo.dstAccelerationStructure = VK_NULL_HANDLE;
 
-		// 1. »ñÈ¡ĞèÒª·ÖÅäµÄbufferµÄ³ß´çĞÅÏ¢
+		// 1. è·å–éœ€è¦åˆ†é…çš„bufferçš„å°ºå¯¸ä¿¡æ¯
 		VkAccelerationStructureBuildSizesInfoKHR buildSize = {};
 		buildSize.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR;
 		{
 			uint32_t primitiveCount = info.maxInstance;
 
-			//»ñÈ¡buffer³ß´ç£¬ÔÚÏÂÃæ½øĞĞ·ÖÅä
+			//è·å–bufferå°ºå¯¸ï¼Œåœ¨ä¸‹é¢è¿›è¡Œåˆ†é…
 			vkGetAccelerationStructureBuildSizesKHR(
 				VULKAN_DEVICE,
 				VK_ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR,
@@ -1702,7 +1702,7 @@ namespace GameEngine
 				&buildSize);
 		}
 
-		// 2. Èç¹û·Ç¸üĞÂ£¬ĞèÒªÊ×ÏÈ´´½¨¼ÓËÙ½á¹¹
+		// 2. å¦‚æœéæ›´æ–°ï¼Œéœ€è¦é¦–å…ˆåˆ›å»ºåŠ é€Ÿç»“æ„
 		if (update == false)
 		{
 			RHIBufferInfo bufferInfo1 = {};
@@ -1719,20 +1719,20 @@ namespace GameEngine
 			createInfo.buffer = CAST<VulkanRHIBuffer>(accelerationStructureBuffer)->GetHandle();
 			createInfo.offset = 0;
 
-			// ´Ë´¦½ö´´½¨ÁË¼ÓËÙ½á¹¹£¬²¢Ã»ÓĞÊµ¼Ê¹¹½¨£¨·ÖÅäÁË¿Õ¼ä£¬»¹Ã»ÍùÀïÌîÊı¾İ£©
+			// æ­¤å¤„ä»…åˆ›å»ºäº†åŠ é€Ÿç»“æ„ï¼Œå¹¶æ²¡æœ‰å®é™…æ„å»ºï¼ˆåˆ†é…äº†ç©ºé—´ï¼Œè¿˜æ²¡å¾€é‡Œå¡«æ•°æ®ï¼‰
 			if (vkCreateAccelerationStructureKHR(VULKAN_DEVICE, &createInfo, nullptr, &handle) != VK_SUCCESS)
 			{
 				LOG_ERROR("Failed to create Acceleration Structure!");
 			}
 
-			// »ñÈ¡¼ÓËÙ½á¹¹µØÖ·
+			// è·å–åŠ é€Ÿç»“æ„åœ°å€
 			VkAccelerationStructureDeviceAddressInfoKHR accelerationDeviceAddressInfo{};
 			accelerationDeviceAddressInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR;
 			accelerationDeviceAddressInfo.accelerationStructure = handle;
 			address = vkGetAccelerationStructureDeviceAddressKHR(VULKAN_DEVICE, &accelerationDeviceAddressInfo);
 		}
 
-		// 3. ´´½¨¹¹½¨¹ı³ÌĞèÒªÊ¹ÓÃµÄscratch buffer
+		// 3. åˆ›å»ºæ„å»ºè¿‡ç¨‹éœ€è¦ä½¿ç”¨çš„scratch buffer
 		RHIBufferInfo bufferInfo2 = {};
 		bufferInfo2.memoryUsage = MEMORY_USAGE_CPU_TO_GPU;
 		bufferInfo2.type = RESOURCE_TYPE_RW_BUFFER;
@@ -1740,16 +1740,16 @@ namespace GameEngine
 		bufferInfo2.size = buildSize.buildScratchSize;
 		RHIBufferRef scratchBuffer = VULKAN_RHI->CreateBuffer(bufferInfo2);
 
-		// 4. ÃüÁîÖ´ĞĞ¼ÓËÙ½á¹¹´´½¨
+		// 4. å‘½ä»¤æ‰§è¡ŒåŠ é€Ÿç»“æ„åˆ›å»º
 		{
-			//²¹Æë¹¹½¨ËùĞèµÄĞÅÏ¢£¨ĞèÒª¹¹½¨µÄ¼ÓËÙ½á¹¹£¬ºÍscratch buffer£©
+			//è¡¥é½æ„å»ºæ‰€éœ€çš„ä¿¡æ¯ï¼ˆéœ€è¦æ„å»ºçš„åŠ é€Ÿç»“æ„ï¼Œå’Œscratch bufferï¼‰
 			accelerationStructureBuildGeometryInfo.srcAccelerationStructure = update ?
 				handle :
 				VK_NULL_HANDLE;
 			accelerationStructureBuildGeometryInfo.dstAccelerationStructure = handle;
 			accelerationStructureBuildGeometryInfo.scratchData.deviceAddress = VulkanUtil::GetBufferDeviceAddress(CAST<VulkanRHIBuffer>(scratchBuffer)->GetHandle(), VULKAN_DEVICE);
 
-			// ¹¹½¨
+			// æ„å»º
 			VkAccelerationStructureBuildRangeInfoKHR accelerationStructureBuildRangeInfo = {};
 			accelerationStructureBuildRangeInfo.primitiveCount = info.maxInstance;
 			accelerationStructureBuildRangeInfo.primitiveOffset = 0;
@@ -1767,7 +1767,7 @@ namespace GameEngine
 			immediateCommandContest->Flush();
 		}
 
-		// 5. »ØÊÕscratch bufferÄÚ´æ
+		// 5. å›æ”¶scratch bufferå†…å­˜
 	}
 
 	void VulkanRHITopLevelAccelerationStructure::Destroy()

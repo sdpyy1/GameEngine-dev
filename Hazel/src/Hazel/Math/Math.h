@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <glm/glm.hpp>
 
@@ -14,7 +14,7 @@ namespace GameEngine::Math {
 	template<typename DivisorT,
 		std::enable_if_t<std::is_integral_v<DivisorT>, int> = 0>
 	inline static glm::uvec2 DivideAndRoundUp(glm::uvec2 dividend, DivisorT divisor) {
-		// ×ª»»³ıÊıÎª uint32_t£¨Óë glm::uvec2 µÄ·ÖÁ¿ÀàĞÍÆ¥Åä£©
+		// è½¬æ¢é™¤æ•°ä¸º uint32_tï¼ˆä¸ glm::uvec2 çš„åˆ†é‡ç±»å‹åŒ¹é…ï¼‰
 		uint32_t div = static_cast<uint32_t>(divisor);
 		return {
 			DivideAndRoundUp(dividend.x, div),
@@ -23,7 +23,7 @@ namespace GameEngine::Math {
 	}
 
 	/*
-		ÒòÎª×îºóÒ»ĞĞ¿Ï¶¨ÊÇ0001£¬ËùÒÔ¿ÉÒÔºöÂÔ
+		å› ä¸ºæœ€åä¸€è¡Œè‚¯å®šæ˜¯0001ï¼Œæ‰€ä»¥å¯ä»¥å¿½ç•¥
 	*/
 	static void ConvertGlmMat4To3x4Transform(const glm::mat4& mat, float* outTransform)
 	{

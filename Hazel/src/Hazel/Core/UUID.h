@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Utils/Serializable.h"
 namespace GameEngine {
 	class UUID
@@ -19,7 +19,7 @@ namespace GameEngine {
 }
 
 namespace std {
-	// ¶¨ÒåUUIDµÄ¹şÏ£·½·¨£¬Ö±½ÓÓÃ±¾Éí½øĞĞHash
+	// å®šä¹‰UUIDçš„å“ˆå¸Œæ–¹æ³•ï¼Œç›´æ¥ç”¨æœ¬èº«è¿›è¡ŒHash
 	template <>
 	struct hash<GameEngine::UUID>
 	{

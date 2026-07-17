@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "DependencyGraph.h"
 namespace GameEngine
 {
@@ -35,14 +35,14 @@ namespace GameEngine
     {
         for (auto& edgeID : outEdges[id])
         {
-            inEdges[GetEdge(edgeID)->to].erase(edgeID); // É¾³ý³ö±ß
+            inEdges[GetEdge(edgeID)->to].erase(edgeID); // åˆ é™¤å‡ºè¾¹
             delete edges[edgeID];
             edges[edgeID] = nullptr;
         }
 
         for (auto& edgeID : inEdges[id])
         {
-            outEdges[GetEdge(edgeID)->to].erase(edgeID); // É¾³ýÈë±ß
+            outEdges[GetEdge(edgeID)->to].erase(edgeID); // åˆ é™¤å…¥è¾¹
             delete edges[edgeID];
             edges[edgeID] = nullptr;
         }

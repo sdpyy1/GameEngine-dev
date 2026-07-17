@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "ImGuiPass.h"
 #include "Hazel/Core/Application.h"
 #include <backends/imgui_impl_vulkan.h>
@@ -13,7 +13,7 @@ namespace GameEngine
     {
         APP_DYNAMICRHI->InitImGui(APP_GLFWWINDOW);
         m_PanelManager = std::make_shared<PanelManager>();
-        APP_RENDERSYSTEM->SetPanelManager(m_PanelManager);  // ÒòÎªÒª´«µİÊÂ¼ş¸øËû
+        APP_RENDERSYSTEM->SetPanelManager(m_PanelManager);  // å› ä¸ºè¦ä¼ é€’äº‹ä»¶ç»™ä»–
 
     }
     void ImGuiPass::Build(RDGBuilder& builder)
@@ -44,8 +44,8 @@ namespace GameEngine
 
             RDGRenderPassHandle pass = builder.CreateRenderPass(GetName())
                 .Color(0, UI, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, { 0.0f, 0.0f, 0.0f, 0.0f })
-                .Read(0,0,0, RenderRes)  // Ö»ÊÇÊ¹ÓÃÒ²¿ÉÒÔÕâÑù·ÀÖ¹²»´´½¨×ÊÔ´
-                .Read(0,0,0, debug)  // Ö»ÊÇÊ¹ÓÃÒ²¿ÉÒÔÕâÑù·ÀÖ¹²»´´½¨×ÊÔ´
+                .Read(0,0,0, RenderRes)  // åªæ˜¯ä½¿ç”¨ä¹Ÿå¯ä»¥è¿™æ ·é˜²æ­¢ä¸åˆ›å»ºèµ„æº
+                .Read(0,0,0, debug)  // åªæ˜¯ä½¿ç”¨ä¹Ÿå¯ä»¥è¿™æ ·é˜²æ­¢ä¸åˆ›å»ºèµ„æº
                 .Execute([&](RDGPassContext context) {
                         auto [w, h] = APP_WINDOWSIZE;
                         Extent2D windowExtent = { w, h };

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <thread>
 
@@ -9,18 +9,18 @@ namespace GameEngine {
 	public:
 		Thread(const std::string& name);
 
-		// Ïß³ÌÖ´ĞĞ
+		// çº¿ç¨‹æ‰§è¡Œ
 		template<typename Fn, typename... Args>
 		void Dispatch(Fn&& func, Args&&... args)
 		{
-			m_Thread = std::thread(func, std::forward<Args>(args)...); // ÕâĞĞ»áÁ¢¼´ĞÂÏß³ÌÖ´ĞĞ´«ÈëµÄº¯Êı
+			m_Thread = std::thread(func, std::forward<Args>(args)...); // è¿™è¡Œä¼šç«‹å³æ–°çº¿ç¨‹æ‰§è¡Œä¼ å…¥çš„å‡½æ•°
 			SetName(m_Name);
 			LOG_INFO("Thread [{0}] Dispatch and Run!", m_Name);
 		}
 
 		void SetName(const std::string& name);
 
-		// ×èÈûµÈ´ıÏß³Ì½áÊø
+		// é˜»å¡ç­‰å¾…çº¿ç¨‹ç»“æŸ
 		void Join();
 
 		std::thread::id GetID() const;
@@ -29,11 +29,11 @@ namespace GameEngine {
 		std::thread m_Thread;
 	};
 
-	// Ïß³ÌĞÅºÅ£¬ÓÃÓÚÏß³Ì¼äÍ¬²½
+	// çº¿ç¨‹ä¿¡å·ï¼Œç”¨äºçº¿ç¨‹é—´åŒæ­¥
 	class ThreadSignal
 	{
 	public:
-		// manualReset: true±íÊ¾ÊÖ¶¯ÖØÖÃ£¬false±íÊ¾×Ô¶¯ÖØÖÃ false±íÊ¾Ò»´Î·ÅĞĞÒ»¸ö
+		// manualReset: trueè¡¨ç¤ºæ‰‹åŠ¨é‡ç½®ï¼Œfalseè¡¨ç¤ºè‡ªåŠ¨é‡ç½® falseè¡¨ç¤ºä¸€æ¬¡æ”¾è¡Œä¸€ä¸ª
 		ThreadSignal(const std::string& name, bool manualReset = false);
 
 		void WaitAndReset();

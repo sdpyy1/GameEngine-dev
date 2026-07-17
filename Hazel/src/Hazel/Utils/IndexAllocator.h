@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 namespace GameEngine {
 
     typedef struct IndexRange
@@ -13,7 +13,7 @@ namespace GameEngine {
 
         uint32_t Allocate();
         IndexRange Allocate(uint32_t size);
-        void Release(uint32_t index); // ºÍPoolÉè¼ÆÒ»Ñù£¬ÊÍ·ÅÊ±²Å»º´æ
+        void Release(uint32_t index); // å’ŒPoolè®¾è®¡ä¸€æ ·ï¼Œé‡Šæ”¾æ—¶æ‰ç¼“å­˜
         void Release(IndexRange range);
 
         inline uint32_t GetSize() { return maxIndex; }
@@ -22,7 +22,7 @@ namespace GameEngine {
         uint32_t maxIndex;
         uint32_t nextIndex;
 
-        std::list<IndexRange> unusedIndex;  // Ë«ÏòÁ´±í£¬·ÖÅäIDÊ±£¬±éÀúList£¬Èç¹ûÓĞrange¿ÉÒÔÂú×ã£¬¾ÍÓÃpoolÖĞµÄ£¬·ñÔò¾Í´´½¨ĞÂµÄ£¬µÈÊÍ·ÅÊ±ÔÙ·Å»ØÀ´
+        std::list<IndexRange> unusedIndex;  // åŒå‘é“¾è¡¨ï¼Œåˆ†é…IDæ—¶ï¼Œéå†Listï¼Œå¦‚æœæœ‰rangeå¯ä»¥æ»¡è¶³ï¼Œå°±ç”¨poolä¸­çš„ï¼Œå¦åˆ™å°±åˆ›å»ºæ–°çš„ï¼Œç­‰é‡Šæ”¾æ—¶å†æ”¾å›æ¥
 	};
 
 

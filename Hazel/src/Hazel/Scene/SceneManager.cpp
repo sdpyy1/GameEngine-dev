@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "SceneManager.h"
 #include "Hazel/Utils/FileSystem.h"
 #include "SceneSerializer.h"
@@ -15,7 +15,7 @@ namespace GameEngine
 	}
 
 	void SceneManager::PackSettingForRender() {
-		// È«¾ÖÉèÖÃ
+		// å…¨å±€è®¾ç½®
 		auto& settings = m_CurrentScene->settings;
 		if(settings.onlyIndirectionLight){
 			m_SceneInfo.globalSettingInfos.renderSetting.debugDDGI = 1;
@@ -29,8 +29,8 @@ namespace GameEngine
 		m_SceneInfo.globalSettingInfos.renderSetting.renderBoundingBox = settings.renderBoundingBox? 1 : 0;
 		m_SceneInfo.globalSettingInfos.renderSetting.ClusterLightFrustumDebug = settings.ClusterLightFrustumDebug ? 1 : 0;
 
-		// ActiveCameraÉèÖÃ
-		auto activeCamera = m_CurrentScene->GetFirstEntityWith<CameraComponent>(); // TODO: ÁÙÊ±£¬ÕâÑùĞ´µÄ»°£¬Ö»»áÅĞ¶ÏµÚÒ»¸öÉãÏñ»ú×é¼ş£¬²»Ö§³Ö¶à¸öÉãÏñ»ú
+		// ActiveCameraè®¾ç½®
+		auto activeCamera = m_CurrentScene->GetFirstEntityWith<CameraComponent>(); // TODO: ä¸´æ—¶ï¼Œè¿™æ ·å†™çš„è¯ï¼Œåªä¼šåˆ¤æ–­ç¬¬ä¸€ä¸ªæ‘„åƒæœºç»„ä»¶ï¼Œä¸æ”¯æŒå¤šä¸ªæ‘„åƒæœº
 		Entity cameraEntity = Entity{ activeCamera ,m_CurrentScene };
         if (cameraEntity) {
 			auto& component = cameraEntity.GetComponent<CameraComponent>();
@@ -45,7 +45,7 @@ namespace GameEngine
 			m_ActiveEditorCamera = m_DefaultEditorCamera;
 		}
 
-		// µÆ¹âÉèÖÃ
+		// ç¯å…‰è®¾ç½®
 		auto dirLight = m_CurrentScene->GetFirstEntityWith<DirectionalLightComponent>();
 		Entity dirLightEntity = Entity{ dirLight ,m_CurrentScene };
 		if (dirLightEntity) {
@@ -56,7 +56,7 @@ namespace GameEngine
 			m_SceneInfo.globalSettingInfos.shadowSetting.CSMSmooth = component.CSMSmooth;
 		}
 
-		// ºó´¦ÀíÉèÖÃ
+		// åå¤„ç†è®¾ç½®
 		auto postprocess = m_CurrentScene->GetFirstEntityWith<PostProcessingComponent>();
 		Entity postProcessEntity = Entity{ postprocess ,m_CurrentScene };
 		if (postProcessEntity) {
@@ -90,7 +90,7 @@ namespace GameEngine
             m_SceneInfo.globalSettingInfos.postprocess.colorSetting.toneMappingMode = component.toneMappingMode;
 		
 		}
-		// Ìì¿ÕÉèÖÃ
+		// å¤©ç©ºè®¾ç½®
 		auto skyLight = m_CurrentScene->GetFirstEntityWith<SkyComponent>();
 		Entity skyLightEntity = Entity{ skyLight ,m_CurrentScene };
 		if (skyLightEntity) {
@@ -100,7 +100,7 @@ namespace GameEngine
 			m_SceneInfo.cpuRenderSetting.IBLPath = component.iblPath[component.selectedIBL].string();
 		}
 
-		// Ì½ÕëÉèÖÃ
+		// æ¢é’ˆè®¾ç½®
         auto probe = m_CurrentScene->GetFirstEntityWith<LightProbeComponent>();
         Entity probeEntity = Entity{ probe ,m_CurrentScene };
 		if (probeEntity) {
@@ -164,7 +164,7 @@ namespace GameEngine
 			m_CurrentScene->ClearEntities();
 		}
 		m_CurrentScene->SetSelectedEntity({});
-		SceneSerializer serializer(m_CurrentScene);  // Ä¿Ç°´ò¿ªÒ»¸ö³¡¾°£¬¾ÍÊÇ°Ñµ±Ç°³¡¾°Çå¿Õ£¬¼ÓÔØĞÂ³¡¾°µÄEntity
+		SceneSerializer serializer(m_CurrentScene);  // ç›®å‰æ‰“å¼€ä¸€ä¸ªåœºæ™¯ï¼Œå°±æ˜¯æŠŠå½“å‰åœºæ™¯æ¸…ç©ºï¼ŒåŠ è½½æ–°åœºæ™¯çš„Entity
 		serializer.Deserialize(filepath.string());
 		m_CurrentSceneFilePath = filepath.string();
 		std::replace(m_CurrentSceneFilePath.begin(), m_CurrentSceneFilePath.end(), '\\', '/');

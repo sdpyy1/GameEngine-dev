@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <glm/glm.hpp>
 #include "Hazel/Scene/EditorCamera.h"
@@ -22,10 +22,10 @@ namespace GameEngine {
 			return { {0.0f, 0.0f, 0.0f},{0.0f, 0.0f, 0.0f} };
 		}
 
-		// ÆÁÄ»×ø±ê->´ÓÉãÏñ»úÎ»ÖÃ´¦·¢ÉäÉäÏß
+		// å±å¹•åæ ‡->ä»æ‘„åƒæœºä½ç½®å¤„å‘å°„å°„çº¿
 		static Ray CastRay(EditorCamera& camera, float ndcX, float ndcY)
 		{
-			glm::vec4 mouseClipPos = { ndcX, ndcY, 0.0f, 1.0f }; // ½ü²Ã¼ôÃæ
+			glm::vec4 mouseClipPos = { ndcX, ndcY, 0.0f, 1.0f }; // è¿‘è£å‰ªé¢
 			glm::vec4 rayCamera = glm::inverse(camera.GetProjectionMatrix()) * mouseClipPos;
 			rayCamera /= rayCamera.w;
 			glm::vec4 rayWorld4 = glm::inverse(camera.GetViewMatrix()) * rayCamera;

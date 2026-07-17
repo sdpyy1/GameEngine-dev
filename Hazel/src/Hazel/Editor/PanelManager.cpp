@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "Hazel/Core/Base.h"
 #include "PanelManager.h"
 #include <imgui.h>
@@ -20,7 +20,7 @@ namespace GameEngine {
 		m_FolderPreviewPanel.OnImGuiRender();
 		m_AssetManagerPanel.OnImGuiRender();
 		m_LogPanel.OnImGuiRender();
-		// m_RDGPanel.OnImGuiRender();   // Ò»¸öÍæÒâÕ¼20FPS
+		// m_RDGPanel.OnImGuiRender();   // ä¸€ä¸ªç©æ„å 20FPS
 	}
 	void PanelManager::ViewportGUI(RHIDescriptorSetRef viewportTexture)
 	{
@@ -91,7 +91,7 @@ namespace GameEngine {
 			glm::value_ptr(cameraProjection),
 			(ImGuizmo::OPERATION)m_GizmoType,
 			ImGuizmo::LOCAL,
-			glm::value_ptr(transform), // transform»á±»ImGuizmoĞŞ¸Ä
+			glm::value_ptr(transform), // transformä¼šè¢«ImGuizmoä¿®æ”¹
 			nullptr,
 			snap ? snapValues : nullptr);
 
@@ -199,7 +199,7 @@ namespace GameEngine {
 
 		return false;
 	}
-	std::pair<float, float> PanelManager::GetMouseViewportSpace()  // NDC×ø±ê
+	std::pair<float, float> PanelManager::GetMouseViewportSpace()  // NDCåæ ‡
 	{
 		auto [mx, my] = ImGui::GetMousePos();
 		const auto& viewportBounds = m_ViewportBounds;
@@ -237,7 +237,7 @@ namespace GameEngine {
 	ImVec4 GetColorForDuration(float ms, float maxMs)
 	{
 		float t = ms / maxMs;
-		// Green ¡ú Yellow ¡ú Red
+		// Green â†’ Yellow â†’ Red
 		return ImVec4(
 			t < 0.5f ? 0.0f : (t - 0.5f) * 2.0f,   // Red
 			t < 0.5f ? t * 2.0f : 1.0f,            // Green
@@ -256,7 +256,7 @@ namespace GameEngine {
 			return;
 		}
 
-		// ¼ÆËã×ÜÖ¡ GPU ºÄÊ±
+		// è®¡ç®—æ€»å¸§ GPU è€—æ—¶
 		float totalFrameMs = 0.0f;
 		for (auto& info : m_GPUTimeInfo)
 			totalFrameMs += info.DurationMs;
@@ -264,7 +264,7 @@ namespace GameEngine {
 		ImGui::Text("Total GPU Frame Time: %.3f ms", totalFrameMs);
 		ImGui::Separator();
 
-		// ±í¸ñ + Ìõ×´Í¼
+		// è¡¨æ ¼ + æ¡çŠ¶å›¾
 		if (ImGui::BeginTable("GPU Time Table", 3,
 			ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingFixedFit))
 		{
@@ -283,15 +283,15 @@ namespace GameEngine {
 
 				ImGui::TableNextRow();
 
-				// Pass Ãû³Æ
+				// Pass åç§°
 				ImGui::TableSetColumnIndex(0);
 				ImGui::TextUnformatted(info.Name.c_str());
 
-				// ºÄÊ±
+				// è€—æ—¶
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.3f", info.DurationMs);
 
-				// Ìõ×´Í¼ÏÔÊ¾±ÈÀı
+				// æ¡çŠ¶å›¾æ˜¾ç¤ºæ¯”ä¾‹
 				ImGui::TableSetColumnIndex(2);
 				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
 				ImGui::ProgressBar(percent, ImVec2(barMaxWidth, 0.0f), nullptr);
@@ -305,7 +305,7 @@ namespace GameEngine {
 	}
 
 	void PanelManager::RenderViewPortTools() {
-		// ------------------ Ğü¸¡°´Å¥ ------------------
+		// ------------------ æ‚¬æµ®æŒ‰é’® ------------------
 		ImGui::SetNextWindowPos(ImVec2(m_ViewportBounds[0].x + 5, m_ViewportBounds[0].y + 25));
 		ImGui::SetNextWindowSize(ImVec2(100, 40));
 		ImGuiWindowFlags floatButtonFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoFocusOnAppearing;
@@ -314,16 +314,16 @@ namespace GameEngine {
 			isSubMeshModelClickMode = !isSubMeshModelClickMode;
 		}
 		ImGui::End();
-		// ------------------ Ğü¸¡°´Å¥½áÊø ------------------
+		// ------------------ æ‚¬æµ®æŒ‰é’®ç»“æŸ ------------------
 	}
 
 	void PanelManager::RenderFPS()
 	{
 		//------------------------------------------------------
-		//  FPS Overlay£¨Ç¿ÖÆ»­ÔÚ Viewport Ö®ÉÏ£©
+		//  FPS Overlayï¼ˆå¼ºåˆ¶ç”»åœ¨ Viewport ä¹‹ä¸Šï¼‰
 		//------------------------------------------------------
 
-		// ÉèÖÃ¸¡´°Î»ÖÃ£ºÓÒÉÏ½Ç
+		// è®¾ç½®æµ®çª—ä½ç½®ï¼šå³ä¸Šè§’
 		const float padding = 20.0f;
 		ImVec2 fpsPos(
 			m_ViewportBounds[1].x - 70.0f,
@@ -351,7 +351,7 @@ namespace GameEngine {
 
 	void PanelManager::DispatchViewPortSize()
 	{
-		// ³ÌĞòÖĞViewportSize¶¼À´×ÔÕâÀï
+		// ç¨‹åºä¸­ViewportSizeéƒ½æ¥è‡ªè¿™é‡Œ
 		m_ViewportBounds[0] = ImGui::GetWindowPos();
 
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
@@ -364,14 +364,14 @@ namespace GameEngine {
 	}
 	void PanelManager::GlobalWindow()
 	{
-		// ========== Dockspace Ö÷´°¿Ú ==========
+		// ========== Dockspace ä¸»çª—å£ ==========
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuiStyle& style = ImGui::GetStyle();
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
 		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-		window_flags |= ImGuiWindowFlags_MenuBar; // Îª²Ëµ¥À¸Ô¤Áô¿Õ¼ä
+		window_flags |= ImGuiWindowFlags_MenuBar; // ä¸ºèœå•æ é¢„ç•™ç©ºé—´
 
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImGui::SetNextWindowPos(viewport->Pos);
@@ -383,10 +383,10 @@ namespace GameEngine {
 
 		ImGui::Begin("Main Window", nullptr, window_flags);
 
-		// ========== ¶¥²¿²Ëµ¥À¸ ==========
+		// ========== é¡¶éƒ¨èœå•æ  ==========
 		if (ImGui::BeginMenuBar())
 		{
-			// --- File ²Ëµ¥ ---
+			// --- File èœå• ---
 			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::MenuItem("New Scene", "Ctrl+N"))
@@ -412,7 +412,7 @@ namespace GameEngine {
 				ImGui::EndMenu();
 			}
 
-			// --- View ²Ëµ¥ ---
+			// --- View èœå• ---
 			if (ImGui::BeginMenu("View"))
 			{
 				ImGui::MenuItem("Folder Preview", nullptr, &m_FolderPreviewPanel.isOpen);
@@ -420,7 +420,7 @@ namespace GameEngine {
 				ImGui::EndMenu();
 			}
 
-			// --- Help ²Ëµ¥ ---
+			// --- Help èœå• ---
 			if (ImGui::BeginMenu("Help"))
 			{
 				ImGui::Text("GameEngine Editor - Custom Build");
@@ -434,7 +434,7 @@ namespace GameEngine {
 			ImGui::EndMenuBar();
 		}
 
-		// ========== DockSpace ÇøÓò ==========
+		// ========== DockSpace åŒºåŸŸ ==========
 		ImGuiID dockspaceID = ImGui::GetID("MyMainDockspace");
 		ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), 0);
 		ImGui::End(); // Main Window
@@ -484,7 +484,7 @@ namespace GameEngine {
 
 						if (isSelected)
 						{
-							ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.8f, 0.0f, 1.0f)); // ÈëÕ»
+							ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.8f, 0.0f, 1.0f)); // å…¥æ ˆ
 							nodeFlags |= ImGuiTreeNodeFlags_Selected;
 						}
 

@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "MeshCollector.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -8,14 +8,14 @@
 namespace GameEngine
 {
 	/*
-		ÕâÀïµÄÊÕ¼¯ÀàËÆUEµÄ FScene-> Proxy(²¢Ã»ÓĞ×ö) -> FMeshBatch -> ´´½¨MeshPassProcessor -> Ã¿¸öPass¶¨Òå×Ô¼ºAddBatch()ÊÕ¼¯×Ô¼ºĞèÒªµÄMeshBatch -> ×îÖÕ×éÖ¯³ÉFMeshDrawCommand
+		è¿™é‡Œçš„æ”¶é›†ç±»ä¼¼UEçš„ FScene-> Proxy(å¹¶æ²¡æœ‰åš) -> FMeshBatch -> åˆ›å»ºMeshPassProcessor -> æ¯ä¸ªPasså®šä¹‰è‡ªå·±AddBatch()æ”¶é›†è‡ªå·±éœ€è¦çš„MeshBatch -> æœ€ç»ˆç»„ç»‡æˆFMeshDrawCommand
 	*/
 	void GameEngine::MeshCollector::CollectMesh()
 	{
 		std::vector<MeshBatch> batch;
 
 		auto& scene = APP_SCENEMANAGER->GetActiveScene();
-		// Õâ¸ö±éÀúÔÚUEÏàµ±ÓÚ´ÓFPrimitiveSceneProxyµ½FMeshBatch
+		// è¿™ä¸ªéå†åœ¨UEç›¸å½“äºä»FPrimitiveSceneProxyåˆ°FMeshBatch
 		auto& allEntityOwnSubmesh = scene->GetAllEntitiesWith<SubmeshComponent>();
 		for (auto& entity : allEntityOwnSubmesh)
 		{
@@ -23,30 +23,30 @@ namespace GameEngine
 			Entity meshEntity = Entity(entity, scene);
 			if (meshComponent.model == nullptr || !meshEntity.GetParent().GetComponent<ModelComponent>().Visible || !meshComponent.Visible) continue;
 
-			glm::mat4 transform = scene->GetWorldSpaceTransformMatrix(meshEntity); // ÒòÎªSubMesh´æµÄ¶¼ÊÇLocal±ä»»
+			glm::mat4 transform = scene->GetWorldSpaceTransformMatrix(meshEntity); // å› ä¸ºSubMeshå­˜çš„éƒ½æ˜¯Localå˜æ¢
 
-			//////////////////////////////////////////////// TODO: CPUÌŞ³ı ////////////////////////////////////////////
-			// ¿ÉÒÔ×öÒ»¸öModel¼¶ÌŞ³ı£¬GPUÔÙ½øĞĞmesh¼¶ÌŞ³ı  ÕâÀï¶ÔModelµÄÌŞ³ı¿ÉÒÔÉÓ´øÑ§Ï°ÁË¸÷ÖÖ¼ÓËÙ½á¹¹
+			//////////////////////////////////////////////// TODO: CPUå‰”é™¤ ////////////////////////////////////////////
+			// å¯ä»¥åšä¸€ä¸ªModelçº§å‰”é™¤ï¼ŒGPUå†è¿›è¡Œmeshçº§å‰”é™¤  è¿™é‡Œå¯¹Modelçš„å‰”é™¤å¯ä»¥æå¸¦å­¦ä¹ äº†å„ç§åŠ é€Ÿç»“æ„
 
-			//////////////////////////////////////////////// ÊÕ¼¯MeshBatch ////////////////////////////////////////////
+			//////////////////////////////////////////////// æ”¶é›†MeshBatch ////////////////////////////////////////////
 			MeshBatch drawBatch;
 			drawBatch.instanceID = meshComponent.meshInfoID;
 			drawBatch.material = meshComponent.GetMaterial();
 			drawBatch.indexCount = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].indexBuffer->IndexNum();
 			batch.push_back(drawBatch);
 
-			//////////////////////////////////////////////// ¸üĞÂÊµÀıĞÅÏ¢ ////////////////////////////////////////////
+			//////////////////////////////////////////////// æ›´æ–°å®ä¾‹ä¿¡æ¯ ////////////////////////////////////////////
 			meshComponent.meshInfo.modelMatrix = transform;
 			meshComponent.meshInfo.prevModelMatrix = meshComponent.prevModel;
 			if (meshComponent.meshInfoID == 0) {
-				meshComponent.meshInfoID = RENDER_RESOURCEMANAGER->AllocateMeshInstanceInfoID(); // ÊµÀıĞÅÏ¢»¹Ã»´«µİµ½GPU
+				meshComponent.meshInfoID = RENDER_RESOURCEMANAGER->AllocateMeshInstanceInfoID(); // å®ä¾‹ä¿¡æ¯è¿˜æ²¡ä¼ é€’åˆ°GPU
 			}
-			meshComponent.meshInfo.animationID = 0; // TODO: ¶¯»­
+			meshComponent.meshInfo.animationID = 0; // TODO: åŠ¨ç”»
 			meshComponent.meshInfo.indexID = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].indexBuffer->indexID;
 			meshComponent.meshInfo.vertexID = meshComponent.model->GetSubmeshes()[meshComponent.SubmeshIndex].vertexBuffer->vertexID;
 			meshComponent.meshInfo.materialID = meshComponent.material? meshComponent.material->GetMaterialID():0;
 
-			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshComponent.meshInfo, meshComponent.meshInfoID);  //TODO:Ä¿Ç°ÊÇÒ»¸öMeshÒ»¸öMeshÉÏ´«Êı¾İµ½GPU£¬ĞèÒªºÏ²¢ÉÏ´«£¬µ«ÊÇÉæ¼°µ½ÈçºÎºÏ²¢µÄÎÊÌâ
+			RENDER_RESOURCEMANAGER->SetMeshInstanceInfo(meshComponent.meshInfo, meshComponent.meshInfoID);  //TODO:ç›®å‰æ˜¯ä¸€ä¸ªMeshä¸€ä¸ªMeshä¸Šä¼ æ•°æ®åˆ°GPUï¼Œéœ€è¦åˆå¹¶ä¸Šä¼ ï¼Œä½†æ˜¯æ¶‰åŠåˆ°å¦‚ä½•åˆå¹¶çš„é—®é¢˜
 			meshComponent.prevModel = transform;
 		}
 
@@ -65,11 +65,11 @@ namespace GameEngine
 	}
 
 	/*
-		ÊÕ¼¯ËùÓĞMeshµÄBLASºÍModelMatrix£¬ÓÃÓÚ¸üĞÂTLAS
+		æ”¶é›†æ‰€æœ‰Meshçš„BLASå’ŒModelMatrixï¼Œç”¨äºæ›´æ–°TLAS
 	*/
 	void MeshCollector::Collect4TLAS(std::vector<RHIAccelerationStructureInstanceInfo>& instances)
 	{
-		RHIBottomLevelAccelerationStructureRef blas;  // TODO: ÆäÊµºÍ¹âÕ¤ÎŞ¹ØµÄ½á¹¹²»Ó¦¸Ã·ÅÕâ
+		RHIBottomLevelAccelerationStructureRef blas;  // TODO: å…¶å®å’Œå…‰æ …æ— å…³çš„ç»“æ„ä¸åº”è¯¥æ”¾è¿™
 		auto& scene = APP_SCENEMANAGER->GetActiveScene();
 		auto allEntityOwnSubmesh = scene->GetAllEntitiesWith<SubmeshComponent>();
 		for (auto entity : allEntityOwnSubmesh)

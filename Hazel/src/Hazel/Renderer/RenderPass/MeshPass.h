@@ -1,26 +1,26 @@
-#pragma once
+ï»¿#pragma once
 #include "RenderPass.h"
 #include <Hazel/Renderer/RenderResource/Material.h>
 #include "Hazel/Utils/IndexAllocator.h"
 #include <Hazel/Renderer/RenderResource/RenderBuffer.h>
 /*
-UEµÄÁ÷³Ì£º
-	1. ´ÓFPrimitiveSceneProxyµ½FMeshBatch£¨Ö÷Òª°üº¬¶¥µã¹¤³§ + ²ÄÖÊ£©
-	2. ´ÓFMeshBatchµ½FMeshDrawCommand£¨±éÀúEMeshPass¶¨ÒåµÄËùÓĞPass£¬´´½¨¶ÔÓ¦µÄFMeshPassProcessor´¦ÀíÕâĞ©FMeshBatch£©£¨ÕâĞ©PassµÄ´¦ÀíÊÇ²¢ĞĞ½øĞĞµÄ£©£¨DrawCommandÖĞ×°ÁËPSO¡¢ShaderµÈÕâ¸öDrawCallĞèÒªµÄĞÅÏ¢£©
+UEçš„æµç¨‹ï¼š
+	1. ä»FPrimitiveSceneProxyåˆ°FMeshBatchï¼ˆä¸»è¦åŒ…å«é¡¶ç‚¹å·¥å‚ + æè´¨ï¼‰
+	2. ä»FMeshBatchåˆ°FMeshDrawCommandï¼ˆéå†EMeshPasså®šä¹‰çš„æ‰€æœ‰Passï¼Œåˆ›å»ºå¯¹åº”çš„FMeshPassProcessorå¤„ç†è¿™äº›FMeshBatchï¼‰ï¼ˆè¿™äº›Passçš„å¤„ç†æ˜¯å¹¶è¡Œè¿›è¡Œçš„ï¼‰ï¼ˆDrawCommandä¸­è£…äº†PSOã€Shaderç­‰è¿™ä¸ªDrawCalléœ€è¦çš„ä¿¡æ¯ï¼‰
 */
 
 
 /*
-	TODO: Ä¿Ç°ÊµÏÖÃ»ÓĞ¿¼ÂÇÊµÀı»¯ºÏ²¢£¬ÒòÎªÕâÑù»áÊ¹ÌŞ³ı±äµÃ¸´ÔÓ£¬ÒòÎªÌŞ³ı²»»á¿¼ÂÇÁ¬ĞøĞÔ¡£ÖĞ¼äµÄÊµÀı±»ÌŞ³ı£¬¾Í±ØĞëÌá¹©¶îÍâµÄÊÖ¶ÎÀ´´¦ÀíÕâÖÖÇé¿ö¡£
-	ÕûÌåÁ÷³Ì:
-	1. ÊÕ¼¯MeshBatch
-	2. »º´æĞèÒªµÄPSO£¬²¢½«MeshBatch¸ù¾İPSO½øĞĞ·Ö×é
-	3. Ã¿¸öPSO¶ÔÓ¦µÄMeshBatchs×é³ÉÒ»¸öMeshDrawCommand£¬Í¨¹ı¼ä½ÓäÖÈ¾½Ó¿ÚÒ»¿ÚÆøÈ«²¿ÉÏ´«£¨ÌáÇ°½øĞĞGPUÌŞ³ı£©(Ò²¾ÍÊÇËµÒ»¿ÚÆøÉÏ´«ÁËÕâ¸öPassĞèÒªµÄËùÓĞDrawCall,²¢¼ÇÂ¼ÁËÃ¿¸öPSOµÄ·¶Î§£¬ºóĞøÖ´ĞĞ¼ä½ÓäÖÈ¾Ê±£¬Ö»ĞèÒª¸ù¾İ·¶Î§¾ÍÓĞÕÒµ½¶ÔÓ¦µÄDrawCall)
+	TODO: ç›®å‰å®ç°æ²¡æœ‰è€ƒè™‘å®ä¾‹åŒ–åˆå¹¶ï¼Œå› ä¸ºè¿™æ ·ä¼šä½¿å‰”é™¤å˜å¾—å¤æ‚ï¼Œå› ä¸ºå‰”é™¤ä¸ä¼šè€ƒè™‘è¿ç»­æ€§ã€‚ä¸­é—´çš„å®ä¾‹è¢«å‰”é™¤ï¼Œå°±å¿…é¡»æä¾›é¢å¤–çš„æ‰‹æ®µæ¥å¤„ç†è¿™ç§æƒ…å†µã€‚
+	æ•´ä½“æµç¨‹:
+	1. æ”¶é›†MeshBatch
+	2. ç¼“å­˜éœ€è¦çš„PSOï¼Œå¹¶å°†MeshBatchæ ¹æ®PSOè¿›è¡Œåˆ†ç»„
+	3. æ¯ä¸ªPSOå¯¹åº”çš„MeshBatchsç»„æˆä¸€ä¸ªMeshDrawCommandï¼Œé€šè¿‡é—´æ¥æ¸²æŸ“æ¥å£ä¸€å£æ°”å…¨éƒ¨ä¸Šä¼ ï¼ˆæå‰è¿›è¡ŒGPUå‰”é™¤ï¼‰(ä¹Ÿå°±æ˜¯è¯´ä¸€å£æ°”ä¸Šä¼ äº†è¿™ä¸ªPasséœ€è¦çš„æ‰€æœ‰DrawCall,å¹¶è®°å½•äº†æ¯ä¸ªPSOçš„èŒƒå›´ï¼Œåç»­æ‰§è¡Œé—´æ¥æ¸²æŸ“æ—¶ï¼Œåªéœ€è¦æ ¹æ®èŒƒå›´å°±æœ‰æ‰¾åˆ°å¯¹åº”çš„DrawCall)
 */
 
 namespace GameEngine {
 	/*
-		MeshBatch£ºÒòÎªËùÓĞMeshĞÅÏ¢¶¼Ê¹ÓÃÁËBindless£¬ËùÒÔMeshBatchÖ»ĞèÒª´æ´¢ÊµÀıIDºÍ²ÄÖÊ£¬µ«ÊÇÒòÎªDrawCallĞèÒªÖ¸¶¨äÖÈ¾¶¥µãÊıÁ¿£¬ËùÒÔĞèÒª´«ÈëMeshµÄË÷ÒıÊıÁ¿£¨Âß¼­ÊÇÈÃ¶¥µã×ÅÉ«Æ÷Ö´ĞĞË÷Òı´ÎÊıÀ´ÊÖ¶¯×°ÅäÈı½ÇĞÎ£©
+		MeshBatchï¼šå› ä¸ºæ‰€æœ‰Meshä¿¡æ¯éƒ½ä½¿ç”¨äº†Bindlessï¼Œæ‰€ä»¥MeshBatchåªéœ€è¦å­˜å‚¨å®ä¾‹IDå’Œæè´¨ï¼Œä½†æ˜¯å› ä¸ºDrawCalléœ€è¦æŒ‡å®šæ¸²æŸ“é¡¶ç‚¹æ•°é‡ï¼Œæ‰€ä»¥éœ€è¦ä¼ å…¥Meshçš„ç´¢å¼•æ•°é‡ï¼ˆé€»è¾‘æ˜¯è®©é¡¶ç‚¹ç€è‰²å™¨æ‰§è¡Œç´¢å¼•æ¬¡æ•°æ¥æ‰‹åŠ¨è£…é…ä¸‰è§’å½¢ï¼‰
 	*/
 	struct MeshBatch
 	{
@@ -29,7 +29,7 @@ namespace GameEngine {
 		MaterialRef material;
 	};
 
-	// ÓÃÓÚ¸øBatch°´ÕÕPSO½øĞĞ·Ö×é
+	// ç”¨äºç»™BatchæŒ‰ç…§PSOè¿›è¡Œåˆ†ç»„
 	struct DrawPipelineState
 	{
 		uint32_t renderQueue;
@@ -87,21 +87,21 @@ namespace GameEngine {
 	};
 
 	/*
-		ÎªÁË·½±ãÌŞ³ıÊ±ÄÃµ½ÏêÏ¸ĞÅÏ¢£¬ÉÏ´«µÄBuffer²»ÄÜÖ»°üº¬»æÖÆÖ¸Áî,»¹ĞèÒª¼ÇÂ¼ÊµÀıÊıÁ¿,Èç¹ûºóĞøĞèÒª¸ü¶àĞÅÏ¢£¬¿ÉÒÔÀ©Õ¹Õâ¸ö½á¹¹Ìå
+		ä¸ºäº†æ–¹ä¾¿å‰”é™¤æ—¶æ‹¿åˆ°è¯¦ç»†ä¿¡æ¯ï¼Œä¸Šä¼ çš„Bufferä¸èƒ½åªåŒ…å«ç»˜åˆ¶æŒ‡ä»¤,è¿˜éœ€è¦è®°å½•å®ä¾‹æ•°é‡,å¦‚æœåç»­éœ€è¦æ›´å¤šä¿¡æ¯ï¼Œå¯ä»¥æ‰©å±•è¿™ä¸ªç»“æ„ä½“
 	*/
 	struct MeshIndirectDrawData {
 		 uint32_t instanceCount;
 		 CullingType passType;
-		 uint32_t index;  // ¶¨Ïò¹â±íÊ¾CSM£¬µã¹âÔ´±íÊ¾id
+		 uint32_t index;  // å®šå‘å…‰è¡¨ç¤ºCSMï¼Œç‚¹å…‰æºè¡¨ç¤ºid
 		 uint32_t _padding;
 
 		 std::array<RHIIndirectCommand, MAX_PER_FRAME_INSTANCE_SIZE> indirectCommands;
 	};
 
 	/*
-		×îÖÕ¶¨ÒåÒ»´ÎDrawCallĞèÒªµÄĞÅÏ¢
-		1. Ê¹ÓÃµÄPSO
-		2. ¼ä½Ó»æÖÆBufferµÄBatch£¨PSOÒ»ÖÂµÄ»æÖÆÖ¸Áî¿ÉÒÔÒ»´ÎĞÔÈ«²¿ÉÏ´«£©
+		æœ€ç»ˆå®šä¹‰ä¸€æ¬¡DrawCalléœ€è¦çš„ä¿¡æ¯
+		1. ä½¿ç”¨çš„PSO
+		2. é—´æ¥ç»˜åˆ¶Bufferçš„Batchï¼ˆPSOä¸€è‡´çš„ç»˜åˆ¶æŒ‡ä»¤å¯ä»¥ä¸€æ¬¡æ€§å…¨éƒ¨ä¸Šä¼ ï¼‰
 	*/
 	struct MeshDrawCommand
 	{
@@ -124,15 +124,15 @@ namespace GameEngine {
 		virtual RHIGraphicsPipelineRef OnCreatePipeline(const DrawPipelineState& first) = 0;
 	private:
 		void MapMeshBatches(MeshBatch& batch);
-	private: // cullingÊ±ÓÃÀ´ÅĞ¶ÏÕâÊÇÊ²Ã´passµÄĞÅÏ¢
+	private: // cullingæ—¶ç”¨æ¥åˆ¤æ–­è¿™æ˜¯ä»€ä¹ˆpassçš„ä¿¡æ¯
 		CullingType m_PassType;
 		uint32_t m_Index;
 	private:
-		std::vector<MeshBatch> m_MeshBatches; // ÊÕ¼¯µ±Ç°PassĞèÒªµÄbatch
+		std::vector<MeshBatch> m_MeshBatches; // æ”¶é›†å½“å‰Passéœ€è¦çš„batch
 		std::array<std::shared_ptr<RenderBuffer<MeshIndirectDrawData>>, FRAMES_IN_FLIGHT> m_MeshIndirectDrawDataBuffer;
 		std::map<DrawPipelineState, std::vector<MeshBatch>> m_MeshBatchMap;
-		std::vector<MeshDrawCommand> m_MeshDrawCommands;  // ´æ´¢Õâ¸öÊÇÎªÁËDrawµÄÊ±ºò±éÀú
-		std::vector<RHIIndirectCommand> m_IndirectCommands; // ´æ´¢Õâ¸öÊÇÎªÁË°ÑCommandsÒ»¿ÚÆøÉÏ´«
+		std::vector<MeshDrawCommand> m_MeshDrawCommands;  // å­˜å‚¨è¿™ä¸ªæ˜¯ä¸ºäº†Drawçš„æ—¶å€™éå†
+		std::vector<RHIIndirectCommand> m_IndirectCommands; // å­˜å‚¨è¿™ä¸ªæ˜¯ä¸ºäº†æŠŠCommandsä¸€å£æ°”ä¸Šä¼ 
 	};
 	using MeshPassProcessorRef = std::shared_ptr<MeshPassProcessor>;
 
@@ -145,7 +145,7 @@ namespace GameEngine {
 		virtual std::vector<MeshPassProcessorRef> GetMeshPassProcessors() { return meshPassProcessors; }
 
 	protected:
-		// Ã¿¸öMeshPassÓÃ×Ô¼º¼Ì³ĞµÄMeshPassProcessorÀ´³õÊ¼»¯Õâ¸öÖ¸Õë
+		// æ¯ä¸ªMeshPassç”¨è‡ªå·±ç»§æ‰¿çš„MeshPassProcessoræ¥åˆå§‹åŒ–è¿™ä¸ªæŒ‡é’ˆ
 		// MeshPassProcessorRef meshPassProcessor = nullptr;
 		std::vector<MeshPassProcessorRef> meshPassProcessors;
 	};

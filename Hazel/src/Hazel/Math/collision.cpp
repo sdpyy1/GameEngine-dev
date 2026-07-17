@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "collision.h"
 #include <glm/gtx/norm.hpp>
 namespace GameEngine {
@@ -30,15 +30,15 @@ namespace GameEngine {
     }
     AxisAlignedBox AxisAlignedBox::Transformed(const glm::mat4& transform) const
     {
-        // Ä£ĞÍ¿Õ¼äÖĞĞÄµã
+        // æ¨¡å‹ç©ºé—´ä¸­å¿ƒç‚¹
         glm::vec3 worldCenter = glm::vec3(transform * glm::vec4(center, 1.0f));
 
-        // Ğı×ª¾ØÕóµÄÈı¸öÖá
+        // æ—‹è½¬çŸ©é˜µçš„ä¸‰ä¸ªè½´
         glm::vec3 right = glm::vec3(transform[0]);
         glm::vec3 up = glm::vec3(transform[1]);
         glm::vec3 forward = glm::vec3(transform[2]);
 
-        // ¼ÆËã±ä»»ºóµÄ°ë³ß´ç£¨Ê¹ÓÃ¾ø¶ÔÖµ£¬±£Ö¤AABBÖá¶ÔÆë£©
+        // è®¡ç®—å˜æ¢åçš„åŠå°ºå¯¸ï¼ˆä½¿ç”¨ç»å¯¹å€¼ï¼Œä¿è¯AABBè½´å¯¹é½ï¼‰
         glm::vec3 worldHalfExtent =
             glm::abs(halfExtent.x * right) +
             glm::abs(halfExtent.y * up) +
@@ -116,7 +116,7 @@ namespace GameEngine {
         float distance_sq = glm::dot(dir, dir);
         float distance = glm::sqrt(distance_sq);
 
-        // Çé¿ö1£ºÈç¹ûÒ»¸öÇòÍêÈ«°üº¬ÁíÒ»¸öÇò
+        // æƒ…å†µ1ï¼šå¦‚æœä¸€ä¸ªçƒå®Œå…¨åŒ…å«å¦ä¸€ä¸ªçƒ
         if (distance + a.radius <= b.radius + 1e-5f) {
             return b;
         }
@@ -124,10 +124,10 @@ namespace GameEngine {
             return a;
         }
 
-        // Çé¿ö2£ºÁ½¸öÇò²¿·ÖÖØµş»òÍêÈ«·ÖÀë
+        // æƒ…å†µ2ï¼šä¸¤ä¸ªçƒéƒ¨åˆ†é‡å æˆ–å®Œå…¨åˆ†ç¦»
         result.radius = (distance + a.radius + b.radius) * 0.5f;
 
-        // ±ÜÃâ³ıÒÔÁã£¨µ±Á½ÇòĞÄÍêÈ«ÖØºÏÊ±£©
+        // é¿å…é™¤ä»¥é›¶ï¼ˆå½“ä¸¤çƒå¿ƒå®Œå…¨é‡åˆæ—¶ï¼‰
         if (distance > 1e-6f) {
             result.center = a.center + dir * ((result.radius - a.radius) / distance);
         }
@@ -222,13 +222,13 @@ namespace GameEngine {
     }
 
     /*
-        ×¢ÒâÕâÖÖÄÚ´æÎ»ÖÃ¶ÁÈ¡£¬Òª¿¼ÂÇ¾ØÕóµÄ´æ´¢ÊÇÁĞÖ÷Ğò»¹ÊÇĞĞÖ÷Ğò£¬ glmµÄmat4ÊÇÁĞÖ÷ĞòµÄ
-        Õâ¶Î´úÂëÉú³ÉµÄÆ½Ãæ·½³ÌµÄ·¨Ïß¶¼Ö¸ÏòÊÓ×¶ÌåÄÚ²¿
+        æ³¨æ„è¿™ç§å†…å­˜ä½ç½®è¯»å–ï¼Œè¦è€ƒè™‘çŸ©é˜µçš„å­˜å‚¨æ˜¯åˆ—ä¸»åºè¿˜æ˜¯è¡Œä¸»åºï¼Œ glmçš„mat4æ˜¯åˆ—ä¸»åºçš„
+        è¿™æ®µä»£ç ç”Ÿæˆçš„å¹³é¢æ–¹ç¨‹çš„æ³•çº¿éƒ½æŒ‡å‘è§†é”¥ä½“å†…éƒ¨
     */
     Frustum CreateFrustumFromMatrix(const glm::mat4& VP)
     {
         Frustum frustum;
-        // ÓÒÆ½Ãæ
+        // å³å¹³é¢
         frustum.planeRight = glm::vec4(
             VP[0][3] - VP[0][0],
             VP[1][3] - VP[1][0],
@@ -236,7 +236,7 @@ namespace GameEngine {
             VP[3][3] - VP[3][0]
         );
 
-        // ×óÆ½Ãæ
+        // å·¦å¹³é¢
         frustum.planeLeft = glm::vec4(
             VP[0][3] + VP[0][0],
             VP[1][3] + VP[1][0],
@@ -244,7 +244,7 @@ namespace GameEngine {
             VP[3][3] + VP[3][0]
         );
 
-        // ÉÏÆ½Ãæ
+        // ä¸Šå¹³é¢
         frustum.planeTop = glm::vec4(
             VP[0][3] - VP[0][1],
             VP[1][3] - VP[1][1],
@@ -252,7 +252,7 @@ namespace GameEngine {
             VP[3][3] - VP[3][1]
         );
 
-        // ÏÂÆ½Ãæ
+        // ä¸‹å¹³é¢
         frustum.planeBottom = glm::vec4(
             VP[0][3] + VP[0][1],
             VP[1][3] + VP[1][1],
@@ -260,7 +260,7 @@ namespace GameEngine {
             VP[3][3] + VP[3][1]
         );
 
-        // Ô¶Æ½Ãæ
+        // è¿œå¹³é¢
         frustum.planeFar = glm::vec4(
             VP[0][3] - VP[0][2],
             VP[1][3] - VP[1][2],
@@ -268,7 +268,7 @@ namespace GameEngine {
             VP[3][3] - VP[3][2]
         );
 
-        // ½üÆ½Ãæ
+        // è¿‘å¹³é¢
         frustum.planeNear = glm::vec4(
             VP[0][3] + VP[0][2],
             VP[1][3] + VP[1][2],
@@ -276,7 +276,7 @@ namespace GameEngine {
             VP[3][3] + VP[3][2]
         );
 
-        // ¹éÒ»»¯
+        // å½’ä¸€åŒ–
         auto normalizePlane = [](glm::vec4& p)
             {
                 float len = glm::length(glm::vec3(p));
@@ -323,14 +323,14 @@ namespace GameEngine {
     BoundingBox BoundingBoxTransform(const BoundingBox& box, const glm::mat4& mat)
     {
         glm::vec3 boxOffset[8] = {
-            glm::vec3(-1.0f, -1.0f, 1.0f),  // ºóÏÂ×ó
-            glm::vec3(1.0f, -1.0f, 1.0f),   // ºóÏÂÓÒ
-            glm::vec3(1.0f, 1.0f, 1.0f),    // ºóÉÏÓÒ
-            glm::vec3(-1.0f, 1.0f, 1.0f),   // ºóÉÏ×ó
-            glm::vec3(-1.0f, -1.0f, -1.0f), // Ç°ÏÂ×ó
-            glm::vec3(1.0f, -1.0f, -1.0f),  // Ç°ÏÂÓÒ
-            glm::vec3(1.0f, 1.0f, -1.0f),   // Ç°ÉÏÓÒ
-            glm::vec3(-1.0f, 1.0f, -1.0f)   // Ç°ÉÏ×ó
+            glm::vec3(-1.0f, -1.0f, 1.0f),  // åä¸‹å·¦
+            glm::vec3(1.0f, -1.0f, 1.0f),   // åä¸‹å³
+            glm::vec3(1.0f, 1.0f, 1.0f),    // åä¸Šå³
+            glm::vec3(-1.0f, 1.0f, 1.0f),   // åä¸Šå·¦
+            glm::vec3(-1.0f, -1.0f, -1.0f), // å‰ä¸‹å·¦
+            glm::vec3(1.0f, -1.0f, -1.0f),  // å‰ä¸‹å³
+            glm::vec3(1.0f, 1.0f, -1.0f),   // å‰ä¸Šå³
+            glm::vec3(-1.0f, 1.0f, -1.0f)   // å‰ä¸Šå·¦
         };
 
         glm::vec3 center = (box.maxBound + box.minBound) * 0.5f;
@@ -401,7 +401,7 @@ namespace GameEngine {
     }
     bool BoxIntersectBox(const BoundingBox& box1, const BoundingBox& box2)
     {
-        // TODO: ·ÖÀëÖá¶¨Àí£¨SAT£©£º¼ì²éÈı¸ö×ø±êÖáÉÏµÄÍ¶Ó°ÊÇ·ñ¶¼ÓĞÖØµş
+        // TODO: åˆ†ç¦»è½´å®šç†ï¼ˆSATï¼‰ï¼šæ£€æŸ¥ä¸‰ä¸ªåæ ‡è½´ä¸Šçš„æŠ•å½±æ˜¯å¦éƒ½æœ‰é‡å 
         bool noOverlapInX = box1.maxBound.x < box2.minBound.x || box2.maxBound.x < box1.minBound.x;
         bool noOverlapInY = box1.maxBound.y < box2.minBound.y || box2.maxBound.y < box1.minBound.y;
         bool noOverlapInZ = box1.maxBound.z < box2.minBound.z || box2.maxBound.z < box1.minBound.z;

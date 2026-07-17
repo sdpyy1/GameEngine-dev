@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "RDGBuilder.h"
 #include "Hazel/Renderer/RHI/RHIResource.h"
 #include "RDGPool.h"
@@ -184,7 +184,7 @@ namespace GameEngine {
 #ifdef RDG_DEBUG
             LOG_INFO("RDG Pass Begin: [{}]", name);
 #endif
-			// Ö´ĞĞ pass
+			// æ‰§è¡Œ pass
 			switch (pass->NodeType()) {
 			case RDG_PASS_NODE_TYPE_RENDER:         ExecutePass(dynamic_cast<RDGRenderPassNodeRef>(pass)); break;
 			case RDG_PASS_NODE_TYPE_COMPUTE:        ExecutePass(dynamic_cast<RDGComputePassNodeRef>(pass)); break;
@@ -196,7 +196,7 @@ namespace GameEngine {
 #ifdef RDG_DEBUG
             LOG_INFO("RDG Pass End: [{}]", name);
 #endif
-			// ¼ì²éÏÂÒ»¸ö pass Ç°×º£¬Èç¹û±ä»¯»òÕßÊÇ×îºóÒ»¸ö pass£¬pop
+			// æ£€æŸ¥ä¸‹ä¸€ä¸ª pass å‰ç¼€ï¼Œå¦‚æœå˜åŒ–æˆ–è€…æ˜¯æœ€åä¸€ä¸ª passï¼Œpop
 			size_t nextIndex = i + 1;
 			std::string nextPrefix;
 			while (nextIndex < passes.size() && (!passes[nextIndex] || passes[nextIndex]->isCulled)) {
@@ -216,10 +216,10 @@ namespace GameEngine {
 
 
 
-		for (auto& pass : passes)   // ÊÍ·Å³Ø»¯×ÊÔ´
+		for (auto& pass : passes)   // é‡Šæ”¾æ± åŒ–èµ„æº
 		{
 			//ReleaseResource(pass);
-			for (auto& descriptor : pass->pooledDescriptorSets)  // ³Ø»¯µÄviewÔÚpass½áÊøºó¾Í¿ÉÒÔÊÍ·Å£¬µ«ÊÇÃèÊö·ûµÃÈ«²¿Ö´ĞĞÍêÔÙÊÍ·Å£¿
+			for (auto& descriptor : pass->pooledDescriptorSets)  // æ± åŒ–çš„viewåœ¨passç»“æŸåå°±å¯ä»¥é‡Šæ”¾ï¼Œä½†æ˜¯æè¿°ç¬¦å¾—å…¨éƒ¨æ‰§è¡Œå®Œå†é‡Šæ”¾ï¼Ÿ
 			{
 				RDGDescriptorSetPool::Get(APP_FRAMEINDEX)->Release({ descriptor.first }, pass->rootSignature, descriptor.second);
 			}
@@ -237,13 +237,13 @@ namespace GameEngine {
 #endif
 			{
 				/*
-					°ÑÄ³¸ö×ÊÔ´´ÓA×´Ì¬×ª»»ÎªB×´Ì¬
+					æŠŠæŸä¸ªèµ„æºä»AçŠ¶æ€è½¬æ¢ä¸ºBçŠ¶æ€
 				*/
 				RHITextureBarrier barrier = {
-					Resolve(texture),        // µÚÒ»¸ö³ÉÔ±: texture
-					previousState,           // µÚ¶ş¸ö³ÉÔ±: srcState
-					edge->state,             // µÚÈı¸ö³ÉÔ±: dstState
-					edge->subresource        // µÚËÄ¸ö³ÉÔ±: subresource
+					Resolve(texture),        // ç¬¬ä¸€ä¸ªæˆå‘˜: texture
+					previousState,           // ç¬¬äºŒä¸ªæˆå‘˜: srcState
+					edge->state,             // ç¬¬ä¸‰ä¸ªæˆå‘˜: dstState
+					edge->subresource        // ç¬¬å››ä¸ªæˆå‘˜: subresource
 				};
 				command->TextureBarrier(barrier);
 			}
@@ -257,11 +257,11 @@ namespace GameEngine {
 #endif
 			{
 				RHIBufferBarrier barrier = {
-					Resolve(buffer),  // µÚÒ»¸ö³ÉÔ±: buffer
-					previousState,    // µÚ¶ş¸ö³ÉÔ±: srcState
-					edge->state,      // µÚÈı¸ö³ÉÔ±: dstState
-					edge->offset,     // µÚËÄ¸ö³ÉÔ±: offset
-					edge->size        // µÚÎå¸ö³ÉÔ±: size
+					Resolve(buffer),  // ç¬¬ä¸€ä¸ªæˆå‘˜: buffer
+					previousState,    // ç¬¬äºŒä¸ªæˆå‘˜: srcState
+					edge->state,      // ç¬¬ä¸‰ä¸ªæˆå‘˜: dstState
+					edge->offset,     // ç¬¬å››ä¸ªæˆå‘˜: offset
+					edge->size        // ç¬¬äº”ä¸ªæˆå‘˜: size
 				};
 				command->BufferBarrier(barrier);
 
@@ -297,11 +297,11 @@ namespace GameEngine {
 #endif
 			{
 				RHIBufferBarrier barrier = {
-					Resolve(buffer),  // ¶ÔÓ¦ .buffer
-					previousState,    // ¶ÔÓ¦ .srcState
-					edge->state,      // ¶ÔÓ¦ .dstState
-					edge->offset,     // ¶ÔÓ¦ .offset
-					edge->size        // ¶ÔÓ¦ .size
+					Resolve(buffer),  // å¯¹åº” .buffer
+					previousState,    // å¯¹åº” .srcState
+					edge->state,      // å¯¹åº” .dstState
+					edge->offset,     // å¯¹åº” .offset
+					edge->size        // å¯¹åº” .size
 				};
 				command->BufferBarrier(barrier);
 
@@ -323,7 +323,7 @@ namespace GameEngine {
 			RHITextureViewRef view = RDGTextureViewPool::Get()->Allocate(info).textureView;
 			pass->pooledViews.push_back(view);
 
-			// ¿´Õâ¸öÎÆÀí¶ÔÓ¦µÄ×ÊÔ´ÃèÊö·û´´½¨Ã»ÓĞ
+			// çœ‹è¿™ä¸ªçº¹ç†å¯¹åº”çš„èµ„æºæè¿°ç¬¦åˆ›å»ºæ²¡æœ‰
 			if (pass->descriptorSets[edge->set] == nullptr && pass->rootSignature != nullptr)
 			{
 				auto descriptor = RDGDescriptorSetPool::Get(APP_FRAMEINDEX)->Allocate(pass->rootSignature, edge->set).descriptor;
@@ -331,7 +331,7 @@ namespace GameEngine {
 				pass->pooledDescriptorSets.push_back({ descriptor, edge->set });
 			}
 
-			// ¸üĞÂ×ÊÔ´ÃèÊö·û
+			// æ›´æ–°èµ„æºæè¿°ç¬¦
 			if ((edge->asShaderRead || edge->asShaderReadWrite) &&
 				pass->descriptorSets[edge->set] != nullptr)
 			{
@@ -343,7 +343,7 @@ namespace GameEngine {
 				pass->descriptorSets[edge->set]->UpdateDescriptor(updateInfo);
 			}
 			});
-		// BufferÍ¬TextrueÒ»Ñù
+		// BufferåŒTextrueä¸€æ ·
 		pass->ForEachBuffer([&](RDGBufferEdgeRef edge, RDGBufferNodeRef buffer) {
 			if (pass->descriptorSets[edge->set] == nullptr && pass->rootSignature != nullptr)
 			{
@@ -370,7 +370,7 @@ namespace GameEngine {
 
 	void RDGBuilder::PrepareRenderTarget(RDGRenderPassNodeRef pass, RHIRenderPassInfo& renderPassInfo)
 	{
-		//TODO:ÆäÊµ¿ÉÒÔForEachTextureÊ±Ö±½ÓÇø·Ö¸÷ÖÖasXxxx
+		//TODO:å…¶å®å¯ä»¥ForEachTextureæ—¶ç›´æ¥åŒºåˆ†å„ç§asXxxx
 		pass->ForEachTexture([&](RDGTextureEdgeRef edge, RDGTextureNodeRef texture) {
 			if (edge->IsOutput()) return;
 			if (!(edge->asColor || edge->asDepthStencil)) return;
@@ -431,11 +431,11 @@ namespace GameEngine {
 		PrepareDescriptorSet(pass);
 		RHIRenderPassInfo renderPassInfo = {};
 		PrepareRenderTarget(pass, renderPassInfo);
-		RHIRenderPassRef renderPass = APP_DYNAMICRHI->CreateRenderPass(renderPassInfo); // ¸ù¾İÍ¼´´½¨RenderPassºÍFranmeBuffer£¬ÒòÎªÓĞpoolÆäÊµÎŞËùÎ½°ÑRenderPassºÍFrameBuffer·ÅÔÚÒ»Æğ´´½¨
+		RHIRenderPassRef renderPass = APP_DYNAMICRHI->CreateRenderPass(renderPassInfo); // æ ¹æ®å›¾åˆ›å»ºRenderPasså’ŒFranmeBufferï¼Œå› ä¸ºæœ‰poolå…¶å®æ— æ‰€è°“æŠŠRenderPasså’ŒFrameBufferæ”¾åœ¨ä¸€èµ·åˆ›å»º
 
 		CreateInputBarriers(pass);
 
-		command->BeginRenderPass(renderPass); // BeginµÄÊÇRenderPass£¬°ÑÊµ¼ÊµÄFrameBufferµ±×÷²ÎÊı´«µİ½øÈ¥ÁË
+		command->BeginRenderPass(renderPass); // Beginçš„æ˜¯RenderPassï¼ŒæŠŠå®é™…çš„FrameBufferå½“ä½œå‚æ•°ä¼ é€’è¿›å»äº†
 
 		RDGPassContext context;
 		context.command = command;
@@ -561,7 +561,7 @@ namespace GameEngine {
 				barrier.dstState = RESOURCE_STATE_TRANSFER_SRC;
 				barrier.subresource = {};
 				command->TextureBarrier(barrier);
-				command->GenerateMips(Resolve(to)); // Ä¬ÈÏÎÆÀí´¦ÓÚsrc×´Ì¬£¬ĞèÒªÊÖ¶¯¼ÓÆÁÕÏ
+				command->GenerateMips(Resolve(to)); // é»˜è®¤çº¹ç†å¤„äºsrcçŠ¶æ€ï¼Œéœ€è¦æ‰‹åŠ¨åŠ å±éšœ
 
 				barrier.texture = Resolve(to);
 				barrier.srcState = RESOURCE_STATE_TRANSFER_SRC;
@@ -640,22 +640,22 @@ namespace GameEngine {
 		NodeID currentID = passNode->ID();
 		NodeID previousID = UINT32_MAX;
 
-		RHIResourceState previousState = textureNode->initState;        // ÈôÃ»ÓĞÇ°ĞòÒıÓÃ£¬ÄÇ×´Ì¬¾ÍÊÇ×ÊÔ´±¾ÉíµÄ³õÊ¼×´Ì¬
+		RHIResourceState previousState = textureNode->initState;        // è‹¥æ²¡æœ‰å‰åºå¼•ç”¨ï¼Œé‚£çŠ¶æ€å°±æ˜¯èµ„æºæœ¬èº«çš„åˆå§‹çŠ¶æ€
 
 		textureNode->ForEachPass([&](RDGTextureEdgeRef edge, RDGPassNodeRef pass) {
 			bool isOutputFirst = output ? !edge->IsOutput() : edge->IsOutput();
-			bool isPrevoiusPass = output ? pass->ID() <= currentID : pass->ID() < currentID;   // ±éÀúµÄÕâ¸öpassÊÇ²»ÊÇµ±Ç°passµÄÇ°Ğòpass
-			bool isSubresourceCovered = subresource.IsDefault() ||                      // ÎŞ×´Ì¬µØ×·×ÙÕû¸ö×Ó×ÊÔ´×´Ì¬ÊµÔÚÓĞĞ©À§ÄÑ£¬ÏÖÔÚÖ§³ÖµÄ·½·¨ÊÇ£º
-				edge->subresource.IsDefault() ||                // 1. ÈôÄ¿±ê×´Ì¬ÊÇÄ¬ÈÏ·¶Î§£¬ÄÇÖ»×·×ÙÇ°Ğò×î½üµÄ×´Ì¬
-				subresource == edge->subresource;               // 2. ÈôÄ¿±ê×´Ì¬ÊÇ×Ó·¶Î§£¬ÄÇ±ØĞë×·×ÙÇ°Ğò×î½üµÄÍêÈ«Ò»ÖÂµÄ×Ó·¶Î§/Ä¬ÈÏ·¶Î§µÄ×´Ì¬
-			// ÔÙºÏÀíÀûÓÃoutputµÄÊÖ¶¯ÆÁÕÏ£¬Ó¦¸ÃÄÜ¹»Íê³ÉÈ«²¿×Ó·¶Î§µÄ¹ÜÀí
+			bool isPrevoiusPass = output ? pass->ID() <= currentID : pass->ID() < currentID;   // éå†çš„è¿™ä¸ªpassæ˜¯ä¸æ˜¯å½“å‰passçš„å‰åºpass
+			bool isSubresourceCovered = subresource.IsDefault() ||                      // æ— çŠ¶æ€åœ°è¿½è¸ªæ•´ä¸ªå­èµ„æºçŠ¶æ€å®åœ¨æœ‰äº›å›°éš¾ï¼Œç°åœ¨æ”¯æŒçš„æ–¹æ³•æ˜¯ï¼š
+				edge->subresource.IsDefault() ||                // 1. è‹¥ç›®æ ‡çŠ¶æ€æ˜¯é»˜è®¤èŒƒå›´ï¼Œé‚£åªè¿½è¸ªå‰åºæœ€è¿‘çš„çŠ¶æ€
+				subresource == edge->subresource;               // 2. è‹¥ç›®æ ‡çŠ¶æ€æ˜¯å­èŒƒå›´ï¼Œé‚£å¿…é¡»è¿½è¸ªå‰åºæœ€è¿‘çš„å®Œå…¨ä¸€è‡´çš„å­èŒƒå›´/é»˜è®¤èŒƒå›´çš„çŠ¶æ€
+			// å†åˆç†åˆ©ç”¨outputçš„æ‰‹åŠ¨å±éšœï¼Œåº”è¯¥èƒ½å¤Ÿå®Œæˆå…¨éƒ¨å­èŒƒå›´çš„ç®¡ç†
 			if (!(isPrevoiusPass && isSubresourceCovered)) return;
-			if (pass->ID() > previousID || previousID == UINT32_MAX)     // ²»Í¬µÄÇ°Ğòpass£¬È¡×îºóÒ»¸öµÄ×´Ì¬
+			if (pass->ID() > previousID || previousID == UINT32_MAX)     // ä¸åŒçš„å‰åºpassï¼Œå–æœ€åä¸€ä¸ªçš„çŠ¶æ€
 			{
 				previousState = edge->state;
 				previousID = pass->ID();
 			}
-			else if (pass->ID() == previousID &&                         // Í¬Ò»¸öÇ°Ğòpass£¬¿¼ÂÇÈ¡ÊäÈëorÊä³ö×´Ì¬
+			else if (pass->ID() == previousID &&                         // åŒä¸€ä¸ªå‰åºpassï¼Œè€ƒè™‘å–è¾“å…¥orè¾“å‡ºçŠ¶æ€
 				isOutputFirst)
 			{
 				previousState = edge->state;
@@ -672,22 +672,22 @@ namespace GameEngine {
 		NodeID currentID = passNode->ID();
 		NodeID previousID = UINT32_MAX;
 
-		RHIResourceState previousState = bufferNode->initState;         // ÈôÃ»ÓĞÇ°ĞòÒıÓÃ£¬ÄÇ×´Ì¬¾ÍÊÇ×ÊÔ´±¾ÉíµÄ³õÊ¼×´Ì¬
+		RHIResourceState previousState = bufferNode->initState;         // è‹¥æ²¡æœ‰å‰åºå¼•ç”¨ï¼Œé‚£çŠ¶æ€å°±æ˜¯èµ„æºæœ¬èº«çš„åˆå§‹çŠ¶æ€
 
 		bufferNode->ForEachPass([&](RDGBufferEdgeRef edge, RDGPassNodeRef pass) {
 			bool isOutputFirst = output ? !edge->IsOutput() : edge->IsOutput();
 			bool isPrevoiusPass = output ? pass->ID() <= currentID : pass->ID() < currentID;
 			bool isSubresourceCovered = (offset == 0 && size == 0) ||
 				(edge->offset == 0 && edge->size == 0) ||
-				(offset == edge->offset && size == edge->size);  // Í¬textureÀïµÄ²ßÂÔ
+				(offset == edge->offset && size == edge->size);  // åŒtextureé‡Œçš„ç­–ç•¥
 
 			if (!(isPrevoiusPass && isSubresourceCovered)) return;
-			if (pass->ID() > previousID || previousID == UINT32_MAX)     // ²»Í¬µÄÇ°Ğòpass£¬È¡×îºóÒ»¸öµÄ×´Ì¬
+			if (pass->ID() > previousID || previousID == UINT32_MAX)     // ä¸åŒçš„å‰åºpassï¼Œå–æœ€åä¸€ä¸ªçš„çŠ¶æ€
 			{
 				previousState = edge->state;
 				previousID = pass->ID();
 			}
-			else if (pass->ID() == previousID &&                         // Í¬Ò»¸öÇ°Ğòpass£¬¿¼ÂÇÈ¡ÊäÈëorÊä³ö×´Ì¬
+			else if (pass->ID() == previousID &&                         // åŒä¸€ä¸ªå‰åºpassï¼Œè€ƒè™‘å–è¾“å…¥orè¾“å‡ºçŠ¶æ€
 				isOutputFirst)
 			{
 				previousState = edge->state;
@@ -872,7 +872,7 @@ namespace GameEngine {
 		edge->index = index;
 		edge->type = RESOURCE_TYPE_UNIFORM_BUFFER;
 
-		graph->Link(graph->GetNode(buffer.ID()), pass, edge); // Á¬½ÓBuffer½áµãºÍµ±Ç°Pass½áµã£¬ÔÚ±ßÖĞ´æ´¢¶ÁShader
+		graph->Link(graph->GetNode(buffer.ID()), pass, edge); // è¿æ¥Bufferç»“ç‚¹å’Œå½“å‰Passç»“ç‚¹ï¼Œåœ¨è¾¹ä¸­å­˜å‚¨è¯»Shader
 
 		return *this;
 	}
@@ -900,7 +900,7 @@ namespace GameEngine {
 	RDGRenderPassBuilder& RDGRenderPassBuilder::ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset, uint32_t size)
 	{
 		RDGBufferEdgeRef edge = graph->CreateEdge<RDGBufferEdge>();
-		edge->state = RESOURCE_STATE_UNORDERED_ACCESS; // UAV£¨Ëæ»ú¶ÁĞ´ÊÓÍ¼£©
+		edge->state = RESOURCE_STATE_UNORDERED_ACCESS; // UAVï¼ˆéšæœºè¯»å†™è§†å›¾ï¼‰
 		edge->offset = offset;
 		edge->size = size;
 		edge->asShaderReadWrite = true;
@@ -909,7 +909,7 @@ namespace GameEngine {
 		edge->index = index;
 		edge->type = RESOURCE_TYPE_RW_BUFFER;
 
-		graph->Link(pass, graph->GetNode(buffer.ID()), edge);   // ´ÓPassÁ¬Ïò×ÊÔ´£¬±íÊ¾»áĞ´ÈëËü
+		graph->Link(pass, graph->GetNode(buffer.ID()), edge);   // ä»Passè¿å‘èµ„æºï¼Œè¡¨ç¤ºä¼šå†™å…¥å®ƒ
 
 		return *this;
 	}
@@ -917,7 +917,7 @@ namespace GameEngine {
 	RDGRenderPassBuilder& RDGRenderPassBuilder::ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGTextureHandle texture, TextureViewType viewType, TextureSubresourceRange subresource)
 	{
 		RDGTextureEdgeRef edge = graph->CreateEdge<RDGTextureEdge>();
-		edge->state = RESOURCE_STATE_UNORDERED_ACCESS; // UAV£¨Ëæ»ú¶ÁĞ´ÊÓÍ¼£©
+		edge->state = RESOURCE_STATE_UNORDERED_ACCESS; // UAVï¼ˆéšæœºè¯»å†™è§†å›¾ï¼‰
 		edge->subresource = subresource;
 		edge->asShaderReadWrite = true;
 		edge->set = set;
@@ -926,7 +926,7 @@ namespace GameEngine {
 		edge->type = RESOURCE_TYPE_RW_TEXTURE;
 		edge->viewType = viewType;
 
-		graph->Link(pass, graph->GetNode(texture.ID()), edge); // ´ÓPassÁ¬Ïò×ÊÔ´£¬±íÊ¾»áĞ´ÈëËü
+		graph->Link(pass, graph->GetNode(texture.ID()), edge); // ä»Passè¿å‘èµ„æºï¼Œè¡¨ç¤ºä¼šå†™å…¥å®ƒ
 
 		return *this;
 	}
@@ -947,7 +947,7 @@ namespace GameEngine {
 		edge->binding = binding;
 		edge->viewType = subresource.layerCount > 1 ? VIEW_TYPE_2D_ARRAY : VIEW_TYPE_2D;
 
-		graph->Link(pass, graph->GetNode(texture.ID()), edge);  // Êä³ö
+		graph->Link(pass, graph->GetNode(texture.ID()), edge);  // è¾“å‡º
 
 		return *this;
 	}

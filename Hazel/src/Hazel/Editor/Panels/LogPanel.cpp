@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "LogPanel.h"
 #include <imgui.h>
 
@@ -32,7 +32,7 @@ namespace GameEngine {
 
 		ImGui::Begin("Log Panel", &isOpen);
 
-		// ÈÕÖ¾¼¶±ð¹ýÂË
+		// æ—¥å¿—çº§åˆ«è¿‡æ»¤
 		ImGui::Checkbox("trace", &m_ShowTrace); ImGui::SameLine();
 		ImGui::Checkbox("info", &m_ShowInfo); ImGui::SameLine();
 		ImGui::Checkbox("warn", &m_ShowWarn); ImGui::SameLine();
@@ -44,7 +44,7 @@ namespace GameEngine {
 		{
 			std::lock_guard<std::mutex> lock(GameEngine::Log::s_LogMutex);
 			GameEngine::Log::s_LogCache.clear();
-			m_ScrollToBottom = true; // Çå¿Õºó¹ö¶¯µ½µ×
+			m_ScrollToBottom = true; // æ¸…ç©ºåŽæ»šåŠ¨åˆ°åº•
 		}
 
 		ImGui::BeginChild("LogRegion", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
@@ -58,30 +58,30 @@ namespace GameEngine {
 			ImVec4 color;
 			switch (log.Level)
 			{
-			case LogLevel::trace:    color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f); break; // »ÒÉ«
-			case LogLevel::info:     color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f); break; // ÂÌÉ«
-			case LogLevel::warn:     color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f); break; // »ÆÉ«
-			case LogLevel::error:    color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); break; // ºìÉ«
-			default:                 color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); break; // Ä¬ÈÏ°×É«
+			case LogLevel::trace:    color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f); break; // ç°è‰²
+			case LogLevel::info:     color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f); break; // ç»¿è‰²
+			case LogLevel::warn:     color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f); break; // é»„è‰²
+			case LogLevel::error:    color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); break; // çº¢è‰²
+			default:                 color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); break; // é»˜è®¤ç™½è‰²
 			}
 
 			ImGui::PushStyleColor(ImGuiCol_Text, color);
 
-			// ÅÐ¶ÏÊÇ·ñÊÇ Vulkan Validation Error
+			// åˆ¤æ–­æ˜¯å¦æ˜¯ Vulkan Validation Error
 			if (log.Level == LogLevel::error && log.Message.find("[Validation]") != std::string::npos)
 			{
-				ImGui::TextUnformatted("Vulkan Validation LOG_ERROR"); // Ìæ»»ÏÔÊ¾ÄÚÈÝ
+				ImGui::TextUnformatted("Vulkan Validation LOG_ERROR"); // æ›¿æ¢æ˜¾ç¤ºå†…å®¹
 			}
 			else
 			{
-				ImGui::TextUnformatted(log.Message.c_str()); // Õý³£ÏÔÊ¾
+				ImGui::TextUnformatted(log.Message.c_str()); // æ­£å¸¸æ˜¾ç¤º
 			}
 
 			ImGui::PopStyleColor();
 		}
 
 
-		// ×Ô¶¯¹ö¶¯µ½µ×
+		// è‡ªåŠ¨æ»šåŠ¨åˆ°åº•
 		if (m_ScrollToBottom || ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
 		{
 			ImGui::SetScrollHereY(1.0f);

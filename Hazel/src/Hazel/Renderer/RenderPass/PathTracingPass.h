@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "RenderPass.h"
 
 namespace GameEngine {
@@ -20,12 +20,12 @@ namespace GameEngine {
 		RHIShaderRef m_MissShader;
 		struct setting
 		{
-			int numSamples = 1;			// Ã¿Ö¡²ÉÑùÊı
-			int totalNumSamples = 0;	// ÀÛ¼Æ²ÉÑùÊı
-			int numBounce = 50;			// ¹âÏß·´ÉäÉî¶È
-			int sampleSkyBox = 1;		// ÊÇ·ñ²ÉÑùÀ´×ÔÌì¿ÕºĞµÄ¹âÕÕ
-			int indirectOnly = 0;		// ½ö¼ä½Ó¹âÕÕ
-			int historyActive = 1;		// ÊÇ·ñÊ±ÓòÀÛ»ı
+			int numSamples = 1;			// æ¯å¸§é‡‡æ ·æ•°
+			int totalNumSamples = 0;	// ç´¯è®¡é‡‡æ ·æ•°
+			int numBounce = 50;			// å…‰çº¿åå°„æ·±åº¦
+			int sampleSkyBox = 1;		// æ˜¯å¦é‡‡æ ·æ¥è‡ªå¤©ç©ºç›’çš„å…‰ç…§
+			int indirectOnly = 0;		// ä»…é—´æ¥å…‰ç…§
+			int historyActive = 1;		// æ˜¯å¦æ—¶åŸŸç´¯ç§¯
 		} m_Settings;
 		RHITextureRef m_HistoryTexture;
 		RHITextureRef m_DirectTexture;

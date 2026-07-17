@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "Hazel/Core/Thread.h"
 
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -17,7 +17,7 @@ namespace GameEngine {
 
 		std::wstring wName(name.begin(), name.end());
 		SetThreadDescription(threadHandle, wName.c_str());
-		SetThreadAffinityMask(threadHandle, 8); // ÉèÖÃÇ×ºÍÁ¦ÑÚÂëÎª8£¬±íÊ¾½«Ïß³Ì°ó¶¨µ½µÚ4¸öCPUºËĞÄ£¨´Ó0¿ªÊ¼¼ÆÊı£© ÕâºÍSetNameÎŞ¹Ø
+		SetThreadAffinityMask(threadHandle, 8); // è®¾ç½®äº²å’ŒåŠ›æ©ç ä¸º8ï¼Œè¡¨ç¤ºå°†çº¿ç¨‹ç»‘å®šåˆ°ç¬¬4ä¸ªCPUæ ¸å¿ƒï¼ˆä»0å¼€å§‹è®¡æ•°ï¼‰ è¿™å’ŒSetNameæ— å…³
 	}
 
 	void Thread::Join()
@@ -34,12 +34,12 @@ namespace GameEngine {
 
 	void ThreadSignal::WaitAndReset()
 	{
-		WaitForSingleObject(m_SignalHandle, INFINITE); // ×èÈûÖ±µ½ÊÂ¼ş´¥·¢
+		WaitForSingleObject(m_SignalHandle, INFINITE); // é˜»å¡ç›´åˆ°äº‹ä»¶è§¦å‘
 	}
 
 	void ThreadSignal::Signal()
 	{
-		SetEvent(m_SignalHandle); // ´¥·¢ÊÂ¼ş£¬»½ĞÑµÈ´ıµÄÏß³Ì
+		SetEvent(m_SignalHandle); // è§¦å‘äº‹ä»¶ï¼Œå”¤é†’ç­‰å¾…çš„çº¿ç¨‹
 	}
 
 	void ThreadSignal::Reset()

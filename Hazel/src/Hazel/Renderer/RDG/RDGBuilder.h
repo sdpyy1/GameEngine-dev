@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "DependencyGraph.h"
 #include "RDGHandle.h"
 #include "RDGNode.h"
@@ -10,8 +10,8 @@
 #include <vector>
 // #define RDG_DEBUG
 /*
-    RDGNode·ÖÎªPassNode(RenderPass, ComputePass, RayTracingPass, CopyPass, PresentPass)ºÍResourceNode(TextureNode, BufferNode)
-    RDGEdgeÓÃÓÚ´æ´¢ ×ÊÔ´->PassµÄView£¬ÓÃÓÚÔÚPassÊ±´´½¨¶ÔÓ¦µÄview
+    RDGNodeåˆ†ä¸ºPassNode(RenderPass, ComputePass, RayTracingPass, CopyPass, PresentPass)å’ŒResourceNode(TextureNode, BufferNode)
+    RDGEdgeç”¨äºå­˜å‚¨ èµ„æº->Passçš„Viewï¼Œç”¨äºåœ¨Passæ—¶åˆ›å»ºå¯¹åº”çš„view
 */
 namespace GameEngine {
 
@@ -49,13 +49,13 @@ namespace GameEngine {
     {
     public:
         RDGBuilder() = default;
-        RDGBuilder(RHICommandListRef command): command(command){}  // ¸øÒ»¸öcommandList
+        RDGBuilder(RHICommandListRef command): command(command){}  // ç»™ä¸€ä¸ªcommandList
 
         ~RDGBuilder() {};
 
         RDGTextureBuilder CreateTexture(std::string name);
         RDGBufferBuilder CreateBuffer(std::string name);
-        RDGRenderPassBuilder CreateRenderPass(std::string name);    // ¼Ù¶¨ËùÓĞpassµÄÌí¼ÓË³Ğò¾ÍÊÇÖ´ĞĞË³Ğò£¬·½±ã´¦ÀíÅÅĞòºÍÒÀÀµ¹ØÏµµÈ
+        RDGRenderPassBuilder CreateRenderPass(std::string name);    // å‡å®šæ‰€æœ‰passçš„æ·»åŠ é¡ºåºå°±æ˜¯æ‰§è¡Œé¡ºåºï¼Œæ–¹ä¾¿å¤„ç†æ’åºå’Œä¾èµ–å…³ç³»ç­‰
         RDGComputePassBuilder CreateComputePass(std::string name);
         RDGRayTracingPassBuilder CreateRayTracingPass(std::string name);
         RDGPresentPassBuilder CreatePresentPass(std::string name);
@@ -98,18 +98,18 @@ namespace GameEngine {
             }
             return dynamic_cast<Type>(node)->GetHandle();
         }
-        // Resolve ´´½¨ÕæÕıµÄ×ÊÔ´
+        // Resolve åˆ›å»ºçœŸæ­£çš„èµ„æº
         RHITextureRef Resolve(RDGTextureNodeRef textureNode);
         RHIBufferRef Resolve(RDGBufferNodeRef bufferNode);
         void Release(RDGTextureNodeRef textureNode, RHIResourceState state);
         void Release(RDGBufferNodeRef bufferNode, RHIResourceState state);
 
-        RHIResourceState PreviousState(RDGTextureNodeRef textureNode, RDGPassNodeRef passNode, TextureSubresourceRange subresource = {}, bool output = false);    // »ñÈ¡µ±Ç°pass£¨ÔÚÖ´ĞĞË³ĞòÉÏ£©µÄ×ÊÔ´µÄÇ°Ğò×´Ì¬
-        RHIResourceState PreviousState(RDGBufferNodeRef bufferNode, RDGPassNodeRef passNode, uint32_t offset = 0, uint32_t size = 0, bool output = false);      // outputÓÃÓÚ±ê¼ÇÊÇÏà¶ÔÓÚÊäÈë»¹ÊÇÊä³ö×ÊÔ´
+        RHIResourceState PreviousState(RDGTextureNodeRef textureNode, RDGPassNodeRef passNode, TextureSubresourceRange subresource = {}, bool output = false);    // è·å–å½“å‰passï¼ˆåœ¨æ‰§è¡Œé¡ºåºä¸Šï¼‰çš„èµ„æºçš„å‰åºçŠ¶æ€
+        RHIResourceState PreviousState(RDGBufferNodeRef bufferNode, RDGPassNodeRef passNode, uint32_t offset = 0, uint32_t size = 0, bool output = false);      // outputç”¨äºæ ‡è®°æ˜¯ç›¸å¯¹äºè¾“å…¥è¿˜æ˜¯è¾“å‡ºèµ„æº
         bool IsLastUsedPass(RDGTextureNodeRef textureNode, RDGPassNodeRef passNode, bool output = false);
         bool IsLastUsedPass(RDGBufferNodeRef bufferNode, RDGPassNodeRef passNode, bool output = false);
 
-        std::vector<RDGPassNodeRef> passes; // ´´½¨µÄÈ«²¿pass£¬°´ÕÕ´´½¨Ë³ĞòÖ´ĞĞ
+        std::vector<RDGPassNodeRef> passes; // åˆ›å»ºçš„å…¨éƒ¨passï¼ŒæŒ‰ç…§åˆ›å»ºé¡ºåºæ‰§è¡Œ
 
         DependencyGraphRef graph = std::make_shared<DependencyGraph>();
         RDGBlackBoard blackBoard;
@@ -128,7 +128,7 @@ namespace GameEngine {
         RDGTextureBuilder& Import(RHITextureRef texture, RHIResourceState initState);
         RDGTextureBuilder& Exetent(Extent3D extent);
         RDGTextureBuilder& Format(RHIFormat format);
-        RDGTextureBuilder& MemoryUsage(MemoryUsage memoryUsage);
+        RDGTextureBuilder& MemoryUsage(MemoryUsage memoryUsage = MEMORY_USAGE_GPU_ONLY);
         RDGTextureBuilder& AllowReadWrite();
         RDGTextureBuilder& AllowRenderTarget();
         RDGTextureBuilder& AllowDepthStencil();
@@ -175,14 +175,14 @@ namespace GameEngine {
             , graph(builder->GetGraph()) {
         };
 
-        RDGRenderPassBuilder& PassIndex(uint32_t x = 0, uint32_t y = 0, uint32_t z = 0);        // ¸øÒ»¸öindexÉèÖÃº¯Êı·½±ã¸øExecute´«²Î
-        RDGRenderPassBuilder& RootSignature(RHIRootSignatureRef rootSignature);                 // ÈôÌá¹©¸ùÇ©ÃûÎ´Ìá¹©ÃèÊö·û£¬Ê¹ÓÃ³Ø»¯´´½¨
-        RDGRenderPassBuilder& DescriptorSet(uint32_t set, RHIDescriptorSetRef descriptorSet);   // ÈôÌá¹©ÁËÃèÊö·û£¬Ö±½ÓÓÃÏàÓ¦µÄÃèÊö·û
+        RDGRenderPassBuilder& PassIndex(uint32_t x = 0, uint32_t y = 0, uint32_t z = 0);        // ç»™ä¸€ä¸ªindexè®¾ç½®å‡½æ•°æ–¹ä¾¿ç»™Executeä¼ å‚
+        RDGRenderPassBuilder& RootSignature(RHIRootSignatureRef rootSignature);                 // è‹¥æä¾›æ ¹ç­¾åæœªæä¾›æè¿°ç¬¦ï¼Œä½¿ç”¨æ± åŒ–åˆ›å»º
+        RDGRenderPassBuilder& DescriptorSet(uint32_t set, RHIDescriptorSetRef descriptorSet);   // è‹¥æä¾›äº†æè¿°ç¬¦ï¼Œç›´æ¥ç”¨ç›¸åº”çš„æè¿°ç¬¦
         
-        // ´´½¨±ß  Ä¬ÈÏView¶¼ÊÇ2D£¬Èç¹ûĞèÒªcubeView£¬ĞèÒªÊÖ¶¯Ö¸¶¨
+        // åˆ›å»ºè¾¹  é»˜è®¤Viewéƒ½æ˜¯2Dï¼Œå¦‚æœéœ€è¦cubeViewï¼Œéœ€è¦æ‰‹åŠ¨æŒ‡å®š
         RDGRenderPassBuilder& Read(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);
         RDGRenderPassBuilder& Read(uint32_t set, uint32_t binding, uint32_t index, RDGTextureHandle texture, TextureViewType viewType = VIEW_TYPE_2D, TextureSubresourceRange subresource = {});
-        RDGRenderPassBuilder& ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);   // ºÃÏñºÍreadÒ²Ã»Ê²Ã´Çø±ğ£¿
+        RDGRenderPassBuilder& ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);   // å¥½åƒå’Œreadä¹Ÿæ²¡ä»€ä¹ˆåŒºåˆ«ï¼Ÿ
         RDGRenderPassBuilder& ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGTextureHandle texture, TextureViewType viewType = VIEW_TYPE_2D, TextureSubresourceRange subresource = {});
         RDGRenderPassBuilder& LabelColor(Color3 color);
         RDGRenderPassBuilder& Color(uint32_t binding, RDGTextureHandle texture,
@@ -197,8 +197,8 @@ namespace GameEngine {
             uint32_t clearStencil = 0,
             TextureSubresourceRange subresource = {});
 
-        // ±êÊ¶ºóĞø»¹»áÊ¹ÓÃµÄ×ÊÔ´£¬»áÓÃPassNode->ResourceNode
-        RDGRenderPassBuilder& OutputRead(RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);             // ÔÚÖ´ĞĞÍêPassºó×÷ÎªÊä³ö£¬×Ô¶¯ÆÁÕÏ£¬¿ÉÄÜ»¹»áÔÚÆäËûµØ·½Ê¹ÓÃ
+        // æ ‡è¯†åç»­è¿˜ä¼šä½¿ç”¨çš„èµ„æºï¼Œä¼šç”¨PassNode->ResourceNode
+        RDGRenderPassBuilder& OutputRead(RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);             // åœ¨æ‰§è¡Œå®ŒPassåä½œä¸ºè¾“å‡ºï¼Œè‡ªåŠ¨å±éšœï¼Œå¯èƒ½è¿˜ä¼šåœ¨å…¶ä»–åœ°æ–¹ä½¿ç”¨
         RDGRenderPassBuilder& OutputRead(RDGTextureHandle texture, TextureSubresourceRange subresource = {});
         RDGRenderPassBuilder& OutputReadWrite(RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);
         RDGRenderPassBuilder& OutputReadWrite(RDGTextureHandle texture, TextureSubresourceRange subresource = {});
@@ -222,14 +222,14 @@ namespace GameEngine {
             , graph(builder->GetGraph()) {
         };
 
-        RDGComputePassBuilder& PassIndex(uint32_t x = 0, uint32_t y = 0, uint32_t z = 0);        // ¸øÒ»¸öindexÉèÖÃº¯Êı·½±ã¸øExecute´«²Î
-        RDGComputePassBuilder& RootSignature(RHIRootSignatureRef rootSignature);                 // ÈôÌá¹©¸ùÇ©ÃûÎ´Ìá¹©ÃèÊö·û£¬Ê¹ÓÃ³Ø»¯´´½¨
-        RDGComputePassBuilder& DescriptorSet(uint32_t set, RHIDescriptorSetRef descriptorSet);   // ÈôÌá¹©ÁËÃèÊö·û£¬Ö±½ÓÓÃÏàÓ¦µÄÃèÊö·û
+        RDGComputePassBuilder& PassIndex(uint32_t x = 0, uint32_t y = 0, uint32_t z = 0);        // ç»™ä¸€ä¸ªindexè®¾ç½®å‡½æ•°æ–¹ä¾¿ç»™Executeä¼ å‚
+        RDGComputePassBuilder& RootSignature(RHIRootSignatureRef rootSignature);                 // è‹¥æä¾›æ ¹ç­¾åæœªæä¾›æè¿°ç¬¦ï¼Œä½¿ç”¨æ± åŒ–åˆ›å»º
+        RDGComputePassBuilder& DescriptorSet(uint32_t set, RHIDescriptorSetRef descriptorSet);   // è‹¥æä¾›äº†æè¿°ç¬¦ï¼Œç›´æ¥ç”¨ç›¸åº”çš„æè¿°ç¬¦
         RDGComputePassBuilder& Read(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);
         RDGComputePassBuilder& Read(uint32_t set, uint32_t binding, uint32_t index, RDGTextureHandle texture, TextureViewType viewType = VIEW_TYPE_2D, TextureSubresourceRange subresource = {});
-        RDGComputePassBuilder& ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);   // ºÃÏñºÍreadÒ²Ã»Ê²Ã´Çø±ğ£¿
+        RDGComputePassBuilder& ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);   // å¥½åƒå’Œreadä¹Ÿæ²¡ä»€ä¹ˆåŒºåˆ«ï¼Ÿ
         RDGComputePassBuilder& ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGTextureHandle texture, TextureViewType viewType = VIEW_TYPE_2D, TextureSubresourceRange subresource = {});
-        RDGComputePassBuilder& OutputRead(RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);             // ÔÚÖ´ĞĞÍêPassºó×÷ÎªÊä³ö£¬×Ô¶¯ÆÁÕÏ£¬¿ÉÄÜ»¹»áÔÚÆäËûµØ·½Ê¹ÓÃ
+        RDGComputePassBuilder& OutputRead(RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);             // åœ¨æ‰§è¡Œå®ŒPassåä½œä¸ºè¾“å‡ºï¼Œè‡ªåŠ¨å±éšœï¼Œå¯èƒ½è¿˜ä¼šåœ¨å…¶ä»–åœ°æ–¹ä½¿ç”¨
         RDGComputePassBuilder& OutputRead(RDGTextureHandle texture, TextureSubresourceRange subresource = {});
         RDGComputePassBuilder& OutputReadWrite(RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);
         RDGComputePassBuilder& OutputReadWrite(RDGTextureHandle texture, TextureSubresourceRange subresource = {});
@@ -256,14 +256,14 @@ namespace GameEngine {
             , graph(builder->GetGraph()) {
         };
 
-        RDGRayTracingPassBuilder& PassIndex(uint32_t x = 0, uint32_t y = 0, uint32_t z = 0);        // ¸øÒ»¸öindexÉèÖÃº¯Êı·½±ã¸øExecute´«²Î
-        RDGRayTracingPassBuilder& RootSignature(RHIRootSignatureRef rootSignature);                 // ÈôÌá¹©¸ùÇ©ÃûÎ´Ìá¹©ÃèÊö·û£¬Ê¹ÓÃ³Ø»¯´´½¨
-        RDGRayTracingPassBuilder& DescriptorSet(uint32_t set, RHIDescriptorSetRef descriptorSet);   // ÈôÌá¹©ÁËÃèÊö·û£¬Ö±½ÓÓÃÏàÓ¦µÄÃèÊö·û
+        RDGRayTracingPassBuilder& PassIndex(uint32_t x = 0, uint32_t y = 0, uint32_t z = 0);        // ç»™ä¸€ä¸ªindexè®¾ç½®å‡½æ•°æ–¹ä¾¿ç»™Executeä¼ å‚
+        RDGRayTracingPassBuilder& RootSignature(RHIRootSignatureRef rootSignature);                 // è‹¥æä¾›æ ¹ç­¾åæœªæä¾›æè¿°ç¬¦ï¼Œä½¿ç”¨æ± åŒ–åˆ›å»º
+        RDGRayTracingPassBuilder& DescriptorSet(uint32_t set, RHIDescriptorSetRef descriptorSet);   // è‹¥æä¾›äº†æè¿°ç¬¦ï¼Œç›´æ¥ç”¨ç›¸åº”çš„æè¿°ç¬¦
         RDGRayTracingPassBuilder& Read(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);
         RDGRayTracingPassBuilder& Read(uint32_t set, uint32_t binding, uint32_t index, RDGTextureHandle texture, TextureViewType viewType = VIEW_TYPE_2D, TextureSubresourceRange subresource = {});
-        RDGRayTracingPassBuilder& ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);   // ºÃÏñºÍreadÒ²Ã»Ê²Ã´Çø±ğ£¿
+        RDGRayTracingPassBuilder& ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);   // å¥½åƒå’Œreadä¹Ÿæ²¡ä»€ä¹ˆåŒºåˆ«ï¼Ÿ
         RDGRayTracingPassBuilder& ReadWrite(uint32_t set, uint32_t binding, uint32_t index, RDGTextureHandle texture, TextureViewType viewType = VIEW_TYPE_2D, TextureSubresourceRange subresource = {});
-        RDGRayTracingPassBuilder& OutputRead(RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);             // ÔÚÖ´ĞĞÍêPassºó×÷ÎªÊä³ö£¬×Ô¶¯ÆÁÕÏ£¬¿ÉÄÜ»¹»áÔÚÆäËûµØ·½Ê¹ÓÃ
+        RDGRayTracingPassBuilder& OutputRead(RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);             // åœ¨æ‰§è¡Œå®ŒPassåä½œä¸ºè¾“å‡ºï¼Œè‡ªåŠ¨å±éšœï¼Œå¯èƒ½è¿˜ä¼šåœ¨å…¶ä»–åœ°æ–¹ä½¿ç”¨
         RDGRayTracingPassBuilder& OutputRead(RDGTextureHandle texture, TextureSubresourceRange subresource = {});
         RDGRayTracingPassBuilder& OutputReadWrite(RDGBufferHandle buffer, uint32_t offset = 0, uint32_t size = 0);
         RDGRayTracingPassBuilder& OutputReadWrite(RDGTextureHandle texture, TextureSubresourceRange subresource = {});

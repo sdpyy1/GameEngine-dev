@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "RenderPass.h"
 #include "Hazel/Renderer/RenderResource/Shader.h"
 #include <Hazel/Renderer/RenderResource/Texture.h>
@@ -28,7 +28,7 @@ namespace GameEngine {
 	private:
 		TextureRef Lut;
 
-		bool hasPreCompute = false;   // ¿ØÖÆÖ»ÓĞµÚÒ»Ö¡¼ÆËã
+		bool hasPreCompute = false;   // æ§åˆ¶åªæœ‰ç¬¬ä¸€å¸§è®¡ç®—
 
 
 		std::unordered_map<std::string, EnvironmentMap> environmentMaps;

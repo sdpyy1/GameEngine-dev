@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "SkyPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -99,7 +99,7 @@ namespace GameEngine {
         RDGTextureHandle MultiScatteringLutTexture = builder.CreateTexture("MultiScatteringLutTexture")
             .Exetent({ MultiScatteringLutResolution ,MultiScatteringLutResolution, 1})
             .AllowReadWrite()
-            .Format(FORMAT_R8G8B8A8_UNORM)  // ²»ÄÜÓÃFORMAT_R32G32B32A32_SFLOAT »á±¨´í
+            .Format(FORMAT_R8G8B8A8_UNORM)  // ä¸èƒ½ç”¨FORMAT_R32G32B32A32_SFLOAT ä¼šæŠ¥é”™
             .Finish();
 
 		builder.CreateComputePass("Sky_MultiScatteringLutPass")
@@ -131,7 +131,7 @@ namespace GameEngine {
             .Execute([&](RDGPassContext context) {
                 RHICommandListRef command = context.command;
                 command->SetComputePipeline(SkyViewLutPipeline);
-                command->BindDescriptorSet(context.descriptors[2], 2);
+                command->BindDescriptorSet(context.descriptors[2], 2); 
 				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetSamplerDescriptorSet(), 1);
                 command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
                 command->Dispatch(SkyViewLutWidth / 8, SkyViewLutHeight / 8, 1);

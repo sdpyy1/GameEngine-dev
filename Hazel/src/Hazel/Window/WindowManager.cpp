@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "WindowManager.h"
 #include <Hazel/Core/Events/ApplicationEvent.h>
 #include <Hazel/Core/Events/KeyEvent.h>
@@ -24,7 +24,7 @@ namespace GameEngine {
 		glfwSetWindowUserPointer(m_GLFWWindow, &m_Data);		
 		
 		glfwSetWindowUserPointer(m_GLFWWindow, &m_Data);
-		// SetVSync(&m_Data.VSync);  SyncµÄÉèÖÃÔÚRenderSystemÖÐ
+		// SetVSync(&m_Data.VSync);  Syncçš„è®¾ç½®åœ¨RenderSystemä¸­
 
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_GLFWWindow, [](GLFWwindow* window, int width, int height)

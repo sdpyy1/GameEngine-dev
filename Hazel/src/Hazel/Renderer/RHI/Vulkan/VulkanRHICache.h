@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Volk/volk.h>
 #include "VulkanUtil.h"
 namespace GameEngine {
@@ -27,7 +27,7 @@ namespace GameEngine {
                     a.samples == b.samples &&
                     a.loadOp == b.loadOp &&
                     a.storeOp == b.storeOp;
-                // a.stencilLoadOp     == b.stencilLoadOp &&    // ºóÃæ¼¸ÏîÈ«²¿Ğ´ËÀ ²»×öÅĞ¶Ï
+                // a.stencilLoadOp     == b.stencilLoadOp &&    // åé¢å‡ é¡¹å…¨éƒ¨å†™æ­» ä¸åšåˆ¤æ–­
                 // a.stencilStoreOp    == b.stencilStoreOp &&
                 // a.initialLayout     == b.initialLayout &&
                 // a.finalLayout       == b.finalLayout;
@@ -108,7 +108,7 @@ namespace GameEngine {
             VkFramebufferCreateFlags    flags;
             VkRenderPass                renderPass;
             uint32_t                    attachmentCount;
-            std::vector<VkImageView>    pAttachments;       // ²»ÄÜÓÃÖ¸Õë£¬µÃ´æÒ»·İ
+            std::vector<VkImageView>    pAttachments;       // ä¸èƒ½ç”¨æŒ‡é’ˆï¼Œå¾—å­˜ä¸€ä»½
             uint32_t                    width;
             uint32_t                    height;
             uint32_t                    layers;

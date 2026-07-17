@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "GizmoPass.h"
 #include "Hazel/Renderer/RenderResource/Shader.h"
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
@@ -103,7 +103,7 @@ void GameEngine::GizmoPass::Init()
 		pipelineInfo.blendState.renderTargets[0].enable = false;
 		pipelineInfo.colorAttachmentFormats[0] = FORMAT_R32G32B32A32_SFLOAT;
 		pipelineInfo.depthStencilAttachmentFormat = FORMAT_D32_SFLOAT;
-		pipelineInfo.primitiveType = PRIMITIVE_TYPE_POINT_LIST; // ¶¥µãÖ»·¢·¢Éäµã
+		pipelineInfo.primitiveType = PRIMITIVE_TYPE_POINT_LIST; // é¡¶ç‚¹åªå‘å‘å°„ç‚¹
 
 		m_BillboardPipeline = APP_DYNAMICRHI->CreateGraphicsPipeline(pipelineInfo);
 	}
@@ -144,14 +144,14 @@ void GameEngine::GizmoPass::Init()
 
 void GameEngine::GizmoPass::Build(RDGBuilder& builder)
 {
-	// Ë¢ĞÂBuffer
+	// åˆ·æ–°Buffer
 	RENDER_RESOURCEMANAGER->SetGizmoDataCommand(&command[0], 4);
 
     RDGBufferHandle dataBuffer = builder.CreateBuffer("Gizmo Data")
         .Import(RENDER_RESOURCEMANAGER->GetGizmoDataBuffer(), RESOURCE_STATE_UNDEFINED)
         .Finish();
 
-	// Í¨¹ıÉèÖÃĞÅÏ¢×°Ìî¸÷ÖÖ¹âÔ´ĞÅÏ¢µ½GizmoDrawData
+	// é€šè¿‡è®¾ç½®ä¿¡æ¯è£…å¡«å„ç§å…‰æºä¿¡æ¯åˆ°GizmoDrawData
 	builder.CreateComputePass("Gizmo_Init")
 		.RootSignature(m_RootSignature)
 		.Execute([&](RDGPassContext context) { 
@@ -160,7 +160,7 @@ void GameEngine::GizmoPass::Build(RDGBuilder& builder)
 			 command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(), 0);
 			 command->Dispatch(1, 1, 1);
 		})
-        .OutputIndirectDraw(dataBuffer)   // ±ØĞë°ÑdataBufferÌí¼ÓÆÁÕÏ£¬·ñÔòºóĞøIndirectDraw»á³ö´í
+        .OutputIndirectDraw(dataBuffer)   // å¿…é¡»æŠŠdataBufferæ·»åŠ å±éšœï¼Œå¦åˆ™åç»­IndirectDrawä¼šå‡ºé”™
 		.Finish();
 
 

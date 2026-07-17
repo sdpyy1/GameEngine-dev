@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "PipelineCache.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
@@ -46,7 +46,7 @@ namespace GameEngine
 
         for (auto& input : info.vertexShader->GetReflectInfo().inputVariables)
         {
-            if (input != FORMAT_UKNOWN) return false;    // Ä¿Ç°Ê¹ÓÃµÄ¹ÜÏßÀïÈ«²¿bindless£¬ËùÒÔ¶¥µãÊäÈëÒ»¶¨Îª¿Õ
+            if (input != FORMAT_UKNOWN) return false;    // ç›®å‰ä½¿ç”¨çš„ç®¡çº¿é‡Œå…¨éƒ¨bindlessï¼Œæ‰€ä»¥é¡¶ç‚¹è¾“å…¥ä¸€å®šä¸ºç©º
         }
         if (info.geometryShader)
         {
@@ -60,10 +60,10 @@ namespace GameEngine
         for (uint32_t i = 0; i < std::min(info.colorAttachmentFormats.size(), info.fragmentShader->GetReflectInfo().outputVariables.size()); i++)
         {
             if (FormatChanelCounts(info.colorAttachmentFormats[i]) !=
-                FormatChanelCounts(info.fragmentShader->GetReflectInfo().outputVariables[i])) return false;    // Êä³öÍ¨µÀÊıÒ»ÖÂ
+                FormatChanelCounts(info.fragmentShader->GetReflectInfo().outputVariables[i])) return false;    // è¾“å‡ºé€šé“æ•°ä¸€è‡´
         }
 
-        // TODO ÃèÊö·ûµÈĞÅÏ¢µÄ¼ì²â
+        // TODO æè¿°ç¬¦ç­‰ä¿¡æ¯çš„æ£€æµ‹
         return true;
     }
 }

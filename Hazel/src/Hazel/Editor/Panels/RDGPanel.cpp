@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "RDGPanel.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui.h"
@@ -505,21 +505,21 @@ namespace GameEngine {
 	}
 	void RDGPanel::OnImGuiRender()
 	{
-		// Ô¤¹¹½¨µÄÍ¼±íĞÅÏ¢
+		// é¢„æ„å»ºçš„å›¾è¡¨ä¿¡æ¯
 		static std::vector<GraphNode> passNodes;
 		static std::vector<GraphNode> resourceNodes;
 		static std::vector<GraphLink> links;
 		static std::unordered_map<std::string, GraphNode*> passNodesMap;
 		static std::unordered_map<std::string, GraphNode*> resourceNodesMap;
-		static std::unordered_map<uint32_t, GraphNode*> rdgNodeIdToNodes;   // ´Ë´¦µÄIDÊÇdependency graphµÄid£¬¶à¸öÖØÃûµÄ»áÓÃÍ¬Ò»¸ö
+		static std::unordered_map<uint32_t, GraphNode*> rdgNodeIdToNodes;   // æ­¤å¤„çš„IDæ˜¯dependency graphçš„idï¼Œå¤šä¸ªé‡åçš„ä¼šç”¨åŒä¸€ä¸ª
 		static bool autoUpdate = false;
 		static int autoUpdateCount = 0;
 
-		// Í³¼ÆĞÅÏ¢
+		// ç»Ÿè®¡ä¿¡æ¯
 		static uint32_t importedResourceCount = 0;
-		static uint32_t importedUniqueResourceCount = 0;    // ÒÆ³ıÁËÖØÃûµÄ²¿·Ö
+		static uint32_t importedUniqueResourceCount = 0;    // ç§»é™¤äº†é‡åçš„éƒ¨åˆ†
 
-		// Ñ¡ÖĞ±ê¼Ç
+		// é€‰ä¸­æ ‡è®°
 		static ed::NodeId contextNodeId;
 		static ed::LinkId contextLinkId;
 
@@ -529,8 +529,8 @@ namespace GameEngine {
 		if (context == nullptr)
 		{
 			ed::Config config = {};
-			config.SettingsFile = "Simple.json";        // ÒÔÖ´ĞĞÂ·¾¶Îª»ù×¼
-			config.NavigateButtonIndex = 2;                 // ÖĞ¼üÍÏ¶¯
+			config.SettingsFile = "Simple.json";        // ä»¥æ‰§è¡Œè·¯å¾„ä¸ºåŸºå‡†
+			config.NavigateButtonIndex = 2;                 // ä¸­é”®æ‹–åŠ¨
 			context = ed::CreateEditor(&config);
 		}
 		int nodeUniqueId = 1;
@@ -591,7 +591,7 @@ namespace GameEngine {
 
 				links.reserve(rdgDependencyGraph->GetEdges().size());
 
-				// ³õÊ¼»¯×ÊÔ´½áµãĞÅÏ¢
+				// åˆå§‹åŒ–èµ„æºç»“ç‚¹ä¿¡æ¯
 				auto nodes0 = rdgDependencyGraph->GetNodes<RDGResourceNode>();
 				resourceNodes.reserve(nodes0.size());
 				for (auto& resourceNode : nodes0)
@@ -634,12 +634,12 @@ namespace GameEngine {
 						node.outputs.push_back(pin);
 
 						resourceNodes.push_back(node);
-						resourceNodesMap[name] = &resourceNodes.back(); // vectorµÄµØÖ·»á±ä£¬ĞèÒªÔ¤·ÖÅä³ß´ç
+						resourceNodesMap[name] = &resourceNodes.back(); // vectorçš„åœ°å€ä¼šå˜ï¼Œéœ€è¦é¢„åˆ†é…å°ºå¯¸
 					}
 					rdgNodeIdToNodes[resourceNode->ID()] = resourceNodesMap[name];
 				}
 
-				// ³õÊ¼»¯pass½áµãĞÅÏ¢
+				// åˆå§‹åŒ–passç»“ç‚¹ä¿¡æ¯
 				auto nodes1 = rdgDependencyGraph->GetNodes<RDGPassNode>();
 				passNodes.reserve(nodes1.size());
 				GraphNode* previousPassNode = nullptr;
@@ -744,7 +744,7 @@ namespace GameEngine {
 						}
 
 						passNodes.push_back(node);
-						passNodesMap[name] = &passNodes.back(); // vectorµÄµØÖ·»á±ä£¬ĞèÒªÔ¤·ÖÅä³ß´ç
+						passNodesMap[name] = &passNodes.back(); // vectorçš„åœ°å€ä¼šå˜ï¼Œéœ€è¦é¢„åˆ†é…å°ºå¯¸
 
 						previousPassNode = &passNodes.back();
 					}
@@ -755,7 +755,7 @@ namespace GameEngine {
 			ed::SetCurrentEditor(context);
 			ed::Begin("My Editor", ImVec2(0.0, 0.0f));
 			{
-				// »æÖÆ×ÊÔ´½Úµã
+				// ç»˜åˆ¶èµ„æºèŠ‚ç‚¹
 				for (auto& node : resourceNodes)
 				{
 					ed::BeginNode(node.id);
@@ -774,7 +774,7 @@ namespace GameEngine {
 					}
 				}
 
-				// »æÖÆpass½áµã
+				// ç»˜åˆ¶passç»“ç‚¹
 				nodePosition = ImVec2(0, nodePosition.y + 100);
 				for (auto& node : passNodes)
 				{
@@ -791,7 +791,7 @@ namespace GameEngine {
 						bool nodeSelected = ed::IsNodeSelected(node.id);
 
 						{
-							// ÊäÈë
+							// è¾“å…¥
 							ImGui::BeginGroup();
 							for (auto& input : node.inputs)
 							{
@@ -813,7 +813,7 @@ namespace GameEngine {
 							}
 							ImGui::SameLine();
 
-							// Êä³ö
+							// è¾“å‡º
 							ImGui::BeginGroup();
 							for (auto& output : node.outputs)
 							{
@@ -831,7 +831,7 @@ namespace GameEngine {
 					}
 					ed::EndNode();
 
-					// ¸ø½áµãµÄÃû³Æ¼ÓÉÏ±³¾°ÑÕÉ«
+					// ç»™ç»“ç‚¹çš„åç§°åŠ ä¸ŠèƒŒæ™¯é¢œè‰²
 					ImU32 hearderColor;
 					switch (node.type) {
 					case NodeType::RenderPass:      hearderColor = IM_COL32(50, 50, 50, 255); break;
@@ -861,7 +861,7 @@ namespace GameEngine {
 					}
 				}
 
-				// »æÖÆÑ¡ÖĞµÄ×ÊÔ´½áµãµÄ±ß
+				// ç»˜åˆ¶é€‰ä¸­çš„èµ„æºç»“ç‚¹çš„è¾¹
 				for (auto& node : resourceNodes)
 				{
 					bool nodeSelected = ed::IsNodeSelected(node.id);
@@ -877,7 +877,7 @@ namespace GameEngine {
 			}
 			if (init || APP_TICK < 5) ed::NavigateToContent();
 
-			// »æÖÆÊó±êĞü¸¡µÄĞÅÏ¢
+			// ç»˜åˆ¶é¼ æ ‡æ‚¬æµ®çš„ä¿¡æ¯
 			ed::Suspend();
 
 			if (ed::ShowNodeContextMenu(&contextNodeId))

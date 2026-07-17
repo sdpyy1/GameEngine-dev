@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <cstdint>
 
 namespace GameEngine
@@ -65,7 +65,7 @@ namespace GameEngine
 
         void Link(NodeRef from, NodeRef to, EdgeRef edge);
 
-        void Remove(NodeRef node) { return Remove(node->ID()); }         // É¾³ıÊ±»á×Ô¶¯É¾³ıÏà¹ØÁªµÄ±ß²¢Îö¹¹
+        void Remove(NodeRef node) { return Remove(node->ID()); }         // åˆ é™¤æ—¶ä¼šè‡ªåŠ¨åˆ é™¤ç›¸å…³è”çš„è¾¹å¹¶ææ„
         void Remove(NodeID id);
 
         template<typename Type = Node, typename... Args>
@@ -169,7 +169,7 @@ namespace GameEngine
         std::vector<EdgeRef> edges;
         std::vector<NodeRef> nodes;
 
-        // ¼ÇÂ¼Ã¿¸öNodeµÄ³ö±ßºÍÈë±ß£¬ÓÃÓÚ±éÀú
+        // è®°å½•æ¯ä¸ªNodeçš„å‡ºè¾¹å’Œå…¥è¾¹ï¼Œç”¨äºéå†
         std::unordered_map<NodeID, std::set<EdgeID>> outEdges;   
         std::unordered_map<NodeID, std::set<EdgeID>> inEdges;
     };

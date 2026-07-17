@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "PointShadowPass.h"
 #include "Hazel/Renderer/RenderResource/PipelineCache.h"
 #include <Hazel/Renderer/RenderSystem/RenderManager.h>
@@ -73,7 +73,7 @@ namespace GameEngine {
 			RDGTextureHandle color = builder.CreateTexture("Point Shadow Color[" + std::to_string(i) + "]")
 				.Exetent({ PointShadowResolution, PointShadowResolution, 1 })
 				.Format(FORMAT_R32G32B32A32_SFLOAT)
-				.ArrayLayers(6)  // ´æ´¢Áù¸öÃæ
+				.ArrayLayers(6)  // å­˜å‚¨å…­ä¸ªé¢
 				.MipLevels(1)
 				.AllowRenderTarget()
 				.CubeMap()
@@ -81,7 +81,7 @@ namespace GameEngine {
 			RDGTextureHandle colorfiltered = builder.CreateTexture("Point Shadow Color Filtered [" + std::to_string(i) + "]")
 				.Exetent({ PointShadowResolution, PointShadowResolution, 1 })
 				.Format(FORMAT_R32G32B32A32_SFLOAT)
-				.ArrayLayers(6)  // ´æ´¢Áù¸öÃæ
+				.ArrayLayers(6)  // å­˜å‚¨å…­ä¸ªé¢
 				.MipLevels(1)
 				.AllowReadWrite()
 				.AllowRenderTarget()
@@ -99,8 +99,8 @@ namespace GameEngine {
 
 			RDGRenderPassHandle pass = builder.CreateRenderPass(GetName() + std::to_string(i))
 				.PassIndex(i)
-				.Color(0, color, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE,{ 0.0f, 0.0f, 0.0f, 0.0f }, { TEXTURE_ASPECT_COLOR, 0, 1, 0, 6 })  // ×¢Òâlayer=6
-				.DepthStencil(depth, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, 1.0f, 0, { TEXTURE_ASPECT_DEPTH, 0, 1, 0, 6 }) // ×¢Òâlayer=6
+				.Color(0, color, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE,{ 0.0f, 0.0f, 0.0f, 0.0f }, { TEXTURE_ASPECT_COLOR, 0, 1, 0, 6 })  // æ³¨æ„layer=6
+				.DepthStencil(depth, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE, 1.0f, 0, { TEXTURE_ASPECT_DEPTH, 0, 1, 0, 6 }) // æ³¨æ„layer=6
 				.Execute([&](RDGPassContext context) {
 
 				uint32_t pointLightID = context.passIndex[0];
@@ -109,13 +109,13 @@ namespace GameEngine {
 				command->SetGraphicsPipeline(m_Pipeline);
 				command->SetViewport({ 0, 0 }, { PointShadowResolution, PointShadowResolution });
 				command->SetScissor({ 0, 0 }, { PointShadowResolution, PointShadowResolution });
-				command->SetDepthBias(0.005,0.0,0.0f);  // TODO: Õâ¸ö¶«Î÷ÔõÃ´ÓÃµÄ£¿
+				command->SetDepthBias(0.005,0.0,0.0f);  // TODO: è¿™ä¸ªä¸œè¥¿æ€Žä¹ˆç”¨çš„ï¼Ÿ
 				command->PushConstants(&pointLightID, sizeof(uint32_t), SHADER_FREQUENCY_GRAPHICS);
 				command->BindDescriptorSet(RENDER_RESOURCEMANAGER->GetGlobalResourcePerFrameDescriptorSet(),0);
 				meshPassProcessors[context.passIndex[0]]->Draw(command);
 					})
 				.OutputRead(depth)
-				.OutputRead(color)  // ÊÖ¶¯ÆÁÕÏ
+				.OutputRead(color)  // æ‰‹åŠ¨å±éšœ
 				.Finish();
 
 			if (RENDER_RESOURCEMANAGER->GetGlobalSettingInfo().shadowSetting.PointShadowType == SHADOW_TYPE_VSM || RENDER_RESOURCEMANAGER->GetGlobalSettingInfo().shadowSetting.PointShadowType == SHADOW_TYPE_EVSM) {

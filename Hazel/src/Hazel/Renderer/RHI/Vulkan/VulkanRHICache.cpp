@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "VulkanRHI.h"
 #include "VulkanRHICache.h"
 namespace GameEngine {
@@ -24,7 +24,7 @@ namespace GameEngine {
     {
         for (auto iter : cachedPasses)
         {
-            // vkDestroyRenderPass(VULKAN_DEVICE, iter.second.pass, nullptr); // TODO£º¹Ø±ÕAPPÊ±ÕâÀï»á±¨´í
+            // vkDestroyRenderPass(VULKAN_DEVICE, iter.second.pass, nullptr); // TODOï¼šå…³é—­APPæ—¶è¿™é‡Œä¼šæŠ¥é”™
         }
         cachedPasses.clear();
     }
@@ -54,7 +54,7 @@ namespace GameEngine {
         if (cachedFramebuffers.empty()) return;
         for (auto iter : cachedFramebuffers)
         {
-            // vkDestroyFramebuffer(VULKAN_DEVICE, iter.second.frameBuffer, nullptr); //TODO:¹Ø±ÕAPPÊ±ÕâÀï»á±¨´í
+            // vkDestroyFramebuffer(VULKAN_DEVICE, iter.second.frameBuffer, nullptr); //TODO:å…³é—­APPæ—¶è¿™é‡Œä¼šæŠ¥é”™
         }
         //cachedFramebuffers.clear();
     }

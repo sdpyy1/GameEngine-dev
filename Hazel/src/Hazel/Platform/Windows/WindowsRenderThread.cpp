@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "Hazel/Core/RenderThread.h"
 
 #include <Windows.h>
@@ -22,8 +22,8 @@ namespace GameEngine {
 
 		if (m_ThreadingPolicy == ThreadingPolicy::MultiThreaded)
 		{
-			InitializeCriticalSection(&m_Data->m_CriticalSection); // ´´½¨ÁÙ½çÇø
-			InitializeConditionVariable(&m_Data->m_ConditionVariable); // ´´½¨Ìõ¼ş±äÁ¿ÅäÌ×
+			InitializeCriticalSection(&m_Data->m_CriticalSection); // åˆ›å»ºä¸´ç•ŒåŒº
+			InitializeConditionVariable(&m_Data->m_ConditionVariable); // åˆ›å»ºæ¡ä»¶å˜é‡é…å¥—
 		}
 	}
 
@@ -98,7 +98,7 @@ namespace GameEngine {
 	void RenderThread::NextFrame()
 	{
 		m_AppThreadFrame++;
-		// Renderer::SwapQueues();  // ½»»»ÃüÁî»º³å³Ø
+		// Renderer::SwapQueues();  // äº¤æ¢å‘½ä»¤ç¼“å†²æ± 
 	}
 
 	void RenderThread::BlockUntilRenderComplete()
@@ -122,7 +122,7 @@ namespace GameEngine {
 
 	void RenderThread::Pump()
 	{
-		NextFrame();  // ÇĞ»»ÃüÁî»º³å³ØÎªÏÂÒ»¸ö
+		NextFrame();  // åˆ‡æ¢å‘½ä»¤ç¼“å†²æ± ä¸ºä¸‹ä¸€ä¸ª
 		Kick();
 		BlockUntilRenderComplete();
 	}

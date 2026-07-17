@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Utils/IndexAllocator.h"
 #include <Hazel/Renderer/RHI/RHI.h>
 #include "RenderBuffer.h"
@@ -8,41 +8,41 @@
 #include "Hazel/Scene/SceneManager.h"
 #include "Texture.h"
 namespace GameEngine {
-	// Ã¿Ö¡¶¼ĞèÒª¸üĞÂµÄ×ÊÔ´£¬·ÅÔÚÕâÀï»á×Ô¶¯´´½¨¶à·İ
+	// æ¯å¸§éƒ½éœ€è¦æ›´æ–°çš„èµ„æºï¼Œæ”¾åœ¨è¿™é‡Œä¼šè‡ªåŠ¨åˆ›å»ºå¤šä»½
 	struct PreFrameGlobalResources
 	{
-		bool isNeedUpdate = false; // µ±Ä³¸öÊµÊ±×ÊÔ´¸üĞÂÊ±£¬ÆäËûÖ¡Ò²µÃÔÚ×Ô¼ºÖ¡Ö´ĞĞÊ±¸üĞÂºÃ
-		std::vector<RHIDescriptorUpdateInfo> updateInfos;  // Ö»ÔÚisNeedUpdate=trueÊ±ÉúĞ§
+		bool isNeedUpdate = false; // å½“æŸä¸ªå®æ—¶èµ„æºæ›´æ–°æ—¶ï¼Œå…¶ä»–å¸§ä¹Ÿå¾—åœ¨è‡ªå·±å¸§æ‰§è¡Œæ—¶æ›´æ–°å¥½
+		std::vector<RHIDescriptorUpdateInfo> updateInfos;  // åªåœ¨isNeedUpdate=trueæ—¶ç”Ÿæ•ˆ
 
-		// ¹â×·
+		// å…‰è¿½
 		RHITopLevelAccelerationStructureRef tlas;
 		RHIDescriptorSetRef descriptorSet;
-		// Ä¬ÈÏÉãÏñ»úÀ´×ÔSceneManager×Ô´ø£¬¼¤»îÉãÏñ»ú¿ÉÒÔÀ´×ÔÉãÏñ»ú×é¼ş»òÕßÄ¬ÈÏÉãÏñ»ú
+		// é»˜è®¤æ‘„åƒæœºæ¥è‡ªSceneManagerè‡ªå¸¦ï¼Œæ¿€æ´»æ‘„åƒæœºå¯ä»¥æ¥è‡ªæ‘„åƒæœºç»„ä»¶æˆ–è€…é»˜è®¤æ‘„åƒæœº
 		RenderBuffer<CameraData> activeCameraDataBuffer;
 		RenderBuffer<CameraData> defalutCameraDataBuffer;
 		RenderBuffer<LightInfo> lightInfoBuffer;
 		RenderBuffer<GizmoDrawData> gizmoBuffer = RenderBuffer<GizmoDrawData>(RESOURCE_TYPE_RW_BUFFER | RESOURCE_TYPE_INDIRECT_BUFFER);
 	};
 
-	// ¶ÔÓÚ¸üĞÂÆµÂÊ²»¸ßµÄ×ÊÔ´£¬´æÒ»·İ¼´¿É,ĞèÒªÊ±Ö±½ÓGetÄÃ
+	// å¯¹äºæ›´æ–°é¢‘ç‡ä¸é«˜çš„èµ„æºï¼Œå­˜ä¸€ä»½å³å¯,éœ€è¦æ—¶ç›´æ¥Getæ‹¿
 	struct MultiFrameGlobalResources
 	{
 		RenderBuffer<GlobalSettingInfo> globalSettingInfoBuffer;
-		// ¸÷ÖÖInfoBuffer£¬´æ´¢Ã¿¸ö×ÊÔ´ÔÚBindless ÖĞµÄË÷Òı
+		// å„ç§InfoBufferï¼Œå­˜å‚¨æ¯ä¸ªèµ„æºåœ¨Bindless ä¸­çš„ç´¢å¼•
 		ArrayBuffer<MeshInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> vertexBuffer;
 		ArrayBuffer<MaterialInfo, MAX_MULTI_FRAME_RESOURCE_SIZE> materialBuffer;
 		ArrayBuffer<MeshInstanceInfo, MAX_PER_FRAME_INSTANCE_SIZE> meshInfoBuffer;
 
-		// ²ÉÑùÆ÷£¬ÆäÊµSet=0ÀïÒ²ÓĞ£¬ÕâÀïµ¥¶À´´½¨Ò»·İSet=1
+		// é‡‡æ ·å™¨ï¼Œå…¶å®Set=0é‡Œä¹Ÿæœ‰ï¼Œè¿™é‡Œå•ç‹¬åˆ›å»ºä¸€ä»½Set=1
 		RHIRootSignatureRef samplerRootSignature;
 		RHIDescriptorSetRef samplerDescriptorSet;
 		std::vector<SamplerRef> samplers;
 
-		// Ò»Ğ©ÓĞÓÃµÄ×ÊÔ´
+		// ä¸€äº›æœ‰ç”¨çš„èµ„æº
 		TextureRef whiteTexture;
 		TextureRef blackTexture;
 
-		// ·ÇÒ»Ö¡×ÊÔ´
+		// éä¸€å¸§èµ„æº
 		RHITextureRef HZB;
 	};
 
@@ -53,7 +53,7 @@ namespace GameEngine {
 		RHIBufferRef buffer;
 		RHITextureViewRef textureView;
 		RHISamplerRef sampler;
-		uint64_t bufferOffset = 0;	// ½öbufferÊ¹ÓÃ
+		uint64_t bufferOffset = 0;	// ä»…bufferä½¿ç”¨
 		uint64_t bufferRange = 0;
 	} BindlessResourceInfo;
 	class RenderResourceManager
@@ -70,7 +70,7 @@ namespace GameEngine {
 		RHIRootSignatureRef GetGlobalResourcePreFrameRootSignature() { return m_GlobalResourcePreFrameRootSignature; }
 		RHIDescriptorSetRef GetGlobalResourcePerFrameDescriptorSet();
 		RHITextureRef GetHZB() { return m_MultiFrameGlobalResources.HZB; };
-		// °Ñ×ÊÔ´¹ÒÔØµ½BindlessÖĞ£¨¾ÍÊÇ¸üĞÂ¶ÔÓ¦µÄ×ÊÔ´ÃèÊö·û¶ÔÓ¦bindingµÄindex£©
+		// æŠŠèµ„æºæŒ‚è½½åˆ°Bindlessä¸­ï¼ˆå°±æ˜¯æ›´æ–°å¯¹åº”çš„èµ„æºæè¿°ç¬¦å¯¹åº”bindingçš„indexï¼‰
 		uint32_t RenderResourceManager::AllocateBindlessID(const BindlessResourceInfo& resoruceInfo, BindlessSlot slot);
 		void ReleaseBindlessID(uint32_t id, BindlessSlot slot);
 
@@ -79,17 +79,17 @@ namespace GameEngine {
 		void SetGlobalSettingInfo() { m_MultiFrameGlobalResources.globalSettingInfoBuffer.SetData(m_GlobalSettingInfo); };
 		GlobalSettingInfo GetGlobalSettingInfo() { return m_GlobalSettingInfo; };
 
-		// ²ÄÖÊInfo
+		// æè´¨Info
 		uint32_t AllocateMaterialID() { return m_MultiFrameGlobalResources.materialBuffer.Allocate(); }
 		void ReleaseMaterialID(uint32_t id) { m_MultiFrameGlobalResources.materialBuffer.Release(id); }
 		void SetMaterialInfo(const MaterialInfo& materialInfo, uint32_t materialID) { m_MultiFrameGlobalResources.materialBuffer.SetData(materialInfo, materialID); };
 
-		// ¶¥µãInfo
+		// é¡¶ç‚¹Info
 		uint32_t AllocateMeshInfoID() { return m_MultiFrameGlobalResources.vertexBuffer.Allocate(); }
 		void ReleaseMeshInfoID(uint32_t id) { m_MultiFrameGlobalResources.vertexBuffer.Release(id); }
 		void SetMeshInfo(const MeshInfo& vertexInfo, uint32_t vertexID) { m_MultiFrameGlobalResources.vertexBuffer.SetData(vertexInfo, vertexID); };
 
-		// ÊµÀıInfo
+		// å®ä¾‹Info
 		uint32_t AllocateMeshInstanceInfoID() { return m_MultiFrameGlobalResources.meshInfoBuffer.Allocate(); }
 		void ReleaseMesInstancehInfoID(uint32_t id) { m_MultiFrameGlobalResources.meshInfoBuffer.Release(id); }
 		void SetMeshInstanceInfo(const MeshInstanceInfo& meshInfo, uint32_t meshID) { m_MultiFrameGlobalResources.meshInfoBuffer.SetData(meshInfo, meshID); };
@@ -98,7 +98,7 @@ namespace GameEngine {
 		// LightInfo
 		void SetLightInfo(const LightInfo& lightInfo) { m_PerFrameGlobalResources[APP_FRAMEINDEX].lightInfoBuffer.SetData(lightInfo); };
 
-		// ¸÷ÖÖBufferÊı¾İ
+		// å„ç§Bufferæ•°æ®
 		void RenderResourceManager::UpdateCameraInfo();
 		RenderBuffer<CameraData>& GetCameraDataBuffer() { return m_PerFrameGlobalResources[APP_FRAMEINDEX].activeCameraDataBuffer; }
 
@@ -122,17 +122,17 @@ namespace GameEngine {
 
 		void LoadDefaultTexture();
 	private:
-		// Ã¿¸ö·ÉĞĞÖ¡Ò»·İ
+		// æ¯ä¸ªé£è¡Œå¸§ä¸€ä»½
 		std::array<PreFrameGlobalResources, FRAMES_IN_FLIGHT> m_PerFrameGlobalResources;
-		// È«¾ÖÒ»·İ
+		// å…¨å±€ä¸€ä»½
 		MultiFrameGlobalResources m_MultiFrameGlobalResources;
-		// Ã¿ÖÖÀàĞÍµÄbindless×ÊÔ´£¬¶¼ÓĞÒ»¸öID·ÖÅäÆ÷£¬´¦Àí×ÊÔ´Ó³Éäµ½BindlessµÄIDµÄ»ñÈ¡ºÍÊÍ·Å
+		// æ¯ç§ç±»å‹çš„bindlessèµ„æºï¼Œéƒ½æœ‰ä¸€ä¸ªIDåˆ†é…å™¨ï¼Œå¤„ç†èµ„æºæ˜ å°„åˆ°Bindlessçš„IDçš„è·å–å’Œé‡Šæ”¾
 		std::array<IndexAllocator, BINDLESS_SLOT_MAX_ENUM> m_BindlessIDAlloctor;
 		RHIRootSignatureRef m_GlobalResourcePreFrameRootSignature;
 
-		// Ò»Ğ©×ÊÔ´£¬ÓÃÓÚ·½±ãÉèÖÃ£¬²¢copyµ½buffer£¨ÆäÊµ¿ÉÒÔÖ±½Ó¶¨ÒåÔÚRenderBufferÄÚ²¿£©
+		// ä¸€äº›èµ„æºï¼Œç”¨äºæ–¹ä¾¿è®¾ç½®ï¼Œå¹¶copyåˆ°bufferï¼ˆå…¶å®å¯ä»¥ç›´æ¥å®šä¹‰åœ¨RenderBufferå†…éƒ¨ï¼‰
 		GlobalSettingInfo m_GlobalSettingInfo;
 
-		CPURenderSetting cpuRenderSetting; // ´Ó³¡¾°´«µİ¹ıÀ´µÄÒ»Ğ©äÖÈ¾²ÎÊı£¬Ö»ÔÚCPUÊ¹ÓÃ
+		CPURenderSetting cpuRenderSetting; // ä»åœºæ™¯ä¼ é€’è¿‡æ¥çš„ä¸€äº›æ¸²æŸ“å‚æ•°ï¼Œåªåœ¨CPUä½¿ç”¨
 	};
 }

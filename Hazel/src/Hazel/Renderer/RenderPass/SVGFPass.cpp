@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "SVGFPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -76,7 +76,7 @@ namespace GameEngine {
 	void SVGFPass::Build(RDGBuilder& builder)
 	{
 		auto& [w, h] = APP_WINDOWSIZE;
-	// Â·¾¶×·×Ù½á¹û
+	// è·¯å¾„è¿½è¸ªç»“æœ
 		
 		RDGTextureHandle pathTracingDirectRes = builder.GetTexture("PathTracingdirectRes");
 		if (pathTracingDirectRes.ID() == UINT32_MAX) { return; }
@@ -84,28 +84,28 @@ namespace GameEngine {
 		
 
 		
-		/////////////////////////////////////////// ÀúÊ·ĞÅÏ¢///////////////////////////////////////////
+		/////////////////////////////////////////// å†å²ä¿¡æ¯///////////////////////////////////////////
 		
-		// Ö±½Ó¹â·½²îÀúÊ·
+		// ç›´æ¥å…‰æ–¹å·®å†å²
 		RDGTextureHandle dirVarianceHistory = builder.CreateTexture("PathTracing_SVGF_dirVarianceHistory")
 			.Import(m_DirVarianceHistory, RESOURCE_STATE_UNDEFINED).Finish();
 
-		// ¼ä½Ó¹â·½²îÀúÊ·
+		// é—´æ¥å…‰æ–¹å·®å†å²
 		RDGTextureHandle inDirVarianceHistory = builder.CreateTexture("PathTracing_SVGF_inDirVariance")
 			.Import(m_InDirVarianceHistory, RESOURCE_STATE_UNDEFINED).Finish();
 
-		// Ö±½Ó¹âÀúÊ·
+		// ç›´æ¥å…‰å†å²
 		RDGTextureHandle directHistory = builder.CreateTexture("PathTracing_SVGF_directHistory")
 			.Import(m_DirectHistory, RESOURCE_STATE_UNDEFINED).Finish();
 
-		// ¼ä½Ó¹âÀúÊ·
+		// é—´æ¥å…‰å†å²
 		RDGTextureHandle inDirectHistory = builder.CreateTexture("PathTracing_SVGF_inDirectHistory")
 			.Import(m_IndirectHistory, RESOURCE_STATE_UNDEFINED).Finish();
 		
 
-		/////////////////////////////////////////// ´æ´¢µ±Ç° ///////////////////////////////////////////
+		/////////////////////////////////////////// å­˜å‚¨å½“å‰ ///////////////////////////////////////////
 		
-		// Ö±½Ó¹â»ìºÏ½á¹û
+		// ç›´æ¥å…‰æ··åˆç»“æœ
 		RDGTextureHandle DirMixRes = builder.CreateTexture("PathTracing_SVGF_DirMixRes")
 			.Exetent({ w, h ,1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
@@ -113,7 +113,7 @@ namespace GameEngine {
 			.AllowReadWrite()
 			.Finish();
 
-		// ¼ä½Ó¹â»ìºÏ½á¹û
+		// é—´æ¥å…‰æ··åˆç»“æœ
 		RDGTextureHandle InDirMixRes = builder.CreateTexture("PathTracing_SVGF_InDirMixRes")
 			.Exetent({ w, h ,1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
@@ -122,7 +122,7 @@ namespace GameEngine {
 			.Finish();
 
 
-		// Ö±½Ó¹â·½²î»ìºÏ½á¹û
+		// ç›´æ¥å…‰æ–¹å·®æ··åˆç»“æœ
 		RDGTextureHandle DirVariance = builder.CreateTexture("PathTracing_SVGF_dirvariance")
 			.Exetent({ w, h ,1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
@@ -130,7 +130,7 @@ namespace GameEngine {
 			.AllowReadWrite()
 			.Finish();
 
-		// ¼ä½Ó¹â»ìºÏ½á¹û
+		// é—´æ¥å…‰æ··åˆç»“æœ
 		RDGTextureHandle inDirVariance = builder.CreateTexture("PathTracing_SVGF_Indirvariance")
 			.Exetent({ w, h ,1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
@@ -138,7 +138,7 @@ namespace GameEngine {
 			.AllowReadWrite()
 			.Finish();
 
-		// Ö±½Ó¹âÂË²¨½á¹û
+		// ç›´æ¥å…‰æ»¤æ³¢ç»“æœ
 		RDGTextureHandle directFilterRes = builder.CreateTexture("PathTracing_SVGF_direct")
 			.Exetent({ w, h ,1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
@@ -146,7 +146,7 @@ namespace GameEngine {
 			.AllowReadWrite()
 			.Finish();
 
-		// ¼ä½Ó¹âÂË²¨½á¹û
+		// é—´æ¥å…‰æ»¤æ³¢ç»“æœ
 		RDGTextureHandle inDirectFilterRes = builder.CreateTexture("PathTracing_SVGF_inDirect")
 			.Exetent({ w, h ,1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
@@ -162,7 +162,7 @@ namespace GameEngine {
 			.AllowReadWrite()
 			.Finish();
 
-		// ×îÖÕ½á¹û
+		// æœ€ç»ˆç»“æœ
 		RDGTextureHandle SVGFCombineRes = builder.CreateTexture("PathTracing_SVGF_CombineRes")
 			.Exetent({ w, h ,1 })
 			.Format(FORMAT_R32G32B32A32_SFLOAT)
@@ -173,7 +173,7 @@ namespace GameEngine {
 		
 
 
-		/////////////////////////////////////////// ÆäËûĞÅÏ¢///////////////////////////////////////////
+		/////////////////////////////////////////// å…¶ä»–ä¿¡æ¯///////////////////////////////////////////
 	
 		RDGTextureHandle position = builder.GetTexture("GBufferPosition");
 		RDGTextureHandle normal = builder.GetTexture("GBufferNormal");
@@ -187,11 +187,11 @@ namespace GameEngine {
 
 
 
-		///////////////////////////////////////////// ÀÛ»ıÀúÊ·Pass ///////////////////////////////////////////
+		///////////////////////////////////////////// ç´¯ç§¯å†å²Pass ///////////////////////////////////////////
 		builder.CreateComputePass(GetName() + "_MixHistory")
 			.RootSignature(m_MixHistoryRootSignature)
-			.ReadWrite(1, 0, 0, DirMixRes)  // ´æ´¢Ö±½Ó¹â½á¹û
-			.ReadWrite(1, 1, 0, InDirMixRes) // ´æ´¢¼ä½Ó¹â½á¹û
+			.ReadWrite(1, 0, 0, DirMixRes)  // å­˜å‚¨ç›´æ¥å…‰ç»“æœ
+			.ReadWrite(1, 1, 0, InDirMixRes) // å­˜å‚¨é—´æ¥å…‰ç»“æœ
 			.ReadWrite(1, 2, 0, directHistory)
 			.ReadWrite(1, 3, 0, inDirectHistory)
 			.ReadWrite(1, 4, 0, DirVariance)
@@ -229,7 +229,7 @@ namespace GameEngine {
 			.Finish();
 
 
-		//// ·½²î¸üĞÂ
+		//// æ–¹å·®æ›´æ–°
 		//builder.CreateComputePass(GetName() + "_VarianceUpdate")
 		//	.RootSignature(m_AtrousRootSignature)
 		//	.ReadWrite(1, 0, 0, variance)
@@ -242,7 +242,7 @@ namespace GameEngine {
 
 
 
-		// Ö±½Ó¹â
+		// ç›´æ¥å…‰
 		for (int i = 0; i < 5; i++) {
 			builder.CreateComputePass(GetName() + "_DirectRes" + std::to_string(i))
 				.RootSignature(m_AtrousRootSignature)
@@ -270,7 +270,7 @@ namespace GameEngine {
 
 
 
-		// ¼ä½Ó¹â
+		// é—´æ¥å…‰
 		for (int i = 0; i < 5; i++) {
 			builder.CreateComputePass(GetName() + "_InDirectRes" + std::to_string(i))
 				.RootSignature(m_AtrousRootSignature)

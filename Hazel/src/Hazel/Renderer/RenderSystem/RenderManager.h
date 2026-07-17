@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Renderer/RHI/RHI.h"
 #include "Hazel/Renderer/RHI/RHICommandList.h"
 #include "Hazel/Core/Definations.h"
@@ -33,10 +33,10 @@ namespace GameEngine
 		void SetDrawMeshCount(uint32_t count) { m_DrawMeshCount = count; }
 		uint32_t GetDrawMeshCount() { return m_DrawMeshCount; }
 	private:
-		// ´¦ÀíÆ÷
+		// å¤„ç†å™¨
 		std::shared_ptr<RenderResourceManager> m_RenderResourceManager;
 		std::shared_ptr<PanelManager> m_PanelManager;
-		// äÖÈ¾×ÊÔ´
+		// æ¸²æŸ“èµ„æº
 		DynamicRHIRef m_DynamicRHI;
 		RHISurfaceRef m_Surface;
 		RHIQueueRef m_GraphicsQueue;

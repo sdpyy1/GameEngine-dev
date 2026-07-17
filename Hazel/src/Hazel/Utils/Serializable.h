@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <cereal/access.hpp>
 #include <cereal/types/utility.hpp>
 #include <cereal/types/string.hpp>
@@ -12,7 +12,7 @@
 #include <cereal/archives/binary.hpp>
 #include <Hazel/Renderer/RHI/RHIBase.h>
 namespace cereal {
-	// Ö¸¶¨¸÷ÖÖÀàĞÍµÄĞòÁĞ»¯¹æÔò
+	// æŒ‡å®šå„ç§ç±»å‹çš„åºåˆ—åŒ–è§„åˆ™
 	template<class Archive> void serialize(Archive& ar, GameEngine::Extent2D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height)); }
 	template<class Archive> void serialize(Archive& ar, GameEngine::Extent3D& e) { ar(cereal::make_nvp("width", e.width), cereal::make_nvp("height", e.height), cereal::make_nvp("depth", e.depth)); }
     template<class Archive> void serialize(Archive& ar, glm::vec3& e) { ar(cereal::make_nvp("x", e.x), cereal::make_nvp("y", e.y), cereal::make_nvp("z", e.z)); }

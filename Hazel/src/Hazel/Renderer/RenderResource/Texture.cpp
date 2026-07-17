@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "Texture.h"
 #include "Hazel/Utils/FileSystem.h"
 #include "Hazel/Core/Application.h"
@@ -92,7 +92,7 @@ namespace GameEngine
 			LOG_ERROR("TEXTURE_TYPE_CUBE need arrayLayers = 6");
 		}
 
-		// ÎÄ¼þ¶ÁÈ¡
+		// æ–‡ä»¶è¯»å–
 		Buffer imageBuffer;
 		int width, height, channels;
 		if (m_Spec.yFlip) {
@@ -104,7 +104,7 @@ namespace GameEngine
 			imageBuffer.Size = width * height * 4 * sizeof(float);
 		}
 		else {
-			imageBuffer.Data = stbi_load(m_Spec.path.c_str(), &width, &height, &channels, 4);  // TODO:²»Ö§³Ödds¸ñÊ½
+			imageBuffer.Data = stbi_load(m_Spec.path.c_str(), &width, &height, &channels, 4);  // TODO:ä¸æ”¯æŒddsæ ¼å¼
 			if (!imageBuffer.Data) {
 				LOG_ERROR("Image Load Fail! [{}]", m_Spec.path);
 			}
@@ -127,7 +127,7 @@ namespace GameEngine
 
 		CreateRHITexture();
 
-		// ×ªÒÆÊý¾Ý
+		// è½¬ç§»æ•°æ®
 		RHIBufferInfo bufferInfo = {
 			bufferInfo.size = imageBuffer.Size,
 			bufferInfo.memoryUsage = MEMORY_USAGE_CPU_ONLY,
@@ -154,7 +154,7 @@ namespace GameEngine
 				RESOURCE_STATE_TRANSFER_SRC, RESOURCE_STATE_SHADER_RESOURCE,
 						{TEXTURE_ASPECT_COLOR, 0, m_Spec.mipLevels, 0, m_Spec.arrayLayers} });
 		}
-		else { // Ò²ÐèÒª×ªµ½Shader¶ÁÈ¡²¼¾Ö
+		else { // ä¹Ÿéœ€è¦è½¬åˆ°Shaderè¯»å–å¸ƒå±€
 			APP_DYNAMICRHI->GetImmediateCommandList()->TextureBarrier(
 				{ m_Spec.texture,
 				RESOURCE_STATE_TRANSFER_DST, RESOURCE_STATE_SHADER_RESOURCE,
@@ -182,10 +182,10 @@ namespace GameEngine
 
 	RHIDescriptorSetRef Texture::GetImGuiID(RHITextureRef texture)
 	{
-		return APP_DYNAMICRHI->GetImGuiTextId(CreateView(texture));  // Ã¿´Î¶¼´´½¨Ò»¸öÐÂµÄ
+		return APP_DYNAMICRHI->GetImGuiTextId(CreateView(texture));  // æ¯æ¬¡éƒ½åˆ›å»ºä¸€ä¸ªæ–°çš„
 	}
 
-	RHITextureViewRef Texture::CreateView(RHITextureRef texture)   // TODO:Ä¿Ç°Ö»ÓÐViewportÊ¹ÓÃ
+	RHITextureViewRef Texture::CreateView(RHITextureRef texture)   // TODO:ç›®å‰åªæœ‰Viewportä½¿ç”¨
 	{
 		if (!texture) {
 			LOG_ERROR("Texture is null");
@@ -195,7 +195,7 @@ namespace GameEngine
 		rhiTextureViewInfo.format = texture->GetInfo().format;
 		rhiTextureViewInfo.viewType = texture->GetInfo().arrayLayers == 1?VIEW_TYPE_2D: VIEW_TYPE_2D_ARRAY;
 		rhiTextureViewInfo.subresource = { isDepthFormalt(texture->GetInfo().format) ? TEXTURE_ASPECT_DEPTH : TEXTURE_ASPECT_COLOR, 0, 1, texture->GetInfo().arrayLayers/2, 1 };
-		// return RDGTextureViewPool::Get()->Allocate(rhiTextureViewInfo).textureView;   // TODO:ÕâÖÖÈë³ØÃ»ÓÐÊÍ·ÅÓÐÃ»ÓÐÎÊÌâ
+		// return RDGTextureViewPool::Get()->Allocate(rhiTextureViewInfo).textureView;   // TODO:è¿™ç§å…¥æ± æ²¡æœ‰é‡Šæ”¾æœ‰æ²¡æœ‰é—®é¢˜
 		return APP_DYNAMICRHI->CreateTextureView(rhiTextureViewInfo);
 	}
 }

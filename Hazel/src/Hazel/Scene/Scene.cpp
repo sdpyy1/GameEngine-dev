@@ -1,9 +1,8 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "Scene.h"
 #include "Entity.h"
 #include "Hazel/Core/Application.h"
 #include "Components.h"
-#include "ScriptableEntity.h"
 #include "Hazel/Scene/EditorCamera.h"
 #define GLM_FORCE_DEPTH_ZERO_TO_FE
 #include <glm/glm.hpp>
@@ -35,7 +34,7 @@ namespace GameEngine {
 		if (parent)
 			parentWorld = GetWorldSpaceTransformMatrix(parent);
 
-		// ¾Ö²¿¾ØÕó = ¸¸¾ØÕóÄæ * ÊÀ½ç¾ØÕó
+		// å±€éƒ¨çŸ©é˜µ = çˆ¶çŸ©é˜µé€† * ä¸–ç•ŒçŸ©é˜µ
 		return glm::inverse(parentWorld) * worldMatrix;
 	}
 	template<typename... Component>
@@ -130,7 +129,7 @@ namespace GameEngine {
 	{
 		m_Registry.each([this](entt::entity entityID) {
 			Entity entity{ entityID, this };
-			DestroyEntity(entity,false);  // ÒòÎªËü»á±éÀúËùÓĞµÄÇå³ı£¬²»ĞèÒªµİ¹éÇå³ı
+			DestroyEntity(entity,false);  // å› ä¸ºå®ƒä¼šéå†æ‰€æœ‰çš„æ¸…é™¤ï¼Œä¸éœ€è¦é€’å½’æ¸…é™¤
 			});
 		m_Registry.clear();
 		m_EntityIDMap.clear();
@@ -227,7 +226,7 @@ namespace GameEngine {
 	template<>
 	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
 	{
-		component.CameraRef = std::make_shared<EditorCamera>(*APP_SCENE_DEFAULT_CAMERA); // ´´½¨Ò»¸öÓëµ±Ç°Ïà»úÒ»Ä£Ò»ÑùµÄÏà»ú
+		component.CameraRef = std::make_shared<EditorCamera>(*APP_SCENE_DEFAULT_CAMERA); // åˆ›å»ºä¸€ä¸ªä¸å½“å‰ç›¸æœºä¸€æ¨¡ä¸€æ ·çš„ç›¸æœº
 	}
 	template<>
 	void Scene::OnComponentAdded<LightProbeComponent>(Entity entity, LightProbeComponent& component)
@@ -236,9 +235,9 @@ namespace GameEngine {
 	template<>
 	void Scene::OnComponentAdded<SkyComponent>(Entity entity, SkyComponent& component)
 	{
-		component.iblPath.clear(); // ÏÈÇå¿Õ
+		component.iblPath.clear(); // å…ˆæ¸…ç©º
 
-		std::filesystem::path assetsDir = "Assets"; // ¸ùÄ¿Â¼£¬¿ÉÒÔ¸ù¾İÊµ¼ÊÂ·¾¶µ÷Õû
+		std::filesystem::path assetsDir = "Assets"; // æ ¹ç›®å½•ï¼Œå¯ä»¥æ ¹æ®å®é™…è·¯å¾„è°ƒæ•´
 
 		if (std::filesystem::exists(assetsDir) && std::filesystem::is_directory(assetsDir))
 		{
@@ -247,7 +246,7 @@ namespace GameEngine {
 				if (entry.is_regular_file())
 				{
 					auto ext = entry.path().extension().string();
-					// Ğ¡Ğ´Æ¥Åä
+					// å°å†™åŒ¹é…
 					std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 					if (ext == ".hdr")
 					{

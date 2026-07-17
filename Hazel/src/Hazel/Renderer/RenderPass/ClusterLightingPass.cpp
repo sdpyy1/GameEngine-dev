@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 #include "ClusterLightingPass.h"
 #include "Hazel/Core/Application.h"
 #include "Hazel/Scene/SceneManager.h"
@@ -29,17 +29,17 @@ namespace GameEngine {
 		uint32_t clusterCount = clusterX * clusterY * clusterZ;
 
 
-		// ´æ´¢Ã¿¸ö´ØµÄ¹âÔ´Ë÷ÒıÎ»ÖÃºÍÊıÁ¿
+		// å­˜å‚¨æ¯ä¸ªç°‡çš„å…‰æºç´¢å¼•ä½ç½®å’Œæ•°é‡
 		RDGTextureHandle clusterTexture = builder.CreateTexture("ClusterLightingInfoTexture")
 			.Exetent({ clusterX ,clusterY ,1 })
 			.ArrayLayers(LIGHT_CLUSTER_DEPTH)
-			.Format(FORMAT_R32G32_UINT)  // Ö»ĞèÒª´æÁ½¸öint
+			.Format(FORMAT_R32G32_UINT)  // åªéœ€è¦å­˜ä¸¤ä¸ªint
 			.MipLevels(1)
 			.AllowReadWrite()
 			.Finish();
 
 
-		// ´æ´¢Ã¿¸ö´ØÊµ¼ÊµÄ¹âÔ´ID
+		// å­˜å‚¨æ¯ä¸ªç°‡å®é™…çš„å…‰æºID
 		RDGBufferHandle clusterIdBuffer = builder.CreateBuffer("ClusterLightingIdBuffer")
 			.Size(clusterCount * sizeof(LightingClusterIdInfo) * MAX_LIGHTS_PER_CLUSTER)
 			.AllowReadWrite()

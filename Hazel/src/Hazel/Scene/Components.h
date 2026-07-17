@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Hazel/Core/UUID.h"
 
@@ -86,7 +86,7 @@ namespace GameEngine {
 		{
 			model = AssetManager::GetAsset<Model>(modelID);
 			auto originalMaterial = model->GetMaterial(SubmeshIndex);
-			material = model->GetMaterial(SubmeshIndex)->Clone(); // ´ÓModelµÄ²ÄÖÊÄ£°åÖĞcloneÒ»·İÄ£°åÊµÀı
+			material = model->GetMaterial(SubmeshIndex)->Clone(); // ä»Modelçš„æè´¨æ¨¡æ¿ä¸­cloneä¸€ä»½æ¨¡æ¿å®ä¾‹
 			path = model->GetPath();
 		}
 		MeshRef GetMesh() {
@@ -169,7 +169,7 @@ namespace GameEngine {
 		{
 		}
 
-		// Ëõ·Å-> Ğı×ª-> Æ½ÒÆ
+		// ç¼©æ”¾-> æ—‹è½¬-> å¹³ç§»
 		glm::mat4 GetTransform() const
 		{
 			return glm::translate(glm::mat4(1.0f), Translation)
@@ -254,7 +254,7 @@ namespace GameEngine {
 		}
 		glm::vec3 GetDirection() const
 		{
-			// Ä¬ÈÏ¹â³¯ -x
+			// é»˜è®¤å…‰æœ -x
 			return Rotation * glm::vec3(-1.0f, 0.0f, 0.0f);
 		}
 		friend class SceneSerializer;
@@ -274,7 +274,7 @@ namespace GameEngine {
 			SerailizeEntry(shadowType)
 			SerailizeEntry(showDirection)
 			SerailizeEntry(showCSM)
-			//SerailizeEntry(CSMSmooth)  TODO: Ä¿Ç°ĞòÁĞ»¯Èç¹ûĞòÁĞÖ®Ç°µÄ³¡¾°£¬²»¼°Ê±±£´æĞÂµÄ×Ö¶Î£¬ÔÙ´ÎÆô¶¯»á±¨´í£¬´ıĞŞ¸´
+			//SerailizeEntry(CSMSmooth)  TODO: ç›®å‰åºåˆ—åŒ–å¦‚æœåºåˆ—ä¹‹å‰çš„åœºæ™¯ï¼Œä¸åŠæ—¶ä¿å­˜æ–°çš„å­—æ®µï¼Œå†æ¬¡å¯åŠ¨ä¼šæŠ¥é”™ï¼Œå¾…ä¿®å¤
 		EndSerailize
 	};
 
@@ -355,7 +355,7 @@ namespace GameEngine {
             SerailizeEntry(pathTracingTotalNumSamples)
             SerailizeEntry(pathTracingSampleSkyBox)
             SerailizeEntry(pathTracingIndirectOnly)
-            //SerailizeEntry(pathTracingHistoryActive)  TODO:ÓĞÒ»Ğ©Âß¼­ÎÊÌâµ¼ÖÂĞÂÌí¼Ó×Ö¶Îºó±¨´íÁË£¬¿ÉÄÜÔ­ÒòÊÇÌí¼ÓĞÂ×Ö¶Îºó±£´æÁËÒ»´Î³¡¾°£¬µ«Ã»Ğ´ĞòÁĞ»¯Âß¼­
+            //SerailizeEntry(pathTracingHistoryActive)  TODO:æœ‰ä¸€äº›é€»è¾‘é—®é¢˜å¯¼è‡´æ–°æ·»åŠ å­—æ®µåæŠ¥é”™äº†ï¼Œå¯èƒ½åŸå› æ˜¯æ·»åŠ æ–°å­—æ®µåä¿å­˜äº†ä¸€æ¬¡åœºæ™¯ï¼Œä½†æ²¡å†™åºåˆ—åŒ–é€»è¾‘
 		EndSerailize
 	};
 
@@ -371,7 +371,7 @@ namespace GameEngine {
 		EndSerailize
 	};
 
-	// TODO: Õâ¸öÃ»ÓĞĞòÁĞ»¯£¬ÒòÎªÉãÏñ»úµÄĞòÁĞ»¯»¹Ã»Ğ´
+	// TODO: è¿™ä¸ªæ²¡æœ‰åºåˆ—åŒ–ï¼Œå› ä¸ºæ‘„åƒæœºçš„åºåˆ—åŒ–è¿˜æ²¡å†™
 	struct CameraComponent
 	{ 
 		bool Primary = false;

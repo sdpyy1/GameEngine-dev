@@ -1,4 +1,4 @@
-#include "hzpch.h"
+ï»¿#include "hzpch.h"
 
 #include "AssetManagerPanel.h"
 #include "Hazel/Scene/Components.h"
@@ -74,7 +74,7 @@ namespace GameEngine {
 				component.SetRotationEuler(glm::radians(rotation));
 
 				// static bool lockScale = true;
-				// ImGui::Checkbox("Lock Scale", &lockScale);  // TODO£ºËø¶¨Ëõ·ÅÓĞBug£¬»áÈÃËõ·ÅÍ»È»±ä»¯
+				// ImGui::Checkbox("Lock Scale", &lockScale);  // TODOï¼šé”å®šç¼©æ”¾æœ‰Bugï¼Œä¼šè®©ç¼©æ”¾çªç„¶å˜åŒ–
 				DrawVec3Control("Scale", component.Scale, 1.0f);
 			});
 
@@ -263,12 +263,12 @@ namespace GameEngine {
 		std::shared_ptr<Scene> m_Context = Application::GetSceneManager()->GetActiveScene();
 		if (m_Context)
 		{
-			// Ö»»æÖÆ¸ùÊµÌå£¨Ã»ÓĞ¸¸½ÚµãµÄÊµÌå£©
+			// åªç»˜åˆ¶æ ¹å®ä½“ï¼ˆæ²¡æœ‰çˆ¶èŠ‚ç‚¹çš„å®ä½“ï¼‰
 			m_Context->GetRegistry().each([&](auto entityID)
 				{
 					Entity entity{ entityID , m_Context.get() };
 					if(entity){
-						// ¼ì²éÊÇ·ñÊÇ¸ùÊµÌå£¨ParentHandleÎª0£©
+						// æ£€æŸ¥æ˜¯å¦æ˜¯æ ¹å®ä½“ï¼ˆParentHandleä¸º0ï¼‰
 						if (!entity.HasComponent<RelationshipComponent>() ||
 							entity.GetComponent<RelationshipComponent>().ParentHandle == 0)
 						{
@@ -320,12 +320,12 @@ namespace GameEngine {
 		auto& relationship = entity.GetComponent<RelationshipComponent>();
 		bool hasChildren = !relationship.Children.empty();
 
-		// µ÷Õû±êÖ¾Î»£ºÔö¼ÓNoTreePushOnOpen£¬±ÜÃâ×Ô¶¯ÍÆËÍ½Úµã
+		// è°ƒæ•´æ ‡å¿—ä½ï¼šå¢åŠ NoTreePushOnOpenï¼Œé¿å…è‡ªåŠ¨æ¨é€èŠ‚ç‚¹
 		ImGuiTreeNodeFlags flags = ((Application::GetSceneManager()->GetActiveScene()->GetSelectedEntity() == entity) ? ImGuiTreeNodeFlags_Selected : 0) |
 			ImGuiTreeNodeFlags_OpenOnArrow |
 			ImGuiTreeNodeFlags_SpanAvailWidth |
 			ImGuiTreeNodeFlags_AllowItemOverlap |
-			ImGuiTreeNodeFlags_NoTreePushOnOpen;  // ¹Ø¼ü£º²»×Ô¶¯ÍÆËÍÊ÷½Úµã
+			ImGuiTreeNodeFlags_NoTreePushOnOpen;  // å…³é”®ï¼šä¸è‡ªåŠ¨æ¨é€æ ‘èŠ‚ç‚¹
 
 		if (!hasChildren)
 			flags |= ImGuiTreeNodeFlags_Leaf;
@@ -335,7 +335,7 @@ namespace GameEngine {
 
 		ImGui::PushID((void*)(uint64_t)(uint32_t)entity);
 
-		// »æÖÆ¼ıÍ·£¨TreeNodeEx£©£¬»ñÈ¡Õ¹¿ª×´Ì¬
+		// ç»˜åˆ¶ç®­å¤´ï¼ˆTreeNodeExï¼‰ï¼Œè·å–å±•å¼€çŠ¶æ€
 		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, "");
 
 		ImGui::SameLine(0.0f, iconSpacing);
@@ -458,7 +458,7 @@ namespace GameEngine {
 		ImGui::PopStyleVar();
 		ImGui::Columns(1);
 		ImGui::PopID();
-		if (lock) ImGui::EndDisabled(); // ½áÊø½ûÓÃ¿é
+		if (lock) ImGui::EndDisabled(); // ç»“æŸç¦ç”¨å—
 
 		if (lock) {
 			values.y = values.x;
@@ -521,7 +521,7 @@ namespace GameEngine {
 	}
 	bool IsImageFile(const std::string& filepath)
 	{
-		// ÕÒ×îºóÒ»¸ö '.' Î»ÖÃ
+		// æ‰¾æœ€åä¸€ä¸ª '.' ä½ç½®
 		size_t dotPos = filepath.find_last_of('.');
 		if (dotPos == std::string::npos)
 			return false;
@@ -590,7 +590,7 @@ namespace GameEngine {
 			ImGui::Button("No Texture", size);
 		}
 
-		// ÍÏ×§Ìæ»»ÎÆÀí
+		// æ‹–æ‹½æ›¿æ¢çº¹ç†
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))

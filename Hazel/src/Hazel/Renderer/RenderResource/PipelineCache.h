@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Hazel/Renderer/RHI/RHIBase.h"
 #include "Hazel/Utils/HashUtils.h"
 namespace GameEngine
@@ -22,7 +22,7 @@ namespace GameEngine
 				size_t operator()(const Key& a) const {
 					size_t h = 0;
 
-					// °ÑÖ¸ÕëÖµ reinterpret_cast Îª uint64_t£¬È»ºó hash
+					// æŠŠæŒ‡é’ˆå€¼ reinterpret_cast ä¸º uint64_tï¼Œç„¶å hash
 					uint64_t vptr = reinterpret_cast<uint64_t>(a.info.vertexShader.get());
 					h ^= MurmurHash64A(&vptr, sizeof(uint64_t), 0);
 
@@ -39,7 +39,7 @@ namespace GameEngine
 					h ^= MurmurHash64A(&a.info.rasterizerState, sizeof(RHIRasterizerStateInfo), 0);
 					h ^= MurmurHash64A(&a.info.blendState, sizeof(RHIBlendStateInfo), 0);
 					h ^= MurmurHash64A(&a.info.depthStencilState, sizeof(RHIDepthStencilStateInfo), 0);
-					// h ^= MurmurHash64A(&a.info.vertexInputState, sizeof(VertexInputStateInfo), 0);   ÕâĞĞÃ»ÓĞÉèÖÃ³õÊ¼Öµ£¬»áµ¼ÖÂHash²»Ò»ÖÂ£¬Ä¿Ç°»º´æµÄpipeline¶¼ÊÇ²»ĞèÒªvertexInputStateµÄ
+					// h ^= MurmurHash64A(&a.info.vertexInputState, sizeof(VertexInputStateInfo), 0);   è¿™è¡Œæ²¡æœ‰è®¾ç½®åˆå§‹å€¼ï¼Œä¼šå¯¼è‡´Hashä¸ä¸€è‡´ï¼Œç›®å‰ç¼“å­˜çš„pipelineéƒ½æ˜¯ä¸éœ€è¦vertexInputStateçš„
 
 					return h;
 				}

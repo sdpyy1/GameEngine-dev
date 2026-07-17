@@ -1,19 +1,19 @@
-#pragma once
+ï»¿#pragma once
 #include "Asset.h"
 #include "Model.h"
 #include "Hazel/Core/Definations.h"
 #include <optional>
 /*
-     ×Ê²ú¹ÜÀíÆ÷¹¦ÄÜ£º
-	 1. ×Ê²úĞòÁĞ»¯ºÍ·´ĞòÁĞ»¯
-	 2. ×Ê²ú»º´æºÍ¼ÓÔØ
-	 3. Ô­Ê¼×ÊÔ´¼ÓÔØ
+     èµ„äº§ç®¡ç†å™¨åŠŸèƒ½ï¼š
+	 1. èµ„äº§åºåˆ—åŒ–å’Œååºåˆ—åŒ–
+	 2. èµ„äº§ç¼“å­˜å’ŒåŠ è½½
+	 3. åŸå§‹èµ„æºåŠ è½½
 */
 namespace GameEngine {
 	class AssetManager {
 	public:
 
-		// ¸ø¶¨Ô­Ê¼×ÊÔ´Â·¾¶£¬ĞòÁĞ»¯×Ê²úµ½ APP_SERIALIZE_PATH
+		// ç»™å®šåŸå§‹èµ„æºè·¯å¾„ï¼Œåºåˆ—åŒ–èµ„äº§åˆ° APP_SERIALIZE_PATH
 		template<typename T>
 		static void SerializeAsset(std::filesystem::path path) {
 			if constexpr (std::is_same_v<T, Model>) {
@@ -23,7 +23,7 @@ namespace GameEngine {
 			}
 		}
 
-		// ·´ĞòÁĞ»¯×Ê²ú
+		// ååºåˆ—åŒ–èµ„äº§
 		template<typename T>
 		static std::shared_ptr<T> DeserializeAsset(std::filesystem::path filePath) {
 			if constexpr (std::is_same_v<T, Model>){
@@ -43,7 +43,7 @@ namespace GameEngine {
 			 
 		}
 
-		// »ñÈ¡×Ê²ú£¬²»´æÔÚÊ±»áÑ°ÕÒ¶ÔÓ¦ĞòÁĞ»¯ÎÄ¼ş²¢¼ÓÔØ
+		// è·å–èµ„äº§ï¼Œä¸å­˜åœ¨æ—¶ä¼šå¯»æ‰¾å¯¹åº”åºåˆ—åŒ–æ–‡ä»¶å¹¶åŠ è½½
 		template<typename T>
 		static std::shared_ptr<T> GetAsset(UUID handle) {
 			std::shared_ptr<Asset> asset;
