@@ -33,7 +33,7 @@
 namespace GameEngine {
 	RenderManager::RenderManager()
 	{
-		RHIConfig config{ API_Vulkan,true,true, };
+		RHIConfig config{ API_Vulkan,false,true, };
 		m_RHIConfig = config;
 		m_DynamicRHI = DynamicRHI::Init(config);
 		m_Surface = m_DynamicRHI->CreateSurface(APP_GLFWWINDOW);
@@ -91,7 +91,7 @@ namespace GameEngine {
 		m_RenderResourceManager = std::make_shared<RenderResourceManager>();
 
 		passes[IBL_PASS] = std::make_shared<IBLPass>();
-		passes[GPUCULLING_PASS] = std::make_shared<GPUCullingPass>();
+		// passes[GPUCULLING_PASS] = std::make_shared<GPUCullingPass>();
 		passes[CLUSTER_LIGHTING_PASS] = std::make_shared<ClusterLightingPass>();
 		meshPasses[MESH_PASS_DIRSHADOW_PASS] = std::make_shared<DirShadowPass>();
 		meshPasses[MESH_PASS_POINTSHADOW_PASS] = std::make_shared<PointShadowPass>();

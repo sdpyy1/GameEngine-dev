@@ -26,6 +26,10 @@ project "Hazel"
 		"%{IncludeDir.mikktspace}/mikktspace.c",
 		"%{IncludeDir.VulkanSDK}/Include/Volk/volk.c",  -- 添加编译后会让原来架构找不到Vulkan接口找不到
 		-- "%{IncludeDir.imgui_node_editor}/**.cpp"
+		-- Shaders (not compiled by C++, only listed in IDE for editing)
+		"Assets/Shader/**.glsl",
+		"Assets/Shader/**.spv",
+		"Assets/Shader/**.bat"
 	}
 
 	defines
