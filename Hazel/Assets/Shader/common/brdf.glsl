@@ -150,7 +150,8 @@ float D_Beckmann( float a2, float NoH )
 // [Walter et al. 2007, "Microfacet models for refraction through rough surfaces"]
 float D_GGX( float a2, float NoH )
 {
-	float d = ( NoH * a2 - NoH ) * NoH + 1;	// 2 mad
+	float d = ( NoH * a2 - NoH ) * NoH + 1;
+	d = max(d, a2);	// 2 mad
 	return a2 / ( PI*d*d );					// 4 mul, 1 rcp
 }
 // float D_GGX_H(float cosLh, float roughness)
@@ -309,6 +310,14 @@ vec3 ResolveBRDF(vec3 albedo, float roughness, float metallic, vec3 N, vec3 V, v
     roughness = clamp(roughness, 0.04, 1.0);// 否则实测会出现INF高光点
 
 	float a2 			= pow4(roughness);  
+
+#ifdef FRAGMENT_SHADER
+	// Specular Anti-Aliasing (Karis 2014): widen a2 by screen-space normal derivative to soften GGX single-pixel spikes
+	vec3 dndu = dFdx(N);
+	vec3 dndv = dFdy(N);
+	float kernelRoughness2 = 2.0 * (dot(dndu, dndu) + dot(dndv, dndv));
+	a2 = min(a2 + kernelRoughness2, 0.0081);
+#endif
 	vec3 F0 			= mix(vec3(0.04f), albedo, metallic);             // FO表示一个材质垂直看时的反射率，电介质接近0.04 金属很高，所以用金属度来调和                            
 
 	float D             = D_GGX(a2, context.NoH);        

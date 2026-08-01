@@ -12,6 +12,13 @@ namespace GameEngine {
 		std::filesystem::path ShaderRootDir;
 		// glslc.exe 路径，为空时自动查找（VULKAN_SDK -> 默认安装路径 -> PATH）
 		std::filesystem::path GlslcPath;
+		// 生成渲染调试器（RenderDoc 等）可用的完整源码级调试信息。
+		// 开启后会改用 glslangValidator -gVS 编译，使 SPIR-V 嵌入
+		// NonSemantic.Shader.DebugInfo.100（RenderDoc 源码调试的硬性要求）。
+		// 仅建议在 RenderDoc 调试时开启：会强制全量重编，且依赖 glslangValidator.exe。
+		bool GenerateFullDebugInfo = false;
+		// glslangValidator.exe 路径，为空时自动查找（与 FindGlslcExecutable 同策略）
+		std::filesystem::path GlslangPath;
 		// 忽略时间戳，强制全量重新编译
 		bool ForceRebuildAll = false;
 		// 是否多线程并行编译
@@ -42,6 +49,8 @@ namespace GameEngine {
 
 		// 查找 glslc.exe，找不到返回空路径
 		static std::filesystem::path FindGlslcExecutable();
+		// 查找 glslangValidator.exe，找不到返回空路径
+		static std::filesystem::path FindGlslangExecutable();
 	};
 
 }

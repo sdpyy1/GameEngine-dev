@@ -42,13 +42,43 @@ namespace GameEngine {
 
 		struct CompileTask
 		{
-			fs::path			SourceFile;
+			fs::path			SourceFile;		// 原始文件（用于日志）
+			fs::path			CompileInput;	// 实际传给编译器的文件（fullDebug 时可能是临时文件）
+			fs::path			TempFile;		// fullDebug 模式下写入的临时文件，结束后清理
 			fs::path			OutputFile;
 			const StageRule*	Rule = nullptr;
 			std::string			CommandLine;
 			std::string			CompilerOutput;
 			bool				Success = false;
 		};
+
+		// fullDebug 模式：glslangValidator 不像 glslc 默认开启 #include，需在 #version 之后
+		// 注入扩展声明。返回 true 表示临时文件已写好（dst），调用方负责清理。
+		bool WritePreambleFile(const fs::path& src, const fs::path& dst)
+		{
+			std::ifstream in(src, std::ios::in | std::ios::binary);
+			if (!in)
+				return false;
+			std::ofstream out(dst, std::ios::out | std::ios::binary);
+			if (!out)
+				return false;
+
+			std::string line;
+			bool injected = false;
+			while (std::getline(in, line))
+			{
+				out << line << '\n';
+				if (!injected && line.find("#version") != std::string::npos)
+				{
+					out << "#extension GL_GOOGLE_include_directive : require\n";
+					injected = true;
+				}
+			}
+			if (!injected)
+				out << "#extension GL_GOOGLE_include_directive : require\n";
+
+			return static_cast<bool>(out);
+		}
 
 		std::string ReadTextFile(const fs::path& path)
 		{
@@ -257,6 +287,35 @@ namespace GameEngine {
 		return {};
 	}
 
+	fs::path ShaderCompiler::FindGlslangExecutable()
+	{
+		std::error_code ec;
+
+		// 1. VULKAN_SDK 环境变量
+		if (const char* vulkanSDK = std::getenv("VULKAN_SDK"))
+		{
+			const fs::path candidate = fs::path(vulkanSDK) / "Bin" / "glslangValidator.exe";
+			if (fs::exists(candidate, ec))
+				return candidate;
+		}
+
+		// 2. 与 complie.bat 一致的固定路径
+		{
+			const fs::path candidate = "D:/context/VulkanSDK/1.4.309.0/Bin/glslangValidator.exe";
+			if (fs::exists(candidate, ec))
+				return candidate;
+		}
+
+		// 3. 系统 PATH
+		{
+			char buffer[MAX_PATH] = {};
+			if (::SearchPathA(nullptr, "glslangValidator.exe", nullptr, MAX_PATH, buffer, nullptr) > 0)
+				return fs::path(buffer);
+		}
+
+		return {};
+	}
+
 	ShaderCompileResult ShaderCompiler::CompileDirtyShaders(const ShaderCompileOptions& options)
 	{
 		const auto startTime = std::chrono::high_resolution_clock::now();
@@ -276,6 +335,20 @@ namespace GameEngine {
 		{
 			LOG_WARN_TAG(SHADER_COMPILER_TAG, "未找到 glslc.exe，跳过 Shader 自动编译（请配置 VULKAN_SDK 环境变量）");
 			return result;
+		}
+
+		// 源码级调试模式：改用 glslangValidator -gVS，使 SPIR-V 含 NonSemantic.Shader.DebugInfo.100，
+		// 这是 RenderDoc 源码调试的硬性要求（glslc -g 无法生成该信息）。
+		bool fullDebug = options.GenerateFullDebugInfo;
+		fs::path glslang;
+		if (fullDebug)
+		{
+			glslang = options.GlslangPath.empty() ? FindGlslangExecutable() : options.GlslangPath;
+			if (glslang.empty())
+			{
+				LOG_WARN_TAG(SHADER_COMPILER_TAG, "未找到 glslangValidator.exe，源码级调试不可用，回退普通编译");
+				fullDebug = false;
+			}
 		}
 
 		// ---------- 收集需要编译的 Stage ----------
@@ -307,7 +380,7 @@ namespace GameEngine {
 				result.TotalStages++;
 
 				const fs::path outputFile = spvDir / (file.stem().string() + rule.OutputSuffix + ".spv");
-				if (!options.ForceRebuildAll && fs::exists(outputFile, ec) && GetWriteTicks(outputFile) >= sourceTicks)
+				if (!options.ForceRebuildAll && !fullDebug && fs::exists(outputFile, ec) && GetWriteTicks(outputFile) >= sourceTicks)
 				{
 					result.UpToDate++;
 					continue;
@@ -319,13 +392,41 @@ namespace GameEngine {
 				task.SourceFile = file;
 				task.OutputFile = outputFile;
 				task.Rule = &rule;
-				task.CommandLine = Quote(glslc.string())
-					+ " -g -O0"
-					+ " -fshader-stage=" + rule.StageArg
-					+ " " + Quote(file.string())
-					+ " -D" + rule.Macro
-					+ (rule.NeedSpv14 ? " --target-spv=spv1.4" : "")
-					+ " -o " + Quote(outputFile.string());
+
+				// fullDebug 模式：glslangValidator 不像 glslc 默认开启 #include，需在 #version 后注入
+				// 扩展声明。为避免命令行引号嵌套问题，写入同目录临时文件（相对 include 仍可解析）。
+				fs::path compileInput = file;
+				if (fullDebug)
+				{
+					const fs::path tmp = file.parent_path() / (file.stem().string() + ".rdbg.glsl");
+					if (WritePreambleFile(file, tmp))
+						task.TempFile = tmp;
+					compileInput = tmp;
+				}
+				task.CompileInput = compileInput;
+
+				if (fullDebug)
+				{
+					// glslangValidator：渲染调试器源码级调试所需的完整调试信息（含源文件）
+					task.CommandLine = Quote(glslang.string())
+						+ " -S " + rule.StageArg
+						+ " -V"
+						+ " -gVS"                                              // 非语义调试信息 + 源码（RenderDoc 源码调试硬性要求）
+						+ (rule.NeedSpv14 ? " --target-env vulkan1.2" : " --target-env vulkan1.1")
+						+ " " + Quote(compileInput.string())
+						+ " -D" + rule.Macro
+						+ " -o " + Quote(outputFile.string());
+				}
+				else
+				{
+					task.CommandLine = Quote(glslc.string())
+						+ " -g -O0"
+						+ " -fshader-stage=" + rule.StageArg
+						+ " " + Quote(file.string())
+						+ " -D" + rule.Macro
+						+ (rule.NeedSpv14 ? " --target-spv=spv1.4" : "")
+						+ " -o " + Quote(outputFile.string());
+				}
 
 				tasks.push_back(std::move(task));
 			}
@@ -395,6 +496,11 @@ namespace GameEngine {
 		}
 
 		result.ElapsedMs = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - startTime).count();
+
+		// 清理 fullDebug 模式写入的临时文件
+		for (const CompileTask& task : tasks)
+			if (!task.TempFile.empty())
+				fs::remove(task.TempFile, ec);
 
 		if (result.IsSuccess())
 			LOG_INFO_TAG(SHADER_COMPILER_TAG, "Shader 增量编译完成：编译 {}，最新 {}，耗时 {:.1f} ms", result.Compiled, result.UpToDate, result.ElapsedMs);

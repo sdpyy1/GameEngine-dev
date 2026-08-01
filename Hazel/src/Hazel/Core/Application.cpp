@@ -19,7 +19,10 @@ namespace GameEngine {
 		ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		
-		ShaderCompiler::CompileDirtyShaders();
+		ShaderCompileOptions shaderOptions;
+		shaderOptions.GenerateFullDebugInfo = true;
+		shaderOptions.ForceRebuildAll = false;
+		ShaderCompiler::CompileDirtyShaders(shaderOptions);
 
 		NFD::Init();
 
