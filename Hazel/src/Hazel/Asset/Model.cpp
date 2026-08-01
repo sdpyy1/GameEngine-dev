@@ -131,12 +131,17 @@ namespace GameEngine {
             // 顶点切线
             if (mesh->mTangents)
             {
-                submesh->tangent[i] = glm::vec4(
-                    mesh->mTangents[i].x,
-                    mesh->mTangents[i].y,
-                    mesh->mTangents[i].z,
-                    1.0f
-                );
+                glm::vec3 t(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
+                float w = 1.0f;
+                // 从 Assimp 提供的副切线方向恢复手性符号：glTF 的 TANGENT.w（±1）即编码于此。
+                // 若直接写死 1.0f，会丢失模型自带的反转/手性信息，导致部分模型法线方向错误。
+                if (mesh->mBitangents && mesh->mNormals)
+                {
+                    glm::vec3 n(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+                    glm::vec3 b(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z);
+                    w = (glm::dot(glm::cross(n, t), b) < 0.0f) ? -1.0f : 1.0f;
+                }
+                submesh->tangent[i] = glm::vec4(t, w);
             }
         }
 
@@ -227,7 +232,7 @@ namespace GameEngine {
 			bool hasNormalMap = aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTexPath) == AI_SUCCESS;
 			if (hasNormalMap)
 			{
-                TextureRef textureHandle = LoadMaterialTexture(aiTexPath.C_Str());
+                TextureRef textureHandle = LoadMaterialTexture(aiTexPath.C_Str(), /*srgb=*/false);
 				ma->SetNormal(textureHandle);
 				ma->SetUseNormalTexture(true);
 			}
@@ -430,14 +435,15 @@ namespace GameEngine {
     }
 
 
-    std::shared_ptr<Texture> Model::LoadMaterialTexture(std::string texturePath)
+    std::shared_ptr<Texture> Model::LoadMaterialTexture(std::string texturePath, bool srgb, bool yFlip)
     {
         if (textureMap.find(texturePath) != textureMap.end())
 		{
 			return textureMap[texturePath];
 		}
 		TextureSpec textureSpec;
-		textureSpec.yFlip = true;
+		textureSpec.yFlip = yFlip;
+		textureSpec.srgb = srgb;
 		std::filesystem::path fs_path(path);
 		fs_path = fs_path.parent_path();
 		std::filesystem::path new_texture_path = fs_path / texturePath;

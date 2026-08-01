@@ -202,8 +202,14 @@ namespace GameEngine {
 				if (!std::filesystem::is_directory(path) && ImGui::MenuItem("Serialize"))
 				{
 					std::string ext = path.extension().string();
-					if (ext == ".fbx" || ext == ".obj" || ext == ".gltf" || ext == ".glb"){
+					if (ext == ".fbx" || ext == ".obj" || ext == ".gltf" || ext == ".glb") {
+						// 源模型：首次序列化
 						AssetManager::SerializeAsset<Model>(path);
+						ScanAssetsForCategories(APP_SERIALIZE_PATH);
+					}
+					else if (ext == APP_SERIALIZE_MODEL_EXT) {
+						// 已序列化模型(.hModel)：从内部记录的原始路径重新序列化并覆盖
+						AssetManager::ReserializeAsset(path);
 						ScanAssetsForCategories(APP_SERIALIZE_PATH);
 					}
 					else {

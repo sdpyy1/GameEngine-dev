@@ -101,7 +101,7 @@ namespace GameEngine {
         void ProcessNode(aiNode* node, const aiScene* scene, std::vector<aiMesh*>& processMeshes);
         void ProcessMesh(aiMesh* mesh, const aiScene* scene, int index);
         void ExtractBoneWeights(Mesh* submesh, aiMesh* mesh, const aiScene* scene);
-        std::shared_ptr<Texture> Model::LoadMaterialTexture(std::string texturePath);
+        std::shared_ptr<Texture> Model::LoadMaterialTexture(std::string texturePath, bool srgb = true, bool yFlip = true);
     private:
         std::string path;
         ModelSpec m_ModelSpec;
