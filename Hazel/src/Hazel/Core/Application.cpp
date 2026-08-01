@@ -1,4 +1,4 @@
-#include "hzpch.h"
+﻿#include "hzpch.h"
 
 #include <nfd.hpp>
 #include <GLFW/glfw3.h>
@@ -7,6 +7,7 @@
 #include "Hazel/Core/Events/ApplicationEvent.h"
 #include "Hazel/Scene/SceneManager.h"
 #include "Hazel/Renderer/RenderSystem/RenderManager.h"
+#include "Hazel/Renderer/RenderResource/ShaderCompiler.h"
 
 namespace GameEngine {
 	Application* Application::s_Instance = nullptr;
@@ -17,6 +18,8 @@ namespace GameEngine {
 		Log::Init();
 		ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
+		
+		ShaderCompiler::CompileDirtyShaders();
 
 		NFD::Init();
 
