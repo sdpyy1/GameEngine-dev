@@ -2,6 +2,20 @@
 #include "Mesh.h"
 
 namespace GameEngine{
+
+    bool Mesh::BuildDistanceField(const MeshDistanceFieldSettings& settings, std::string* error)
+    {
+        auto bakedData = std::make_shared<MeshDistanceFieldData>();
+        if (!MeshDistanceFieldBaker::Bake(*this, settings, *bakedData, error))
+        {
+            distanceField.reset();
+            return false;
+        }
+
+        distanceField = std::move(bakedData);
+        return true;
+    }
+
     Mesh::Mesh(const Mesh& mesh, const std::vector<uint32_t>& subMeshIndex)
     {
         Merge(mesh, subMeshIndex);
@@ -62,5 +76,8 @@ namespace GameEngine{
         this->aabb.Merge(other.aabb);
         this->sphere = BoundingSphere(this->aabb);
         this->box = BoundingBox(this->aabb);
+
+        // Geometry changed, so a previously baked field is no longer valid.
+        distanceField.reset();
     }
 }

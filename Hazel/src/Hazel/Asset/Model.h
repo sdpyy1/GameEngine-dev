@@ -16,11 +16,17 @@ namespace GameEngine {
         bool loadMaterials = true; 
         bool genBLAS = false;
         bool uploadGPU = false;  // CPU内部创建模型，必须true
+        bool buildDistanceField = true;
+        uint32_t distanceFieldResolution = 32;
+        uint32_t distanceFieldPadding = 1;
     private:
         BeginSerailize
             SerailizeEntry(flipUV)
             SerailizeEntry(loadMaterials)
             SerailizeEntry(genBLAS)
+            SerailizeEntry(buildDistanceField)
+            SerailizeEntry(distanceFieldResolution)
+            SerailizeEntry(distanceFieldPadding)
         EndSerailize
 
     }ModelSpec;
@@ -88,6 +94,7 @@ namespace GameEngine {
         virtual AssetType GetAssetType() override { return ASSET_TYPE_MODEL; }
         virtual void OnLoadAsset() override;
         virtual void OnSaveAsset() override;
+        bool IsValid() const { return !submeshes.empty(); }
         bool hasBone() {return findBone;}
         std::vector<SubmeshData>& GetSubmeshes() { return submeshes; }
         SubmeshData& GetSubmeshData(uint32_t index) { return submeshes[index]; }

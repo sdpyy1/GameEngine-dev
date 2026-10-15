@@ -18,6 +18,7 @@ namespace GameEngine {
 		DrawGPUProfiler();
 		DrawStatistics();
 		m_FolderPreviewPanel.OnImGuiRender();
+		m_SerializationManagerPanel.OnImGuiRender();
 		m_AssetManagerPanel.OnImGuiRender();
 		m_LogPanel.OnImGuiRender();
 		// m_RDGPanel.OnImGuiRender();   // 一个玩意占20FPS
@@ -416,6 +417,7 @@ namespace GameEngine {
 			if (ImGui::BeginMenu("View"))
 			{
 				ImGui::MenuItem("Folder Preview", nullptr, &m_FolderPreviewPanel.isOpen);
+				ImGui::MenuItem("Serialization Manager", nullptr, &m_SerializationManagerPanel.isOpen);
 				ImGui::MenuItem("Asset Manager", nullptr, &m_AssetManagerPanel.isOpen);
 				ImGui::EndMenu();
 			}

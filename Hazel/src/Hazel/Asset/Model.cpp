@@ -267,7 +267,7 @@ namespace GameEngine {
             }
             materials[index] = ma;
 		}
-        else {
+        else if (m_ModelSpec.loadMaterials) {
             materials[index] = std::make_shared<Material>(true); // 默认材质
         }
         // 处理骨骼
@@ -280,6 +280,28 @@ namespace GameEngine {
         submesh->box = BoundingBox(submesh->aabb);
 
         submesh->name = std::string(mesh->mName.C_Str());
+
+        if (m_ModelSpec.buildDistanceField)
+        {
+            MeshDistanceFieldSettings distanceFieldSettings;
+            distanceFieldSettings.resolution = m_ModelSpec.distanceFieldResolution;
+            distanceFieldSettings.paddingVoxels = m_ModelSpec.distanceFieldPadding;
+
+            std::string distanceFieldError;
+            if (!submesh->BuildDistanceField(distanceFieldSettings, &distanceFieldError))
+            {
+                LOG_WARN("Failed to bake distance field for mesh [{}]: {}", submesh->name, distanceFieldError);
+            }
+            else
+            {
+                const MeshDistanceFieldData* distanceField = submesh->GetDistanceField();
+                LOG_INFO("Baked distance field for mesh [{}]: {}x{}x{} samples",
+                          submesh->name,
+                          distanceField->resolution.x,
+                          distanceField->resolution.y,
+                          distanceField->resolution.z);
+            }
+        }
 
         // 优化缓存
         // MeshOptimizor::OptimizeMesh(submesh);

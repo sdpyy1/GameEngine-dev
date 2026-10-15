@@ -12,14 +12,138 @@
 	 3. 原始资源加载
 */
 namespace GameEngine {
+	struct MeshMemoryStats
+	{
+		std::string name;
+		uint64_t vertexCount = 0;
+		uint64_t indexCount = 0;
+		uint64_t triangleCount = 0;
+		uint64_t positionBytes = 0;
+		uint64_t normalBytes = 0;
+		uint64_t tangentBytes = 0;
+		uint64_t texCoordBytes = 0;
+		uint64_t colorBytes = 0;
+		uint64_t boneIndexBytes = 0;
+		uint64_t boneWeightBytes = 0;
+		uint64_t indexBytes = 0;
+		uint64_t boneBytes = 0;
+		uint64_t objectBytes = 0;
+
+		uint64_t GeometryBytes() const {
+			return positionBytes + normalBytes + tangentBytes + texCoordBytes + colorBytes +
+				boneIndexBytes + boneWeightBytes + indexBytes + boneBytes;
+		}
+		uint64_t TotalBytes() const { return objectBytes + GeometryBytes(); }
+	};
+
+	struct ModelMemoryStats
+	{
+		bool inspected = false;
+		bool valid = false;
+		std::string error;
+		uint64_t sourceBytes = 0;
+		uint64_t modelObjectBytes = 0;
+		uint64_t totalBytes = 0;
+		uint64_t vertexCount = 0;
+		uint64_t indexCount = 0;
+		uint64_t triangleCount = 0;
+		std::vector<MeshMemoryStats> submeshes;
+	};
+
+	struct ModelSerializationInfo
+	{
+		std::filesystem::path sourcePath;
+		std::filesystem::path serializedPath;
+
+		bool IsSerialized() const { return !serializedPath.empty() && std::filesystem::exists(serializedPath); }
+	};
+
 	class AssetManager {
 	public:
+		static std::filesystem::path GetModelSerializedPath(const std::filesystem::path& sourcePath) {
+			const uint64_t stableUID = std::hash<std::string>()(std::filesystem::absolute(sourcePath).string());
+			return std::filesystem::path(APP_SERIALIZE_MODEL_PATH) /
+				(sourcePath.stem().string() + "_" + UUID(stableUID).ToString() + APP_SERIALIZE_MODEL_EXT);
+		}
+
+		static bool IsModelSource(const std::filesystem::path& path) {
+			const std::string extension = path.extension().string();
+			return extension == ".fbx" || extension == ".obj" || extension == ".gltf" || extension == ".glb";
+		}
+
+		static std::vector<ModelSerializationInfo> ScanModelSerialization() {
+			std::vector<ModelSerializationInfo> result;
+			const std::filesystem::path modelRoot(APP_MODEL_PATH);
+			if (!std::filesystem::exists(modelRoot))
+				return result;
+
+			std::error_code ec;
+			for (const auto& entry : std::filesystem::recursive_directory_iterator(modelRoot, ec)) {
+				if (ec) {
+					ec.clear();
+					continue;
+				}
+				if (!entry.is_regular_file(ec) || !IsModelSource(entry.path()))
+					continue;
+
+				ModelSerializationInfo info;
+				info.sourcePath = entry.path();
+				info.serializedPath = GetModelSerializedPath(entry.path());
+				result.push_back(std::move(info));
+			}
+
+			std::sort(result.begin(), result.end(), [](const auto& lhs, const auto& rhs) {
+				if (lhs.IsSerialized() != rhs.IsSerialized())
+					return lhs.IsSerialized();
+				return lhs.sourcePath.string() < rhs.sourcePath.string();
+			});
+			return result;
+		}
+
+		// Imports only CPU geometry for inspection. It deliberately skips materials,
+		// GPU buffers and SDF baking so refreshing the manager stays cheap and safe.
+		static ModelMemoryStats InspectModel(const std::filesystem::path& sourcePath);
+
+		static bool SerializeModel(const std::filesystem::path& sourcePath) {
+			if (!IsModelSource(sourcePath) || !std::filesystem::exists(sourcePath)) {
+				LOG_ERROR("Cannot serialize model source [{}].", sourcePath.string());
+				return false;
+			}
+			try {
+				return SerializeAsset<Model>(sourcePath);
+			}
+			catch (const std::exception& exception) {
+				LOG_ERROR("Failed to serialize model [{}]: {}", sourcePath.string(), exception.what());
+				return false;
+			}
+		}
+
+		static bool DeleteSerializedModel(const std::filesystem::path& sourcePath) {
+			const std::filesystem::path serializedPath = GetModelSerializedPath(sourcePath);
+			std::error_code ec;
+			const bool removed = std::filesystem::remove(serializedPath, ec);
+			if (ec) {
+				LOG_ERROR("Failed to delete serialized model [{}]: {}", serializedPath.string(), ec.message());
+				return false;
+			}
+
+			const uint64_t stableUID = std::hash<std::string>()(std::filesystem::absolute(sourcePath).string());
+			AssetsMapByPath.erase(serializedPath.string());
+			AssetsMapByUUID.erase(UUID(stableUID));
+			if (removed)
+				LOG_INFO("Deleted serialized model [{}].", serializedPath.string());
+			return removed;
+		}
 
 		// 给定原始资源路径，序列化资产到 APP_SERIALIZE_PATH
 		template<typename T>
-		static void SerializeAsset(std::filesystem::path path) {
+		static bool SerializeAsset(std::filesystem::path path) {
 			if constexpr (std::is_same_v<T, Model>) {
 				ModelRef loadedModel = LoadModel(path.string());
+				if (!loadedModel || !loadedModel->IsValid()) {
+					LOG_ERROR("Cannot serialize model [{}] because Assimp produced no submeshes.", path.string());
+					return false;
+				}
 
 			// 用源文件路径派生稳定 UUID：同一源模型每次序列化的 UUID 一致，
 			// 文件名固定 -> 重复序列化直接覆盖旧文件，而不是生成新的随机 UUID 文件，
@@ -45,7 +169,9 @@ namespace GameEngine {
 			}
 				std::filesystem::path savePath(APP_SERIALIZE_MODEL_PATH + path.stem().string() + "_" + loadedModel->GetUUID().ToString() + APP_SERIALIZE_MODEL_EXT);
 				DoSerialize<Model>(loadedModel, savePath);
+				return std::filesystem::exists(savePath);
 			}
+			return false;
 		}
 
 		// 给定已序列化的模型文件，从中记录的源路径重新序列化并覆盖。

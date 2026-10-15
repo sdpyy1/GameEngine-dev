@@ -5,6 +5,7 @@
 #include "Panels/LogPanel.h"
 #include <Hazel/Renderer/RDG/RDGHandle.h>
 #include "Panels/RDGPanel.h"
+#include "Panels/SerializationManagerPanel.h"
 #include "Hazel/Core/Definations.h"
 namespace GameEngine {
 	class SubMesh;
@@ -37,6 +38,7 @@ namespace GameEngine {
 		// 面板
 		AssetManagerPanel m_AssetManagerPanel;
 		FolderPreviewPanel m_FolderPreviewPanel{ APP_ASSET_PATH };
+		SerializationManagerPanel m_SerializationManagerPanel;
 		ImGuiLogPanel m_LogPanel;
 		RDGPanel m_RDGPanel;
 

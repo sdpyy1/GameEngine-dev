@@ -1,6 +1,7 @@
 #pragma once
 #include "Hazel/Utils/Serializable.h"
 #include <Hazel/Math/collision.h>
+#include "MeshDistanceField.h"
 namespace GameEngine {
 
 	typedef struct BoneInfo
@@ -46,7 +47,12 @@ namespace GameEngine {
 		std::vector<glm::vec4> boneWeight;
 		std::vector<uint32_t> index;
 		std::vector<BoneInfo> bone;
+		MeshDistanceFieldRef distanceField;
 		inline uint32_t TriangleNum() { return index.size() / 3; }
+		inline bool HasDistanceField() const { return distanceField && distanceField->IsValid(); }
+		inline MeshDistanceFieldData* GetDistanceField() { return distanceField.get(); }
+		inline const MeshDistanceFieldData* GetDistanceField() const { return distanceField.get(); }
+		bool BuildDistanceField(const MeshDistanceFieldSettings& settings = {}, std::string* error = nullptr);
 
 
 	private:
@@ -64,6 +70,7 @@ namespace GameEngine {
 			SerailizeEntry(boneWeight)
 			SerailizeEntry(index)
 			SerailizeEntry(bone)
+			SerailizeEntry(distanceField)
 		EndSerailize
 	};
 
