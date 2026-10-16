@@ -21,6 +21,19 @@ namespace GameEngine
             ASSERT(index < Count);
             return Args[index];
         }
+
+        bool HasFlag(const char* flag) const
+        {
+            if (!flag)
+                return false;
+
+            for (int index = 1; index < Count; ++index)
+            {
+                if (Args[index] && std::string(Args[index]) == flag)
+                    return true;
+            }
+            return false;
+        }
     };
 
     struct ApplicationSpecification

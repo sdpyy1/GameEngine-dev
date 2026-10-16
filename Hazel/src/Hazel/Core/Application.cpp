@@ -20,8 +20,15 @@ namespace GameEngine {
 		s_Instance = this;
 		
 		ShaderCompileOptions shaderOptions;
-		shaderOptions.GenerateFullDebugInfo = true;
+		// Normal startup uses timestamp-based incremental compilation. RenderDoc
+		// can pass --shader-debug (or the short -shader-debug alias) when a
+		// source-level shader debug build is needed.
+		const bool shaderDebug = m_Specification.CommandLineArgs.HasFlag("--shader-debug") ||
+			m_Specification.CommandLineArgs.HasFlag("-shader-debug");
+		shaderOptions.GenerateFullDebugInfo = shaderDebug;
 		shaderOptions.ForceRebuildAll = false;
+		if (shaderDebug)
+			LOG_INFO("Shader source debug mode enabled by command line; all shader stages will be rebuilt.");
 		ShaderCompiler::CompileDirtyShaders(shaderOptions);
 
 		NFD::Init();
