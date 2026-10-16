@@ -6,6 +6,7 @@
 #include <imgui.h>
 
 namespace GameEngine {
+
 	SerializationManagerPanel::SerializationManagerPanel()
 	{
 		Refresh();
@@ -14,9 +15,6 @@ namespace GameEngine {
 	void SerializationManagerPanel::Refresh()
 	{
 		m_Models = AssetManager::ScanModelSerialization();
-		m_ModelStats.clear();
-		m_ModelStats.reserve(m_Models.size());
-		m_ModelStats.resize(m_Models.size());
 		m_Status = "Scanned " + std::to_string(m_Models.size()) + " model source files.";
 	}
 
@@ -54,10 +52,33 @@ namespace GameEngine {
 			Refresh();
 		ImGui::SameLine();
 		ImGui::TextDisabled("Models under Assets/Model");
+
 		ImGui::Separator();
+		if (ImGui::CollapsingHeader("Serialization Settings", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::Checkbox("Build SDF", &m_SerializationSettings.buildDistanceField);
+			ImGui::BeginDisabled(!m_SerializationSettings.buildDistanceField);
+			int resolution = static_cast<int>(m_SerializationSettings.distanceFieldResolution);
+			if (ImGui::InputInt("SDF Resolution", &resolution))
+				m_SerializationSettings.distanceFieldResolution = static_cast<uint32_t>(std::clamp(resolution, 2, 256));
+			int padding = static_cast<int>(m_SerializationSettings.distanceFieldPadding);
+			if (ImGui::InputInt("SDF Padding (voxels)", &padding))
+				m_SerializationSettings.distanceFieldPadding = static_cast<uint32_t>(std::clamp(padding, 0, 16));
+			ImGui::Checkbox("Signed Distance", &m_SerializationSettings.distanceFieldSigned);
+			ImGui::EndDisabled();
+		}
 
 		if (!m_Status.empty())
 			ImGui::TextDisabled("%s", m_Status.c_str());
+		if (m_HasLastReport)
+			DrawLastSerializationReport();
+
+		const size_t unserializedCount = static_cast<size_t>(std::count_if(m_Models.begin(), m_Models.end(), [](const auto& model) {
+			return !model.IsSerialized();
+		}));
+		ImGui::SetNextItemOpen(false, ImGuiCond_Once);
+		const bool showUnserialized = unserializedCount == 0 || ImGui::CollapsingHeader(
+			("Unserialized Models (" + std::to_string(unserializedCount) + ")").c_str(), 0);
 
 		if (ImGui::BeginTable("ModelSerializationTable", 4,
 			ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingStretchProp))
@@ -71,50 +92,47 @@ namespace GameEngine {
 			for (size_t modelIndex = 0; modelIndex < m_Models.size(); ++modelIndex)
 			{
 				const ModelSerializationInfo& model = m_Models[modelIndex];
-				const ModelMemoryStats& stats = m_ModelStats[modelIndex];
+				const bool isSerialized = model.IsSerialized();
+				if (!isSerialized && !showUnserialized)
+					continue;
+
 				ImGui::PushID(model.sourcePath.string().c_str());
 				ImGui::TableNextRow();
 
 				ImGui::TableSetColumnIndex(0);
-				ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_SpanFullWidth;
-				const bool detailsOpen = ImGui::TreeNodeEx("##model_details", treeFlags, "%s", DisplayPath(model.sourcePath).c_str());
-				if (detailsOpen)
-				{
-					DrawModelDetails(model);
-					ImGui::TreePop();
-				}
+				ImGui::TextWrapped("%s", DisplayPath(model.sourcePath).c_str());
 
 				ImGui::TableSetColumnIndex(1);
-				if (model.IsSerialized())
+				if (isSerialized)
 					ImGui::TextWrapped("%s", DisplayPath(model.serializedPath).c_str());
 				else
 					ImGui::TextDisabled("Not generated");
 
 				ImGui::TableSetColumnIndex(2);
-				if (stats.inspected && !stats.valid)
-					ImGui::TextColored(ImVec4(1.0f, 0.35f, 0.35f, 1.0f), "Unsupported");
-				else if (model.IsSerialized())
+				if (isSerialized)
 					ImGui::TextColored(ImVec4(0.35f, 0.85f, 0.45f, 1.0f), "Serialized");
 				else
 					ImGui::TextColored(ImVec4(1.0f, 0.72f, 0.25f, 1.0f), "Missing");
 
 				ImGui::TableSetColumnIndex(3);
-				const bool canSerialize = !model.IsSerialized() || !stats.inspected || stats.valid;
-				ImGui::BeginDisabled(!canSerialize);
-				if (ImGui::Button(model.IsSerialized() ? "Re-serialize" : "Serialize"))
+				if (ImGui::Button(isSerialized ? "Re-serialize" : "Serialize"))
 				{
 					const std::filesystem::path sourcePath = model.sourcePath;
-					const bool success = AssetManager::SerializeModel(sourcePath);
+					ModelSerializationReport report;
+					const bool success = AssetManager::SerializeModel(sourcePath, m_SerializationSettings, &report);
 					Refresh();
 					m_Status = success ? "Serialized: " + DisplayPath(sourcePath)
 					              : "Serialization failed: " + DisplayPath(sourcePath);
-					ImGui::EndDisabled();
+					if (success)
+					{
+						m_LastReport = std::move(report);
+						m_HasLastReport = true;
+					}
 					ImGui::PopID();
 					break;
 				}
-				ImGui::EndDisabled();
 				ImGui::SameLine();
-				if (ImGui::BeginDisabled(!model.IsSerialized()), ImGui::Button("Delete"))
+				if (ImGui::BeginDisabled(!isSerialized), ImGui::Button("Delete"))
 				{
 					m_DeleteTarget = model.sourcePath;
 					m_ShowDeleteConfirmation = true;
@@ -130,71 +148,56 @@ namespace GameEngine {
 		ImGui::End();
 	}
 
-	void SerializationManagerPanel::DrawModelDetails(const ModelSerializationInfo& model)
+	void SerializationManagerPanel::DrawLastSerializationReport()
 	{
-		const auto modelIt = std::find_if(m_Models.begin(), m_Models.end(), [&model](const auto& candidate) {
-			return candidate.sourcePath == model.sourcePath;
-		});
-		if (modelIt == m_Models.end())
+		if (!ImGui::CollapsingHeader("Last Serialization Report", ImGuiTreeNodeFlags_DefaultOpen))
 			return;
-		const size_t modelIndex = static_cast<size_t>(std::distance(m_Models.begin(), modelIt));
-		ModelMemoryStats& stats = m_ModelStats[modelIndex];
 
-		ImGui::Indent(18.0f);
-		if (!model.IsSerialized())
-		{
-			ImGui::TextDisabled("No serialized asset. Source statistics are not loaded.");
-			ImGui::Unindent(18.0f);
-			return;
-		}
-		if (!stats.inspected)
-			stats = AssetManager::InspectModel(model.sourcePath);
-		if (!stats.valid)
-		{
-			ImGui::TextColored(ImVec4(1.0f, 0.35f, 0.35f, 1.0f), "Inspection failed: %s", stats.error.c_str());
-			ImGui::Unindent(18.0f);
-			return;
-		}
-
-		ImGui::Text("Source file: %s", FormatBytes(stats.sourceBytes).c_str());
-		if (model.IsSerialized())
-		{
-			std::error_code ec;
-			const uintmax_t serializedBytes = std::filesystem::file_size(model.serializedPath, ec);
-			if (!ec)
-				ImGui::Text("Serialized payload: %s", FormatBytes(static_cast<uint64_t>(serializedBytes)).c_str());
-		}
-		ImGui::Text("CPU memory estimate: %s", FormatBytes(stats.totalBytes).c_str());
+		ImGui::Text("Source file: %s", FormatBytes(m_LastReport.sourceBytes).c_str());
+		ImGui::Text("Serialized payload: %s", FormatBytes(m_LastReport.serializedBytes).c_str());
 		ImGui::Text("SubMeshes: %llu | Vertices: %llu | Indices: %llu | Triangles: %llu",
-			static_cast<unsigned long long>(stats.submeshes.size()),
-			static_cast<unsigned long long>(stats.vertexCount),
-			static_cast<unsigned long long>(stats.indexCount),
-			static_cast<unsigned long long>(stats.triangleCount));
+			static_cast<unsigned long long>(m_LastReport.submeshes.size()),
+			static_cast<unsigned long long>(m_LastReport.vertexCount),
+			static_cast<unsigned long long>(m_LastReport.indexCount),
+			static_cast<unsigned long long>(m_LastReport.triangleCount));
+		ImGui::Text("Geometry data: %s", FormatBytes(m_LastReport.geometryBytes).c_str());
+		ImGui::Text("SDF build time: %.3f ms", m_LastReport.distanceFieldBuildTimeMs);
+		ImGui::Text("SDF samples: %llu | Data: %s | CPU storage: %s",
+			static_cast<unsigned long long>(m_LastReport.distanceFieldSampleCount),
+			FormatBytes(m_LastReport.distanceFieldDataBytes).c_str(),
+			FormatBytes(m_LastReport.distanceFieldStorageBytes).c_str());
 
-		for (size_t index = 0; index < stats.submeshes.size(); ++index)
+		for (size_t index = 0; index < m_LastReport.submeshes.size(); ++index)
 		{
-			const MeshMemoryStats& mesh = stats.submeshes[index];
+			const SubmeshSerializationStats& submesh = m_LastReport.submeshes[index];
 			ImGui::PushID(static_cast<int>(index));
-			if (ImGui::TreeNode("##submesh_details", "SubMesh %zu: %s", index, mesh.name.empty() ? "Unnamed" : mesh.name.c_str()))
+			const std::string label = "SubMesh " + std::to_string(index) + ": " +
+				(submesh.name.empty() ? "Unnamed" : submesh.name);
+			if (ImGui::TreeNode(label.c_str()))
 			{
-				ImGui::Text("Memory: %s (object %s + arrays %s)", FormatBytes(mesh.TotalBytes()).c_str(),
-					FormatBytes(mesh.objectBytes).c_str(), FormatBytes(mesh.GeometryBytes()).c_str());
 				ImGui::Text("Vertices: %llu | Indices: %llu | Triangles: %llu",
-					static_cast<unsigned long long>(mesh.vertexCount),
-					static_cast<unsigned long long>(mesh.indexCount),
-					static_cast<unsigned long long>(mesh.triangleCount));
-				ImGui::Text("Position %s | Normal %s | Tangent %s | UV %s",
-					FormatBytes(mesh.positionBytes).c_str(), FormatBytes(mesh.normalBytes).c_str(),
-					FormatBytes(mesh.tangentBytes).c_str(), FormatBytes(mesh.texCoordBytes).c_str());
-				ImGui::Text("Color %s | Bone index %s | Bone weight %s | Index %s | Bone data %s",
-					FormatBytes(mesh.colorBytes).c_str(), FormatBytes(mesh.boneIndexBytes).c_str(),
-					FormatBytes(mesh.boneWeightBytes).c_str(), FormatBytes(mesh.indexBytes).c_str(),
-					FormatBytes(mesh.boneBytes).c_str());
+					static_cast<unsigned long long>(submesh.vertexCount),
+					static_cast<unsigned long long>(submesh.indexCount),
+					static_cast<unsigned long long>(submesh.triangleCount));
+				ImGui::Text("Geometry data: %s", FormatBytes(submesh.geometryBytes).c_str());
+				if (submesh.distanceFieldBuildAttempted)
+				{
+					ImGui::Text("SDF: %s | Build: %.3f ms",
+						submesh.distanceFieldValid ? "Valid" : "Failed",
+						submesh.distanceFieldBuildTimeMs);
+					ImGui::Text("Resolution: %ux%ux%u | Samples: %llu",
+						submesh.distanceFieldResolutionX,
+						submesh.distanceFieldResolutionY,
+						submesh.distanceFieldResolutionZ,
+						static_cast<unsigned long long>(submesh.distanceFieldSampleCount));
+					ImGui::Text("SDF data: %s | CPU storage: %s",
+						FormatBytes(submesh.distanceFieldDataBytes).c_str(),
+						FormatBytes(submesh.distanceFieldStorageBytes).c_str());
+				}
 				ImGui::TreePop();
 			}
 			ImGui::PopID();
 		}
-		ImGui::Unindent(18.0f);
 	}
 
 	void SerializationManagerPanel::DrawDeleteConfirmation()
@@ -202,9 +205,6 @@ namespace GameEngine {
 		if (!m_ShowDeleteConfirmation)
 			return;
 
-		// Open and render the popup at the same ID stack level. The delete button
-		// is inside a per-model PushID scope, so opening it there would create a
-		// different popup ID from this function.
 		ImGui::OpenPopup("Confirm serialized model deletion");
 		bool open = true;
 		if (ImGui::BeginPopupModal("Confirm serialized model deletion", &open, ImGuiWindowFlags_AlwaysAutoResize))
@@ -215,6 +215,7 @@ namespace GameEngine {
 			{
 				const bool success = AssetManager::DeleteSerializedModel(m_DeleteTarget);
 				m_ShowDeleteConfirmation = false;
+				m_HasLastReport = false;
 				ImGui::CloseCurrentPopup();
 				Refresh();
 				m_Status = success ? "Deleted serialized asset." : "Serialized asset was not deleted.";

@@ -1,12 +1,19 @@
 ﻿#include "hzpch.h"
 #include "Mesh.h"
 
+#include <chrono>
+
 namespace GameEngine{
 
     bool Mesh::BuildDistanceField(const MeshDistanceFieldSettings& settings, std::string* error)
     {
+        const auto startTime = std::chrono::steady_clock::now();
+        distanceFieldBuildAttempted = true;
         auto bakedData = std::make_shared<MeshDistanceFieldData>();
-        if (!MeshDistanceFieldBaker::Bake(*this, settings, *bakedData, error))
+        const bool success = MeshDistanceFieldBaker::Bake(*this, settings, *bakedData, error);
+        distanceFieldBuildTimeMs = std::chrono::duration<double, std::milli>(
+            std::chrono::steady_clock::now() - startTime).count();
+        if (!success)
         {
             distanceField.reset();
             return false;
@@ -79,5 +86,7 @@ namespace GameEngine{
 
         // Geometry changed, so a previously baked field is no longer valid.
         distanceField.reset();
+        distanceFieldBuildTimeMs = 0.0;
+        distanceFieldBuildAttempted = false;
     }
 }

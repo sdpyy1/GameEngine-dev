@@ -70,9 +70,8 @@ namespace GameEngine {
 
 
 	// 只是为了序列化时先加载原始模型数据，不需要CPU信息
-	ModelRef AssetManager::LoadModel(std::string path) {
-		ModelSpec m_ModelSpec;
-		return std::make_shared<Model>(path, m_ModelSpec);
+	ModelRef AssetManager::LoadModel(std::string path, const ModelSpec& modelSpec) {
+		return std::make_shared<Model>(path, modelSpec);
 	}
 
 }

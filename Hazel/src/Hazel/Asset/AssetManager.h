@@ -50,12 +50,46 @@ namespace GameEngine {
 		std::vector<MeshMemoryStats> submeshes;
 	};
 
+	struct SubmeshSerializationStats
+	{
+		std::string name;
+		uint64_t vertexCount = 0;
+		uint64_t indexCount = 0;
+		uint64_t triangleCount = 0;
+		uint64_t geometryBytes = 0;
+		double distanceFieldBuildTimeMs = 0.0;
+		uint64_t distanceFieldSampleCount = 0;
+		uint64_t distanceFieldDataBytes = 0;
+		uint64_t distanceFieldStorageBytes = 0;
+		uint32_t distanceFieldResolutionX = 0;
+		uint32_t distanceFieldResolutionY = 0;
+		uint32_t distanceFieldResolutionZ = 0;
+		bool distanceFieldBuildAttempted = false;
+		bool distanceFieldValid = false;
+	};
+
+	struct ModelSerializationReport
+	{
+		uint64_t sourceBytes = 0;
+		uint64_t serializedBytes = 0;
+		uint64_t vertexCount = 0;
+		uint64_t indexCount = 0;
+		uint64_t triangleCount = 0;
+		uint64_t geometryBytes = 0;
+		double distanceFieldBuildTimeMs = 0.0;
+		uint64_t distanceFieldSampleCount = 0;
+		uint64_t distanceFieldDataBytes = 0;
+		uint64_t distanceFieldStorageBytes = 0;
+		std::vector<SubmeshSerializationStats> submeshes;
+	};
+
 	struct ModelSerializationInfo
 	{
 		std::filesystem::path sourcePath;
 		std::filesystem::path serializedPath;
+		bool serialized = false;
 
-		bool IsSerialized() const { return !serializedPath.empty() && std::filesystem::exists(serializedPath); }
+		bool IsSerialized() const { return serialized; }
 	};
 
 	class AssetManager {
@@ -89,6 +123,7 @@ namespace GameEngine {
 				ModelSerializationInfo info;
 				info.sourcePath = entry.path();
 				info.serializedPath = GetModelSerializedPath(entry.path());
+				info.serialized = !info.serializedPath.empty() && std::filesystem::exists(info.serializedPath, ec);
 				result.push_back(std::move(info));
 			}
 
@@ -104,13 +139,15 @@ namespace GameEngine {
 		// GPU buffers and SDF baking so refreshing the manager stays cheap and safe.
 		static ModelMemoryStats InspectModel(const std::filesystem::path& sourcePath);
 
-		static bool SerializeModel(const std::filesystem::path& sourcePath) {
+		static bool SerializeModel(const std::filesystem::path& sourcePath,
+			const ModelSpec& modelSpec = ModelSpec{},
+			ModelSerializationReport* report = nullptr) {
 			if (!IsModelSource(sourcePath) || !std::filesystem::exists(sourcePath)) {
 				LOG_ERROR("Cannot serialize model source [{}].", sourcePath.string());
 				return false;
 			}
 			try {
-				return SerializeAsset<Model>(sourcePath);
+				return SerializeAsset<Model>(sourcePath, modelSpec, report);
 			}
 			catch (const std::exception& exception) {
 				LOG_ERROR("Failed to serialize model [{}]: {}", sourcePath.string(), exception.what());
@@ -137,12 +174,66 @@ namespace GameEngine {
 
 		// 给定原始资源路径，序列化资产到 APP_SERIALIZE_PATH
 		template<typename T>
-		static bool SerializeAsset(std::filesystem::path path) {
+		static bool SerializeAsset(std::filesystem::path path,
+			const ModelSpec& modelSpec = ModelSpec{},
+			ModelSerializationReport* report = nullptr) {
 			if constexpr (std::is_same_v<T, Model>) {
-				ModelRef loadedModel = LoadModel(path.string());
+				ModelRef loadedModel = LoadModel(path.string(), modelSpec);
 				if (!loadedModel || !loadedModel->IsValid()) {
 					LOG_ERROR("Cannot serialize model [{}] because Assimp produced no submeshes.", path.string());
 					return false;
+				}
+
+				if (report)
+				{
+					*report = {};
+					std::error_code reportError;
+					report->sourceBytes = std::filesystem::file_size(path, reportError);
+					report->submeshes.reserve(loadedModel->GetSubmeshes().size());
+					for (const SubmeshData& submeshData : loadedModel->GetSubmeshes())
+					{
+						if (!submeshData.mesh)
+							continue;
+
+						const Mesh& mesh = *submeshData.mesh;
+						SubmeshSerializationStats submeshStats;
+						submeshStats.name = mesh.name;
+						submeshStats.vertexCount = mesh.position.size();
+						submeshStats.indexCount = mesh.index.size();
+						submeshStats.triangleCount = mesh.index.size() / 3;
+						submeshStats.geometryBytes =
+							mesh.position.size() * sizeof(glm::vec3) +
+							mesh.normal.size() * sizeof(glm::vec3) +
+							mesh.tangent.size() * sizeof(glm::vec4) +
+							mesh.texCoord.size() * sizeof(glm::vec2) +
+							mesh.color.size() * sizeof(glm::vec3) +
+							mesh.boneIndex.size() * sizeof(glm::ivec4) +
+							mesh.boneWeight.size() * sizeof(glm::vec4) +
+							mesh.index.size() * sizeof(uint32_t) +
+							mesh.bone.size() * sizeof(BoneInfo);
+						submeshStats.distanceFieldBuildAttempted = mesh.WasDistanceFieldBuildAttempted();
+						submeshStats.distanceFieldBuildTimeMs = mesh.GetDistanceFieldBuildTimeMs();
+						submeshStats.distanceFieldValid = mesh.HasDistanceField();
+						if (const MeshDistanceFieldData* distanceField = mesh.GetDistanceField(); distanceField && distanceField->IsValid())
+						{
+							submeshStats.distanceFieldSampleCount = distanceField->SampleCount();
+							submeshStats.distanceFieldDataBytes = distanceField->SampleDataBytes();
+							submeshStats.distanceFieldStorageBytes = distanceField->StorageBytes();
+							submeshStats.distanceFieldResolutionX = distanceField->resolution.x;
+							submeshStats.distanceFieldResolutionY = distanceField->resolution.y;
+							submeshStats.distanceFieldResolutionZ = distanceField->resolution.z;
+						}
+
+						report->vertexCount += submeshStats.vertexCount;
+						report->indexCount += submeshStats.indexCount;
+						report->triangleCount += submeshStats.triangleCount;
+						report->geometryBytes += submeshStats.geometryBytes;
+						report->distanceFieldBuildTimeMs += submeshStats.distanceFieldBuildTimeMs;
+						report->distanceFieldSampleCount += submeshStats.distanceFieldSampleCount;
+						report->distanceFieldDataBytes += submeshStats.distanceFieldDataBytes;
+						report->distanceFieldStorageBytes += submeshStats.distanceFieldStorageBytes;
+						report->submeshes.push_back(std::move(submeshStats));
+					}
 				}
 
 			// 用源文件路径派生稳定 UUID：同一源模型每次序列化的 UUID 一致，
@@ -169,7 +260,13 @@ namespace GameEngine {
 			}
 				std::filesystem::path savePath(APP_SERIALIZE_MODEL_PATH + path.stem().string() + "_" + loadedModel->GetUUID().ToString() + APP_SERIALIZE_MODEL_EXT);
 				DoSerialize<Model>(loadedModel, savePath);
-				return std::filesystem::exists(savePath);
+				const bool serialized = std::filesystem::exists(savePath);
+				if (serialized && report)
+				{
+					std::error_code reportError;
+					report->serializedBytes = std::filesystem::file_size(savePath, reportError);
+				}
+				return serialized;
 			}
 			return false;
 		}
@@ -238,7 +335,7 @@ namespace GameEngine {
 			return std::static_pointer_cast<T>(AssetsMapByUUID[handle]);
 		}
 
-		static ModelRef LoadModel(std::string path);
+		static ModelRef LoadModel(std::string path, const ModelSpec& modelSpec = ModelSpec{});
 
 		static std::optional<std::filesystem::path> FindModelByUUID(const std::filesystem::path& basePath, const UUID& uuid)
 		{

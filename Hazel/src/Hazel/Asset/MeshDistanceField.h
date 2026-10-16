@@ -44,6 +44,8 @@ struct MeshDistanceFieldData
 
     bool IsValid() const;
     size_t SampleCount() const;
+    size_t SampleDataBytes() const;
+    size_t StorageBytes() const;
     float SampleNearest(const glm::vec3& localPosition) const;
     float SampleTrilinear(const glm::vec3& localPosition) const;
     size_t SampleIndex(uint32_t x, uint32_t y, uint32_t z) const;

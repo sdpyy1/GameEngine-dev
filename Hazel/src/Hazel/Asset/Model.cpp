@@ -286,6 +286,7 @@ namespace GameEngine {
             MeshDistanceFieldSettings distanceFieldSettings;
             distanceFieldSettings.resolution = m_ModelSpec.distanceFieldResolution;
             distanceFieldSettings.paddingVoxels = m_ModelSpec.distanceFieldPadding;
+            distanceFieldSettings.signedDistance = m_ModelSpec.distanceFieldSigned;
 
             std::string distanceFieldError;
             if (!submesh->BuildDistanceField(distanceFieldSettings, &distanceFieldError))

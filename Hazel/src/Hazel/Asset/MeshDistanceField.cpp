@@ -27,6 +27,16 @@ size_t MeshDistanceFieldData::SampleCount() const
            static_cast<size_t>(resolution.z);
 }
 
+size_t MeshDistanceFieldData::SampleDataBytes() const
+{
+    return samples.size() * sizeof(float);
+}
+
+size_t MeshDistanceFieldData::StorageBytes() const
+{
+    return sizeof(MeshDistanceFieldData) + samples.capacity() * sizeof(float);
+}
+
 bool MeshDistanceFieldData::IsValid() const
 {
     return resolution.x >= 2 && resolution.y >= 2 && resolution.z >= 2 &&

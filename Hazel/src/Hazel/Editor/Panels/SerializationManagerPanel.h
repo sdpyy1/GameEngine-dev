@@ -13,15 +13,17 @@ namespace GameEngine {
 	private:
 		void Refresh();
 		void DrawDeleteConfirmation();
-		void DrawModelDetails(const ModelSerializationInfo& model);
+		void DrawLastSerializationReport();
 		std::string DisplayPath(const std::filesystem::path& path) const;
 		static std::string FormatBytes(uint64_t bytes);
 
 	private:
 		std::vector<ModelSerializationInfo> m_Models;
-		std::vector<ModelMemoryStats> m_ModelStats;
+		ModelSpec m_SerializationSettings;
+		ModelSerializationReport m_LastReport;
 		std::filesystem::path m_DeleteTarget;
 		bool m_ShowDeleteConfirmation = false;
+		bool m_HasLastReport = false;
 		std::string m_Status;
 	};
 }

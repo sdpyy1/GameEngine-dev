@@ -19,6 +19,7 @@ namespace GameEngine {
         bool buildDistanceField = true;
         uint32_t distanceFieldResolution = 32;
         uint32_t distanceFieldPadding = 1;
+        bool distanceFieldSigned = true;
     private:
         BeginSerailize
             SerailizeEntry(flipUV)
@@ -27,6 +28,7 @@ namespace GameEngine {
             SerailizeEntry(buildDistanceField)
             SerailizeEntry(distanceFieldResolution)
             SerailizeEntry(distanceFieldPadding)
+            SerailizeEntry(distanceFieldSigned)
         EndSerailize
 
     }ModelSpec;

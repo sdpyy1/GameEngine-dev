@@ -48,10 +48,14 @@ namespace GameEngine {
 		std::vector<uint32_t> index;
 		std::vector<BoneInfo> bone;
 		MeshDistanceFieldRef distanceField;
+		double distanceFieldBuildTimeMs = 0.0;
+		bool distanceFieldBuildAttempted = false;
 		inline uint32_t TriangleNum() { return index.size() / 3; }
 		inline bool HasDistanceField() const { return distanceField && distanceField->IsValid(); }
 		inline MeshDistanceFieldData* GetDistanceField() { return distanceField.get(); }
 		inline const MeshDistanceFieldData* GetDistanceField() const { return distanceField.get(); }
+		inline double GetDistanceFieldBuildTimeMs() const { return distanceFieldBuildTimeMs; }
+		inline bool WasDistanceFieldBuildAttempted() const { return distanceFieldBuildAttempted; }
 		bool BuildDistanceField(const MeshDistanceFieldSettings& settings = {}, std::string* error = nullptr);
 
 
