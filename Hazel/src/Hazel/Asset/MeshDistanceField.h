@@ -69,17 +69,6 @@ public:
                      MeshDistanceFieldData& output,
                      std::string* error = nullptr);
 
-private:
-    static float PointTriangleDistanceSquared(const glm::vec3& point,
-                                              const glm::vec3& a,
-                                              const glm::vec3& b,
-                                              const glm::vec3& c);
-    static bool RayIntersectsTriangle(const glm::vec3& origin,
-                                      const glm::vec3& direction,
-                                      const glm::vec3& a,
-                                      const glm::vec3& b,
-                                      const glm::vec3& c,
-                                      float& distance);
 };
 
 using MeshDistanceFieldRef = std::shared_ptr<MeshDistanceFieldData>;

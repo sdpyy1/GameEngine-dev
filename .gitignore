@@ -2,6 +2,8 @@
 **/bin/
 # 例外：构建工具 premake5.exe 必须随仓库分发，否则 clone 后无法生成工程
 !vendor/premake/bin/
+!Hazel/vendor/embree/bin/
+!Hazel/vendor/embree/bin/**
 bin-int/
 Intermediates/
 

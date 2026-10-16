@@ -13,6 +13,7 @@ IncludeDir["VMA"] = "%{wks.location}/Hazel/vendor/VMA"
 IncludeDir["choc"] = "%{wks.location}/Hazel/vendor/choc"
 IncludeDir["nfd"] = "%{wks.location}/Hazel/vendor/NFD-Extended/NFD-Extended/src/include"
 IncludeDir["cereal"] = "%{wks.location}/Hazel/vendor/cereal/include"
+IncludeDir["Embree"] = "%{wks.location}/Hazel/vendor/embree/include"
 
 IncludeDir["entt"] = "%{wks.location}/Hazel/vendor/entt/include"
 IncludeDir["mono"] = "%{wks.location}/Hazel/vendor/mono/include"
@@ -28,6 +29,7 @@ LibraryDir = {}
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
 LibraryDir["mono"] = "%{wks.location}/Hazel/vendor/mono/lib/%{cfg.buildcfg}"
 LibraryDir["assimp"] = "%{wks.location}/Hazel/vendor/assimp/bin/windows/%{cfg.buildcfg}"
+LibraryDir["Embree"] = "%{wks.location}/Hazel/vendor/embree/lib/%{cfg.buildcfg}"
 
 Library = {}
 

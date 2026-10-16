@@ -62,13 +62,15 @@ project "Hazel"
 		"%{IncludeDir.spirv_reflect}",
 		"%{IncludeDir.cereal}",
 		"%{IncludeDir.imgui_node_editor}",
-		"%{IncludeDir.mikktspace}"
+		"%{IncludeDir.mikktspace}",
+		"%{IncludeDir.Embree}"
 	}
 
 	libdirs
 	{
 		"%{LibraryDir.VulkanSDK}",
 		"%{LibraryDir.assimp}",
+		"%{LibraryDir.Embree}",
 	}
 	links
 	{
@@ -113,36 +115,39 @@ project "Hazel"
 		}
 
 	filter "configurations:Debug"
-		defines "HZ_DEBUG"
+		defines { "HZ_DEBUG", "HZ_USE_EMBREE=1" }
 		runtime "Debug"
 		symbols "on"
 
 		links
 		{
+			"embree4_d.lib",
 			"%{Library.ShaderC_Debug}",
 			"%{Library.SPIRV_Cross_Debug}",
 			"%{Library.SPIRV_Cross_GLSL_Debug}"
 		}
 
 	filter "configurations:Release"
-		defines "HZ_RELEASE"
+		defines { "HZ_RELEASE", "HZ_USE_EMBREE=1" }
 		runtime "Release"
 		optimize "on"
 
 		links
 		{
+			"embree4.lib",
 			"%{Library.ShaderC_Release}",
 			"%{Library.SPIRV_Cross_Release}",
 			"%{Library.SPIRV_Cross_GLSL_Release}"
 		}
 
 	filter "configurations:Dist"
-		defines "HZ_DIST"
+		defines { "HZ_DIST", "HZ_USE_EMBREE=1" }
 		runtime "Release"
 		optimize "on"
 
 		links
 		{
+			"embree4.lib",
 			"%{Library.ShaderC_Release}",
 			"%{Library.SPIRV_Cross_Release}",
 			"%{Library.SPIRV_Cross_GLSL_Release}"
@@ -150,4 +155,16 @@ project "Hazel"
 	filter "configurations:Debug"
 	postbuildcommands {
 		'{COPY} "../Hazel/vendor/assimp/bin/windows/Debug/assimp-vc143-mtd.dll" "%{cfg.targetdir}"',
+	'{COPY} "../Hazel/vendor/embree/bin/Debug/embree4_d.dll" "%{cfg.targetdir}"',
+	'{COPY} "../Hazel/vendor/embree/bin/Debug/tbb12_debug.dll" "%{cfg.targetdir}"',
+	}
+	filter "configurations:Release"
+	postbuildcommands {
+	'{COPY} "../Hazel/vendor/embree/bin/Release/embree4.dll" "%{cfg.targetdir}"',
+	'{COPY} "../Hazel/vendor/embree/bin/Release/tbb12.dll" "%{cfg.targetdir}"',
+	}
+	filter "configurations:Dist"
+	postbuildcommands {
+	'{COPY} "../Hazel/vendor/embree/bin/Release/embree4.dll" "%{cfg.targetdir}"',
+	'{COPY} "../Hazel/vendor/embree/bin/Release/tbb12.dll" "%{cfg.targetdir}"',
 	}
